@@ -468,10 +468,14 @@ function drawBar(ctx: CanvasRenderingContext2D, g: Game, f: Fighter, side: 0 | 1
     gr.addColorStop(0, low ? '#ff9ab0' : '#e9b5ff');
     gr.addColorStop(0.5, low ? '#ef4444' : '#a855f7');
     gr.addColorStop(1, low ? '#7f1d1d' : '#5b21b6');
-  } else {
+  } else if (f.ch === 'orango') {
     gr.addColorStop(0, low ? '#ffe28a' : '#ffb27a');
     gr.addColorStop(0.5, low ? '#ef4444' : '#ef4a2a');
     gr.addColorStop(1, '#7f1d1d');
+  } else {
+    gr.addColorStop(0, low ? '#fda4af' : f.def.glow);
+    gr.addColorStop(0.5, low ? '#ef4444' : f.def.color);
+    gr.addColorStop(1, low ? '#7f1d1d' : f.def.color2);
   }
   ctx.fillStyle = gr;
   ctx.globalAlpha = low ? 0.7 + 0.3 * Math.sin(g.tick * 0.3) : 1;
@@ -553,9 +557,12 @@ function drawMeter(ctx: CanvasRenderingContext2D, g: Game, f: Fighter, side: 0 |
   if (f.ch === 'caetano') {
     gr.addColorStop(0, '#6d28d9');
     gr.addColorStop(1, full ? '#f5d0fe' : '#c084fc');
-  } else {
+  } else if (f.ch === 'orango') {
     gr.addColorStop(0, '#991b1b');
     gr.addColorStop(1, full ? '#fecaca' : '#fb923c');
+  } else {
+    gr.addColorStop(0, f.def.color2);
+    gr.addColorStop(1, full ? f.def.glow : f.def.color);
   }
   ctx.fillStyle = gr;
   ctx.fillRect(bx, y, w * r, h);
