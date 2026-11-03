@@ -126,6 +126,34 @@ function drawFx(ctx: CanvasRenderingContext2D, g: Game, f: Fighter, time: number
       ctx.stroke();
       ctx.restore();
     }
+    if (f.ch === 'tubarao') {
+      if (m.id === 's1' || m.id === 's2') {
+        ctx.save();
+        ctx.strokeStyle = '#a5f3fc';
+        ctx.lineWidth = 3;
+        ctx.globalAlpha = 0.7;
+        for (let i = 0; i < 5; i++) {
+          const u = ((time * 0.04 + i * 0.23) % 1);
+          ctx.beginPath();
+          ctx.arc(p.head.x + 25 + u * 85, p.head.y - 8 + Math.sin(i * 2 + time * 0.1) * 28, 3 + u * 6, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+        ctx.restore();
+      }
+      if (m.id === 's3') {
+        spear(ctx, p.head.x - 55, p.head.y + 15, p.head.x + 60, 55, '#67e8f9');
+        orb(ctx, p.head.x, p.head.y + 15, 58, '#06b6d4', 0.4);
+      }
+    }
+    if (f.ch === 'rickzera') {
+      if (m.id === 's1' || m.id === 's2') orb(ctx, p.wF.x, p.wF.y, 22 + Math.sin(time * 0.3) * 5, glow, 0.7);
+      if (m.id === 's3') {
+        ctx.save();
+        ctx.strokeStyle = '#4ade80'; ctx.lineWidth = 5;
+        ctx.beginPath(); ctx.ellipse(p.aF.x - 20, p.aF.y + 15, 48, 14, -0.2, 0, Math.PI * 2); ctx.stroke();
+        ctx.restore();
+      }
+    }
     if (m.kind === 'super' && t % 2 === 0) orb(ctx, p.hip.x - 20, p.hip.y - 30, 70, glow, 0.5);
   }
   const s = g.seq;
@@ -152,6 +180,23 @@ function drawFx(ctx: CanvasRenderingContext2D, g: Game, f: Fighter, time: number
       ctx.arc(hx - 2, hy, 11, 0, Math.PI * 2);
       ctx.fill();
       ctx.stroke();
+    }
+    if (s.kind === 'engole' && t > 20 && t < 65) {
+      orb(ctx, p.hip.x + 12, p.hip.y - 26, 65, '#67e8f9', 0.3);
+    }
+    if (s.kind === 'superT') {
+      const pulse = 1 + Math.sin(t * 0.13) * 0.15;
+      heart(ctx, p.head.x + 48, p.head.y - 12, 18 * pulse, '#f472b6');
+      if (t > 40) {
+        heart(ctx, p.head.x + 75, p.head.y - 55, 11, '#fbcfe8');
+        heart(ctx, p.head.x + 20, p.head.y - 75, 8, '#f9a8d4');
+      }
+    }
+    if (s.kind === 'superR') {
+      orb(ctx, p.wF.x, p.wF.y, 38, '#86efac', 0.65);
+      if (t > 20 && t < 120) {
+        spear(ctx, p.wF.x, p.wF.y, p.wF.x + 130, 18, '#4ade80');
+      }
     }
     if (s.kind === 'superO') {
       if (t >= 104 && t < 150) orb(ctx, p.wF.x + 36, p.wF.y, 10 + (t - 104) * 1.8, '#ff2a2a', 0.9);
@@ -252,6 +297,7 @@ function drawTrail(ctx: CanvasRenderingContext2D, f: Fighter) {
 }
 
 function drawFighter(ctx: CanvasRenderingContext2D, g: Game, f: Fighter, time: number, reflect = false) {
+  if (f.hidden) return;
   ctx.save();
   ctx.translate(f.x, FLOOR_Y + f.y);
   ctx.scale(f.facing * f.turn, 1);
@@ -261,9 +307,49 @@ function drawFighter(ctx: CanvasRenderingContext2D, g: Game, f: Fighter, time: n
     ctx.translate(0, 70);
   }
   if (!reflect) drawAura(ctx, f, time);
-  drawRig(ctx, f.ch, f.rig, f.pose, { time, expr: f.expr, glow: f.glow, glowColor: f.ch === 'caetano' ? '#c084fc' : '#ff3b2f' });
+  drawRig(ctx, f.ch, f.rig, f.pose, { time, expr: f.expr, glow: f.glow, glowColor: f.def.glow });
   if (!reflect) drawFx(ctx, g, f, time);
   ctx.restore();
+}
+
+function heart(ctx: CanvasRenderingContext2D, x: number, y: number, size: number, color: string) {
+  ctx.save(); ctx.translate(x, y); ctx.scale(size / 20, size / 20);
+  ctx.beginPath(); ctx.moveTo(0, 16);
+  ctx.bezierCurveTo(-32, -2, -19, -28, 0, -10);
+  ctx.bezierCurveTo(19, -28, 32, -2, 0, 16);
+  ctx.fillStyle = color; ctx.shadowColor = color; ctx.shadowBlur = 14; ctx.fill();
+  ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.stroke(); ctx.restore();
+}
+
+function drawProjectiles(ctx: CanvasRenderingContext2D, g: Game) {
+  for (const shot of g.projectiles) {
+    const facing = shot.vx >= 0 ? 1 : -1;
+    ctx.save(); ctx.translate(shot.x, FLOOR_Y + shot.y); ctx.scale(facing, 1);
+    const tail = ctx.createLinearGradient(-85, 0, 10, 0);
+    tail.addColorStop(0, '#22c55e00'); tail.addColorStop(1, '#86efacbb');
+    ctx.fillStyle = tail; ctx.fillRect(-85, -8, 85, 16);
+    if (shot.kind === 'franco') {
+      ctx.rotate(Math.sin(g.tick * 0.3) * 0.15);
+      ctx.shadowColor = '#4ade80'; ctx.shadowBlur = 15;
+      ctx.fillStyle = '#dbeafe'; ctx.strokeStyle = '#15803d'; ctx.lineWidth = 2;
+      ctx.fillRect(-22, -12, 44, 24); ctx.strokeRect(-22, -12, 44, 24);
+      ctx.shadowBlur = 0; ctx.fillStyle = '#64748b';
+      ctx.beginPath(); ctx.ellipse(-5, 0, 5, 8, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#dc2626'; ctx.fillRect(10, -9, 9, 9);
+      ctx.fillStyle = '#fff'; ctx.fillRect(14, -8, 2, 7); ctx.fillRect(11, -5, 7, 2);
+      ctx.fillStyle = '#0f172a'; ctx.font = 'bold 9px sans-serif'; ctx.textAlign = 'left'; ctx.fillText('100', -20, 8);
+    } else {
+      ctx.shadowColor = '#4ade80'; ctx.shadowBlur = 18;
+      ctx.strokeStyle = '#86efac'; ctx.lineWidth = 5; ctx.lineJoin = 'round';
+      for (const dx of [-10, 10]) {
+        ctx.beginPath(); ctx.moveTo(dx, -17); ctx.lineTo(dx + 17, 0);
+        ctx.lineTo(dx, 17); ctx.lineTo(dx - 17, 0); ctx.closePath(); ctx.stroke();
+      }
+      ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.moveTo(-38, 0); ctx.lineTo(35, 0); ctx.stroke();
+    }
+    ctx.restore();
+  }
 }
 
 // ------------------------------------------------------------------ partículas
@@ -405,7 +491,7 @@ function drawBar(ctx: CanvasRenderingContext2D, g: Game, f: Fighter, side: 0 | 1
   ctx.save();
   ctx.beginPath();
   ctx.arc(px, 38, 30, 0, Math.PI * 2);
-  ctx.fillStyle = f.ch === 'caetano' ? '#3b1a5e' : '#5e1a14';
+  ctx.fillStyle = f.def.color2;
   ctx.fill();
   ctx.clip();
   const gp = ctx.createRadialGradient(px, 30, 4, px, 38, 34);
@@ -660,19 +746,13 @@ function drawCine(ctx: CanvasRenderingContext2D, g: Game) {
   const out = t > c.dur - 8 ? Math.max(0, (c.dur - t) / 8) : 1;
   ctx.save();
   ctx.globalAlpha = k * out;
-  // escurece / tinge
-  if (isC) {
-    ctx.fillStyle = 'rgba(14,4,32,0.78)';
-    ctx.fillRect(0, 0, W, H);
-  } else {
-    ctx.fillStyle = `rgba(${130 + Math.sin(t * 0.8) * 20},0,0,0.82)`;
-    ctx.fillRect(0, 0, W, H);
-    const rg = ctx.createRadialGradient(W / 2, H / 2, 50, W / 2, H / 2, 600);
-    rg.addColorStop(0, 'rgba(255,60,30,0.5)');
-    rg.addColorStop(1, 'rgba(0,0,0,0.6)');
-    ctx.fillStyle = rg;
-    ctx.fillRect(0, 0, W, H);
-  }
+  ctx.fillStyle = f.def.color2 + 'dd';
+  ctx.fillRect(0, 0, W, H);
+  const wash = ctx.createRadialGradient(W / 2, H / 2, 30, W / 2, H / 2, 600);
+  wash.addColorStop(0, f.def.color + '77');
+  wash.addColorStop(1, '#000000bb');
+  ctx.fillStyle = wash;
+  ctx.fillRect(0, 0, W, H);
   speedLines(ctx, 1, f.def.glow, g.tick);
   // faixa diagonal com o rosto
   ctx.save();
@@ -685,9 +765,9 @@ function drawCine(ctx: CanvasRenderingContext2D, g: Game) {
   ctx.lineTo(-40, 450);
   ctx.closePath();
   const bg = ctx.createLinearGradient(0, 0, W, 0);
-  bg.addColorStop(0, isC ? '#2a0a4a' : '#4a0606');
-  bg.addColorStop(0.5, isC ? '#6d28d9' : '#b91c1c');
-  bg.addColorStop(1, isC ? '#2a0a4a' : '#4a0606');
+  bg.addColorStop(0, f.def.color2);
+  bg.addColorStop(0.5, f.def.color);
+  bg.addColorStop(1, f.def.color2);
   ctx.fillStyle = bg;
   ctx.fill();
   ctx.lineWidth = 6;
@@ -702,7 +782,7 @@ function drawCine(ctx: CanvasRenderingContext2D, g: Game) {
   ctx.scale(1, 1);
   ctx.save();
   ctx.translate(0, 0);
-  drawHead(ctx, f.ch, sz, { time: t, expr: isC ? 'n' : 'shout', glow: Math.min(1, t / 14), glowColor: isC ? '#d8b4fe' : '#ff5a3a' });
+  drawHead(ctx, f.ch, sz, { time: t, expr: isC ? 'n' : 'shout', glow: Math.min(1, t / 14), glowColor: f.def.glow });
   ctx.restore();
   ctx.restore();
   // texto
@@ -724,7 +804,7 @@ function drawCine(ctx: CanvasRenderingContext2D, g: Game) {
     ctx.save();
     ctx.translate(W / 2, 128);
     ctx.scale(s, s);
-    label(ctx, 'GRAAAAAAWRRR!!!', 0, 0, 52, '#fecaca', '#3a0000', 'center', -0.18, 12);
+    label(ctx, f.ch === 'orango' ? 'GRAAAAAAWRRR!!!' : f.ch === 'tubarao' ? 'FISCALIZAÇÃO TOTAL!' : 'TRANSFERÊNCIA EM 6X!', 0, 0, 46, f.def.glow, f.def.color2, 'center', -0.18, 12);
     ctx.restore();
   }
   ctx.restore();
@@ -759,7 +839,7 @@ export function render(ctx: CanvasRenderingContext2D, g: Game, stage: Stage, tim
   } else if (g.cine) {
     tint = g.cine.f.def.color;
     tintAmt = 1;
-  } else if (g.seq && (g.seq.kind === 'superC' || g.seq.kind === 'superO')) {
+  } else if (g.seq && g.seq.kind.startsWith('super')) {
     tint = g.seq.a.def.color;
     tintAmt = 0.8;
   }
@@ -776,13 +856,14 @@ export function render(ctx: CanvasRenderingContext2D, g: Game, stage: Stage, tim
   }
   // sombras
   for (const f of g.f) {
+    if (f.hidden) continue;
     const s = Math.max(0.35, 1 + f.y / 320);
     ctx.fillStyle = `rgba(0,0,0,${0.38 * s})`;
     ctx.beginPath();
     ctx.ellipse(f.x, FLOOR_Y + 3, (f.def.pushW + 26) * s * (f.state === 'down' ? 1.8 : 1), 9 * s, 0, 0, Math.PI * 2);
     ctx.fill();
   }
-  for (const f of g.f) drawTrail(ctx, f);
+  for (const f of g.f) if (!f.hidden) drawTrail(ctx, f);
   const front = (f: Fighter) => (f.state === 'attack' || f.state === 'seq' || f.state === 'cine' || f.state === 'win' ? 1 : 0);
   const order = front(g.f[0]) > front(g.f[1]) ? [g.f[1], g.f[0]] : [g.f[0], g.f[1]];
   for (const f of order) drawFighter(ctx, g, f, time);
@@ -800,6 +881,7 @@ export function render(ctx: CanvasRenderingContext2D, g: Game, stage: Stage, tim
       }
     }
   }
+  drawProjectiles(ctx, g);
   for (const p of g.parts) drawParticle(ctx, p);
   ctx.restore();
 
@@ -812,22 +894,22 @@ export function render(ctx: CanvasRenderingContext2D, g: Game, stage: Stage, tim
   ctx.save();
   ctx.globalCompositeOperation = 'lighter';
   const l1 = ctx.createRadialGradient(0, 120, 0, 0, 120, 380);
-  l1.addColorStop(0, 'rgba(150,70,255,0.22)');
+  l1.addColorStop(0, g.f[0].def.color + '38');
   l1.addColorStop(1, 'rgba(150,70,255,0)');
   ctx.fillStyle = l1;
   ctx.fillRect(0, 0, W, H);
   const l2 = ctx.createRadialGradient(W, 120, 0, W, 120, 380);
-  l2.addColorStop(0, 'rgba(255,50,40,0.22)');
+  l2.addColorStop(0, g.f[1].def.color + '38');
   l2.addColorStop(1, 'rgba(255,50,40,0)');
   ctx.fillStyle = l2;
   ctx.fillRect(0, 0, W, H);
   ctx.restore();
 
   // escurecimento durante supers
-  if (g.seq && (g.seq.kind === 'superC' || g.seq.kind === 'superO')) {
+  if (g.seq && g.seq.kind.startsWith('super')) {
     const s = g.seq;
     const d = s.t < 12 ? s.t / 12 : s.t > s.dur - 20 ? Math.max(0, (s.dur - s.t) / 20) : 1;
-    ctx.fillStyle = s.kind === 'superC' ? `rgba(20,0,40,${0.28 * d})` : `rgba(60,0,0,${0.32 * d})`;
+    ctx.fillStyle = s.a.def.color2 + Math.floor(80 * d).toString(16).padStart(2, '0');
     ctx.fillRect(0, 0, W, H);
     // barras cinematográficas
     const bh = 44 * d;

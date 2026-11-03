@@ -1,6 +1,7 @@
 // Dados dos personagens: atributos, golpes (frame data) e poses do esqueleto.
 
-export type CharId = 'caetano' | 'orango';
+export const CHAR_IDS = ['caetano', 'orango', 'tubarao', 'rickzera'] as const;
+export type CharId = (typeof CHAR_IDS)[number];
 
 export interface Pose {
   lean: number;
@@ -41,7 +42,7 @@ export interface Move {
   power: number;
   poses: [string, string];
   advance?: [number, number, number];
-  grab?: 'puxao' | 'mordida' | 'super';
+  grab?: 'puxao' | 'mordida' | 'engole' | 'super';
   dedilho?: boolean;
   pierce?: number;
   unblockable?: boolean;
@@ -259,6 +260,71 @@ const orangoMoves: Record<string, Move> = Object.fromEntries([
   }),
 ]);
 
+// ---------------------------------------------------------------- TUBARÃO FISCAL E RICKZERA
+// Mesmo esqueleto articulado: cada personagem tem dados e silhueta próprios.
+const tubaraoPoses: Record<string, Pose> = {
+  ...Object.fromEntries(Object.entries(caetanoPoses).map(([k, p]) => [k, { ...p }])),
+  idle: cp({ lean: 14, head: -4, fa1: 52, fa2: -54, ba1: 100, ba2: -62, fl1: 72, fl2: 96, bl1: 112, bl2: 86 }),
+  roar: cp({ lean: -10, head: -25, mouth: 1, fa1: -40, fa2: -80, ba1: -120, ba2: -85 }),
+  bite: cp({ lean: 48, head: 18, mouth: 1, fa1: 15, fa2: 25, ba1: 45, ba2: 35 }),
+  bite_s: cp({ lean: -12, head: -12, mouth: 1, fa1: 65, fa2: -80 }),
+  bite_a: cp({ lean: 42, head: 18, mouth: 1, fa1: 20, fa2: 10, ba1: 125, ba2: 100, fl1: 45, fl2: 90, bl1: 140, bl2: 100 }),
+  swallow_s: cp({ lean: 5, fa1: 5, fa2: -10, ba1: 0, ba2: -5, mouth: 1 }),
+  swallow_a: cp({ lean: 30, head: -8, fa1: -8, fa2: -15, ba1: -20, ba2: -10, mouth: 1 }),
+  fin_s: cp({ lean: -22, head: 8, fa1: 120, fa2: -100, ba1: 150, ba2: -85 }),
+  fin_a: cp({ lean: 60, head: -22, fa1: 135, fa2: 135, ba1: 150, ba2: 140, fl1: 30, fl2: 80, bl1: 145, bl2: 100, mouth: 1 }),
+  kiss: cp({ lean: 22, head: 10, fa1: -12, fa2: -80, ba1: -20, ba2: -90, mouth: 2 }),
+  grabHold: cp({ lean: 14, fa1: -15, fa2: -5, ba1: -10, ba2: 0 }),
+  pullIn: cp({ lean: 10, fa1: 40, fa2: -85, ba1: 20, ba2: -95, mouth: 1 }),
+  throwUp: cp({ lean: -10, fa1: -95, fa2: -90, ba1: -100, ba2: -95, mouth: 1 }),
+  throwDown: cp({ lean: 50, fa1: 40, fa2: 35, ba1: 50, ba2: 40, mouth: 1 }),
+  slam: cp({ lean: 50, fa1: 50, fa2: 40, ba1: 65, ba2: 50, mouth: 1 }),
+};
+const rickzeraPoses: Record<string, Pose> = {
+  ...Object.fromEntries(Object.entries(caetanoPoses).map(([k, p]) => [k, { ...p }])),
+  idle: cp({ lean: -3, head: 3, fa1: 75, fa2: -38, ba1: 103, ba2: -35, fl1: 78, fl2: 92, bl1: 106, bl2: 88 }),
+  taunt: cp({ lean: -8, head: 5, fa1: -25, fa2: -8, finger: 1, ba1: 90, ba2: -35 }),
+  franco_s: cp({ lean: -16, fa1: 60, fa2: -120, ba1: 95, ba2: -60, finger: 1 }),
+  franco_a: cp({ lean: 16, fa1: -10, fa2: -5, ba1: 110, ba2: -70, finger: 1 }),
+  pix_s: cp({ lean: -8, fa1: 20, fa2: -85, ba1: -10, ba2: -110, finger: 1 }),
+  pix_a: cp({ lean: 20, fa1: -12, fa2: 0, ba1: -20, ba2: -5, finger: 1 }),
+  double_s: cp({ lean: -12, fl1: 30, fl2: 125, bl1: 135, bl2: 145, fa1: -50, fa2: -110 }),
+  double_a: cp({ lean: -18, fl1: -25, fl2: -20, bl1: 110, bl2: 155, fa1: -80, fa2: -120, ba1: 125, ba2: 150 }),
+  roar: cp({ lean: -10, fa1: -40, fa2: -90, ba1: -130, ba2: -80, mouth: 1 }),
+  slam: cp({ lean: 32, fa1: 45, fa2: 35, ba1: 50, ba2: 40 }),
+  bite: cp({ lean: 44, head: 15, mouth: 1 }),
+  grabHold: cp({ lean: 8, fa1: -12, fa2: -5, ba1: -18, ba2: -5 }),
+  pullIn: cp({ lean: 4, fa1: 40, fa2: -85, ba1: 30, ba2: -95 }),
+  throwUp: cp({ lean: -8, fa1: -95, fa2: -90, ba1: -100, ba2: -95 }),
+  throwDown: cp({ lean: 45, fa1: 45, fa2: 35, ba1: 50, ba2: 40 }),
+};
+
+// Todos possuem socos/chutes de três forças, golpes baixos e golpes aéreos.
+const tubaraoMoves: Record<string, Move> = Object.fromEntries(
+  Object.entries(caetanoMoves).filter(([, m]) => m.kind === 'normal').map(([id, m]) => [id, {
+    ...m, startup: m.startup + 2, recovery: m.recovery + 3,
+    dmg: Math.round(m.dmg * 1.3), power: m.power * 1.15,
+    hb: [m.hb[0], m.hb[1] + 24, m.hb[2], m.hb[3] + 8] as Move['hb'],
+  }]),
+);
+Object.assign(tubaraoMoves, Object.fromEntries([
+  mv('s1', { kind: 'special', rank: 9, startup: 13, active: 8, recovery: 25, whiff: 12, dmg: 100, hitstun: 27, blockstun: 16, kb: 8, kbBlock: 5, hb: [18, 160, 65, 180], hitstop: 10, shake: 10, power: 2, poses: ['bite_s', 'bite_a'], advance: [8, 22, 6], label: 'MORDIDA' }),
+  mv('s2', { kind: 'special', rank: 9, startup: 11, active: 4, recovery: 28, whiff: 20, dmg: 145, hitstun: 0, blockstun: 0, kb: 0, hb: [0, 118, 5, 180], hitstop: 0, power: 2, poses: ['swallow_s', 'swallow_a'], grab: 'engole', unblockable: true, label: 'ENGOLE' }),
+  mv('s3', { kind: 'special', rank: 9, startup: 12, active: 10, recovery: 28, whiff: 16, dmg: 95, hitstun: 28, blockstun: 17, kb: 10, kbBlock: 6, hb: [10, 170, 35, 185], launch: 11, launchVx: 7, hitstop: 12, shake: 14, power: 2.4, poses: ['fin_s', 'fin_a'], advance: [9, 23, 8], label: 'CABEÇADA DE BARBATANA' }),
+]));
+const rickzeraMoves: Record<string, Move> = Object.fromEntries(
+  Object.entries(caetanoMoves).filter(([, m]) => m.kind === 'normal').map(([id, m]) => [id, {
+    ...m, startup: Math.max(3, m.startup - 1), recovery: Math.max(0, m.recovery - 1),
+    dmg: Math.round(m.dmg * 0.9), kb: m.kb * 0.85,
+    hb: [...m.hb] as Move['hb'],
+  }]),
+);
+Object.assign(rickzeraMoves, Object.fromEntries([
+  mv('s1', { kind: 'special', rank: 9, startup: 12, active: 3, recovery: 19, whiff: 5, dmg: 52, hitstun: 20, blockstun: 12, kb: 5, kbBlock: 3, hb: [20, 105, 80, 145], hitstop: 7, shake: 5, power: 1.3, poses: ['franco_s', 'franco_a'], label: 'ARREMESSO DO FRANCO SUÍÇO' }),
+  mv('s2', { kind: 'special', rank: 9, startup: 18, active: 7, recovery: 23, whiff: 9, dmg: 24, hitstun: 17, blockstun: 10, kb: 2.5, kbBlock: 2, hb: [20, 125, 60, 145], hitstop: 4, shake: 3, power: 1.1, poses: ['pix_s', 'pix_a'], label: 'LINHAS DO PIX' }),
+  mv('s3', { kind: 'special', rank: 9, startup: 3, active: 12, recovery: 12, whiff: 5, dmg: 34, hitstun: 18, blockstun: 12, kb: 4, hb: [5, 110, -15, 130], launch: 5, launchVx: 3, hitstop: 6, shake: 5, power: 1.3, poses: ['double_s', 'double_a'], trail: 'fa', label: 'DOUBLE JUMP' }),
+]));
+
 export const CHARS: Record<CharId, CharDef> = {
   caetano: {
     id: 'caetano',
@@ -331,6 +397,34 @@ export const CHARS: Record<CharId, CharDef> = {
     superName: 'INSTINTO PRIMORDIAL',
     quote: 'O REI DA SELVA NÃO PRECISA DE FAIXA.',
     bio: 'Um orangotango furioso. Força bruta, alcance absurdo e agarrões devastadores.',
+  },
+  tubarao: {
+    id: 'tubarao', name: 'TUBARÃO FISCAL', short: 'TUBARÃO', title: 'O FISCAL DOS SETE MARES',
+    color: '#06b6d4', color2: '#155e75', glow: '#a5f3fc',
+    hp: 1230, walk: 3.25, walkBack: 2.6, jumpVy: 15.5, jumpVx: 4, dashVx: 8.5, dashDur: 17,
+    pushW: 39, hurtH: 196, crouchH: 122, moves: tubaraoMoves, poses: tubaraoPoses,
+    attrs: [{ label: 'VELOCIDADE', v: 2 }, { label: 'FORÇA', v: 5 }, { label: 'ALCANCE', v: 4 }, { label: 'RESISTÊNCIA', v: 5 }, { label: 'MOBILIDADE', v: 3 }],
+    specials: [
+      { key: 'U', name: 'MORDIDA', desc: 'Avança com uma mordida poderosa. Pode ser defendida.' },
+      { key: 'I', name: 'ENGOLE', desc: 'Agarrão de perto: engole e cospe o rival. Ignora defesa.' },
+      { key: 'O', name: 'CABEÇADA DE BARBATANA', desc: 'Arrancada com armadura que lança o rival para o alto.' },
+    ],
+    superName: 'BEIJO DO FISCALIZADOR', quote: 'SUA DECLARAÇÃO CAIU NA MALHA FINA.',
+    bio: 'Um tubarão musculoso de pele cinza e sangue frio. Domina o corpo a corpo com mordidas e agarrões.',
+  },
+  rickzera: {
+    id: 'rickzera', name: 'RICKZERA', short: 'RICKZERA', title: 'O REI DAS TRANSFERÊNCIAS',
+    color: '#22c55e', color2: '#166534', glow: '#bbf7d0',
+    hp: 940, walk: 4.8, walkBack: 3.9, jumpVy: 16, jumpVx: 5.6, dashVx: 12, dashDur: 14,
+    pushW: 26, hurtH: 172, crouchH: 108, moves: rickzeraMoves, poses: rickzeraPoses,
+    attrs: [{ label: 'VELOCIDADE', v: 5 }, { label: 'FORÇA', v: 2 }, { label: 'ALCANCE', v: 5 }, { label: 'RESISTÊNCIA', v: 2 }, { label: 'MOBILIDADE', v: 5 }],
+    specials: [
+      { key: 'U', name: 'ARREMESSO DO FRANCO SUÍÇO', desc: 'Lança uma nota à distância. O projétil pode ser defendido.' },
+      { key: 'I', name: 'LINHAS DO PIX', desc: 'Dispara três linhas verdes em sequência para pressionar.' },
+      { key: 'O', name: 'DOUBLE JUMP', desc: 'Salto com chute; no ar, ganha um segundo impulso. A tecla de pulo também dá o segundo salto.' },
+    ],
+    superName: 'WISE 6X', quote: 'TRANSFERÊNCIA CONCLUÍDA. SEIS VEZES.',
+    bio: 'Moletom preto, cabelo castanho e energia verde. Controla a distância com dinheiro, Pix e salto duplo.',
   },
 };
 

@@ -16,10 +16,11 @@ export default function App() {
   const [mode, setMode] = useState<Mode>('ai');
   const [difficulty, setDifficulty] = useState<Difficulty>(loadPrefs().difficulty);
   const [char, setChar] = useState<CharId>('caetano');
+  const [opponent, setOpponent] = useState<CharId>('orango');
   const [gameKey, setGameKey] = useState(0);
 
   useEffect(() => {
-    document.title = 'Karatê Caetano VS Orango Tango Bitencourt — Dedilho Wars';
+    document.title = 'DEDILHO WARS';
     applyPrefs(loadPrefs());
   }, []);
 
@@ -30,9 +31,10 @@ export default function App() {
   }, []);
 
   const toMenu = useCallback(() => {
-    audio.music('menu');
     setScreen('menu');
   }, []);
+
+  const toSelect = useCallback(() => { setScreen('select'); }, []);
 
   const choose = useCallback((c: MenuChoice) => {
     if (c === 'play') {
@@ -49,9 +51,9 @@ export default function App() {
   }, []);
 
   const cfg: GameConfig = useMemo(
-    () => ({ mode, p1: char, difficulty, bindings: loadBindings() }),
+    () => ({ mode, p1: char, p2: opponent, difficulty, bindings: loadBindings() }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [mode, char, difficulty, gameKey],
+    [mode, char, opponent, difficulty, gameKey],
   );
 
   return (
@@ -72,8 +74,11 @@ export default function App() {
         <CharSelect
           mode={mode}
           difficulty={difficulty}
-          onPick={(c) => {
+          initialP1={char}
+          initialP2={opponent}
+          onPick={(c, other) => {
             setChar(c);
+            setOpponent(other);
             setGameKey((k) => k + 1);
             audio.music('fight');
             setScreen('game');
@@ -83,7 +88,7 @@ export default function App() {
       )}
       {screen === 'controls' && <Controls onBack={toMenu} />}
       {screen === 'settings' && <Settings onBack={toMenu} />}
-      {screen === 'game' && <GameScreen cfg={cfg} onExit={toMenu} />}
+      {screen === 'game' && <GameScreen key={gameKey} cfg={cfg} onExit={toMenu} onSelect={toSelect} />}
     </Frame>
   );
 }

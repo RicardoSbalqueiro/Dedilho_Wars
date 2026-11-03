@@ -7,20 +7,25 @@ import { CHARS } from '../game/data';
 import { audio } from '../game/audio';
 import { getStage, SkewBtn } from './common';
 
-export function GameScreen({ cfg, onExit }: { cfg: GameConfig; onExit: () => void }) {
+export function GameScreen({ cfg, onExit, onSelect }: { cfg: GameConfig; onExit: () => void; onSelect: () => void }) {
   const ref = useRef<HTMLCanvasElement>(null);
   const gameRef = useRef<Game | null>(null);
   const [paused, setPaused] = useState(false);
   const [result, setResult] = useState<number | null>(null);
   const [sel, setSel] = useState(0);
+  const resultTimerRef = useRef<number | undefined>(undefined);
+  const overlayRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const canvas = ref.current!;
     const ctx = canvas.getContext('2d')!;
     const stage = getStage();
     const game = new Game(cfg, (e) => {
-      if (e.type === 'pause') setPaused(!!e.paused);
-      if (e.type === 'matchEnd') window.setTimeout(() => setResult(e.winner ?? 0), 700);
+      if (e.type === 'pause') { setPaused(!!e.paused); setSel(0); }
+      if (e.type === 'matchEnd') {
+        window.clearTimeout(resultTimerRef.current);
+        resultTimerRef.current = window.setTimeout(() => { setResult(e.winner ?? 0); setSel(0); }, 700);
+      }
     });
     gameRef.current = game;
     (window as unknown as { __game?: Game }).__game = game;
@@ -33,6 +38,9 @@ export function GameScreen({ cfg, onExit }: { cfg: GameConfig; onExit: () => voi
     raf = requestAnimationFrame(loop);
     return () => {
       cancelAnimationFrame(raf);
+      window.clearTimeout(resultTimerRef.current);
+      const debugWindow = window as unknown as { __game?: Game };
+      if (debugWindow.__game === game) delete debugWindow.__game;
       game.destroy();
       gameRef.current = null;
     };
@@ -42,12 +50,15 @@ export function GameScreen({ cfg, onExit }: { cfg: GameConfig; onExit: () => voi
   useEffect(() => {
     if (!paused && result === null) return;
     const onKey = (e: KeyboardEvent) => {
-      const n = paused ? (cfg.mode === 'training' ? 4 : 3) : 2;
-      if (e.code === 'ArrowDown' || e.code === 'KeyS') setSel((s) => (s + 1) % n);
-      if (e.code === 'ArrowUp' || e.code === 'KeyW') setSel((s) => (s + n - 1) % n);
-      if (e.code === 'Enter') {
+      if (!['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight', 'KeyS', 'KeyW', 'Enter', 'Space'].includes(e.code)) return;
+      e.preventDefault();
+      if (e.repeat) return;
+      const n = paused ? (cfg.mode === 'training' ? 5 : 4) : 3;
+      if (e.code === 'ArrowDown' || e.code === 'KeyS' || (!paused && e.code === 'ArrowRight')) setSel((s) => (s + 1) % n);
+      if (e.code === 'ArrowUp' || e.code === 'KeyW' || (!paused && e.code === 'ArrowLeft')) setSel((s) => (s + n - 1) % n);
+      if (e.code === 'Enter' || e.code === 'Space') {
         e.preventDefault();
-        const b = document.querySelector<HTMLButtonElement>(`[data-menu-idx="${sel}"] button`);
+        const b = overlayRef.current?.querySelector<HTMLButtonElement>(`[data-menu-idx="${sel}"] button`);
         b?.click();
       }
     };
@@ -57,6 +68,7 @@ export function GameScreen({ cfg, onExit }: { cfg: GameConfig; onExit: () => voi
 
   const g = gameRef.current;
   const rematch = () => {
+    window.clearTimeout(resultTimerRef.current);
     setResult(null);
     setPaused(false);
     setSel(0);
@@ -68,13 +80,13 @@ export function GameScreen({ cfg, onExit }: { cfg: GameConfig; onExit: () => voi
   const who = result === null ? '' : cfg.mode === 'ai' ? (result === 0 ? 'VOCÊ VENCEU!' : 'O COMPUTADOR VENCEU!') : `JOGADOR ${result + 1} VENCEU!`;
 
   return (
-    <div className="absolute inset-0">
+    <div ref={overlayRef} className="absolute inset-0">
       <canvas ref={ref} width={W} height={H} className="absolute inset-0" />
       <div className="absolute bottom-[3px] left-1/2 -translate-x-1/2 text-[10px] tracking-widest text-white/50 pointer-events-none">ESC / P : PAUSA</div>
 
       {paused && (
-        <div className="absolute inset-0 bg-black/70 flex flex-col items-center justify-center gap-3 fade-in">
-          <div className="title-main text-6xl text-white mb-3" style={{ textShadow: '0 0 20px #a855f7, 4px 4px 0 #000' }}>
+        <div className="absolute inset-0 bg-black/70 flex flex-col items-center justify-center gap-2 fade-in">
+          <div className="title-main text-5xl text-white mb-2" style={{ textShadow: '0 0 20px #a855f7, 4px 4px 0 #000' }}>
             PAUSADO
           </div>
           <MB idx={0} sel={sel} setSel={setSel} onClick={() => g?.togglePause(false)}>
@@ -96,16 +108,20 @@ export function GameScreen({ cfg, onExit }: { cfg: GameConfig; onExit: () => voi
               >
                 REINICIAR POSIÇÕES
               </MB>
-              <MB idx={3} sel={sel} setSel={setSel} onClick={onExit}>
+              <MB idx={3} sel={sel} setSel={setSel} onClick={onSelect}>
+                TROCAR LUTADORES
+              </MB>
+              <MB idx={4} sel={sel} setSel={setSel} onClick={onExit}>
                 MENU PRINCIPAL
               </MB>
             </>
           ) : (
-            <MB idx={2} sel={sel} setSel={setSel} onClick={onExit}>
-              MENU PRINCIPAL
-            </MB>
+            <>
+              <MB idx={2} sel={sel} setSel={setSel} onClick={onSelect}>TROCAR LUTADORES</MB>
+              <MB idx={3} sel={sel} setSel={setSel} onClick={onExit}>MENU PRINCIPAL</MB>
+            </>
           )}
-          <div className="mt-4 text-xs text-white/60 text-center leading-5">
+          <div className="mt-3 text-[10px] text-white/60 text-center leading-5">
             P1: A/D mover · W pular · S agachar · J soco · K chute · L defesa · U/I/O especiais · H super
             <br />
             P2: Setas · Num 1/2/3 soco/chute/defesa · Num 4/5/6 especiais · Num 0 super (ou , . / ; &apos; Enter ShiftD)
@@ -122,15 +138,18 @@ export function GameScreen({ cfg, onExit }: { cfg: GameConfig; onExit: () => voi
             </div>
           </div>
           <div className="absolute bottom-[112px] w-full text-center slide-up" style={{ animationDelay: '0.5s' }}>
-            <div className="title-main text-[34px]" style={{ color: winnerChar.glow, textShadow: `0 0 18px ${winnerChar.color}, 3px 3px 0 #000` }}>
+            <div className="title-main text-[27px] px-8 leading-8" style={{ color: winnerChar.glow, textShadow: `0 0 18px ${winnerChar.color}, 3px 3px 0 #000` }}>
               “{winnerChar.quote}”
             </div>
           </div>
-          <div className="absolute bottom-6 w-full flex justify-center gap-6 pointer-events-auto slide-up" style={{ animationDelay: '0.9s' }}>
+          <div className="absolute bottom-6 w-full flex justify-center gap-5 pointer-events-auto slide-up" style={{ animationDelay: '0.9s' }}>
             <MB idx={0} sel={sel} setSel={setSel} onClick={rematch} color={winnerChar.color} small>
               REVANCHE
             </MB>
-            <MB idx={1} sel={sel} setSel={setSel} onClick={onExit} color={winnerChar.color} small>
+            <MB idx={1} sel={sel} setSel={setSel} onClick={onSelect} color={winnerChar.color} small>
+              TROCAR LUTADORES
+            </MB>
+            <MB idx={2} sel={sel} setSel={setSel} onClick={onExit} color={winnerChar.color} small>
               MENU PRINCIPAL
             </MB>
           </div>

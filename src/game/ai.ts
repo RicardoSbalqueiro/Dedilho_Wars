@@ -67,6 +67,9 @@ export function aiAct(g: Game, f: Fighter, diff: Difficulty) {
     block = true;
     crouch = f.crouch;
   }
+  const incoming = g.projectiles.find((p) => p.owner !== f.idx && Math.abs(p.x - f.x) < 280 && (f.x - p.x) * p.vx > 0);
+  if (incoming && canAct && rnd() < P.block * 0.12) ai.guardT = tk + 24;
+  if (f.ch === 'rickzera' && f.state === 'jump' && f.airJumps < 2 && f.vy > 0 && dist > 170 && rnd() < P.aggr * 0.08) tap('up');
   const mv = o.move;
   if (o.state === 'attack' && mv && !mv.grab && o.serial !== ai.seen && dist < mv.hb[1] + 60) {
     ai.seen = o.serial;
@@ -81,7 +84,7 @@ export function aiAct(g: Game, f: Fighter, diff: Difficulty) {
     block = true;
     crouch = ai.blockLow;
   }
-  if (tk < ai.guardT && canAct && dist < 230) block = true;
+  if (tk < ai.guardT && canAct && (dist < 230 || incoming)) block = true;
 
   // ---------- planos de combo ----------
   if (ai.plan.length) {
@@ -156,6 +159,38 @@ export function aiAct(g: Game, f: Fighter, diff: Difficulty) {
         ai.walk = -1;
         ai.stopDist = 400;
       } else ai.guardT = tk + 20 + Math.floor(rnd() * 30);
+    } else if (f.ch === 'rickzera') {
+      if (dist > 270) {
+        ai.walk = dist > 620 ? 1 : 0;
+        ai.stopDist = 480;
+        if (r < 0.45 * P.spec + 0.2) tap('s1');
+        else if (r < 0.7 * P.spec + 0.25) tap('s2');
+        else if (r > 0.8 && dist < 550) tap('s3');
+      } else if (dist > 145) {
+        if (r < 0.2 + P.spec * 0.35) tap('s2');
+        else if (r < 0.5) tap('s3');
+        else { ai.walk = 1; ai.stopDist = 100; }
+      } else if (r < P.aggr) {
+        startPlan((rnd() < 0.5 ? ['p', 'p', 'k', 's2'] : ['k', 'p', 'k', 's1']) as Action[]);
+      } else if (r > 0.82) {
+        ai.walk = -1;
+        ai.stopDist = 380;
+      } else ai.guardT = tk + 22;
+    } else if (f.ch === 'tubarao') {
+      if (dist > 290) {
+        ai.walk = 1;
+        ai.stopDist = 120;
+        if (r < 0.2 + P.spec * 0.35) tap('s3');
+      } else if (dist > 145) {
+        ai.walk = 1;
+        ai.stopDist = 90;
+        if (r < 0.25 + P.spec * 0.4) tap(rnd() < 0.55 ? 's1' : 's3');
+      } else if (dist < 115 && r < P.spec * 0.55) {
+        tap('s2');
+        ai.walk = 0;
+      } else if (r < P.aggr + 0.1) {
+        startPlan((rnd() < 0.5 ? ['p', 'p', 'k', 's1'] : ['k', 'p', 'p', 's3']) as Action[]);
+      } else ai.guardT = tk + 20;
     } else {
       if (dist > 340) {
         ai.walk = 1;

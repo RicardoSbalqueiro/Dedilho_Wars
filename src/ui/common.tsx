@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import { Stage, W, H, FLOOR_Y } from '../game/stage';
-import { drawFullBody } from '../game/rig';
+import { drawFullBody, drawPortrait } from '../game/rig';
+import { CHARS, CHAR_IDS } from '../game/data';
 import type { CharId } from '../game/data';
 
 let stageInstance: Stage | null = null;
@@ -26,7 +27,7 @@ export function Frame({ children }: { children: ReactNode }) {
   );
 }
 
-export type ArtVariant = 'menu' | 'select';
+export type ArtVariant = 'menu' | 'select' | 'splash';
 
 interface Leaf {
   x: number;
@@ -40,6 +41,8 @@ interface Leaf {
 const POSES: Record<CharId, string[]> = {
   caetano: ['idle', 'idle', 'pM_a', 'idle', 'dedo_a', 'idle', 'kH_a', 'idle', 'soco_a', 'win'],
   orango: ['idle', 'idle', 'pH_a', 'idle', 'dedo_a', 'idle', 'roar', 'idle', 'kH_a', 'win'],
+  tubarao: ['idle', 'idle', 'bite_a', 'idle', 'fin_a', 'idle', 'roar', 'idle', 'kiss', 'win'],
+  rickzera: ['idle', 'idle', 'franco_a', 'idle', 'pix_a', 'idle', 'double_a', 'idle', 'taunt', 'win'],
 };
 
 export function ArtCanvas({ variant, selected }: { variant: ArtVariant; selected?: CharId }) {
@@ -65,32 +68,18 @@ export function ArtCanvas({ variant, selected }: { variant: ArtVariant; selected
       stage.drawFloor(ctx);
       stage.drawLights(ctx, camX, null, 0);
       ctx.restore();
-      const base = (screenX: number) => screenX;
-      if (v === 'menu') {
-        const cx = 520;
-        const ox = 790;
-        glowBehind(ctx, cx, '#a855f7', t);
-        glowBehind(ctx, ox, '#ef4444', t);
-        drawFullBody(ctx, 'caetano', base(cx), FLOOR_Y, 1.55, t, POSES.caetano[Math.floor(t / 110) % 10], false);
-        drawFullBody(ctx, 'orango', base(ox), FLOOR_Y, 1.55, t, POSES.orango[Math.floor(t / 110) % 10], true);
+      if (v === 'menu' || v === 'splash') {
+        const positions = v === 'splash' ? [200, 385, 600, 790] : [460, 610, 760, 900];
+        CHAR_IDS.forEach((ch, i) => {
+          const x = positions[i];
+          const sc = v === 'splash' ? 1.32 : 1.25;
+          glowBehind(ctx, x, CHARS[ch].color, t + i * 20, .72);
+          drawFullBody(ctx, ch, x, v === 'splash' ? 480 : FLOOR_Y, sc, t, POSES[ch][Math.floor((t + i * 28) / 110) % 10], i > 1);
+        });
       } else {
-        const sc = 1.65;
-        const pos: [CharId, number, boolean][] = [
-          ['caetano', 345, false],
-          ['orango', 640, true],
-        ];
-        for (const [ch, x, flip] of pos) {
-          const on = sel === ch;
-          const col = ch === 'caetano' ? '#a855f7' : '#ef4444';
-          if (on) glowBehind(ctx, x, col, t, 1.4);
-          const list = POSES[ch];
-          const pn = on ? list[Math.floor(t / 70) % list.length] : 'idle';
-          const yy = FLOOR_Y + (on ? -Math.abs(Math.sin(t * 0.05)) * 4 : 0);
-          ctx.save();
-          ctx.globalAlpha = on ? 1 : 0.5;
-          drawFullBody(ctx, ch, x, yy, on ? sc * 1.06 : sc * 0.95, t, pn, flip);
-          ctx.restore();
-        }
+        const ch = sel || 'caetano';
+        glowBehind(ctx, 488, CHARS[ch].color, t, .95);
+        drawFullBody(ctx, ch, 488, 422, 1.48, t, POSES[ch][Math.floor(t / 130) % 10]);
       }
       // folhas
       for (const l of leaves) {
@@ -133,6 +122,18 @@ function glowBehind(ctx: CanvasRenderingContext2D, x: number, col: string, t: nu
   ctx.fillStyle = g;
   ctx.fillRect(x - r, FLOOR_Y - 100 - r, r * 2, r * 2);
   ctx.restore();
+}
+
+export function FighterPortrait({ ch, size = 32, className = '' }: { ch: CharId; size?: number; className?: string }) {
+  const ref = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const canvas = ref.current;
+    const ctx = canvas?.getContext('2d');
+    if (!canvas || !ctx) return;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawPortrait(ctx, ch, size + 6, size + 8, size, { time: 0 });
+  }, [ch, size]);
+  return <canvas aria-hidden="true" ref={ref} width={(size + 6) * 2} height={(size + 8) * 2} className={className} />;
 }
 
 export function Panel({ children, className = '', style }: { children: ReactNode; className?: string; style?: React.CSSProperties }) {
