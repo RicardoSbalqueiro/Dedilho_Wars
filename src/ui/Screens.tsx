@@ -282,7 +282,7 @@ export function CharSelect({ mode, difficulty, initialP1 = 'caetano', initialP2 
                 <div className="absolute top-2 left-2 text-[9px] text-white/40">0{i + 1}</div>
                 <FighterPortrait ch={ch} size={roster.length > 4 ? 22 : 29} className={roster.length > 4 ? "absolute top-0 left-[49px]" : "absolute top-0 left-[41px]"} />
                 <div className="absolute bottom-2 left-2 right-1 title-main text-[13px] leading-4" style={{ color: active ? '#fff' : c.glow }}>{c.name}</div>
-                {ch === 'renngotti' ? <div className="absolute right-1 top-1 text-[7px] bg-white text-black px-1">NOVO</div> : null}
+                {ch === 'aneninha' ? <div className="absolute right-1 top-1 text-[7px] bg-white text-black px-1">NOVO</div> : null}
               </button>
             );
           })}

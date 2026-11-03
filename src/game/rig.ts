@@ -15,10 +15,12 @@ export interface DrawOpts {
   glow?: number; // 0..1 olhos brilhando
   glowColor?: string;
   poseName?: string; // nome da pose para acessórios articulados
+  costume?: number;
   kiss?: boolean; // pose de finalização do Tubarão Fiscal
 }
 
 const G = {
+  aneninha: { T: 54, th: 40, sh: 39, ua: 29, fo: 27, headR: 17, foot: 14, hOff: 1.1, hFwd: 2 },
   caetano: { T: 58, th: 44, sh: 44, ua: 32, fo: 30, headR: 17, foot: 14, hOff: 1.15, hFwd: 2 },
   orango: { T: 62, th: 34, sh: 30, ua: 52, fo: 50, headR: 21, foot: 17, hOff: 0.85, hFwd: 6 },
   tubarao: { T: 66, th: 46, sh: 42, ua: 38, fo: 35, headR: 23, foot: 17, hOff: 0.9, hFwd: 4 },
@@ -163,6 +165,7 @@ export function drawHead(ctx: CanvasRenderingContext2D, ch: CharId, r: number, o
   else if (ch === 'rickzera') headRickzera(ctx, r, o);
   else if (ch === 'bieu') headBieu(ctx, r, o);
   else if (ch === 'nomad') headNomad(ctx, r, o);
+  else if(ch === 'aneninha') headAneninha(ctx,r,o);
   else headRenngotti(ctx, r, o);
 }
 
@@ -425,6 +428,7 @@ export function drawRig(ctx: CanvasRenderingContext2D, ch: CharId, rig: Rig, pos
   else if (ch === 'rickzera') drawRickzera(ctx, rig, pose, o);
   else if (ch === 'bieu') drawBieu(ctx, rig, pose, o);
   else if (ch === 'nomad') drawNomad(ctx, rig, pose, o);
+  else if(ch === 'aneninha') drawAneninha(ctx,rig,pose,o);
   else drawRenngotti(ctx, rig, pose, o);
 }
 
@@ -1247,6 +1251,126 @@ function drawRenngotti(ctx: CanvasRenderingContext2D, r: Rig, pose: Pose, o: Dra
     strokePath(ctx, [{ x: x - 40, y: y - 3 }, { x: x + 36, y: y - 3 }], '#d5ab75', 1.4);
     strokePath(ctx, [{ x: x - 24, y: y + 7 }, { x: x + 39, y: y + 7 }], '#b8895e', 1.1);
   }
+}
+
+// ANENINHA: capuz amarelo bordado, cachos, saia em camadas e botas.
+function headAneninha(ctx: CanvasRenderingContext2D, r: number, o: DrawOpts) {
+  const edge = '#35202b', hair = '#59291f', skin = '#ce8b6d';
+  const variant = o.costume ?? 0;
+  const hood = ['#facc15', '#fbbf24', '#22c55e', '#f472b6'][variant % 4];
+  const colors = ['#ec4899', '#06b6d4', '#ef4444', '#22c55e', '#facc15'];
+  poly(ctx, [{x:-r*1.08,y:r*.9},{x:-r*1.1,y:-r*.6},{x:-r*.62,y:-r*2.0},{x:r*.18,y:-r*2.16},{x:r*.9,y:-r*.7},{x:r*1.2,y:r*.82}], hood, edge, r*.085);
+  ell(ctx, 0, -r*.12, r*.89, r*1.02, hair, edge, r*.06);
+  ell(ctx, r*.12, r*.12, r*.71, r*.85, skin, edge, r*.055);
+  // Cachos ao redor do rosto com reflexos acobreados.
+  for(let i=0;i<12;i++) {
+    const ang=rad(130+i*23), x=Math.cos(ang)*r*.78-r*.04, y=Math.sin(ang)*r*.9-r*.14;
+    if(x>r*.47 && y>0) continue;
+    circ(ctx,x,y,r*.24,hair,edge,r*.045);
+    ctx.beginPath();ctx.arc(x-r*.03,y-r*.02,r*.15,.2,4.8);ctx.strokeStyle='#a45a37';ctx.lineWidth=r*.04;ctx.stroke();
+  }
+  // Mecha longa ondulada lateral.
+  strokePath(ctx,[{x:-r*.68,y:r*.1},{x:-r*.84,y:r*.46},{x:-r*.62,y:r*.69},{x:-r*.76,y:r*.96}],hair,r*.22);
+  strokePath(ctx,[{x:-r*.7,y:r*.15},{x:-r*.8,y:r*.46},{x:-r*.65,y:r*.69}], '#ae623d',r*.045);
+  // Olhos, delineado e expressão.
+  for(const [x,w] of [[-.16,.12],[.52,.18]]) {
+    if(o.expr==='hit') strokePath(ctx,[{x:r*(x-w),y:r*.02},{x:r*(x+w),y:r*.12}],edge,r*.065);
+    else {
+      ell(ctx,r*x,r*.02,r*w,r*.095,'#fff7e7',edge,r*.04);
+      circ(ctx,r*(x+.035),r*.02,r*.068,'#4b2d25',edge,r*.02);
+      circ(ctx,r*(x+.045),r*.02,r*.033,'#151119',undefined,0);
+      circ(ctx,r*(x+.015),-r*.008,r*.02,'#fff',undefined,0);
+      strokePath(ctx,[{x:r*(x-w-.035),y:-r*.065},{x:r*(x+w),y:-r*.055}],edge,r*.055);
+    }
+    strokePath(ctx,[{x:r*(x-w),y:-r*.2},{x:r*x,y:-r*.25},{x:r*(x+w),y:-r*.18}],hair,r*.075);
+  }
+  strokePath(ctx,[{x:r*.34,y:r*.12},{x:r*.42,y:r*.3},{x:r*.27,y:r*.34}],'#9e5b4e',r*.04);
+  for(let i=0;i<6;i++)circ(ctx,r*(-.28+(i%3)*.13),r*(.29+Math.floor(i/3)*.08),r*.018,'#a45b4b',undefined,0);
+  if(o.expr==='shout') {
+    ell(ctx,r*.32,r*.65,r*.22,r*.24,'#5b2230',edge,r*.04);
+    ell(ctx,r*.32,r*.48,r*.17,r*.035,'#fff6df');
+    ell(ctx,r*.34,r*.8,r*.12,r*.065,'#e8788f');
+  } else {
+    strokePath(ctx,[{x:r*.04,y:r*.6},{x:r*.29,y:r*.65},{x:r*.59,y:r*.54}],'#8f3c51',r*.075);
+    strokePath(ctx,[{x:r*.2,y:r*.71},{x:r*.44,y:r*.69}],'#f5b29d',r*.035);
+  }
+  // Borda do capuz como tecido multicolorido, sem esconder o rosto.
+  ctx.beginPath();ctx.moveTo(-r*.95,r*.9);ctx.quadraticCurveTo(-r*1.25,-r*.82,-r*.22,-r*1.12);ctx.quadraticCurveTo(r*.7,-r*1.25,r*.94,r*.22);
+  ctx.strokeStyle='#9d174d';ctx.lineWidth=r*.18;ctx.stroke();
+  for(let i=0;i<15;i++) {
+    const a=rad(160+i*12);const x=Math.cos(a)*r*1.04,y=Math.sin(a)*r*1.14-r*.05;
+    circ(ctx,x,y,r*.06,colors[i%colors.length],edge,r*.014);
+  }
+  circ(ctx,-r*.91,r*.83,r*.16,'#facc15',edge,r*.035);
+  if((o.glow||0)>0)eyeGlow(ctx,r*.5,0,r*1.4,o.glowColor||'#f9a8d4',o.glow!);
+}
+
+function drawAneninha(ctx: CanvasRenderingContext2D, r: Rig, pose: Pose, o: DrawOpts) {
+  const p=r.p,{at}=bodyAxes(p),edge='#35202b',skin='#ce8b6d';
+  const variant=o.costume??0;
+  const yellow=['#facc15','#fbbf24','#22c55e','#f472b6'][variant%4];
+  const pink=['#c21867','#db2777','#be185d','#9333ea'][variant%4];
+  const dark=['#8e1553','#9d174d','#831843','#581c87'][variant%4];
+  const trim=['#facc15','#22c55e','#06b6d4','#ec4899'];
+  const arm=(e:P2,w:P2,front:boolean)=>{
+    cap(ctx,p.sh,e,front?19:17,14,yellow,edge,2);
+    cap(ctx,e,w,15,10,yellow,edge,1.8);
+    const u=unit(e,w),n={x:-u.y,y:u.x};
+    for(let i=0;i<3;i++) {
+      const q={x:w.x-u.x*(5+i*3),y:w.y-u.y*(5+i*3)};
+      strokePath(ctx,[{x:q.x+n.x*6,y:q.y+n.y*6},{x:q.x-n.x*6,y:q.y-n.y*6}],trim[i],2.4);
+    }
+    circ(ctx,w.x+u.x*4,w.y+u.y*4,6,skin,edge,1.6);
+    if(front&&o.poseName==='paint_a') {
+      ctx.save();ctx.translate(w.x+u.x*7,w.y+u.y*7);ctx.rotate(Math.atan2(u.y,u.x));
+      ctx.fillStyle='#29252d';ctx.strokeStyle='#fbcfe8';ctx.lineWidth=1.5;ctx.fillRect(-4,-7,17,14);ctx.strokeRect(-4,-7,17,14);
+      ctx.fillStyle='#ec4899';ctx.fillRect(8,-7,4,14);ctx.restore();
+    }
+  };
+  const leg=(k:P2,a:P2,t:P2)=>{
+    cap(ctx,p.hip,k,17,12,skin,edge,1.9);cap(ctx,k,a,12,10,skin,edge,1.8);
+    const u=unit(k,a),n={x:-u.y,y:u.x},top={x:a.x-u.x*24,y:a.y-u.y*24};
+    cap(ctx,top,a,15,13,'#28212e',edge,2);cap(ctx,a,t,14,14,'#28212e',edge,2);
+    for(let i=0;i<5;i++) {
+      const q={x:top.x+u.x*(4+i*4),y:top.y+u.y*(4+i*4)};
+      strokePath(ctx,[{x:q.x+n.x*4,y:q.y+n.y*4},{x:q.x+u.x*3-n.x*4,y:q.y+u.y*3-n.y*4}],i%2?'#facc15':'#f472b6',1.4);
+    }
+    strokePath(ctx,[{x:a.x,y:a.y+5},{x:t.x,y:t.y+5}],'#8b6c86',3);
+  };
+  arm(p.eB,p.wB,false);leg(p.kB,p.aB,p.tB);leg(p.kF,p.aF,p.tF);
+  cap(ctx,p.sh,p.head,10,11,skin,edge,1.6);
+  poly(ctx,[at(-.03,-16),at(-.03,16),at(.65,20),at(1.08,17),at(1.1,-16),at(.55,-19)],yellow,edge,2.3);
+  poly(ctx,[at(.1,-12),at(.75,-17),at(1.08,-16),at(.9,-5),at(.1,-4)],'#dc9919',undefined,0);
+  strokePath(ctx,[at(1.05,-3),at(.14,-1)],'#c21867',5);
+  strokePath(ctx,[at(1.05,3),at(.14,5)],'#06b6d4',3);
+  // Saia rodada em três camadas, com bordado geométrico.
+  const swing=Math.sin(o.time*.1)*2+(o.poseName?.startsWith('dance')?7:0);
+  for(let layer=0;layer<3;layer++) {
+    const topY=p.hip.y-4+layer*14,botY=topY+22,w0=18+layer*6,w1=28+layer*6+swing;
+    ctx.beginPath();ctx.moveTo(p.hip.x-w0,topY);ctx.lineTo(p.hip.x+w0,topY);
+    ctx.quadraticCurveTo(p.hip.x+w1,botY-8,p.hip.x+w1,botY);
+    for(let i=0;i<8;i++)ctx.lineTo(p.hip.x+w1-(i+1)*w1/4,botY+(i%2?0:3));
+    ctx.closePath();ctx.fillStyle=layer%2?dark:pink;ctx.fill();ctx.strokeStyle=edge;ctx.lineWidth=2;ctx.stroke();
+    ctx.strokeStyle='#facc15';ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(p.hip.x-w1+1,botY-3);ctx.lineTo(p.hip.x+w1-1,botY-3);ctx.stroke();
+    for(let i=0;i<7;i++) {
+      const x=p.hip.x-w1+5+i*(w1*2-10)/6;
+      poly(ctx,[{x,y:botY-12},{x:x+4,y:botY-7},{x,y:botY-3},{x:x-4,y:botY-7}],trim[(i+layer)%4],undefined,0);
+    }
+  }
+  for(let i=0;i<5;i++)circ(ctx,p.hip.x-18+i*9,p.hip.y-2,3.7,trim[i%4],edge,.7);
+  ctx.save();ctx.translate(p.head.x,p.head.y);ctx.rotate(rad(pose.lean+pose.head)*.5+pose.rot);
+  headAneninha(ctx,17,{...o,expr:o.expr==='hit'?'hit':pose.mouth>.5?'shout':o.expr});ctx.restore();
+  arm(p.eF,p.wF,true);
+}
+
+/** Dançarinas do ataque coletivo, com figurinos e passos alternados. */
+export function drawBolivianDancer(ctx:CanvasRenderingContext2D,x:number,y:number,scale:number,time:number,flip=false,costume=0) {
+  const key=Math.floor(time/12)%2?'dance1':'dance2';
+  const pose={...CHARS.aneninha.poses[key]};
+  pose.lean+=Math.sin(time*.12)*4;
+  const rig=computeRig('aneninha',pose);
+  ctx.save();ctx.translate(x,y-Math.abs(Math.sin(time*Math.PI/12))*7*scale);ctx.scale(flip?-scale:scale,scale);
+  drawRig(ctx,'aneninha',rig,pose,{time,poseName:key,costume});ctx.restore();
 }
 
 // ------------------------------------------------------------ retratos

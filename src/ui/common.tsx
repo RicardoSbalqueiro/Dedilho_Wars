@@ -82,6 +82,7 @@ const POSES: Record<CharId, string[]> = {
   bieu: ['idle', 'idle', 'driver_a', 'idle', 'rat_a', 'idle', 'spray_a', 'idle', 'taunt', 'win'],
   nomad: ['idle', 'idle', 'burger_a', 'idle', 'glock_a', 'idle', 'boomerang_a', 'idle', 'taunt', 'win'],
   renngotti: ['idle', 'idle', 'pM_a', 'idle', 'kH_a', 'idle', 'taunt', 'idle', 'pH_a', 'win'],
+  aneninha: ['idle','dance1','osasco_a','idle','paint_a','dance2','shout_a','idle','win','dance1'],
 };
 
 export function ArtCanvas({ variant, selected }: { variant: ArtVariant; selected?: CharId }) {
@@ -140,29 +141,14 @@ export function ArtCanvas({ variant, selected }: { variant: ArtVariant; selected
 }
 
 // Demonstração coreografada sem controles, áudio ou instâncias do motor de partida.
-// Cada dupla alterna ataques, acertos e recuos. O sétimo lutador entra de longe.
+// Cada dupla alterna ataques, acertos e recuos. Os oito lutadores aparecem em quatro duplas.
 function drawDemoBrawl(ctx: CanvasRenderingContext2D, t: number, splash: boolean) {
   const rotation = Math.floor(t / 560) % CHAR_IDS.length;
   const chars = CHAR_IDS.map((_, i) => CHAR_IDS[(i + rotation) % CHAR_IDS.length]);
-  const extra = chars[6];
-  const extraTime = t % 196;
-  const extraX = splash ? 480 : 425;
-  const extraY = splash ? 350 : 483;
-  const extraScale = splash ? .7 : .84;
-  const extraMove = CHARS[extra].moves.s1;
-  const extraPose = extraTime < 28 || extraTime > 100 ? 'idle' : extraTime < 44 ? extraMove.poses[0] : extraMove.poses[1];
-  drawFullBody(ctx, extra, extraX, extraY, extraScale, t, extraPose);
-  const groups = splash ? [{ x: 155, y: 478, s: 1.08 }, { x: 475, y: 482, s: 1.08 }, { x: 792, y: 478, s: 1.08 }]
-    : [{ x: 443, y: 355, s: .66 }, { x: 634, y: 474, s: 1.03 }, { x: 831, y: 367, s: .74 }];
-  groups.forEach((g, i) => drawDemoPair(ctx, chars[i * 2], chars[i * 2 + 1], g.x, g.y, g.s, t + i * 57, i === 2 && extraTime > 80 && extraTime < 105));
-  if (extraTime >= 44 && extraTime <= 83) {
-    const target = groups[2];
-    const u = (extraTime - 44) / 39;
-    const x = extraX + (target.x + 32 - extraX) * u;
-    const y = extraY - 100 * extraScale + (target.y - 100 * target.s - (extraY - 100 * extraScale)) * u;
-    drawDemoProjectile(ctx, extra, x, y, 1, t, .9);
-    if (extraTime > 77) drawDemoImpact(ctx, target.x + 32, target.y - 95 * target.s, CHARS[extra].glow, extraTime - 78, target.s);
-  }
+  const groups = splash
+    ? [{x:120,y:480,s:.9},{x:360,y:470,s:.9},{x:600,y:480,s:.9},{x:840,y:470,s:.9}]
+    : [{x:430,y:354,s:.65},{x:610,y:478,s:.9},{x:770,y:350,s:.65},{x:860,y:480,s:.8}];
+  groups.forEach((g,i)=>drawDemoPair(ctx,chars[i*2],chars[i*2+1],g.x,g.y,g.s,t+i*47,false));
 }
 
 function drawDemoPair(ctx: CanvasRenderingContext2D, left: CharId, right: CharId, x: number, y: number, scale: number, t: number, extraHit: boolean) {

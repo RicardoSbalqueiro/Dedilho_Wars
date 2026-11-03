@@ -1,6 +1,6 @@
 # DEDILHO WARS
 
-Jogo de luta 2D com sete lutadores, seis cenários e rádio integrada.
+Jogo de luta 2D com oito lutadores, seis cenários e rádio integrada.
 
 ## Jogar
 
@@ -10,13 +10,13 @@ O ZIP inclui tanto o jogo pronto como o código-fonte. O index.html da raiz é a
 
 ## Seleção e cenários
 
-- **Streamers:** Rickzera, Karatê Caetano, Nomad Lobby, Bieubatman e Renngotti.
+- **Streamers:** Rickzera, Karatê Caetano, Nomad Lobby, Bieubatman, Renngotti e Aneninha.
 - **Viewers:** Em breve; não permite confirmar um personagem.
 - **Especiais:** Tubarão Fiscal e Orango Tango Bitencourt.
 
 Use Q/E ou Tab para trocar de categoria, setas/WASD para escolher e Enter para confirmar. Escolha P1 e depois o adversário; ambos podem usar o mesmo personagem. A próxima tela escolhe o cenário e permite uma seleção aleatória. Há troca de lutadores e de mapa na pausa e após a partida; a revanche mantém o confronto atual.
 
-Cenários: **Neto Supermercados**, **Dojo Senbukan**, **Liberdade SP**, **Curitiba**, **Piauí** e **Palácio do Planalto**. A geometria de combate é compartilhada; cada cenário tem seu próprio desenho, arquitetura e chão. A abertura usa um cenário aleatório e uma demonstração visual de luta entre os sete personagens, sem interferir nos controles do menu ou na rádio.
+Cenários: **Neto Supermercados**, **Dojo Senbukan**, **Liberdade SP**, **Curitiba**, **Piauí** e **Palácio do Planalto**. A geometria de combate é compartilhada; cada cenário tem seu próprio desenho, arquitetura e chão. A abertura usa um cenário aleatório e uma demonstração visual de luta entre os oito personagens, sem interferir nos controles do menu ou na rádio.
 
 ## Golpes
 
@@ -29,8 +29,11 @@ Cenários: **Neto Supermercados**, **Dojo Senbukan**, **Liberdade SP**, **Curiti
 | Bieubatman | Chave de Fenda | Jogar Rato | Pichação | Prestígio |
 | Nomad Lobby | Mario Burger | Rajada de Glock | Boomerang | Arena |
 | Renngotti | Joga pra Lua | Jogar Microfone | Grito Alto | TILT |
+| Aneninha | Soco de Osasco | Pichar Muro para representar Osasco | Grito Alto | Yo Soy de Bolivia. |
 
 Renngotti arremessa o oponente para o alto e permite continuar com um combo aéreo. O microfone é um projétil em arco; o grito tem alcance frontal e empurrão, mas pode ser defendido. TILT usa uma mesa em uma sequência cinematográfica.
+
+Aneninha avança com o Soco de Osasco e lança o adversário para continuar combos. A pichação deixa um muro marcado com OSASCO que causa até três acertos, podendo ser defendido ou saltado. Seu grito é uma onda frontal que interrompe e empurra. Na ULT, ela grita e dança com uma horda de dez dançarinas de roupas coloridas e bandeiras bolivianas, numa sequência de seis acertos. Ela também aparece na demonstração da abertura.
 
 Todos possuem golpes fracos/médios/fortes, ataques agachados e aéreos, defesa alta/baixa, dash, combos, barra de ULT, retratos, animações de reação e vitória, IA e treinamento. Os ganhos de ULT estão em metade do valor original; o custo continua em 100 e o treinamento mantém a barra livre.
 
@@ -85,6 +88,6 @@ O build produz dist/index.html com desenhos, scripts e estilos incorporados, e o
 - src/game/audio.ts e radio.ts: síntese original e playlist.
 - src/assets/radio/: faixas incluídas.
 
-Caetano usa o novo visual sem camisa, porte atlético, calça laranja e faixa roxa. Seu afro permanece maior que o de Bieu. Renngotti usa moletom/cargo brancos, óculos escuros e fones.
+Caetano usa o novo visual sem camisa, porte atlético, calça laranja e faixa roxa. Seu afro permanece maior que o de Bieu. Renngotti usa moletom/cargo brancos, óculos escuros e fones. Aneninha usa capuz amarelo bordado, cachos castanhos, saia rosa em camadas, pompons e botas decoradas, no mesmo estilo desenhado dos demais lutadores.
 
 A fonte Russo One é de Jovanny Lemonad e usa SIL Open Font License 1.1. A licença integral está em src/assets/Russo-One-LICENSE.txt e incorporada ao HTML distribuído.

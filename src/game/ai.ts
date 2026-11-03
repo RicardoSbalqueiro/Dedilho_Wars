@@ -183,6 +183,16 @@ export function aiAct(g: Game, f: Fighter, diff: Difficulty) {
         ai.walk = -1;
         ai.stopDist = 380;
       } else ai.guardT = tk + 22;
+    } else if (f.ch === 'aneninha') {
+      if (dist > 290) { ai.walk = 1; ai.stopDist = 175; if (r > .8) tap('up'); }
+      else if (dist > 150) {
+        if (r < .2 + P.spec * .4) tap('s3');
+        else { ai.walk = 1; ai.stopDist = 105; }
+      } else if (r < P.spec * .45) {
+        tap(rnd() < .55 ? 's2' : 's1'); ai.walk = 0;
+      } else if (r < P.aggr + .15) {
+        startPlan((rnd() < .5 ? ['p', 'p', 'k', 's1'] : ['k', 'p', 'p', 's3']) as Action[]);
+      } else ai.guardT = tk + 20;
     } else if (f.ch === 'renngotti') {
       if (o.state === 'launched' && o.y < -140 && dist < 180 && r < 0.7 * P.aggr) {
         ai.walk = 1;

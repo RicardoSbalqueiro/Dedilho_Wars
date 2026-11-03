@@ -106,7 +106,7 @@ export interface Fighter {
 }
 
 interface Seq {
-  kind: 'puxao' | 'mordida' | 'engole' | 'superC' | 'superO' | 'superT' | 'superR' | 'superB' | 'superN' | 'superG' | 'moon';
+  kind: 'puxao' | 'mordida' | 'engole' | 'superC' | 'superO' | 'superT' | 'superR' | 'superB' | 'superN' | 'superG' | 'superA' | 'moon';
   a: Fighter;
   d: Fighter;
   t: number;
@@ -116,7 +116,7 @@ interface Seq {
 
 export interface Projectile {
   owner: 0 | 1;
-  kind: 'franco' | 'pix' | 'rat' | 'spray' | 'burger' | 'bullet' | 'boomerang' | 'bazooka' | 'microphone';
+  kind: 'franco' | 'pix' | 'rat' | 'spray' | 'burger' | 'bullet' | 'boomerang' | 'bazooka' | 'microphone' | 'osasco';
   age?: number;
   returning?: boolean;
   hitMask?: number;
@@ -678,6 +678,7 @@ export class Game {
       this.moveBanner = { text: m.label, color: f.def.color, t: 0, dur: 75 };
       if (m.kind === 'special') this.hype = Math.max(this.hype, 0.5);
     }
+    if (f.ch === 'aneninha' && m.id === 's3') { audio.say('Osasco!', 1.4, 1.1); audio.noise(.35, .17, 1300, 'bandpass'); }
     if (f.ch === 'tubarao' && m.id === 's1') audio.bite();
     if (f.ch === 'tubarao' && m.id === 's3') audio.whoosh(1.8);
     if (m.id === 's3' && f.ch === 'orango') audio.roar();
@@ -1018,16 +1019,17 @@ export class Game {
     if (f.ch === 'bieu') return m.id === 's2' ? 'rat' : m.id === 's3' ? 'spray' : null;
     if (f.ch === 'nomad') return m.id === 's1' ? 'burger' : m.id === 's2' ? 'bullet' : m.id === 's3' ? 'boomerang' : null;
     if (f.ch === 'renngotti') return m.id === 's2' ? 'microphone' : null;
+    if (f.ch === 'aneninha') return m.id === 's2' ? 'osasco' : null;
     return null;
   }
 
   private spawnProjectile(f: Fighter, m: Move) {
     const kind = this.projectileKind(f, m);
     if (!kind) return;
-    const speed = { franco: 12, pix: 16, rat: 8, spray: 0, burger: 9, bullet: 20, boomerang: 11, bazooka: 20, microphone: 11 }[kind];
-    const y = kind === 'rat' ? -18 : kind === 'bullet' ? -145 : kind === 'spray' ? -70 : kind === 'microphone' ? -115 : -104;
-    const radius = kind === 'spray' ? 62 : kind === 'rat' ? 14 : kind === 'bullet' ? 6 : kind === 'burger' ? 25 : 20;
-    this.projectiles.push({ owner: f.idx, kind, x: f.x + f.facing * (kind === 'spray' ? 115 : 65), y, vx: f.facing * speed, life: kind === 'spray' ? 64 : kind === 'boomerang' ? 110 : 95, serial: f.serial, move: m, age: 0, radius, vy: kind === 'microphone' ? -2.4 : undefined });
+    const speed = { franco: 12, pix: 16, rat: 8, spray: 0, burger: 9, bullet: 20, boomerang: 11, bazooka: 20, microphone: 11, osasco: 0 }[kind];
+    const y = kind === 'rat' ? -18 : kind === 'bullet' ? -145 : kind === 'spray' || kind === 'osasco' ? -70 : kind === 'microphone' ? -115 : -104;
+    const radius = kind === 'osasco' ? 48 : kind === 'spray' ? 62 : kind === 'rat' ? 14 : kind === 'bullet' ? 6 : kind === 'burger' ? 25 : 20;
+    this.projectiles.push({ owner: f.idx, kind, x: f.x + f.facing * (kind === 'spray' || kind === 'osasco' ? 115 : 65), y, vx: f.facing * speed, life: kind === 'osasco' ? 96 : kind === 'spray' ? 64 : kind === 'boomerang' ? 110 : 95, serial: f.serial, move: m, age: 0, radius, vy: kind === 'microphone' ? -2.4 : undefined });
     audio.tone(kind === 'bullet' ? 220 : kind === 'rat' ? 900 : 640, 0.1, 'triangle', 0.14, kind === 'bullet' ? 70 : 1500);
     this.spark(f.x + f.facing * 60, FLOOR_Y + y, f.def.glow, 5, 4, 2, 12);
   }
@@ -1059,9 +1061,9 @@ export class Game {
       if (d.invuln > 0 || d.armor || ['down', 'getup', 'seq', 'cine', 'win'].includes(d.state)) return true;
       const phaseMask = p.returning ? 2 : 1;
       if (p.kind === 'boomerang' && ((p.hitMask ?? 0) & phaseMask)) return true;
-      if (p.kind === 'spray' && ((p.hitCount ?? 0) >= 4 || p.age - (p.lastHitAt ?? -99) < 14)) return true;
+      if ((p.kind === 'spray' || p.kind === 'osasco') && ((p.hitCount ?? 0) >= (p.kind === 'osasco' ? 3 : 4) || p.age - (p.lastHitAt ?? -99) < (p.kind === 'osasco' ? 20 : 14))) return true;
       const r = p.radius ?? 20;
-      const ry = p.kind === 'spray' ? 55 : p.kind === 'bullet' ? 6 : 15;
+      const ry = p.kind === 'osasco' ? 65 : p.kind === 'spray' ? 55 : p.kind === 'bullet' ? 6 : 15;
       const box = { x0: p.x - r, x1: p.x + r, y0: p.y - ry, y1: p.y + ry };
       if (!this.overlap(box, this.hurtBox(d))) return true;
       this.applyHit(a, d, p.move, { x: p.x, y: FLOOR_Y + p.y, dir: Math.sign(p.vx) || a.facing, serial: p.serial });
@@ -1069,7 +1071,7 @@ export class Game {
         p.hitMask = (p.hitMask ?? 0) | phaseMask;
         return true;
       }
-      if (p.kind === 'spray') {
+      if (p.kind === 'spray' || p.kind === 'osasco') {
         p.lastHitAt = p.age;
         p.hitCount = (p.hitCount ?? 0) + 1;
         return true;
@@ -1199,7 +1201,7 @@ export class Game {
     // --- agarrões ---
     if (m.grab) {
       if (tracked) a.connected = true;
-      if (m.grab === 'super') this.startSeq(({ caetano: 'superC', orango: 'superO', tubarao: 'superT', rickzera: 'superR', bieu: 'superB', nomad: 'superN', renngotti: 'superG' } as const)[a.ch], a, d);
+      if (m.grab === 'super') this.startSeq(({ caetano: 'superC', orango: 'superO', tubarao: 'superT', rickzera: 'superR', bieu: 'superB', nomad: 'superN', renngotti: 'superG', aneninha: 'superA' } as const)[a.ch], a, d);
       else this.startSeq(m.grab, a, d);
       return;
     }
@@ -1401,7 +1403,7 @@ export class Game {
     f.turn = 1;
     f.glow = 1;
     f.aura = 1;
-    f.poseOverride = f.ch === 'orango' || f.ch === 'tubarao' ? 'roar' : f.ch === 'bieu' ? 'drive' : f.ch === 'nomad' ? 'bazooka' : f.ch === 'renngotti' ? 'tilt_s' : 'taunt';
+    f.poseOverride = f.ch === 'orango' || f.ch === 'tubarao' ? 'roar' : f.ch === 'bieu' ? 'drive' : f.ch === 'nomad' ? 'bazooka' : f.ch === 'renngotti' ? 'tilt_s' : f.ch === 'aneninha' ? 'roar' : 'taunt';
     this.cine = { f, t: 0, dur: f.ch === 'caetano' ? 100 : f.ch === 'orango' ? 120 : 75 };
     this.moveBanner = { text: f.def.superName, color: f.def.color, t: 0, dur: 150 };
     this.flash = { c: f.def.glow, a: 0.8 };
@@ -1484,7 +1486,7 @@ export class Game {
   }
 
   private startSeq(kind: Seq['kind'], a: Fighter, d: Fighter) {
-    const dur = { puxao: 86, mordida: 78, engole: 100, superC: 215, superO: 215, superT: 150, superR: 170, superB: 160, superN: 150, superG: 155, moon: 74 }[kind];
+    const dur = { puxao: 86, mordida: 78, engole: 100, superC: 215, superO: 215, superT: 150, superR: 170, superB: 160, superN: 150, superG: 155, superA: 206, moon: 74 }[kind];
     this.seq = { kind, a, d, t: 0, dur, x0: d.x };
     a.state = 'seq';
     d.state = 'seq';
@@ -1496,7 +1498,7 @@ export class Game {
     a.crouch = d.crouch = false;
     a.turn = d.turn = 1;
     d.facing = (-a.facing) as 1 | -1;
-    d.comboHits = kind === 'superR' || kind === 'superG' || kind === 'moon' ? 0 : 1;
+    d.comboHits = kind === 'superR' || kind === 'superG' || kind === 'superA' || kind === 'moon' ? 0 : 1;
     d.comboDmg = 0;
     if (kind.startsWith('super')) {
       a.y = 0;
@@ -1610,6 +1612,8 @@ export class Game {
       this.updateSuperR(s);
     } else if (s.kind === 'moon') {
       this.updateMoon(s);
+    } else if (s.kind === 'superA') {
+      this.updateSuperA(s);
     } else if (s.kind === 'superG') {
       this.updateSuperG(s);
     } else if (s.kind === 'superB') {
@@ -1761,6 +1765,49 @@ export class Game {
       this.ring(a.x + f * 65, FLOOR_Y - 70, '#e2e8f0', 140, 20, 5);
       audio.whoosh(2);
       audio.tone(260, 0.6, 'triangle', 0.15, 1500);
+    }
+  }
+
+  private updateSuperA(s: Seq) {
+    const { a, d, t } = s;
+    const f = a.facing;
+    this.camOv = { x: (a.x + d.x) / 2, zoom: 1.02 };
+    this.camOvT = 2;
+    a.y = -Math.abs(Math.sin(t * Math.PI / 12)) * 8;
+    a.aura = a.glow = 1;
+    a.poseOverride = Math.floor(t / 12) % 2 ? 'dance1' : 'dance2';
+    d.poseOverride = t < 156 ? 'hit' : 'air';
+    if (t < 45) d.x += (a.x + f * 155 - d.x) * .12;
+    if (t === 1) audio.say('Yo soy de Bolivia!', 1.35, 1.05);
+    if (t <= 156 && t % 12 === 0) {
+      const notes = [392, 494, 587, 494, 440, 523, 659, 523];
+      audio.tone(notes[Math.floor(t / 12) % notes.length], .16, 'triangle', .08);
+      audio.noise(.045, .08, 1500, 'bandpass');
+    }
+    if (t >= 56 && t <= 136 && (t - 56) % 20 === 0) {
+      this.seqHit(a, d, 24, 1.1, a.def.glow);
+      d.x = a.x + f * (155 + (t - 56) * .65);
+      if (t === 56) this.text(d.x, FLOOR_Y - 190, '¡BOLIVIA!', a.def.glow, 25);
+    }
+    if (t === 156) {
+      s.x0 = d.x;
+      this.seqHit(a, d, 170, 4, a.def.glow);
+      this.flash = { c: '#fbcfe8', a: .85 };
+      this.shake = 35;
+      this.hitstop = 10;
+      this.text(d.x, FLOOR_Y - 180, 'YO SOY DE BOLIVIA!', '#fef08a', 39);
+      audio.boom(1.2);
+    }
+    if (t > 156 && t < 187) {
+      const u = (t - 156) / 31;
+      d.x = s.x0 + f * 200 * u;
+      d.y = -150 * Math.sin(u * Math.PI);
+      d.rotAdd = -u * Math.PI;
+    }
+    if (t >= 187) { d.y = 0; d.rotAdd = 0; d.poseOverride = 'down'; a.poseOverride = 'win'; }
+    if (t % 3 === 0) {
+      const colors = ['#ef4444', '#facc15', '#22c55e', '#ec4899'];
+      this.spark(a.x + f * rand(-150, 360), FLOOR_Y - rand(140, 260), colors[Math.floor(t / 3) % 4], 3, 3, 3, 36);
     }
   }
 

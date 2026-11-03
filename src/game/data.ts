@@ -1,10 +1,10 @@
 // Dados dos personagens: atributos, golpes (frame data) e poses do esqueleto.
 
-export const CHAR_IDS = ['caetano', 'orango', 'tubarao', 'rickzera', 'bieu', 'nomad', 'renngotti'] as const;
+export const CHAR_IDS = ['caetano', 'orango', 'tubarao', 'rickzera', 'bieu', 'nomad', 'renngotti', 'aneninha'] as const;
 export type CharId = (typeof CHAR_IDS)[number];
 
 export const CHAR_CATEGORIES = {
-  Streamers: ['rickzera', 'caetano', 'nomad', 'bieu', 'renngotti'],
+  Streamers: ['rickzera', 'caetano', 'nomad', 'bieu', 'renngotti', 'aneninha'],
   Especiais: ['tubarao', 'orango'],
   Viewers: [],
 } as const satisfies Record<string, readonly CharId[]>;
@@ -398,6 +398,29 @@ Object.assign(renngottiMoves, Object.fromEntries([
   mv('s3', { kind: 'special', rank: 9, startup: 17, active: 12, recovery: 30, whiff: 13, dmg: 65, hitstun: 28, blockstun: 17, kb: 13, kbBlock: 7, hb: [10, 300, 20, 190], hitstop: 9, shake: 12, power: 1.9, poses: ['shout_s', 'shout_a'], label: 'GRITO ALTO' }),
 ]));
 
+// ---------------------------------------------------------------- ANENINHA
+const aneninhaPoses: Record<string, Pose> = {
+  ...Object.fromEntries(Object.entries(caetanoPoses).map(([k, p]) => [k, { ...p }])),
+  idle: cp({ lean: -2, head: 3, fa1: 48, fa2: -78, ba1: 110, ba2: -60, fl1: 72, fl2: 98, bl1: 112, bl2: 86 }),
+  osasco_s: cp({ lean: -22, fa1: 75, fa2: -130, ba1: 100, ba2: -110 }),
+  osasco_a: cp({ lean: 30, fa1: -5, fa2: -2, ba1: 125, ba2: -100, fl1: 45, fl2: 90, bl1: 140, bl2: 105, mouth: 1 }),
+  paint_s: cp({ lean: 0, fa1: 45, fa2: -80, ba1: 100, ba2: -50 }),
+  paint_a: cp({ lean: 15, fa1: -12, fa2: 0, ba1: 115, ba2: -60, finger: 1 }),
+  shout_s: cp({ lean: -10, head: -12, fa1: -30, fa2: -80, ba1: -140, ba2: -90 }),
+  shout_a: cp({ lean: 18, head: 12, mouth: 1, fa1: -20, fa2: -80, ba1: -150, ba2: -95 }),
+  dance1: cp({ lean: -12, head: -5, fa1: -60, fa2: -120, ba1: -135, ba2: -165, fl1: 42, fl2: 110, bl1: 112, bl2: 87, mouth: 1 }),
+  dance2: cp({ lean: 12, head: -8, fa1: -125, fa2: -155, ba1: -40, ba2: -95, fl1: 76, fl2: 92, bl1: 143, bl2: 64, mouth: 1 }),
+  roar: cp({ lean: -8, head: -18, fa1: -60, fa2: -100, ba1: -135, ba2: -100, mouth: 1 }),
+  taunt: cp({ lean: -8, head: 4, fa1: -20, fa2: -10, ba1: 100, ba2: -70 }),
+  win: cp({ lean: -7, head: -8, fa1: -65, fa2: -120, ba1: -140, ba2: -155, fl1: 70, fl2: 96, bl1: 115, bl2: 84, mouth: 1 }),
+};
+const aneninhaMoves = copyNormals(.98, 0, 0);
+Object.assign(aneninhaMoves, Object.fromEntries([
+  mv('s1', { kind: 'special', rank: 9, startup: 14, active: 6, recovery: 22, whiff: 12, dmg: 95, hitstun: 28, blockstun: 16, kb: 9, kbBlock: 5, hb: [15, 150, 65, 160], launch: 6, launchVx: 5, hitstop: 12, shake: 13, power: 2.2, poses: ['osasco_s', 'osasco_a'], advance: [10, 21, 5], trail: 'fw', label: 'SOCO DE OSASCO' }),
+  mv('s2', { kind: 'special', rank: 9, startup: 17, active: 5, recovery: 25, whiff: 8, dmg: 20, hitstun: 16, blockstun: 9, kb: 3, kbBlock: 2, hb: [20, 145, 5, 145], hitstop: 5, shake: 3, power: 1, poses: ['paint_s', 'paint_a'], label: 'PICHAR MURO — OSASCO' }),
+  mv('s3', { kind: 'special', rank: 9, startup: 18, active: 8, recovery: 25, whiff: 10, dmg: 65, hitstun: 27, blockstun: 15, kb: 12, kbBlock: 7, hb: [10, 275, 15, 185], hitstop: 8, shake: 11, power: 1.8, poses: ['shout_s', 'shout_a'], label: 'GRITO ALTO' }),
+]));
+
 export const CHARS: Record<CharId, CharDef> = {
   caetano: {
     id: 'caetano',
@@ -540,6 +563,20 @@ export const CHARS: Record<CharId, CharDef> = {
     ],
     superName: 'TILT', quote: 'A MESA NÃO AGUENTOU O TILT.',
     bio: 'Moletom branco, óculos escuros e headset. Lança o rival à lua e controla a luta com microfone e voz.',
+  },
+  aneninha: {
+    id: 'aneninha', name: 'ANENINHA', short: 'ANENINHA', title: 'OSASCO NO CORAÇÃO, BOLÍVIA NO RITMO',
+    color: '#ec4899', color2: '#9d174d', glow: '#fbcfe8',
+    hp: 1000, walk: 4.3, walkBack: 3.5, jumpVy: 16.3, jumpVx: 5.1, dashVx: 10.8, dashDur: 15,
+    pushW: 27, hurtH: 169, crouchH: 105, moves: aneninhaMoves, poses: aneninhaPoses,
+    attrs: [{ label: 'VELOCIDADE', v: 4 }, { label: 'FORÇA', v: 3 }, { label: 'ALCANCE', v: 4 }, { label: 'RESISTÊNCIA', v: 3 }, { label: 'MOBILIDADE', v: 4 }],
+    specials: [
+      { key: 'U', name: 'SOCO DE OSASCO', desc: 'Soco com avanço que lança e abre combos.' },
+      { key: 'I', name: 'PICHAR MURO PARA REPRESENTAR OSASCO', desc: 'Pinta um muro que pressiona com até três acertos. Pode ser defendido ou saltado.' },
+      { key: 'O', name: 'GRITO ALTO', desc: 'Onda de voz frontal que interrompe e empurra. Pode ser defendida.' },
+    ],
+    superName: 'YO SOY DE BOLIVIA', quote: 'OSASCO NO CORAÇÃO, BOLÍVIA NO RITMO!',
+    bio: 'Capuz amarelo, cachos e saia rosa bordada. Junta pressão de Osasco, voz forte e uma horda de dançarinas.',
   },
 };
 

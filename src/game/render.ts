@@ -2,7 +2,7 @@
 import type { Game, Fighter, Particle } from './engine';
 import { settings } from './engine';
 import { Stage, W, H, FLOOR_Y } from './stage';
-import { drawRig, drawPortrait, drawHead } from './rig';
+import { drawRig, drawPortrait, drawHead, drawBolivianDancer } from './rig';
 import { keyLabel } from './input';
 
 const FONT = "'Russo One','Impact','Arial Black','Segoe UI',sans-serif";
@@ -160,13 +160,20 @@ function drawFx(ctx: CanvasRenderingContext2D, g: Game, f: Fighter, time: number
     if (f.ch === 'bieu' && m.id === 's3' && t >= m.startup && t < m.startup + m.active + 8) {
       spear(ctx, p.wF.x + 10, p.wF.y, p.wF.x + 100, 40, '#c084fc');
     }
-    if (f.ch === 'renngotti' && m.id === 's3' && t >= m.startup - 2 && t < m.startup + m.active + 6) {
-      ctx.save();ctx.globalCompositeOperation='lighter';ctx.strokeStyle='#e5e7eb';
+    if ((f.ch === 'renngotti' || f.ch === 'aneninha') && m.id === 's3' && t >= m.startup - 2 && t < m.startup + m.active + 6) {
+      ctx.save();ctx.globalCompositeOperation='lighter';ctx.strokeStyle=f.def.glow;
       for(let i=0;i<6;i++) {
         const r=35+i*40+(time*3%35);ctx.lineWidth=5-i*.6;ctx.globalAlpha=.8-i*.1;
         ctx.beginPath();ctx.ellipse(p.head.x+18,p.head.y+10,r,r*.65,0,-.7,.7);ctx.stroke();
       }
       ctx.restore();
+    }
+    if (f.ch === 'aneninha' && m.id === 's1' && t >= m.startup - 2 && t < m.startup + m.active + 5) {
+      orb(ctx,p.wF.x+10,p.wF.y,36,glow,.8);
+      spear(ctx,p.wF.x,p.wF.y,p.wF.x+100,18,col);
+    }
+    if (f.ch === 'aneninha' && m.id === 's2' && t >= m.startup - 2 && t < m.startup + m.active + 6) {
+      spear(ctx,p.wF.x+10,p.wF.y,p.wF.x+70,25,col);
     }
     if (m.kind === 'super' && t % 2 === 0) orb(ctx, p.hip.x - 20, p.hip.y - 30, 70, glow, 0.5);
   }
@@ -335,6 +342,32 @@ function heart(ctx: CanvasRenderingContext2D, x: number, y: number, size: number
   ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.stroke(); ctx.restore();
 }
 
+function drawDanceHorde(ctx:CanvasRenderingContext2D,g:Game,front:boolean) {
+  const s=g.seq;
+  if(!s || s.kind!=='superA')return;
+  const t=s.t,f=s.a.facing;
+  const enter=Math.min(1,Math.max(0,(t-8)/52));
+  const leave=t>184?(t-184)/22:0;
+  const count=front?4:6;
+  for(let i=0;i<count;i++) {
+    const start=front?-255:-260;
+    const spacing=front?190:112;
+    const x=s.a.x+f*(start+i*spacing-(1-enter)*650+leave*720);
+    const y=FLOOR_Y+(front?17:-17);
+    const scale=front?.86:.73;
+    ctx.save();ctx.globalAlpha=front?1:.9;
+    drawBolivianDancer(ctx,x,y,scale,t+i*7,f<0,i+(front?1:0));
+    if(!front && i%2===0) {
+      ctx.strokeStyle='#4a2b38';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x-f*22,y-145);ctx.lineTo(x-f*22,y-216);ctx.stroke();
+      for(let stripe=0;stripe<3;stripe++) {
+        ctx.fillStyle=['#dc2626','#facc15','#16a34a'][stripe];
+        ctx.fillRect(x-f*22,y-216+stripe*9+Math.sin(t*.1+i)*3,36*f,9);
+      }
+    }
+    ctx.restore();
+  }
+}
+
 function drawVehicles(ctx: CanvasRenderingContext2D, g: Game) {
   const s = g.seq;
   if (s?.kind === 'moon' && s.t > 20) {
@@ -388,7 +421,7 @@ function drawProjectiles(ctx: CanvasRenderingContext2D, g: Game) {
     const facing = shot.vx >= 0 ? 1 : -1;
     const color = g.f[shot.owner].def.glow;
     ctx.save(); ctx.translate(shot.x, FLOOR_Y + shot.y); ctx.scale(facing, 1);
-    if (shot.kind !== 'spray') {
+    if (shot.kind !== 'spray' && shot.kind !== 'osasco') {
       const tail = ctx.createLinearGradient(-85, 0, 10, 0);
       tail.addColorStop(0, color + '00'); tail.addColorStop(1, color + 'bb');
       ctx.fillStyle = tail; ctx.fillRect(-85, -6, 85, 12);
@@ -412,6 +445,21 @@ function drawProjectiles(ctx: CanvasRenderingContext2D, g: Game) {
       }
       ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5;
       ctx.beginPath(); ctx.moveTo(-38, 0); ctx.lineTo(35, 0); ctx.stroke();
+    } else if (shot.kind === 'osasco') {
+      const rise=Math.min(1,(shot.age??0)/8);
+      ctx.scale(1,rise);ctx.globalAlpha=Math.min(1,shot.life/18);
+      ctx.fillStyle='#81717e';ctx.strokeStyle='#463342';ctx.lineWidth=2;
+      ctx.beginPath();ctx.roundRect(-53,-63,106,126,3);ctx.fill();ctx.stroke();
+      ctx.strokeStyle='#b0a1ad';ctx.lineWidth=1.5;
+      for(let row=0;row<6;row++) {
+        const y=-63+row*21;ctx.beginPath();ctx.moveTo(-53,y);ctx.lineTo(53,y);ctx.stroke();
+        for(let col=-1;col<3;col++) {const x=-53+col*42+(row%2?21:0);if(x>-53&&x<53){ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x,y+21);ctx.stroke();}}
+      }
+      ctx.save();ctx.rotate(-.07);ctx.fillStyle='#ec4899';ctx.strokeStyle='#fbcfe8';ctx.lineWidth=1;
+      ctx.font='italic 900 21px sans-serif';ctx.textAlign='center';ctx.strokeText('OSASCO',0,10);ctx.fillText('OSASCO',0,10);
+      ctx.strokeStyle='#ec4899';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(-25,-15);ctx.lineTo(-30,-38);ctx.lineTo(-11,-26);ctx.lineTo(0,-48);ctx.lineTo(11,-26);ctx.lineTo(30,-38);ctx.lineTo(25,-15);ctx.closePath();ctx.stroke();
+      for(let i=0;i<5;i++){ctx.beginPath();ctx.moveTo(-35+i*17,16);ctx.lineTo(-35+i*17,27+(i%3)*8);ctx.stroke();}ctx.restore();
+      heart(ctx,28,40,9,'#ec4899');
     } else if (shot.kind === 'microphone') {
       ctx.rotate((shot.age??g.tick)*.22);
       ctx.fillStyle='#1f2937';ctx.strokeStyle='#cbd5e1';ctx.lineWidth=2;
@@ -918,7 +966,7 @@ function drawCine(ctx: CanvasRenderingContext2D, g: Game) {
     ctx.save();
     ctx.translate(W / 2, 128);
     ctx.scale(s, s);
-    label(ctx, f.ch === 'orango' ? 'GRAAAAAAWRRR!!!' : f.ch === 'tubarao' ? 'FISCALIZAÇÃO TOTAL!' : f.ch === 'bieu' ? 'PRESTÍGIO NAS RUAS!' : f.ch === 'nomad' ? 'BEM-VINDO À ARENA!' : f.ch === 'renngotti' ? 'O TILT É INEVITÁVEL!' : 'TRANSFERÊNCIA EM 6X!', 0, 0, 46, f.def.glow, f.def.color2, 'center', -0.18, 12);
+    label(ctx, f.ch === 'orango' ? 'GRAAAAAAWRRR!!!' : f.ch === 'tubarao' ? 'FISCALIZAÇÃO TOTAL!' : f.ch === 'bieu' ? 'PRESTÍGIO NAS RUAS!' : f.ch === 'nomad' ? 'BEM-VINDO À ARENA!' : f.ch === 'renngotti' ? 'O TILT É INEVITÁVEL!' : f.ch === 'aneninha' ? '¡YO SOY DE BOLIVIA!' : 'TRANSFERÊNCIA EM 6X!', 0, 0, 46, f.def.glow, f.def.color2, 'center', -0.18, 12);
     ctx.restore();
   }
   ctx.restore();
@@ -977,6 +1025,7 @@ export function render(ctx: CanvasRenderingContext2D, g: Game, stage: Stage, tim
     ctx.ellipse(f.x, FLOOR_Y + 3, (f.def.pushW + 26) * s * (f.state === 'down' ? 1.8 : 1), 9 * s, 0, 0, Math.PI * 2);
     ctx.fill();
   }
+  drawDanceHorde(ctx,g,false);
   for (const f of g.f) if (!f.hidden) drawTrail(ctx, f);
   const front = (f: Fighter) => (f.state === 'attack' || f.state === 'seq' || f.state === 'cine' || f.state === 'win' ? 1 : 0);
   const order = front(g.f[0]) > front(g.f[1]) ? [g.f[1], g.f[0]] : [g.f[0], g.f[1]];
@@ -995,6 +1044,7 @@ export function render(ctx: CanvasRenderingContext2D, g: Game, stage: Stage, tim
       }
     }
   }
+  drawDanceHorde(ctx,g,true);
   drawVehicles(ctx, g);
   drawProjectiles(ctx, g);
   for (const p of g.parts) drawParticle(ctx, p);
