@@ -127,3 +127,8 @@ input[type='range'] {
   transform: skewX(-14deg);
   box-shadow: none;
 }
+
+.music-eq { display:flex; align-items:center; gap:2px; height:17px; width:21px; }
+.music-eq span { display:block; width:3px; height:5px; background:#e879f9; transform-origin:center; }
+.music-eq.playing span { animation: music-level .7s ease-in-out infinite alternate; }
+@keyframes music-level { 0% { height:4px; } 50% { height:16px; } 100% { height:8px; } }

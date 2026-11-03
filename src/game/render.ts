@@ -94,7 +94,7 @@ function drawFx(ctx: CanvasRenderingContext2D, g: Game, f: Fighter, time: number
   if (f.state === 'attack' && m) {
     const t = f.moveT;
     if (m.id === 's2' && f.ch === 'caetano' && t >= 2 && t < m.startup + m.active + 4) {
-      spear(ctx, p.wF.x + 6, p.wF.y, Math.min(m.hb[1] + 20, p.wF.x + 150), 14, '#c084fc');
+      spear(ctx, p.wF.x + 6, p.wF.y, Math.min(m.hb[1] + 20, p.wF.x + 150), 14, col);
       orb(ctx, p.wF.x + 22, p.wF.y, 20 + Math.sin(time) * 3, '#e9d5ff');
     }
     if (m.id === 's1' && f.ch === 'orango') {
@@ -105,7 +105,7 @@ function drawFx(ctx: CanvasRenderingContext2D, g: Game, f: Fighter, time: number
       }
     }
     if (m.id === 's3' && f.ch === 'caetano') {
-      if (t < m.startup) orb(ctx, p.wB.x, p.wB.y, 6 + 34 * (t / m.startup), '#c084fc', 0.6 + 0.4 * (t / m.startup));
+      if (t < m.startup) orb(ctx, p.wB.x, p.wB.y, 6 + 34 * (t / m.startup), col, 0.6 + 0.4 * (t / m.startup));
       else if (t < m.startup + m.active + 6) orb(ctx, p.wB.x + 8, p.wB.y, 60, '#e9d5ff');
     }
     if (m.id === 's1' && f.ch === 'caetano' && t >= m.startup - 3 && t < m.startup + m.active + 4) {
@@ -159,6 +159,14 @@ function drawFx(ctx: CanvasRenderingContext2D, g: Game, f: Fighter, time: number
     }
     if (f.ch === 'bieu' && m.id === 's3' && t >= m.startup && t < m.startup + m.active + 8) {
       spear(ctx, p.wF.x + 10, p.wF.y, p.wF.x + 100, 40, '#c084fc');
+    }
+    if (f.ch === 'renngotti' && m.id === 's3' && t >= m.startup - 2 && t < m.startup + m.active + 6) {
+      ctx.save();ctx.globalCompositeOperation='lighter';ctx.strokeStyle='#e5e7eb';
+      for(let i=0;i<6;i++) {
+        const r=35+i*40+(time*3%35);ctx.lineWidth=5-i*.6;ctx.globalAlpha=.8-i*.1;
+        ctx.beginPath();ctx.ellipse(p.head.x+18,p.head.y+10,r,r*.65,0,-.7,.7);ctx.stroke();
+      }
+      ctx.restore();
     }
     if (m.kind === 'super' && t % 2 === 0) orb(ctx, p.hip.x - 20, p.hip.y - 30, 70, glow, 0.5);
   }
@@ -329,6 +337,25 @@ function heart(ctx: CanvasRenderingContext2D, x: number, y: number, size: number
 
 function drawVehicles(ctx: CanvasRenderingContext2D, g: Game) {
   const s = g.seq;
+  if (s?.kind === 'moon' && s.t > 20) {
+    ctx.save();ctx.globalAlpha=Math.min(.75,(s.t-20)/18);
+    const x=s.d.x+s.a.facing*20,y=FLOOR_Y-355;
+    const glow=ctx.createRadialGradient(x,y,8,x,y,90);glow.addColorStop(0,'#f1f5f966');glow.addColorStop(1,'#f1f5f900');
+    ctx.fillStyle=glow;ctx.fillRect(x-90,y-90,180,180);
+    ctx.fillStyle='#d1d5db';ctx.beginPath();ctx.arc(x,y,35,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#9ca3af';for(let i=0;i<5;i++){ctx.beginPath();ctx.arc(x+Math.cos(i*2)*20,y+Math.sin(i*2)*19,3+i,0,Math.PI*2);ctx.fill();}ctx.restore();
+  }
+  if (s?.kind === 'superG' && s.t >= 65 && s.t < 96) {
+    const u=Math.min(1,(s.t-50)/15);
+    ctx.save();ctx.translate(s.d.x,FLOOR_Y-210+u*180);ctx.rotate((1-u)*.25*s.a.facing);
+    ctx.fillStyle='#78503a';ctx.strokeStyle='#281c17';ctx.lineWidth=4;
+    ctx.beginPath();ctx.roundRect(-105,-15,210,30,3);ctx.fill();ctx.stroke();
+    ctx.fillStyle='#a47753';ctx.fillRect(-99,-12,198,8);
+    ctx.fillStyle='#4b3428';ctx.fillRect(-87,14,12,50);ctx.fillRect(75,14,12,50);
+    ctx.strokeStyle='#b38b66';ctx.lineWidth=2;for(let i=0;i<4;i++){ctx.beginPath();ctx.moveTo(-92,-5+i*6);ctx.lineTo(93,-7+i*6);ctx.stroke();}
+    if(s.t>65){ctx.strokeStyle='#e2d3c3';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(-10,-15);ctx.lineTo(5,-4);ctx.lineTo(-4,3);ctx.lineTo(11,15);ctx.stroke();}
+    ctx.restore();
+  }
   if (!s || s.kind !== 'superB' || s.t >= 112) return;
   const { a, t } = s;
   ctx.save(); ctx.translate(a.x + a.facing * 45, FLOOR_Y - 8); ctx.scale(a.facing, 1);
@@ -385,6 +412,14 @@ function drawProjectiles(ctx: CanvasRenderingContext2D, g: Game) {
       }
       ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5;
       ctx.beginPath(); ctx.moveTo(-38, 0); ctx.lineTo(35, 0); ctx.stroke();
+    } else if (shot.kind === 'microphone') {
+      ctx.rotate((shot.age??g.tick)*.22);
+      ctx.fillStyle='#1f2937';ctx.strokeStyle='#cbd5e1';ctx.lineWidth=2;
+      ctx.beginPath();ctx.roundRect(-6,-4,12,36,4);ctx.fill();ctx.stroke();
+      ctx.fillStyle='#4b5563';ctx.beginPath();ctx.ellipse(0,-13,12,16,0,0,Math.PI*2);ctx.fill();ctx.stroke();
+      ctx.strokeStyle='#cbd5e1';ctx.lineWidth=1;
+      for(let i=-2;i<3;i++){ctx.beginPath();ctx.moveTo(-10,-13+i*4);ctx.lineTo(10,-13+i*4);ctx.stroke();}
+      ctx.fillStyle='#9ca3af';ctx.fillRect(-2,4,4,7);
     } else if (shot.kind === 'rat') {
       const hop = Math.sin(g.tick * 0.8) * 3;ctx.translate(0,hop);
       ctx.strokeStyle='#d9a8bb';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(-17,3);ctx.bezierCurveTo(-55,-8,-40,20,-68,11);ctx.stroke();
@@ -537,9 +572,9 @@ function drawBar(ctx: CanvasRenderingContext2D, g: Game, f: Fighter, side: 0 | 1
   const gr = ctx.createLinearGradient(0, y, 0, y + h);
   const low = ratio < 0.25;
   if (f.ch === 'caetano') {
-    gr.addColorStop(0, low ? '#ff9ab0' : '#e9b5ff');
-    gr.addColorStop(0.5, low ? '#ef4444' : '#a855f7');
-    gr.addColorStop(1, low ? '#7f1d1d' : '#5b21b6');
+    gr.addColorStop(0, low ? '#ff9ab0' : f.def.glow);
+    gr.addColorStop(0.5, low ? '#ef4444' : f.def.color);
+    gr.addColorStop(1, low ? '#7f1d1d' : f.def.color2);
   } else if (f.ch === 'orango') {
     gr.addColorStop(0, low ? '#ffe28a' : '#ffb27a');
     gr.addColorStop(0.5, low ? '#ef4444' : '#ef4a2a');
@@ -627,8 +662,8 @@ function drawMeter(ctx: CanvasRenderingContext2D, g: Game, f: Fighter, side: 0 |
   ctx.clip();
   const gr = ctx.createLinearGradient(bx, 0, bx + w, 0);
   if (f.ch === 'caetano') {
-    gr.addColorStop(0, '#6d28d9');
-    gr.addColorStop(1, full ? '#f5d0fe' : '#c084fc');
+    gr.addColorStop(0, f.def.color2);
+    gr.addColorStop(1, full ? f.def.glow : f.def.color);
   } else if (f.ch === 'orango') {
     gr.addColorStop(0, '#991b1b');
     gr.addColorStop(1, full ? '#fecaca' : '#fb923c');
@@ -883,7 +918,7 @@ function drawCine(ctx: CanvasRenderingContext2D, g: Game) {
     ctx.save();
     ctx.translate(W / 2, 128);
     ctx.scale(s, s);
-    label(ctx, f.ch === 'orango' ? 'GRAAAAAAWRRR!!!' : f.ch === 'tubarao' ? 'FISCALIZAÇÃO TOTAL!' : f.ch === 'bieu' ? 'PRESTÍGIO NAS RUAS!' : f.ch === 'nomad' ? 'BEM-VINDO À ARENA!' : 'TRANSFERÊNCIA EM 6X!', 0, 0, 46, f.def.glow, f.def.color2, 'center', -0.18, 12);
+    label(ctx, f.ch === 'orango' ? 'GRAAAAAAWRRR!!!' : f.ch === 'tubarao' ? 'FISCALIZAÇÃO TOTAL!' : f.ch === 'bieu' ? 'PRESTÍGIO NAS RUAS!' : f.ch === 'nomad' ? 'BEM-VINDO À ARENA!' : f.ch === 'renngotti' ? 'O TILT É INEVITÁVEL!' : 'TRANSFERÊNCIA EM 6X!', 0, 0, 46, f.def.glow, f.def.color2, 'center', -0.18, 12);
     ctx.restore();
   }
   ctx.restore();

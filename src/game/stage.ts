@@ -1,4 +1,15 @@
-// Arena: DOJO DO DESTINO — camadas com parallax, público, lanternas e piso de madeira.
+// Arenas em camadas com parallax; a geometria do combate é igual em todos os mapas.
+import { buildOutdoorScene } from './stage-scenes';
+export const STAGE_IDS = ['neto', 'dojo', 'liberdade', 'curitiba', 'piaui', 'planalto'] as const;
+export type StageId = (typeof STAGE_IDS)[number];
+export const STAGES: Record<StageId, { id: StageId; name: string; subtitle: string; accent: string }> = {
+  neto: { id: 'neto', name: 'Neto Supermercados', subtitle: 'OFERTAS E COMBATE NA CALÇADA', accent: '#3b82f6' },
+  dojo: { id: 'dojo', name: 'Dojo Senbukan', subtitle: 'O DOJO CLÁSSICO DO DEDILHO', accent: '#a855f7' },
+  liberdade: { id: 'liberdade', name: 'Liberdade SP', subtitle: 'LANTERNAS NO CORAÇÃO DE SÃO PAULO', accent: '#ef4444' },
+  curitiba: { id: 'curitiba', name: 'Curitiba', subtitle: 'JARDIM BOTÂNICO E ARAUCÁRIAS', accent: '#4ade80' },
+  piaui: { id: 'piaui', name: 'Piauí', subtitle: 'SERRA, CAATINGA E SOL', accent: '#fb923c' },
+  planalto: { id: 'planalto', name: 'Palácio do Planalto', subtitle: 'A ARENA MODERNISTA DE BRASÍLIA', accent: '#38bdf8' },
+};
 
 export const W = 960;
 export const H = 540;
@@ -325,18 +336,27 @@ interface Spectator {
 }
 
 export class Stage {
-  sky = buildSky();
-  mountains = buildMountains();
-  hall = buildHall();
-  floor = buildFloor();
+  sky: HTMLCanvasElement;
+  mountains: HTMLCanvasElement;
+  hall: HTMLCanvasElement;
+  floor: HTMLCanvasElement;
   crowd: Spectator[] = [];
   hype = 0;
 
-  constructor() {
+  constructor(public readonly id: StageId = 'dojo') {
+    if (id === 'dojo') {
+      this.sky = buildSky(); this.mountains = buildMountains(); this.hall = buildHall(); this.floor = buildFloor();
+      const sign = this.hall.getContext('2d')!;
+      sign.fillStyle = '#170d22dd'; sign.fillRect(617, 52, 366, 39);
+      sign.font = "900 23px 'Russo One',Impact,sans-serif"; sign.textAlign = 'center'; sign.fillStyle = '#f7dca9'; sign.fillText('DOJO SENBUKAN', 800, 80);
+    } else {
+      const scene = buildOutdoorScene(id, STAGE_W, H);
+      this.sky = scene.sky; this.mountains = scene.mountains; this.hall = scene.hall; this.floor = scene.floor;
+    }
     const skins = ['#f1c8a0', '#c98d5c', '#8d5a3a', '#e8b58a', '#6b4430'];
     const hairs = ['#111', '#2a1a10', '#4a3020', '#999', '#222'];
-    for (let i = 0; i < 64; i++) {
-      const x = 20 + (i / 64) * 1560 + rnd() * 14;
+    for (let i = 0; i < (id === 'dojo' ? 64 : 24); i++) {
+      const x = 20 + (i / (id === 'dojo' ? 64 : 24)) * 1560 + rnd() * 14;
       const t = x / STAGE_W;
       const pal = t < 0.4 ? ['#7c3aed', '#a855f7', '#5b21b6', '#e9d5ff', '#4c1d95'] : t > 0.6 ? ['#dc2626', '#ef4444', '#991b1b', '#fecaca', '#7f1d1d'] : ['#f59e0b', '#e5e7eb', '#1f2937', '#fb923c', '#16a34a'];
       this.crowd.push({
@@ -369,7 +389,7 @@ export class Stage {
     this.layer(ctx, camX, zoom, 0.35);
     ctx.drawImage(this.hall, 0, 0);
     // lanternas
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; this.id === 'dojo' && i < 10; i++) {
       const x = 90 + i * 168;
       const t = x / STAGE_W;
       const col = t < 0.42 ? '#a855f7' : t > 0.58 ? '#ef4444' : '#f97316';
@@ -479,9 +499,10 @@ export class Stage {
     };
     ctx.save();
     ctx.globalCompositeOperation = 'lighter';
-    pool(480, '#8b3fe0', 0.45);
-    pool(1120, '#e0302f', 0.45);
-    pool(800, '#ffb060', 0.22);
+    const accent = STAGES[this.id].accent;
+    pool(480, this.id === 'dojo' ? '#8b3fe0' : accent, this.id === 'dojo' ? 0.45 : 0.16);
+    pool(1120, this.id === 'dojo' ? '#e0302f' : accent, this.id === 'dojo' ? 0.45 : 0.16);
+    pool(800, this.id === 'dojo' || this.id === 'piaui' ? '#ffb060' : '#d6f5ff', 0.15);
     if (tint) pool(camX, tint, 0.6 * tintAmt);
     ctx.restore();
   }

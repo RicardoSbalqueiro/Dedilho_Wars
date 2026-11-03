@@ -7,6 +7,7 @@ import { audio } from './audio';
 import { computeRig, lerpPose } from './rig';
 import type { Rig, P2 } from './rig';
 import { FLOOR_Y } from './stage';
+import type { StageId } from './stage';
 import { aiAct, aiMashRate, newAI } from './ai';
 import type { AIState } from './ai';
 
@@ -22,6 +23,7 @@ export interface GameConfig {
   mode: Mode;
   p1: CharId;
   p2: CharId;
+  stage?: StageId;
   difficulty: Difficulty;
   bindings: [Bindings, Bindings];
 }
@@ -104,7 +106,7 @@ export interface Fighter {
 }
 
 interface Seq {
-  kind: 'puxao' | 'mordida' | 'engole' | 'superC' | 'superO' | 'superT' | 'superR' | 'superB' | 'superN';
+  kind: 'puxao' | 'mordida' | 'engole' | 'superC' | 'superO' | 'superT' | 'superR' | 'superB' | 'superN' | 'superG' | 'moon';
   a: Fighter;
   d: Fighter;
   t: number;
@@ -114,13 +116,14 @@ interface Seq {
 
 export interface Projectile {
   owner: 0 | 1;
-  kind: 'franco' | 'pix' | 'rat' | 'spray' | 'burger' | 'bullet' | 'boomerang' | 'bazooka';
+  kind: 'franco' | 'pix' | 'rat' | 'spray' | 'burger' | 'bullet' | 'boomerang' | 'bazooka' | 'microphone';
   age?: number;
   returning?: boolean;
   hitMask?: number;
   hitCount?: number;
   lastHitAt?: number;
   radius?: number;
+  vy?: number;
   x: number;
   y: number;
   vx: number;
@@ -1014,16 +1017,17 @@ export class Game {
     if (f.ch === 'rickzera') return m.id === 's1' ? 'franco' : m.id === 's2' ? 'pix' : null;
     if (f.ch === 'bieu') return m.id === 's2' ? 'rat' : m.id === 's3' ? 'spray' : null;
     if (f.ch === 'nomad') return m.id === 's1' ? 'burger' : m.id === 's2' ? 'bullet' : m.id === 's3' ? 'boomerang' : null;
+    if (f.ch === 'renngotti') return m.id === 's2' ? 'microphone' : null;
     return null;
   }
 
   private spawnProjectile(f: Fighter, m: Move) {
     const kind = this.projectileKind(f, m);
     if (!kind) return;
-    const speed = { franco: 12, pix: 16, rat: 8, spray: 0, burger: 9, bullet: 20, boomerang: 11, bazooka: 20 }[kind];
-    const y = kind === 'rat' ? -18 : kind === 'bullet' ? -145 : kind === 'spray' ? -70 : -104;
+    const speed = { franco: 12, pix: 16, rat: 8, spray: 0, burger: 9, bullet: 20, boomerang: 11, bazooka: 20, microphone: 11 }[kind];
+    const y = kind === 'rat' ? -18 : kind === 'bullet' ? -145 : kind === 'spray' ? -70 : kind === 'microphone' ? -115 : -104;
     const radius = kind === 'spray' ? 62 : kind === 'rat' ? 14 : kind === 'bullet' ? 6 : kind === 'burger' ? 25 : 20;
-    this.projectiles.push({ owner: f.idx, kind, x: f.x + f.facing * (kind === 'spray' ? 115 : 65), y, vx: f.facing * speed, life: kind === 'spray' ? 64 : kind === 'boomerang' ? 110 : 95, serial: f.serial, move: m, age: 0, radius });
+    this.projectiles.push({ owner: f.idx, kind, x: f.x + f.facing * (kind === 'spray' ? 115 : 65), y, vx: f.facing * speed, life: kind === 'spray' ? 64 : kind === 'boomerang' ? 110 : 95, serial: f.serial, move: m, age: 0, radius, vy: kind === 'microphone' ? -2.4 : undefined });
     audio.tone(kind === 'bullet' ? 220 : kind === 'rat' ? 900 : 640, 0.1, 'triangle', 0.14, kind === 'bullet' ? 70 : 1500);
     this.spark(f.x + f.facing * 60, FLOOR_Y + y, f.def.glow, 5, 4, 2, 12);
   }
@@ -1045,6 +1049,10 @@ export class Game {
         }
       }
       p.x += p.vx;
+      if (p.kind === 'microphone') {
+        p.vy = (p.vy ?? 0) + 0.075;
+        p.y += p.vy;
+      }
       p.life--;
       if (p.life <= 0 || p.x < -40 || p.x > 1640) return false;
       const d = this.opp(a);
@@ -1191,7 +1199,7 @@ export class Game {
     // --- agarrões ---
     if (m.grab) {
       if (tracked) a.connected = true;
-      if (m.grab === 'super') this.startSeq(({ caetano: 'superC', orango: 'superO', tubarao: 'superT', rickzera: 'superR', bieu: 'superB', nomad: 'superN' } as const)[a.ch], a, d);
+      if (m.grab === 'super') this.startSeq(({ caetano: 'superC', orango: 'superO', tubarao: 'superT', rickzera: 'superR', bieu: 'superB', nomad: 'superN', renngotti: 'superG' } as const)[a.ch], a, d);
       else this.startSeq(m.grab, a, d);
       return;
     }
@@ -1393,7 +1401,7 @@ export class Game {
     f.turn = 1;
     f.glow = 1;
     f.aura = 1;
-    f.poseOverride = f.ch === 'orango' || f.ch === 'tubarao' ? 'roar' : f.ch === 'bieu' ? 'drive' : f.ch === 'nomad' ? 'bazooka' : 'taunt';
+    f.poseOverride = f.ch === 'orango' || f.ch === 'tubarao' ? 'roar' : f.ch === 'bieu' ? 'drive' : f.ch === 'nomad' ? 'bazooka' : f.ch === 'renngotti' ? 'tilt_s' : 'taunt';
     this.cine = { f, t: 0, dur: f.ch === 'caetano' ? 100 : f.ch === 'orango' ? 120 : 75 };
     this.moveBanner = { text: f.def.superName, color: f.def.color, t: 0, dur: 150 };
     this.flash = { c: f.def.glow, a: 0.8 };
@@ -1476,7 +1484,7 @@ export class Game {
   }
 
   private startSeq(kind: Seq['kind'], a: Fighter, d: Fighter) {
-    const dur = { puxao: 86, mordida: 78, engole: 100, superC: 215, superO: 215, superT: 150, superR: 170, superB: 160, superN: 150 }[kind];
+    const dur = { puxao: 86, mordida: 78, engole: 100, superC: 215, superO: 215, superT: 150, superR: 170, superB: 160, superN: 150, superG: 155, moon: 74 }[kind];
     this.seq = { kind, a, d, t: 0, dur, x0: d.x };
     a.state = 'seq';
     d.state = 'seq';
@@ -1488,7 +1496,7 @@ export class Game {
     a.crouch = d.crouch = false;
     a.turn = d.turn = 1;
     d.facing = (-a.facing) as 1 | -1;
-    d.comboHits = kind === 'superR' ? 0 : 1;
+    d.comboHits = kind === 'superR' || kind === 'superG' || kind === 'moon' ? 0 : 1;
     d.comboDmg = 0;
     if (kind.startsWith('super')) {
       a.y = 0;
@@ -1600,6 +1608,10 @@ export class Game {
       this.updateSuperT(s);
     } else if (s.kind === 'superR') {
       this.updateSuperR(s);
+    } else if (s.kind === 'moon') {
+      this.updateMoon(s);
+    } else if (s.kind === 'superG') {
+      this.updateSuperG(s);
     } else if (s.kind === 'superB') {
       this.updateSuperB(s);
     } else if (s.kind === 'superN') {
@@ -1721,6 +1733,70 @@ export class Game {
       d.rotAdd = -u * Math.PI;
       d.poseOverride = t > 152 ? 'down' : 'air';
       if (t > 152) a.poseOverride = 'win';
+    }
+  }
+
+  private updateMoon(s: Seq) {
+    const { a, d, t } = s;
+    const f = a.facing;
+    this.camOv = { x: (a.x + d.x) / 2, zoom: t < 25 ? 1.3 : 0.9 };
+    this.camOvT = 2;
+    if (t < 25) {
+      a.poseOverride = 'grabHold';
+      d.poseOverride = 'grabbed';
+      d.x += (a.x + f * 78 - d.x) * 0.3;
+      d.y = 0;
+    } else {
+      a.poseOverride = t < 45 ? 'moon_a' : 'idle';
+      d.poseOverride = 'air';
+      const u = t - 25;
+      d.x = a.x + f * (80 + u * 0.9);
+      d.y = -14 * u + 0.18 * u * u;
+      d.rotAdd = -Math.min(1, u / 35) * Math.PI * 2;
+      if (t % 5 === 0) this.spark(d.x, FLOOR_Y + d.y - 70, '#e2e8f0', 4, 4, 3, 16);
+    }
+    if (t === 25) {
+      this.seqHit(a, d, a.def.moves.s1.dmg, 2.4, a.def.glow);
+      this.text(d.x, FLOOR_Y - 200, 'PRA LUA!', '#f8fafc', 42);
+      this.ring(a.x + f * 65, FLOOR_Y - 70, '#e2e8f0', 140, 20, 5);
+      audio.whoosh(2);
+      audio.tone(260, 0.6, 'triangle', 0.15, 1500);
+    }
+  }
+
+  private updateSuperG(s: Seq) {
+    const { a, d, t } = s;
+    const f = a.facing;
+    this.camOv = { x: (a.x + d.x) / 2, zoom: t < 65 ? 1.3 : 1.15 };
+    this.camOvT = 2;
+    a.aura = a.glow = 1;
+    a.poseOverride = t < 65 ? 'tilt_s' : t < 105 ? 'tilt_a' : 'win';
+    d.poseOverride = t < 65 ? 'grabbed' : t < 95 ? 'hitLow' : 'down';
+    if (t < 65) d.x = a.x + f * 120;
+    if (t >= 35 && t < 65) this.shake = Math.max(this.shake, 3 + (t - 35) * 0.2);
+    if (t === 40) audio.tone(100, 0.5, 'sawtooth', 0.2, 400);
+    if (t === 65) {
+      s.x0 = d.x;
+      this.seqHit(a, d, 315, 4.5, '#f8fafc');
+      this.flash = { c: '#ffffff', a: 0.95 };
+      this.expl = { t: 0, color: '#cbd5e1', dur: 50 };
+      this.hitstop = 12;
+      this.shake = 48;
+      this.text(d.x, FLOOR_Y - 165, 'TILT!', '#f8fafc', 64);
+      for (let i = 0; i < 6; i++) this.ring(d.x, FLOOR_Y - 55, i % 2 ? '#e2e8f0' : '#64748b', 130 + i * 65, 25 + i * 3, 8);
+      this.dust(d.x, FLOOR_Y, 22);
+      this.spark(d.x, FLOOR_Y - 70, '#d6b78b', 38, 13, 5, 32);
+      audio.boom(1.7);
+    }
+    if (t >= 65 && t < 95) {
+      const u = (t - 65) / 30;
+      d.x = s.x0 + f * 160 * u;
+      d.y = -45 * Math.sin(u * Math.PI);
+      d.rotAdd = -u * Math.PI * 0.5;
+    }
+    if (t >= 95) {
+      d.y = 0;
+      d.rotAdd = 0;
     }
   }
 
@@ -2019,7 +2095,14 @@ export class Game {
     d.poseOverride = null;
     d.turn = 1;
     d.facing = (-a.facing) as 1 | -1;
-    if (s.kind === 'mordida') {
+    if (s.kind === 'moon') {
+      a.landLag = 3;
+      d.state = 'launched';
+      d.y = Math.min(-200, d.y);
+      d.vy = 1.5;
+      d.vx = a.facing * 2;
+      d.juggle = 1;
+    } else if (s.kind === 'mordida') {
       d.state = 'launched';
       d.y = -2;
       d.vy = -8;

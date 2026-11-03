@@ -1,24 +1,26 @@
-# Dedilho Wars
+# DEDILHO WARS
 
-Jogo de luta 2D com Karatê Caetano, Orango Tango Bitencourt, Tubarão Fiscal, Rickzera, Bieubatman e Nomad Lobby.
+Jogo de luta 2D com sete lutadores, seis cenários e rádio integrada.
 
-## Jogar sem instalar ferramentas
+## Jogar
 
-1. Extraia este ZIP.
-2. Abra **JOGAR.html** com Chrome, Edge ou Firefox atualizado em um computador com teclado.
-3. Clique na tela inicial e escolha Jogar, Versus Local ou Treinamento.
+Acesse https://dedilho-wars-luta.pithyblimp1.chatgpt.site em um computador com teclado. Para jogar offline, abra /baixar/ e baixe o ZIP completo. Extraia toda a pasta e abra **JOGAR.html** com Chrome, Edge ou Firefox atualizado. Não remova a pasta src/assets/radio: ela contém as sete músicas usadas pelo jogo offline. Clique na abertura para ativar o áudio.
 
-O HTML já contém o jogo compilado, os estilos e a fonte. Não precisa de Node.js, servidor ou conexão com a internet para o combate. O narrador usa as vozes disponíveis no navegador/sistema; sua disponibilidade offline pode variar. O áudio começa após clicar ou pressionar uma tecla.
+O ZIP inclui tanto o jogo pronto como o código-fonte. O index.html da raiz é a entrada de desenvolvimento do Vite; para jogar diretamente use JOGAR.html. A versão online carrega as músicas do próprio site sob demanda, e a versão extraída usa os MP3 locais, sem streaming externo. O narrador usa as vozes disponíveis no navegador/sistema.
 
-**Abra JOGAR.html para jogar.** O index.html na raiz é o ponto de entrada do código-fonte e precisa do Vite.
+## Seleção e cenários
 
-## Elenco e seleção de confrontos
+- **Streamers:** Rickzera, Karatê Caetano, Nomad Lobby, Bieubatman e Renngotti.
+- **Viewers:** Em breve; não permite confirmar um personagem.
+- **Especiais:** Tubarão Fiscal e Orango Tango Bitencourt.
 
-A seleção tem as abas **Streamers** (Rickzera, Karatê Caetano, Nomad Lobby e Bieubatman), **Viewers** (Em breve) e **Memes** (Tubarão Fiscal e Orango). Use Q/E ou Tab para trocar de aba. Viewers não permite iniciar uma luta enquanto estiver vazia.
+Use Q/E ou Tab para trocar de categoria, setas/WASD para escolher e Enter para confirmar. Escolha P1 e depois o adversário; ambos podem usar o mesmo personagem. A próxima tela escolhe o cenário e permite uma seleção aleatória. Há troca de lutadores e de mapa na pausa e após a partida; a revanche mantém o confronto atual.
 
-Na seleção, escolha primeiro o Jogador 1 e pressione **Confirmar P1**. Depois escolha o adversário (CPU, Jogador 2 ou oponente de treino) e pressione **Lutar!**. Todos podem enfrentar todos, inclusive o mesmo personagem. É possível revisar cada lado pelos painéis superiores. Use **Trocar lutadores** no menu de pausa ou depois da partida para montar o próximo confronto.
+Cenários: **Neto Supermercados**, **Dojo Senbukan**, **Liberdade SP**, **Curitiba**, **Piauí** e **Palácio do Planalto**. A geometria de combate é compartilhada; cada cenário tem seu próprio desenho, arquitetura e chão. A abertura usa um cenário aleatório e uma demonstração visual de luta entre os sete personagens, sem interferir nos controles do menu ou na rádio.
 
-| Personagem | Especial U | Especial I | Especial O | Super H |
+## Golpes
+
+| Personagem | Especial U | Especial I | Especial O | ULT H |
 | --- | --- | --- | --- | --- |
 | Karatê Caetano | Chute da Conspiração | Dedilho Perfurante | Soco Pego | Conspiração Absoluta |
 | Orango Tango Bitencourt | Dedilho Supremo | Puxão de Camisa | Mordida na Perna | Instinto Primordial |
@@ -26,81 +28,63 @@ Na seleção, escolha primeiro o Jogador 1 e pressione **Confirmar P1**. Depois 
 | Rickzera | Arremesso do Franco Suíço | Linhas do Pix | Double Jump | Wise 6x |
 | Bieubatman | Chave de Fenda | Jogar Rato | Pichação | Prestígio |
 | Nomad Lobby | Mario Burger | Rajada de Glock | Boomerang | Arena |
+| Renngotti | Joga pra Lua | Jogar Microfone | Grito Alto | TILT |
 
-Tubarão é resistente e domina o corpo a corpo: Engole ignora a defesa quando conecta de perto; a Cabeçada tem armadura durante a preparação final e o avanço. Rickzera é ágil: lança projéteis que podem ser defendidos, dispara três linhas de Pix e pode saltar uma segunda vez com W ou O (no P2, seta para cima ou Num 6). O impulso extra é limitado a dois saltos por voo e recarrega ao aterrissar. O Wise 6x acerta exatamente seis vezes quando conecta.
+Renngotti arremessa o oponente para o alto e permite continuar com um combo aéreo. O microfone é um projétil em arco; o grito tem alcance frontal e empurrão, mas pode ser defendido. TILT usa uma mesa em uma sequência cinematográfica.
 
-Bieubatman combina estocada que atravessa parte da defesa, rato rasteiro e nuvem de tinta persistente. Seu Prestígio traz o carro para a luta. Nomad lança hambúrgueres, dispara três projéteis altos que podem ser evitados agachando e usa um boomerang que retorna e pode acertar uma vez na ida e uma na volta. Arena usa uma bazuca cartunesca.
-
-**Agachar:** segure S no P1 ou seta para baixo no P2. A caixa de colisão fica menor; combine com Defesa para bloquear golpes rasteiros. Soco/chute agachado usa os golpes baixos do personagem. Golpes aéreos altos exigem defesa em pé. É possível mudar a altura da guarda durante a defesa.
-
-**ULT:** todos os ganhos de barra por acertos, dano recebido e defesa foram reduzidos à metade. A barra e o custo do super continuam em 100; no treinamento, a barra permanece livre para praticar.
-
-Todos possuem golpes fracos/médios/fortes, ataques baixos e aéreos, defesa alta/baixa, dash, combos, barra de super, animação de vitória, retratos e suporte à IA e ao treino. O super gasta a barra completa fora do treinamento.
-
-## Estação de rádio
-
-Abra **Estação de Rádio** no menu principal ou na pausa. Escolha a música original dinâmica do Dedilho Wars ou um dos quatro raps completos de Ulisses: Caetano Neandertal, Sofá do Renngotti, Tubarão amante do Pablão e Amante Oragutango. Há pausa, próxima/anterior, volume e controle de posição nos raps. A faixa escolhida continua ao fechar a rádio ou mudar de tela; o volume é compartilhado com Música nas configurações. Fechar a rádio durante uma pausa mantém a partida pausada.
-
-Os quatro MP3 foram incorporados ao HTML, completos, em 96 kbps estéreo para reduzir o tamanho do download. Não dependem de streaming nem de arquivos externos. Estação e estado de pausa são lembrados pelo navegador; o áudio precisa de um clique para começar.
+Todos possuem golpes fracos/médios/fortes, ataques agachados e aéreos, defesa alta/baixa, dash, combos, barra de ULT, retratos, animações de reação e vitória, IA e treinamento. Os ganhos de ULT estão em metade do valor original; o custo continua em 100 e o treinamento mantém a barra livre.
 
 ## Controles padrão
 
-| Ação | Jogador 1 | Jogador 2 |
+| Ação | P1 | P2 |
 | --- | --- | --- |
 | Mover | A / D | Setas esquerda / direita |
 | Pular / agachar | W / S | Setas cima / baixo |
 | Soco / chute / defesa | J / K / L | Num 1 / Num 2 / Num 3 |
 | Especiais | U / I / O | Num 4 / Num 5 / Num 6 |
-| Super | H | Num 0 |
+| ULT | H | Num 0 |
 | Pausar | Esc ou P | Esc ou P |
 
-Sem teclado numérico, o jogador 2 pode usar vírgula, ponto e barra para soco/chute/defesa; ponto e vírgula, apóstrofo e Enter para os especiais; Shift direito para o super. Ative Num Lock ao usar o teclado numérico. As teclas podem ser alteradas em **Controles**.
+Sem numpad, P2 também usa vírgula, ponto e barra para soco/chute/defesa; ponto e vírgula, apóstrofo e Enter para especiais; Shift direito para ULT. Ative Num Lock. As teclas podem ser alteradas em Controles.
 
-No treino, **R** reinicia as posições e **T** troca o comportamento do oponente. Na seleção de personagens, use setas/WASD e Enter ou clique nos retratos e botões de confirmação.
+Segure baixo para agachar e reduzir a caixa de colisão. Baixo + Defesa bloqueia golpes rasteiros; ataques aéreos altos exigem defesa em pé. Soco/chute agachado usa os ataques baixos do personagem. No treino, R reinicia posições e T troca o comportamento do oponente.
+
+## Música
+
+O botão **Música**, com mini equalizador, fica no canto inferior direito do menu principal e à esquerda da confirmação nas seleções de lutadores e mapas. A pausa também dá acesso à rádio. A escolha de faixa continua ao fechar o painel e ao mudar de tela; o volume é compartilhado com Música em Configurações. A rádio tem pausa, próxima/anterior, controle de posição e sequência automática.
+
+A playlist tem a trilha original dinâmica e sete músicas completas. Os antigos créditos de Ulisses aparecem como **Orangotango Esfolador Rapper**. **Sequência Let’s Gay 1** mantém o crédito **Dornelles**. As três faixas mais recentes são Diário de um Viadão (Gaystavão), Sequência Let’s Gay 1 e Rap do Renngotti Cria de Exu Traficante de Anões Cubanos.
+
+Os MP3 enviados estão incluídos em 96 kbps estéreo, completos, para reduzir o download. Estação e pausa são lembradas pelo navegador; o áudio começa a partir de uma interação do jogador.
 
 ## Continuar o desenvolvimento
 
-Instale uma versão LTS atual do Node.js (22.12+ ou 24 recomendado). A primeira instalação das dependências precisa de internet. No terminal, dentro desta pasta:
+Instale Node.js 22.12+ ou 24 LTS. Dentro desta pasta:
 
 ```sh
 npm ci
 npm run dev
 ```
 
-Abra o endereço exibido pelo Vite, normalmente http://localhost:5173. As alterações em src/ aparecem durante o desenvolvimento.
+Abra o endereço informado pelo Vite, normalmente http://localhost:5173. A primeira instalação precisa de internet.
 
 ```sh
-npm run typecheck  # verifica o TypeScript
-npm run build      # verifica e gera dist/index.html autossuficiente
-npm run preview    # permite testar o build pelo servidor local
+npm run typecheck
+npm run build
+npm run preview
 ```
 
-Após alterar o jogo, execute npm run build e copie dist/index.html para JOGAR.html para atualizar o arquivo de dois cliques. A versão JOGAR.html incluída neste ZIP corresponde ao código-fonte desta entrega.
+O build produz dist/index.html com desenhos, scripts e estilos incorporados, e os sete arquivos MP3 na mesma pasta dist. Para distribuir um novo build, mantenha toda a pasta dist junta; copiar somente o HTML perde os arquivos de música. O JOGAR.html desta entrega foi preparado para usar os MP3 em src/assets/radio, preservando uma única cópia dos áudios no ZIP.
 
-## Organização
+## Organização e créditos
 
-- src/ui/: menus, seleção de personagem e tela de partida.
-- src/game/engine.ts: combate, regras e partidas.
-- src/game/data.ts: personagens, golpes e poses.
-- src/game/ai.ts: comportamento da inteligência artificial.
-- src/game/render.ts, rig.ts e stage.ts: desenho, animação e cenário.
-- src/game/audio.ts: música e efeitos sintetizados.
-- src/game/input.ts: teclado e configuração dos controles.
+- src/ui/: menus, seleções de personagem/mapa, rádio e tela de partida.
+- src/game/data.ts, engine.ts e ai.ts: personagens, regras, golpes e IA.
+- src/game/rig.ts e render.ts: desenhos articulados e efeitos.
+- src/game/stage.ts e stage-scenes.ts: cenários.
+- src/game/audio.ts e radio.ts: síntese original e playlist.
+- src/assets/radio/: faixas incluídas.
 
-## Atualização atual
+Caetano usa o novo visual sem camisa, porte atlético, calça laranja e faixa roxa. Seu afro permanece maior que o de Bieu. Renngotti usa moletom/cargo brancos, óculos escuros e fones.
 
-- Bieubatman e Nomad Lobby completos e jogáveis.
-- Seleção com Streamers, Viewers (Em breve) e Memes.
-- Rádio com trilha original e quatro raps de Ulisses, incluindo uso offline.
-- Defesa agachada revisada e ganho de ULT reduzido pela metade.
-- Afro arredondado maior no Caetano, sem cabelo comprido, acima do tamanho do afro de Bieu.
-
-## Elenco e visual
-
-A abertura agora usa apenas o título **DEDILHO WARS**. Os quatro personagens adicionados têm desenho vetorial articulado no mesmo estilo dos originais, retratos próprios, efeitos próprios, projéteis, golpes exclusivos e supers cinematográficos. O ZIP contém o código-fonte desta versão e o JOGAR.html correspondente.
-
-## Preparação inicial
-
-O ZIP original continha o código-fonte sem uma distribuição pronta para abrir. Foram incluídos o HTML compilado, instruções de execução e desenvolvimento, verificação TypeScript no build e a fonte local para dispensar o carregamento pelo Google Fonts. Os personagens e as regras de combate foram preservados.
-
-A fonte Russo One é de Jovanny Lemonad e usa a licença SIL Open Font License 1.1. O texto integral está em src/assets/Russo-One-LICENSE.txt e também foi incorporado ao HTML distribuído.
+A fonte Russo One é de Jovanny Lemonad e usa SIL Open Font License 1.1. A licença integral está em src/assets/Russo-One-LICENSE.txt e incorporada ao HTML distribuído.

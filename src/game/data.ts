@@ -1,11 +1,11 @@
 // Dados dos personagens: atributos, golpes (frame data) e poses do esqueleto.
 
-export const CHAR_IDS = ['caetano', 'orango', 'tubarao', 'rickzera', 'bieu', 'nomad'] as const;
+export const CHAR_IDS = ['caetano', 'orango', 'tubarao', 'rickzera', 'bieu', 'nomad', 'renngotti'] as const;
 export type CharId = (typeof CHAR_IDS)[number];
 
 export const CHAR_CATEGORIES = {
-  Streamers: ['rickzera', 'caetano', 'nomad', 'bieu'],
-  Memes: ['tubarao', 'orango'],
+  Streamers: ['rickzera', 'caetano', 'nomad', 'bieu', 'renngotti'],
+  Especiais: ['tubarao', 'orango'],
   Viewers: [],
 } as const satisfies Record<string, readonly CharId[]>;
 export type CharCategory = keyof typeof CHAR_CATEGORIES;
@@ -49,7 +49,7 @@ export interface Move {
   power: number;
   poses: [string, string];
   advance?: [number, number, number];
-  grab?: 'puxao' | 'mordida' | 'engole' | 'super';
+  grab?: 'puxao' | 'mordida' | 'engole' | 'moon' | 'super';
   dedilho?: boolean;
   pierce?: number;
   unblockable?: boolean;
@@ -376,15 +376,37 @@ Object.assign(nomadMoves, Object.fromEntries([
   mv('s3', { kind: 'special', rank: 9, startup: 17, active: 4, recovery: 26, whiff: 9, dmg: 42, hitstun: 22, blockstun: 12, kb: 3, kbBlock: 2, hb: [20, 120, 70, 140], hitstop: 6, shake: 5, power: 1.3, poses: ['boomerang_s', 'boomerang_a'], label: 'BOOMERANG' }),
 ]));
 
+
+// ---------------------------------------------------------------- RENNGOTTI
+const renngottiPoses: Record<string, Pose> = {
+  ...Object.fromEntries(Object.entries(rickzeraPoses).map(([k, p]) => [k, { ...p }])),
+  idle: cp({ lean: 3, head: -3, fa1: 60, fa2: -62, ba1: 105, ba2: -58, fl1: 74, fl2: 96, bl1: 110, bl2: 87 }),
+  moon_s: cp({ lean: 8, fa1: -15, fa2: -8, ba1: -20, ba2: -12 }),
+  moon_a: cp({ lean: -18, fa1: -100, fa2: -95, ba1: -110, ba2: -100, mouth: 1 }),
+  mic_s: cp({ lean: -10, fa1: 50, fa2: -125, ba1: 100, ba2: -60 }),
+  mic_a: cp({ lean: 20, fa1: -10, fa2: -4, ba1: 115, ba2: -70 }),
+  shout_s: cp({ lean: -16, head: -12, fa1: 42, fa2: -80, ba1: 112, ba2: -70 }),
+  shout_a: cp({ lean: 28, head: 8, fa1: 90, fa2: 30, ba1: 130, ba2: 70, mouth: 1 }),
+  tilt_s: cp({ lean: -12, fa1: -100, fa2: -90, ba1: -112, ba2: -98, mouth: 1 }),
+  tilt_a: cp({ lean: 42, fa1: 45, fa2: 28, ba1: 65, ba2: 36, mouth: 1 }),
+  desk: cp({ lean: -12, fa1: -100, fa2: -90, ba1: -112, ba2: -98, mouth: 1 }),
+};
+const renngottiMoves = copyNormals(1, 0, 7);
+Object.assign(renngottiMoves, Object.fromEntries([
+  mv('s1', { kind: 'special', rank: 9, startup: 10, active: 4, recovery: 26, whiff: 18, dmg: 90, hitstun: 0, blockstun: 0, kb: 0, hb: [0, 120, 0, 176], hitstop: 0, shake: 6, power: 1.8, poses: ['moon_s', 'moon_a'], grab: 'moon', unblockable: true, label: 'JOGA PRA LUA' }),
+  mv('s2', { kind: 'special', rank: 9, startup: 14, active: 3, recovery: 23, whiff: 8, dmg: 60, hitstun: 23, blockstun: 14, kb: 6, kbBlock: 3, hb: [20, 110, 65, 150], hitstop: 8, shake: 6, power: 1.4, poses: ['mic_s', 'mic_a'], label: 'JOGAR MICROFONE' }),
+  mv('s3', { kind: 'special', rank: 9, startup: 17, active: 12, recovery: 30, whiff: 13, dmg: 65, hitstun: 28, blockstun: 17, kb: 13, kbBlock: 7, hb: [10, 300, 20, 190], hitstop: 9, shake: 12, power: 1.9, poses: ['shout_s', 'shout_a'], label: 'GRITO ALTO' }),
+]));
+
 export const CHARS: Record<CharId, CharDef> = {
   caetano: {
     id: 'caetano',
     name: 'KARATÊ CAETANO',
     short: 'CAETANO',
     title: 'O MAIOR ARTISTA MARCIAL DO MUNDO (segundo ele)',
-    color: '#a855f7',
-    color2: '#6d28d9',
-    glow: '#d8b4fe',
+    color: '#f97316',
+    color2: '#9a3412',
+    glow: '#fed7aa',
     hp: 1000,
     walk: 4.4,
     walkBack: 3.6,
@@ -411,7 +433,7 @@ export const CHARS: Record<CharId, CharDef> = {
     ],
     superName: 'CONSPIRAÇÃO ABSOLUTA',
     quote: 'ERA TUDO PARTE DA CONSPIRAÇÃO.',
-    bio: 'Cabelo cacheado, faixa roxa e confiança infinita. Mestre dos combos e da velocidade.',
+    bio: 'Musculoso, sem camisa, calça laranja e faixa roxa. Mestre dos combos, da velocidade e da confiança infinita.',
   },
   orango: {
     id: 'orango',
@@ -504,6 +526,20 @@ export const CHARS: Record<CharId, CharDef> = {
     ],
     superName: 'ARENA', quote: 'BEM-VINDO À MINHA ARENA.',
     bio: 'Boné vermelho, macacão azul e barba loira. Domina a distância com lanche, rajada e boomerang.',
+  },
+  renngotti: {
+    id: 'renngotti', name: 'RENNGOTTI', short: 'RENNGOTTI', title: 'A VOZ DO CAOS',
+    color: '#e2e8f0', color2: '#475569', glow: '#f8fafc',
+    hp: 1020, walk: 4.1, walkBack: 3.3, jumpVy: 16.2, jumpVx: 5, dashVx: 10.5, dashDur: 15,
+    pushW: 29, hurtH: 180, crouchH: 110, moves: renngottiMoves, poses: renngottiPoses,
+    attrs: [{ label: 'VELOCIDADE', v: 4 }, { label: 'FORÇA', v: 3 }, { label: 'ALCANCE', v: 4 }, { label: 'RESISTÊNCIA', v: 3 }, { label: 'MOBILIDADE', v: 4 }],
+    specials: [
+      { key: 'U', name: 'JOGA PRA LUA', desc: 'Agarrão de perto que lança alto e abre espaço para um combo aéreo.' },
+      { key: 'I', name: 'JOGAR MICROFONE', desc: 'Arremessa o microfone em arco para pressionar à distância.' },
+      { key: 'O', name: 'GRITO ALTO', desc: 'Onda sonora à frente: interrompe golpes e empurra. Pode ser defendida.' },
+    ],
+    superName: 'TILT', quote: 'A MESA NÃO AGUENTOU O TILT.',
+    bio: 'Moletom branco, óculos escuros e headset. Lança o rival à lua e controla a luta com microfone e voz.',
   },
 };
 

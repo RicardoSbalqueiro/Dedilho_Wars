@@ -70,6 +70,7 @@ export function aiAct(g: Game, f: Fighter, diff: Difficulty) {
   const incoming = g.projectiles.find((p) => p.owner !== f.idx && Math.abs(p.x - f.x) < (p.kind === 'spray' ? 100 : 280) && ((f.x - p.x) * p.vx > 0 || p.kind === 'spray'));
   if (incoming && canAct && rnd() < P.block * 0.12) ai.guardT = tk + 24;
   if (f.ch === 'rickzera' && f.state === 'jump' && f.airJumps < 2 && f.vy > 0 && dist > 170 && rnd() < P.aggr * 0.08) tap('up');
+  if (f.ch === 'renngotti' && f.state === 'jump' && !f.airAttacked && Math.abs(o.y - f.y) < 125 && dist < 150 && rnd() < P.aggr * 0.2) tap(rnd() < 0.5 ? 'p' : 'k');
   const mv = o.move;
   if (o.state === 'attack' && mv && !mv.grab && o.serial !== ai.seen && dist < mv.hb[1] + 60) {
     ai.seen = o.serial;
@@ -128,7 +129,10 @@ export function aiAct(g: Game, f: Fighter, diff: Difficulty) {
   function startPlan(list: Action[]) {
     const n = Math.max(1, Math.min(list.length, P.combo));
     ai.plan = list.slice(0, n);
-    if (rnd() < P.spec && n >= 2) ai.plan[n - 1] = f.ch === 'caetano' ? (['s1', 's2', 's3'] as Action[])[Math.floor(rnd() * 3)] : (['s1', 's3', 's2'] as Action[])[Math.floor(rnd() * 2)];
+    if (rnd() < P.spec && n >= 2) {
+      const choices: Action[] = f.ch === 'caetano' ? ['s1', 's2', 's3'] : f.ch === 'renngotti' ? ['s2', 's3'] : ['s1', 's3'];
+      ai.plan[n - 1] = choices[Math.floor(rnd() * choices.length)];
+    }
     ai.planStep = 0;
   }
 
@@ -179,6 +183,25 @@ export function aiAct(g: Game, f: Fighter, diff: Difficulty) {
         ai.walk = -1;
         ai.stopDist = 380;
       } else ai.guardT = tk + 22;
+    } else if (f.ch === 'renngotti') {
+      if (o.state === 'launched' && o.y < -140 && dist < 180 && r < 0.7 * P.aggr) {
+        ai.walk = 1;
+        tap('up');
+      } else if (dist > 300) {
+        ai.walk = dist > 550 ? 1 : 0;
+        ai.stopDist = 210;
+        if (r < 0.25 + P.spec * 0.5) tap('s2');
+        else { ai.walk = 1; ai.stopDist = 160; }
+      } else if (dist > 150) {
+        if (r < 0.2 + P.spec * 0.45) tap('s3');
+        else if (r < 0.65) tap('s2');
+        else { ai.walk = 1; ai.stopDist = 95; }
+      } else if (dist < 115 && r < 0.15 + P.spec * 0.4) {
+        tap('s1');
+        ai.walk = 0;
+      } else if (r < P.aggr + 0.15) {
+        startPlan((rnd() < 0.5 ? ['p', 'p', 'k', 's3'] : ['k', 'p', 'p', 's2']) as Action[]);
+      } else ai.guardT = tk + 24;
     } else if (f.ch === 'bieu') {
       if (dist > 245) {
         ai.walk = dist > 500 ? 1 : 0;

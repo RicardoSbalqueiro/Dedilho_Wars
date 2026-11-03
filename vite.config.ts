@@ -10,7 +10,14 @@ const __dirname = path.dirname(__filename);
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), tailwindcss(), viteSingleFile()],
+  plugins: [react(), tailwindcss(), viteSingleFile({ useRecommendedBuildConfig: false })],
+  base: "./",
+  build: {
+    assetsDir: "",
+    assetsInlineLimit: (filePath) => !filePath.endsWith(".mp3"),
+    cssCodeSplit: false,
+    rollupOptions: { output: { inlineDynamicImports: true } },
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "src"),

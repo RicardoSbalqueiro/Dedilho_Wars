@@ -8,7 +8,7 @@ import { CHARS } from '../game/data';
 import { audio } from '../game/audio';
 import { getStage, SkewBtn } from './common';
 
-export function GameScreen({ cfg, onExit, onSelect, onRadio, inputSuspended = false }: { cfg: GameConfig; onExit: () => void; onSelect: () => void; onRadio: () => void; inputSuspended?: boolean }) {
+export function GameScreen({ cfg, onExit, onSelect, onMap, onRadio, inputSuspended = false }: { cfg: GameConfig; onExit: () => void; onSelect: () => void; onMap: () => void; onRadio: () => void; inputSuspended?: boolean }) {
   const ref = useRef<HTMLCanvasElement>(null);
   const gameRef = useRef<Game | null>(null);
   const [paused, setPaused] = useState(false);
@@ -20,7 +20,7 @@ export function GameScreen({ cfg, onExit, onSelect, onRadio, inputSuspended = fa
   useEffect(() => {
     const canvas = ref.current!;
     const ctx = canvas.getContext('2d')!;
-    const stage = getStage();
+    const stage = getStage(cfg.stage ?? 'dojo');
     const game = new Game(cfg, (e) => {
       if (e.type === 'pause') { setPaused(!!e.paused); setSel(0); }
       if (e.type === 'matchEnd') {
@@ -54,7 +54,7 @@ export function GameScreen({ cfg, onExit, onSelect, onRadio, inputSuspended = fa
       if (!['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight', 'KeyS', 'KeyW', 'Enter', 'Space'].includes(e.code)) return;
       e.preventDefault();
       if (e.repeat) return;
-      const n = paused ? (cfg.mode === 'training' ? 6 : 5) : 3;
+      const n = paused ? (cfg.mode === 'training' ? 7 : 6) : 4;
       if (e.code === 'ArrowDown' || e.code === 'KeyS' || (!paused && e.code === 'ArrowRight')) setSel((s) => (s + 1) % n);
       if (e.code === 'ArrowUp' || e.code === 'KeyW' || (!paused && e.code === 'ArrowLeft')) setSel((s) => (s + n - 1) % n);
       if (e.code === 'Enter' || e.code === 'Space') {
@@ -112,18 +112,20 @@ export function GameScreen({ cfg, onExit, onSelect, onRadio, inputSuspended = fa
               <MB idx={3} sel={sel} setSel={setSel} onClick={onSelect}>
                 TROCAR LUTADORES
               </MB>
-              <MB idx={4} sel={sel} setSel={setSel} onClick={onRadio} color="#f472b6">
-                ESTAÇÃO DE RÁDIO
+              <MB idx={4} sel={sel} setSel={setSel} onClick={onMap}>TROCAR MAPA</MB>
+              <MB idx={5} sel={sel} setSel={setSel} onClick={onRadio} color="#f472b6">
+                MÚSICA
               </MB>
-              <MB idx={5} sel={sel} setSel={setSel} onClick={onExit}>
+              <MB idx={6} sel={sel} setSel={setSel} onClick={onExit}>
                 MENU PRINCIPAL
               </MB>
             </>
           ) : (
             <>
               <MB idx={2} sel={sel} setSel={setSel} onClick={onSelect}>TROCAR LUTADORES</MB>
-              <MB idx={3} sel={sel} setSel={setSel} onClick={onRadio} color="#f472b6">ESTAÇÃO DE RÁDIO</MB>
-              <MB idx={4} sel={sel} setSel={setSel} onClick={onExit}>MENU PRINCIPAL</MB>
+              <MB idx={3} sel={sel} setSel={setSel} onClick={onMap}>TROCAR MAPA</MB>
+              <MB idx={4} sel={sel} setSel={setSel} onClick={onRadio} color="#f472b6">MÚSICA</MB>
+              <MB idx={5} sel={sel} setSel={setSel} onClick={onExit}>MENU PRINCIPAL</MB>
             </>
           )}
           <div className="mt-3 text-[10px] text-white/60 text-center leading-5">
@@ -154,9 +156,8 @@ export function GameScreen({ cfg, onExit, onSelect, onRadio, inputSuspended = fa
             <MB idx={1} sel={sel} setSel={setSel} onClick={onSelect} color={winnerChar.color} small>
               TROCAR LUTADORES
             </MB>
-            <MB idx={2} sel={sel} setSel={setSel} onClick={onExit} color={winnerChar.color} small>
-              MENU PRINCIPAL
-            </MB>
+            <MB idx={2} sel={sel} setSel={setSel} onClick={onMap} color={winnerChar.color} small>TROCAR MAPA</MB>
+            <MB idx={3} sel={sel} setSel={setSel} onClick={onExit} color={winnerChar.color} small>MENU PRINCIPAL</MB>
           </div>
         </div>
       )}

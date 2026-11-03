@@ -47,21 +47,21 @@ export function RadioPanel({ onBack }: { onBack: () => void }) {
       className="absolute inset-0 z-50 text-white"
       style={{ background: 'radial-gradient(ellipse at 80% 30%,#381459 0%,#100a20 50%,#07060e 100%)' }}>
       <div className="absolute left-6 right-6 top-5 flex justify-between items-center border-b border-white/15 pb-3">
-        <div><div className="text-[9px] tracking-[.35em] text-purple-300">DEDILHO WARS · ESTAÇÃO DE RÁDIO</div><h1 id="radio-heading" className="title-main text-[34px] mt-1">DW RADIO <span className="text-purple-400">/</span> ULISSES</h1></div>
+        <div><div className="text-[9px] tracking-[.35em] text-purple-300">DEDILHO WARS · ESTAÇÃO DE RÁDIO</div><h1 id="radio-heading" className="title-main text-[34px] mt-1">DW RADIO <span className="text-purple-400">/</span> PLAYLIST</h1></div>
         <button ref={closeRef} type="button" onClick={onBack} className="border border-white/40 bg-white/10 px-4 py-2 text-[12px] hover:bg-white/20 focus:outline-2 focus:outline-purple-300">VOLTAR <span className="text-white/50 ml-2">ESC</span></button>
       </div>
 
-      <div className="absolute left-6 top-[112px] bottom-[44px] w-[445px]">
-        <div className="flex justify-between text-[9px] tracking-[.2em] text-white/50 mb-3"><span>ESCOLHA SUA ESTAÇÃO</span><span>05 FAIXAS</span></div>
-        <div className="flex flex-col gap-[7px]">
+      <div className="absolute left-6 top-[112px] bottom-[44px] w-[445px] flex flex-col">
+        <div className="flex justify-between text-[9px] tracking-[.2em] text-white/50 mb-3"><span>ESCOLHA SUA ESTAÇÃO</span><span>{String(RADIO_TRACKS.length).padStart(2, '0')} FAIXAS</span></div>
+        <div className="flex flex-col gap-[7px] overflow-y-auto min-h-0 pr-2">
           {RADIO_TRACKS.map((track, index) => {
             const selected = track.id === current.id;
             return <button type="button" key={track.id} data-radio-station={track.id} aria-pressed={selected}
               onClick={() => audio.selectRadio(track.id)}
               className="flex items-center gap-3 text-left border px-3 py-3 transition-colors hover:bg-purple-400/20 focus:outline-2 focus:outline-purple-300"
-              style={{ minHeight: 63, borderColor: selected ? '#c084fc' : '#ffffff22', background: selected ? 'linear-gradient(90deg,#7e22ce77,#7e22ce11)' : '#ffffff04', boxShadow: selected ? 'inset 3px 0 #d8b4fe' : undefined }}>
+              style={{ minHeight: 68, flexShrink: 0, borderColor: selected ? '#c084fc' : '#ffffff22', background: selected ? 'linear-gradient(90deg,#7e22ce77,#7e22ce11)' : '#ffffff04', boxShadow: selected ? 'inset 3px 0 #d8b4fe' : undefined }}>
               <span className="text-[13px] text-purple-300 w-6 shrink-0">{String(index + 1).padStart(2, '0')}</span>
-              <span className="flex-1"><span className="block title-main text-[13px] leading-[17px]">{track.title}</span><span className="block text-[9px] text-white/45 mt-[2px]">{track.artist}{index === 0 ? ' · DINÂMICA' : ' · RAP'}</span></span>
+              <span className="flex-1"><span className="block title-main text-[13px] leading-[17px]">{track.title}</span><span className="block text-[9px] text-white/45 mt-[2px]">{track.artist}{index === 0 ? ' · DINÂMICA' : ''}</span></span>
               <span className="text-[8px] tracking-wider text-purple-200 w-12 text-right">{selected ? state.playing ? 'NO AR' : 'PRONTA' : 'TOCAR'}</span>
             </button>;
           })}
@@ -73,7 +73,7 @@ export function RadioPanel({ onBack }: { onBack: () => void }) {
         <div className="flex-1 flex items-center justify-center gap-[7px] py-2" aria-hidden="true">
           {Array.from({ length: 21 }, (_, i) => <span key={i} style={{ width: 8, height: 14 + ((i * 17 + 13) % 57), background: `linear-gradient(0deg,#7e22ce,${original ? '#d8b4fe' : '#f0abfc'})`, opacity: state.playing ? 0.9 : 0.22, transform: state.playing ? `scaleY(${0.55 + Math.sin(state.currentTime * 4 + i) * 0.35})` : 'scaleY(.4)', transition: 'transform .3s ease,opacity .3s ease' }} />)}
         </div>
-        <div className="min-h-[65px]"><h2 className="title-main text-[20px] leading-6 text-purple-100">{current.title}</h2><p className="text-[11px] text-white/50 mt-1">{current.artist}{original ? ' · Tema automático do jogo' : ' · Raps do Ulisses'}</p></div>
+        <div className="min-h-[65px]"><h2 className="title-main text-[17px] leading-5 text-purple-100">{current.title}</h2><p className="text-[11px] text-white/50 mt-1">{current.artist}{original ? ' · Tema automático do jogo' : ''}</p></div>
         <div className="mt-2">
           <input aria-label="Posição da música" type="range" min={0} max={state.duration || 1} step={1} value={Math.min(state.currentTime, state.duration || 1)} disabled={original || state.duration <= 0} onChange={(e) => audio.seekRadio(+e.target.value)} className="w-full h-3 accent-purple-400 disabled:opacity-25" />
           <div className="flex justify-between text-[9px] text-white/40 mt-1"><span>{original ? 'TRILHA ORIGINAL' : radioTime(state.currentTime)}</span><span>{original ? '∞' : state.duration ? radioTime(state.duration) : '—:—'}</span></div>
@@ -86,7 +86,7 @@ export function RadioPanel({ onBack }: { onBack: () => void }) {
         <div className="mt-3 flex gap-3 items-center"><label htmlFor="radio-volume" className="text-[9px] text-white/50 tracking-widest">VOLUME</label><input id="radio-volume" type="range" min={0} max={1} step={0.01} value={state.volume} onChange={(e) => volume(+e.target.value)} className="flex-1 h-3 accent-purple-400" /><span className="text-[10px] text-white/60 w-8 text-right">{Math.round(state.volume * 100)}%</span></div>
         <p role={state.error ? 'alert' : undefined} className={`text-[9px] leading-3 mt-3 min-h-6 ${state.error ? 'text-amber-200' : 'text-white/40'}`}>{state.error || (original ? 'O tema acompanha o menu, a luta e a vitória.' : 'Os raps continuam durante a partida. Ao terminar, o próximo rap começa.')}</p>
       </div>
-      <div className="absolute left-6 right-6 bottom-3 text-[9px] text-white/35 tracking-wider">TRILHA ORIGINAL + RAPS DO ULISSES · A MÚSICA CONTINUA AO FECHAR A RÁDIO · TAB NAVEGAR · ESC VOLTAR</div>
+      <div className="absolute left-6 right-6 bottom-3 text-[9px] text-white/35 tracking-wider">TRILHA ORIGINAL + PLAYLIST COMPLETA · A MÚSICA CONTINUA AO FECHAR A RÁDIO · TAB NAVEGAR · ESC VOLTAR</div>
     </div>
   );
 }

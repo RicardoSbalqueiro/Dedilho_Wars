@@ -1,13 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
 import { CHARS, CHAR_CATEGORIES } from '../game/data';
 import type { CharId, CharCategory } from '../game/data';
+import { STAGE_IDS, STAGES } from '../game/stage';
+import type { StageId } from '../game/stage';
 import type { Difficulty, Mode } from '../game/engine';
 import { audio } from '../game/audio';
 import { ACTIONS, ACTION_LABELS, DEFAULT_BINDINGS, keyLabel, loadBindings, saveBindings } from '../game/input';
 import type { Action, Bindings } from '../game/input';
 import { applyPrefs, loadPrefs, savePrefs } from '../game/prefs';
 import type { Prefs } from '../game/prefs';
-import { ArtCanvas, FighterPortrait, SkewBtn } from './common';
+import { ArtCanvas, FighterPortrait, MusicButton, StagePreview, SkewBtn } from './common';
 
 // ------------------------------------------------------------------ SPLASH
 export function Splash({ onStart }: { onStart: () => void }) {
@@ -43,12 +45,11 @@ function Title({ big }: { big?: boolean }) {
 // ------------------------------------------------------------------ MENU PRINCIPAL
 export type MenuChoice = 'play' | 'versus' | 'training' | 'controls' | 'settings' | 'radio';
 
-export function MainMenu({ onChoose, suspended = false }: { onChoose: (c: MenuChoice) => void; suspended?: boolean }) {
+export function MainMenu({ onChoose, onRadio, suspended = false }: { onChoose: (c: MenuChoice) => void; onRadio: () => void; suspended?: boolean }) {
   const items: [MenuChoice, string, string][] = [
     ['play', 'JOGAR', '#a855f7'],
     ['versus', 'VERSUS LOCAL', '#f59e0b'],
     ['training', 'TREINAMENTO', '#22c55e'],
-    ['radio', 'ESTAÇÃO DE RÁDIO', '#f472b6'],
     ['controls', 'CONTROLES', '#38bdf8'],
     ['settings', 'CONFIGURAÇÕES', '#ef4444'],
   ];
@@ -100,7 +101,8 @@ export function MainMenu({ onChoose, suspended = false }: { onChoose: (c: MenuCh
           </SkewBtn>
         ))}
       </div>
-      <div className="absolute bottom-3 left-8 text-[11px] tracking-widest text-white/60">↑ ↓ NAVEGAR · ENTER CONFIRMAR · P1: WASD + JKL / UIO / H · P2: SETAS + NUMPAD</div>
+      <div className="absolute bottom-3 left-8 text-[10px] tracking-widest text-white/60">↑ ↓ NAVEGAR · ENTER CONFIRMAR · P1: WASD + JKL / UIO / H · P2: SETAS + NUMPAD</div>
+      <div className="absolute right-6 bottom-5"><MusicButton onClick={onRadio} /></div>
     </div>
   );
 }
@@ -154,14 +156,14 @@ export function DifficultySelect({ onPick, onBack }: { onPick: (d: Difficulty) =
 }
 
 // ------------------------------------------------------------------ SELEÇÃO DE PERSONAGEM
-const CATEGORY_ORDER: CharCategory[] = ['Streamers', 'Viewers', 'Memes'];
+const CATEGORY_ORDER: CharCategory[] = ['Streamers', 'Viewers', 'Especiais'];
 const categoryOf = (ch: CharId): CharCategory => CATEGORY_ORDER.find((category) => (CHAR_CATEGORIES[category] as readonly CharId[]).includes(ch)) || 'Streamers';
 
 const MODE_TITLE: Record<Mode, string> = { ai: 'CONTRA O COMPUTADOR', versus: 'VERSUS LOCAL', training: 'TREINAMENTO' };
 
-export function CharSelect({ mode, difficulty, initialP1 = 'caetano', initialP2 = 'orango', onPick, onBack }: {
+export function CharSelect({ mode, difficulty, initialP1 = 'caetano', initialP2 = 'orango', onPick, onBack, onRadio, suspended = false }: {
   mode: Mode; difficulty: Difficulty; initialP1?: CharId; initialP2?: CharId;
-  onPick: (p1: CharId, p2: CharId) => void; onBack: () => void;
+  onPick: (p1: CharId, p2: CharId) => void; onBack: () => void; onRadio: () => void; suspended?: boolean;
 }) {
   const [phase, setPhase] = useState<0 | 1>(0);
   const [picks, setPicks] = useState<[CharId, CharId]>([initialP1, initialP2]);
@@ -223,7 +225,7 @@ export function CharSelect({ mode, difficulty, initialP1 = 'caetano', initialP2 
   useEffect(() => {
     const k = (e: KeyboardEvent) => {
       const codes = ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'KeyA', 'KeyD', 'KeyW', 'KeyS', 'KeyQ', 'KeyE', 'Tab', 'Enter', 'Space', 'Escape'];
-      if (!codes.includes(e.code)) return;
+      if (suspended || !codes.includes(e.code)) return;
       e.preventDefault();
       if (e.repeat || lockedRef.current) return;
       if (e.code === 'KeyQ' || e.code === 'KeyE' || e.code === 'Tab') {
@@ -234,7 +236,9 @@ export function CharSelect({ mode, difficulty, initialP1 = 'caetano', initialP2 
       if (roster.length) {
         if (e.code === 'ArrowLeft' || e.code === 'KeyA') select(roster[(index + roster.length - 1) % roster.length]);
         if (e.code === 'ArrowRight' || e.code === 'KeyD') select(roster[(index + 1) % roster.length]);
-        if (['ArrowUp', 'ArrowDown', 'KeyW', 'KeyS'].includes(e.code)) select(roster[(index + (roster.length > 2 ? 2 : 1)) % roster.length]);
+        const rowStep = roster.length > 2 ? 2 : 1;
+        if (['ArrowUp', 'KeyW'].includes(e.code)) select(roster[(index - rowStep + roster.length) % roster.length]);
+        if (['ArrowDown', 'KeyS'].includes(e.code)) select(roster[(index + rowStep) % roster.length]);
       }
       if (e.code === 'Enter' || e.code === 'Space') confirm();
       if (e.code === 'Escape') back();
@@ -266,7 +270,7 @@ export function CharSelect({ mode, difficulty, initialP1 = 'caetano', initialP2 
             style={{ background: category === tab ? '#8b5cf6' : '#130b22dd', borderColor: category === tab ? '#ddd6fe' : '#ffffff33', color: category === tab ? '#fff' : '#b9accd' }}>{tab.toUpperCase()}</button>)}
         </div>
         <div className="text-[9px] tracking-[.2em] text-white/60 mb-2">{phase === 0 ? '01 / SEU LUTADOR' : `02 / ${opponentLabel}`}</div>
-        <div className="grid grid-cols-2 gap-[10px]">
+        <div className="grid grid-cols-2 gap-[8px]">
           {roster.map((ch, i) => {
             const c = CHARS[ch];
             const active = sel === ch;
@@ -274,11 +278,11 @@ export function CharSelect({ mode, difficulty, initialP1 = 'caetano', initialP2 
               <button key={ch} type="button" data-char={ch} aria-label={`Selecionar ${c.name}`} aria-pressed={active} disabled={locked}
                 onClick={() => select(ch)}
                 className="relative text-left border-2 overflow-hidden transition-all cursor-pointer"
-                style={{ height: 100, borderColor: active ? c.glow : '#ffffff33', background: `linear-gradient(135deg,${c.color}${active ? '88' : '33'},#090511)`, boxShadow: active ? `0 0 18px ${c.color}77` : 'none', transform: active ? 'translateY(-2px)' : undefined }}>
+                style={{ height: roster.length > 4 ? 70 : 100, borderColor: active ? c.glow : '#ffffff33', background: `linear-gradient(135deg,${c.color}${active ? '88' : '33'},#090511)`, boxShadow: active ? `0 0 18px ${c.color}77` : 'none', transform: active ? 'translateY(-2px)' : undefined }}>
                 <div className="absolute top-2 left-2 text-[9px] text-white/40">0{i + 1}</div>
-                <FighterPortrait ch={ch} size={29} className="absolute top-0 left-[41px]" />
+                <FighterPortrait ch={ch} size={roster.length > 4 ? 22 : 29} className={roster.length > 4 ? "absolute top-0 left-[49px]" : "absolute top-0 left-[41px]"} />
                 <div className="absolute bottom-2 left-2 right-1 title-main text-[13px] leading-4" style={{ color: active ? '#fff' : c.glow }}>{c.name}</div>
-                {ch === 'nomad' || ch === 'bieu' ? <div className="absolute right-1 top-1 text-[7px] bg-white text-black px-1">NOVO</div> : null}
+                {ch === 'renngotti' ? <div className="absolute right-1 top-1 text-[7px] bg-white text-black px-1">NOVO</div> : null}
               </button>
             );
           })}
@@ -294,12 +298,12 @@ export function CharSelect({ mode, difficulty, initialP1 = 'caetano', initialP2 
         <div className="text-[9px] tracking-wider text-white/70 mt-1">{d.title}</div>
       </div>}
       <div className="absolute right-6 top-[147px] w-[284px]">
-        {hasSelection ? <FighterDetails ch={sel} bindings={bindings} /> : <div className="mt-20 text-center text-white/45 text-sm leading-6">Novos desafiantes estão chegando.<br />STREAMERS e MEMES já estão prontos para lutar.</div>}
+        {hasSelection ? <FighterDetails ch={sel} bindings={bindings} /> : <div className="mt-20 text-center text-white/45 text-sm leading-6">Novos desafiantes estão chegando.<br />STREAMERS e ESPECIAIS já estão prontos para lutar.</div>}
       </div>
       <div className="absolute left-8 right-8 bottom-[28px] flex justify-between items-center">
         <SkewBtn small onClick={back}>VOLTAR</SkewBtn>
-        <div className="text-[9px] tracking-wider text-white/60">SETAS / WASD ESCOLHER · ENTER CONFIRMAR</div>
-        <SkewBtn small active disabled={!hasSelection || locked} color={hasSelection ? d.color : '#555'} onClick={confirm}>{locked ? 'PREPARE-SE!' : !hasSelection ? 'EM BREVE' : phase === 0 ? 'CONFIRMAR P1' : 'LUTAR!'}</SkewBtn>
+        <div className="text-[8px] tracking-wider text-white/60">SETAS / WASD · ENTER CONFIRMAR</div>
+        <div className="flex items-center gap-5"><MusicButton onClick={onRadio} /><SkewBtn small active disabled={!hasSelection || locked} color={hasSelection ? d.color : '#555'} onClick={confirm}>{locked ? 'PREPARE-SE!' : !hasSelection ? 'EM BREVE' : phase === 0 ? 'CONFIRMAR P1' : 'ESCOLHER MAPA'}</SkewBtn></div>
       </div>
       <div className="absolute bottom-2 w-full text-center text-[9px] text-white/40">ESC VOLTAR · CLIQUE NOS PAINÉIS P1 / P2 PARA REVISAR A ESCOLHA</div>
       {locked && <div className="absolute inset-0 bg-white/50 pointer-events-none fade-in" style={{ animationDuration: '.4s' }} />}
@@ -327,6 +331,86 @@ function FighterDetails({ ch, bindings }: { ch: CharId; bindings: Bindings }) {
         <div className="text-[8px] tracking-widest text-white/60">SUPER ESPECIAL · {keyLabel(bindings.super[0])}</div>
         <div className="title-main text-[14px] leading-4 mt-1" style={{ color: d.glow }}>{d.superName}</div>
       </div>
+    </div>
+  );
+}
+
+// ------------------------------------------------------------------ SELEÇÃO DE MAPA
+export function StageSelect({ p1, p2, initialStage = 'dojo', onPick, onBack, onRadio, suspended = false }: {
+  p1: CharId; p2: CharId; initialStage?: StageId; onPick: (stage: StageId) => void;
+  onBack: () => void; onRadio: () => void; suspended?: boolean;
+}) {
+  const [selected, setSelected] = useState<StageId | 'random'>(initialStage);
+  const [locked, setLocked] = useState(false);
+  const lockedRef = useRef(false);
+  const timer = useRef<number | undefined>(undefined);
+  const randomPreview = useRef(STAGE_IDS[Math.floor(Math.random() * STAGE_IDS.length)]);
+  const options: (StageId | 'random')[] = [...STAGE_IDS, 'random'];
+  const preview = selected === 'random' ? randomPreview.current : selected;
+  useEffect(() => { audio.music('menu'); return () => window.clearTimeout(timer.current); }, []);
+  const confirm = () => {
+    if (lockedRef.current || suspended) return;
+    lockedRef.current = true;
+    setLocked(true);
+    audio.confirm();
+    const chosen = selected === 'random' ? STAGE_IDS[Math.floor(Math.random() * STAGE_IDS.length)] : selected;
+    timer.current = window.setTimeout(() => onPick(chosen), 260);
+  };
+  const select = (id: StageId | 'random') => {
+    if (lockedRef.current || suspended) return;
+    setSelected(id);
+    audio.select();
+  };
+  useEffect(() => {
+    const key = (e: KeyboardEvent) => {
+      if (suspended || lockedRef.current || !['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'KeyA', 'KeyD', 'KeyW', 'KeyS', 'Enter', 'Space', 'Escape'].includes(e.code)) return;
+      e.preventDefault();
+      if (e.repeat) return;
+      const i = options.indexOf(selected);
+      if (e.code === 'ArrowLeft' || e.code === 'KeyA') select(options[(i + options.length - 1) % options.length]);
+      if (e.code === 'ArrowRight' || e.code === 'KeyD') select(options[(i + 1) % options.length]);
+      if (e.code === 'ArrowUp' || e.code === 'KeyW') select(options[(i + options.length - 3) % options.length]);
+      if (e.code === 'ArrowDown' || e.code === 'KeyS') select(options[(i + 3) % options.length]);
+      if (e.code === 'Enter' || e.code === 'Space') confirm();
+      if (e.code === 'Escape') onBack();
+    };
+    window.addEventListener('keydown', key);
+    return () => window.removeEventListener('keydown', key);
+  });
+  return (
+    <div className="absolute inset-0" data-stage-select data-stage-choice={selected}>
+      <StagePreview stageId={preview} animated className="absolute inset-0 w-full h-full" />
+      <div className="absolute inset-0 bg-black/75" />
+      <div className="absolute left-6 top-5 title-main text-[30px]">ESCOLHA O MAPA</div>
+      <div className="absolute right-6 top-6 text-[9px] tracking-widest text-white/55">03 / ARENA DO CONFRONTO</div>
+      <div className="absolute left-6 top-[66px] flex items-center gap-3 text-[13px]">
+        <span style={{ color: CHARS[p1].glow }}>{CHARS[p1].name}</span><span className="title-main text-amber-300 text-[18px]">VS</span><span style={{ color: CHARS[p2].glow }}>{CHARS[p2].name}</span>
+      </div>
+      <div className="absolute top-[108px] left-6 right-6 grid grid-cols-3 gap-3">
+        {STAGE_IDS.map((id, index) => {
+          const info = STAGES[id];
+          return <button key={id} type="button" data-stage={id} aria-label={`Selecionar mapa ${info.name}`} aria-pressed={selected === id} onClick={() => select(id)} disabled={locked}
+            className="relative overflow-hidden h-[136px] border-2 text-left cursor-pointer transition-transform"
+            style={{ borderColor: selected === id ? info.accent : '#ffffff33', transform: selected === id ? 'translateY(-2px)' : undefined, boxShadow: selected === id ? `0 0 20px ${info.accent}55` : undefined }}>
+            <StagePreview stageId={id} className="absolute inset-0 w-full h-full" />
+            <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg,transparent 25%,rgba(0,0,0,.95))' }} />
+            <span className="absolute top-2 left-2 text-[9px] px-1 bg-black/60 text-white/70">0{index + 1}</span>
+            <div className="absolute left-3 right-3 bottom-3"><div className="title-main text-[18px]" style={{ color: selected === id ? info.accent : '#fff' }}>{info.name}</div><div className="text-[9px] text-white/65 mt-1">{info.subtitle}</div></div>
+          </button>;
+        })}
+      </div>
+      <button type="button" data-stage="random" aria-pressed={selected === 'random'} onClick={() => select('random')} disabled={locked}
+        className="absolute left-6 top-[404px] w-[296px] h-[45px] border-2 text-left px-4 cursor-pointer"
+        style={{ borderColor: selected === 'random' ? '#fcd34d' : '#ffffff33', background: selected === 'random' ? '#785311cc' : '#0a061acc' }}>
+        <span className="title-main text-[17px]">? ALEATÓRIO</span><span className="text-[8px] text-white/50 float-right mt-1">SURPREENDA-ME</span>
+      </button>
+      <div className="absolute right-6 top-[412px] text-right"><div className="title-main text-[17px]" style={{ color: STAGES[preview].accent }}>{selected === 'random' ? 'O DESTINO ESCOLHE A ARENA' : STAGES[preview].name}</div><div className="text-[9px] mt-1 text-white/50">Mesmo elenco, novos cenários para cada luta.</div></div>
+      <div className="absolute bottom-7 left-8 right-8 flex items-center justify-between">
+        <SkewBtn small onClick={onBack} disabled={locked}>LUTADORES</SkewBtn>
+        <span className="text-[8px] tracking-wider text-white/55">SETAS / WASD ESCOLHER · ENTER CONFIRMAR</span>
+        <div className="flex items-center gap-5"><MusicButton onClick={onRadio} /><SkewBtn small active color={STAGES[preview].accent} disabled={locked} onClick={confirm}>{locked ? 'PREPARE-SE!' : 'LUTAR!'}</SkewBtn></div>
+      </div>
+      <div className="absolute bottom-2 w-full text-center text-[9px] text-white/35">ESC VOLTAR À ESCOLHA DOS LUTADORES</div>
     </div>
   );
 }
