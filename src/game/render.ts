@@ -1,3 +1,4 @@
+import { RANGED_MOVES } from './data';
 // Renderização: mundo, personagens, efeitos, HUD e cinemáticas dos supers.
 import type { Game, Fighter, Particle } from './engine';
 import { settings } from './engine';
@@ -744,6 +745,12 @@ function drawHUD(ctx: CanvasRenderingContext2D, g: Game) {
   const [a, b] = g.f;
   drawBar(ctx, g, a, 0);
   drawBar(ctx, g, b, 1);
+  for (const f of g.f) {
+    if (!RANGED_MOVES[f.ch].length) continue;
+    const right = f.idx === 1;
+    const text = f.rangedCooldown > 0 ? `DISTÂNCIA: ${(f.rangedCooldown / 60).toFixed(1)}s` : `DISTÂNCIA: ${f.rangedUses}/3`;
+    label(ctx, text, right ? W - 48 : 48, 86, 11, f.rangedCooldown ? '#fb7185' : '#ddd6fe', '#150a1e', right ? 'right' : 'left', 0, 3);
+  }
   // timer
   ctx.save();
   ctx.beginPath();

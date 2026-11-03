@@ -3,6 +3,14 @@
 export const CHAR_IDS = ['caetano', 'orango', 'tubarao', 'rickzera', 'bieu', 'nomad', 'renngotti', 'aneninha'] as const;
 export type CharId = (typeof CHAR_IDS)[number];
 
+// Três usos compartilham o mesmo limite por lutador; rajadas contam como um uso.
+export const RANGED_MOVES: Record<CharId, readonly string[]> = {
+  caetano: [], orango: ['s1'], tubarao: [], rickzera: ['s1', 's2'],
+  bieu: ['s2', 's3'], nomad: ['s1', 's2', 's3'],
+  renngotti: ['s2', 's3'], aneninha: ['s2', 's3'],
+};
+
+
 export const CHAR_CATEGORIES = {
   Streamers: ['rickzera', 'caetano', 'nomad', 'bieu', 'renngotti', 'aneninha'],
   Especiais: ['tubarao', 'orango'],
@@ -363,17 +371,17 @@ function copyNormals(dmgScale: number, startup: number, reach: number): Record<s
     hb: [m.hb[0], m.hb[1] + reach, m.hb[2], m.hb[3]] as Move['hb'],
   }]));
 }
-const bieuMoves = copyNormals(1.15, 1, 8);
+const bieuMoves = copyNormals(1.05, 1, 8);
 Object.assign(bieuMoves, Object.fromEntries([
-  mv('s1', { kind: 'special', rank: 9, startup: 11, active: 6, recovery: 23, whiff: 11, dmg: 88, hitstun: 25, blockstun: 15, kb: 7, kbBlock: 4, hb: [20, 150, 70, 146], pierce: 0.35, hitstop: 9, shake: 9, power: 1.8, poses: ['driver_s', 'driver_a'], advance: [7, 15, 3.5], label: 'CHAVE DE FENDA', trail: 'fw' }),
-  mv('s2', { kind: 'special', rank: 9, startup: 16, active: 3, recovery: 25, whiff: 6, dmg: 46, hitstun: 21, blockstun: 13, kb: 4, kbBlock: 2, hb: [20, 100, 0, 35], level: 'low', hitstop: 6, shake: 4, power: 1.2, poses: ['rat_s', 'rat_a'], label: 'JOGAR RATO' }),
-  mv('s3', { kind: 'special', rank: 9, startup: 19, active: 7, recovery: 25, whiff: 8, dmg: 18, hitstun: 15, blockstun: 9, kb: 1, kbBlock: 1, hb: [20, 155, 10, 130], hitstop: 3, shake: 3, power: 0.8, poses: ['spray_s', 'spray_a'], label: 'PICHAÇÃO' }),
+  mv('s1', { kind: 'special', rank: 9, startup: 13, active: 6, recovery: 26, whiff: 11, dmg: 80, hitstun: 25, blockstun: 15, kb: 7, kbBlock: 4, hb: [20, 150, 70, 146], pierce: 0.35, hitstop: 9, shake: 9, power: 1.8, poses: ['driver_s', 'driver_a'], advance: [7, 15, 3.5], label: 'CHAVE DE FENDA', trail: 'fw' }),
+  mv('s2', { kind: 'special', rank: 9, startup: 16, active: 3, recovery: 25, whiff: 6, dmg: 42, hitstun: 21, blockstun: 13, kb: 4, kbBlock: 2, hb: [20, 100, 0, 35], level: 'low', hitstop: 6, shake: 4, power: 1.2, poses: ['rat_s', 'rat_a'], label: 'JOGAR RATO' }),
+  mv('s3', { kind: 'special', rank: 9, startup: 19, active: 7, recovery: 25, whiff: 8, dmg: 16, hitstun: 15, blockstun: 9, kb: 1, kbBlock: 1, hb: [20, 155, 10, 130], hitstop: 3, shake: 3, power: 0.8, poses: ['spray_s', 'spray_a'], label: 'PICHAÇÃO' }),
 ]));
-const nomadMoves = copyNormals(1.07, 1, 5);
+const nomadMoves = copyNormals(1, 1, 5);
 Object.assign(nomadMoves, Object.fromEntries([
-  mv('s1', { kind: 'special', rank: 9, startup: 15, active: 3, recovery: 23, whiff: 8, dmg: 58, hitstun: 23, blockstun: 14, kb: 6, kbBlock: 3, hb: [20, 120, 65, 145], hitstop: 8, shake: 6, power: 1.4, poses: ['burger_s', 'burger_a'], label: 'MARIO BURGER' }),
-  mv('s2', { kind: 'special', rank: 9, startup: 12, active: 5, recovery: 27, whiff: 7, dmg: 23, hitstun: 16, blockstun: 9, kb: 2, kbBlock: 1.5, hb: [20, 120, 135, 155], level: 'high', hitstop: 3, shake: 3, power: 0.9, poses: ['glock_s', 'glock_a'], label: 'RAJADA DE GLOCK' }),
-  mv('s3', { kind: 'special', rank: 9, startup: 17, active: 4, recovery: 26, whiff: 9, dmg: 42, hitstun: 22, blockstun: 12, kb: 3, kbBlock: 2, hb: [20, 120, 70, 140], hitstop: 6, shake: 5, power: 1.3, poses: ['boomerang_s', 'boomerang_a'], label: 'BOOMERANG' }),
+  mv('s1', { kind: 'special', rank: 9, startup: 15, active: 3, recovery: 26, whiff: 8, dmg: 52, hitstun: 23, blockstun: 14, kb: 6, kbBlock: 3, hb: [20, 120, 65, 145], hitstop: 8, shake: 6, power: 1.4, poses: ['burger_s', 'burger_a'], label: 'MARIO BURGER' }),
+  mv('s2', { kind: 'special', rank: 9, startup: 15, active: 5, recovery: 29, whiff: 7, dmg: 20, hitstun: 16, blockstun: 9, kb: 2, kbBlock: 1.5, hb: [20, 120, 135, 155], level: 'high', hitstop: 3, shake: 3, power: 0.9, poses: ['glock_s', 'glock_a'], label: 'RAJADA DE GLOCK' }),
+  mv('s3', { kind: 'special', rank: 9, startup: 17, active: 4, recovery: 29, whiff: 9, dmg: 38, hitstun: 22, blockstun: 12, kb: 3, kbBlock: 2, hb: [20, 120, 70, 140], hitstop: 6, shake: 5, power: 1.3, poses: ['boomerang_s', 'boomerang_a'], label: 'BOOMERANG' }),
 ]));
 
 

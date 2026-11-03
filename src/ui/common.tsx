@@ -48,16 +48,16 @@ export function MusicButton({ onClick }: { onClick: () => void }) {
 }
 
 /** Palco de 960x540 escalado para caber na janela. */
-export function Frame({ children }: { children: ReactNode }) {
+export function Frame({ children, game = false }: { children: ReactNode; game?: boolean }) {
   const [s, setS] = useState(1);
   useEffect(() => {
-    const f = () => setS(Math.min(window.innerWidth / W, window.innerHeight / H));
+    const f = () => { const portrait = matchMedia('(pointer: coarse)').matches && window.innerHeight > window.innerWidth; setS(Math.min(window.innerWidth / W, (window.innerHeight - (game && portrait ? 190 : 0)) / H)); };
     f();
     window.addEventListener('resize', f);
     return () => window.removeEventListener('resize', f);
-  }, []);
+  }, [game]);
   return (
-    <div className="fixed inset-0 bg-black flex items-center justify-center overflow-hidden select-none">
+    <div data-game-frame={game ? '1' : '0'} className="game-frame fixed inset-0 bg-black flex items-center justify-center overflow-hidden select-none">
       <div style={{ width: W, height: H, transform: `scale(${s})`, position: 'relative', flexShrink: 0, overflow: 'hidden' }}>{children}</div>
     </div>
   );

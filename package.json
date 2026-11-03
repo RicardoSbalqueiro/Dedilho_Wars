@@ -4,10 +4,14 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "npm run typecheck && vite build",
-    "preview": "vite preview",
-    "typecheck": "tsc --noEmit"
+    "dev": "npm run build && npm run db:local && npm run preview",
+    "build": "npm run typecheck && node scripts/build.mjs",
+    "preview": "node scripts/preview.mjs",
+    "typecheck": "tsc --noEmit",
+    "dev:client": "vite",
+    "db:generate": "drizzle-kit generate",
+    "db:local": "node scripts/migrate-local.mjs",
+    "test": "node scripts/test.mjs"
   },
   "dependencies": {
     "clsx": "2.1.1",
@@ -21,10 +25,13 @@
     "@types/react": "19.2.7",
     "@types/react-dom": "19.2.3",
     "@vitejs/plugin-react": "5.1.1",
+    "drizzle-kit": "0.31.4",
+    "drizzle-orm": "0.44.5",
     "tailwindcss": "4.1.17",
     "typescript": "5.9.3",
     "vite": "7.3.2",
-    "vite-plugin-singlefile": "2.3.0"
+    "vite-plugin-singlefile": "2.3.0",
+    "wrangler": "4.50.0"
   },
   "engines": {
     "node": "^20.19.0 || >=22.12.0"

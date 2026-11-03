@@ -43,11 +43,12 @@ function Title({ big }: { big?: boolean }) {
 }
 
 // ------------------------------------------------------------------ MENU PRINCIPAL
-export type MenuChoice = 'play' | 'versus' | 'training' | 'controls' | 'settings' | 'radio';
+export type MenuChoice = 'play' | 'versus' | 'training' | 'controls' | 'settings' | 'radio' | 'online';
 
 export function MainMenu({ onChoose, onRadio, suspended = false }: { onChoose: (c: MenuChoice) => void; onRadio: () => void; suspended?: boolean }) {
   const items: [MenuChoice, string, string][] = [
     ['play', 'JOGAR', '#a855f7'],
+    ['online', 'ONLINE', '#22d3ee'],
     ['versus', 'VERSUS LOCAL', '#f59e0b'],
     ['training', 'TREINAMENTO', '#22c55e'],
     ['controls', 'CONTROLES', '#38bdf8'],
@@ -84,7 +85,7 @@ export function MainMenu({ onChoose, onRadio, suspended = false }: { onChoose: (
       <div className="absolute left-8 top-10">
         <Title />
       </div>
-      <div className="absolute left-8 top-[140px] flex flex-col gap-[6px]">
+      <div className="absolute left-8 top-[125px] flex flex-col gap-[5px]">
         {items.map(([k, label, color], i) => (
           <SkewBtn
             key={k}

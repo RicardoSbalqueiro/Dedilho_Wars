@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
+import { TrainingChallenges } from './TrainingChallenges';
+import { GameOverlay, TouchControls } from './TouchControls';
 import { Game } from '../game/engine';
 import type { GameConfig } from '../game/engine';
 import { render } from '../game/render';
@@ -14,6 +16,7 @@ export function GameScreen({ cfg, onExit, onSelect, onMap, onRadio, inputSuspend
   const [paused, setPaused] = useState(false);
   const [result, setResult] = useState<number | null>(null);
   const [sel, setSel] = useState(0);
+  const [dummy, setDummy] = useState(0);
   const resultTimerRef = useRef<number | undefined>(undefined);
   const overlayRef = useRef<HTMLDivElement>(null);
 
@@ -82,11 +85,13 @@ export function GameScreen({ cfg, onExit, onSelect, onMap, onRadio, inputSuspend
 
   return (
     <div ref={overlayRef} className="absolute inset-0">
+      {cfg.mode === 'training' && <TrainingChallenges gameRef={gameRef}/>}
       <canvas ref={ref} width={W} height={H} className="absolute inset-0" />
       <div className="absolute bottom-[3px] left-1/2 -translate-x-1/2 text-[10px] tracking-widest text-white/50 pointer-events-none">P1: {keyLabel(cfg.bindings[0].down[0])} AGACHAR · P2: {keyLabel(cfg.bindings[1].down[0])} AGACHAR · ESC / P: PAUSA</div>
 
+      {!paused && result === null && <TouchControls onMenu={() => gameRef.current?.togglePause()}/>}
       {paused && (
-        <div className="pause-menu absolute inset-0 bg-black/80 flex flex-col items-center justify-center gap-2 fade-in">
+        <GameOverlay><div className="pause-menu absolute inset-0 bg-black/80 flex flex-col items-center justify-center gap-2 fade-in">
           <div className="title-main text-5xl text-white mb-2" style={{ textShadow: '0 0 20px #a855f7, 4px 4px 0 #000' }}>
             PAUSADO
           </div>
@@ -128,16 +133,17 @@ export function GameScreen({ cfg, onExit, onSelect, onMap, onRadio, inputSuspend
               <MB idx={5} sel={sel} setSel={setSel} onClick={onExit}>MENU PRINCIPAL</MB>
             </>
           )}
+          {cfg.mode === 'training' && <button className="text-xs py-2 px-4 bg-white/10 rounded cursor-pointer" onClick={() => {if(g){g.train.dummy=(g.train.dummy+1)%4;g.f[1].cpu=g.train.dummy===1;g.f[1].pad.reset();setDummy(g.train.dummy)}}}>OPONENTE: {['PARADO','IA','DEFENDE','P2'][g?.train.dummy ?? dummy]}</button>}
           <div className="mt-3 text-[10px] text-white/60 text-center leading-5">
             P1: A/D mover · W pular · S agachar · J soco · K chute · L defesa · U/I/O especiais · H super
             <br />
             P2: Setas · Num 1/2/3 soco/chute/defesa · Num 4/5/6 especiais · Num 0 super (ou , . / ; &apos; Enter ShiftD)
           </div>
-        </div>
+        </div></GameOverlay>
       )}
 
       {result !== null && winnerChar && (
-        <div className="absolute inset-0 pointer-events-none fade-in" style={{ background: `linear-gradient(180deg, ${winnerChar.color}55 0%, transparent 35%, transparent 62%, rgba(0,0,0,0.85) 100%)` }}>
+        <GameOverlay><div className="result-menu absolute inset-0 pointer-events-none fade-in" style={{ background: `linear-gradient(180deg, ${winnerChar.color}55 0%, transparent 35%, transparent 62%, rgba(0,0,0,0.85) 100%)` }}>
           <div className="absolute top-5 w-full text-center">
             <div className="title-main text-[22px] tracking-[0.3em] text-white/90 pop-in">{who}</div>
             <div className="title-main text-[56px] pop-in" style={{ color: '#fff', WebkitTextStroke: `2px ${winnerChar.color2}`, textShadow: `0 0 28px ${winnerChar.color}, 5px 5px 0 #000`, animationDelay: '0.15s' }}>
@@ -159,7 +165,7 @@ export function GameScreen({ cfg, onExit, onSelect, onMap, onRadio, inputSuspend
             <MB idx={2} sel={sel} setSel={setSel} onClick={onMap} color={winnerChar.color} small>TROCAR MAPA</MB>
             <MB idx={3} sel={sel} setSel={setSel} onClick={onExit} color={winnerChar.color} small>MENU PRINCIPAL</MB>
           </div>
-        </div>
+        </div></GameOverlay>
       )}
     </div>
   );

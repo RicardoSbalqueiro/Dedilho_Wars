@@ -1,7 +1,9 @@
+import { challengeDefinition, challengeAvailable, saveChallengeBadge } from './challenges';
+import type { ChallengeId, ChallengeProgress } from './challenges';
 // Lógica de combate (separada da renderização).
-import { CHARS, NORMAL_BY_RANK } from './data';
+import { CHARS, NORMAL_BY_RANK, RANGED_MOVES } from './data';
 import type { CharDef, CharId, Move, Pose } from './data';
-import { Pad, keyboard } from './input';
+import { ACTIONS, Pad, keyboard } from './input';
 import type { Bindings } from './input';
 import { audio } from './audio';
 import { computeRig, lerpPose } from './rig';
@@ -26,6 +28,7 @@ export interface GameConfig {
   stage?: StageId;
   difficulty: Difficulty;
   bindings: [Bindings, Bindings];
+  online?: boolean;
 }
 
 export interface GameEvent {
@@ -80,6 +83,8 @@ export interface Fighter {
   landLag: number;
   airAttacked: boolean;
   airJumps: number;
+  rangedUses: number;
+  rangedCooldown: number;
   hidden: boolean;
   juggle: number;
   invuln: number;
@@ -184,6 +189,8 @@ function makeFighter(idx: 0 | 1, ch: CharId, cpu: boolean): Fighter {
     landLag: 0,
     airAttacked: false,
     airJumps: 0,
+    rangedUses: 0,
+    rangedCooldown: 0,
     hidden: false,
     juggle: 0,
     invuln: 0,
@@ -241,11 +248,15 @@ export class Game {
     { hits: 0, dmg: 0, t: 0 },
   ];
   train = { dummy: 0, lastDmg: 0, combo: 0, total: 0, idle: 0, maxCombo: 0 };
+  challenge: ChallengeProgress | null = null;
+  private challengeSuperSerial = -1;
   hype = 0;
   speed = 0; // intensidade de linhas de velocidade
   perfect = false;
   winner = -1;
   onEvent: (e: GameEvent) => void;
+  onlineInputs: [number, number] = [0, 0];
+  onlinePressed: [number, number] = [0, 0];
   private acc = 0;
   private last = 0;
   private keyHandler: (code: string, e: KeyboardEvent) => void;
@@ -277,6 +288,7 @@ export class Game {
 
   // ------------------------------------------------------------ controle de partida
   resetMatch() {
+    if (this.challenge) this.challenge = {id:this.challenge.id,current:0,done:false,seen:[]};
     for (const f of this.f) {
       f.wins = 0;
       f.meter = 0;
@@ -317,6 +329,8 @@ export class Game {
       f.comboHits = f.comboDmg = 0;
       f.juggle = 0;
       f.airJumps = 0;
+      f.rangedUses = 0;
+      f.rangedCooldown = 0;
       f.airAttacked = false;
       f.hidden = false;
       f.trail = [];
@@ -338,6 +352,27 @@ export class Game {
     if (this.training) this.announce('TREINAMENTO', '', 60, '#fbbf24');
   }
 
+  startChallenge(id: ChallengeId | null) {
+    if (!this.training || id && !challengeAvailable(id,this.f[0].ch)) return;
+    this.challenge = id ? {id,current:0,done:false,seen:[]} : null;
+    this.challengeSuperSerial = -1;
+    this.train.dummy = id === 'block' ? 1 : 0;
+    this.f[1].cpu = this.train.dummy === 1;
+    this.resetPositions();
+    this.f[0].x = 650; this.f[1].x = id === 'block' ? 830 : 760;
+    this.train.lastDmg = this.train.combo = this.train.total = this.train.maxCombo = 0;
+  }
+
+  private challengeEvent(metric: string, amount = 1, token = '') {
+    const c=this.challenge;
+    if (!this.training || !c || c.done) return;
+    const def=challengeDefinition(c.id);
+    if (def.metric !== metric) return;
+    if (metric === 'special') { if(c.seen.includes(token)) return; c.seen.push(token); }
+    c.current=Math.min(def.target,metric === 'combo' ? Math.max(c.current,amount) : c.current+amount);
+    if (c.current >= def.target) { c.done=true; saveChallengeBadge(c.id); audio.confirm(); }
+  }
+
   resetPositions() {
     this.resetRound();
     for (const f of this.f) f.meter = 100;
@@ -349,7 +384,7 @@ export class Game {
     if (bound || code === 'Escape' || code === 'Space') e.preventDefault();
     if (e.repeat) return;
     if (code === 'Escape' || code === 'KeyP') {
-      this.togglePause();
+      if (!this.cfg.online) this.togglePause();
     } else if (this.training && !this.paused) {
       if (code === 'KeyR') this.resetPositions();
       if (code === 'KeyT') {
@@ -384,14 +419,22 @@ export class Game {
   }
 
   private pollInputs() {
+    if (this.cfg.online) {
+      for (const f of this.f) {
+        ACTIONS.forEach((a,i) => {f.pad.set(a, !!(this.onlineInputs[f.idx] & (1 << i)), this.tick);if ((this.onlinePressed[f.idx] & (1 << i)) && f.pad.pressedAt[a] !== this.tick) f.pad.tap(a,this.tick)});
+        this.onlinePressed[f.idx] = 0;
+      }
+      return;
+    }
     const m = this.cfg.mode;
     const human: [boolean, boolean] = m === 'versus' ? [true, true] : m === 'ai' ? [true, false] : [true, this.train.dummy === 3];
-    for (let i = 0; i < 2; i++) if (human[i]) this.f[i].pad.pollKeys(this.cfg.bindings[i], this.tick);
+    for (let i = 0; i < 2; i++) if (human[i]) this.f[i].pad.pollKeys(this.cfg.bindings[i], this.tick, i === 0);
   }
 
   step() {
     this.tick++;
     if (this.paused) return;
+    for (const f of this.f) if (f.rangedCooldown > 0 && --f.rangedCooldown === 0) { f.rangedUses = 0; if(f.idx===0)this.challengeEvent('range'); }
     this.pollInputs();
     if (this.phase !== 'fight') for (const f of this.f) f.pad.reset();
 
@@ -635,8 +678,7 @@ export class Game {
     for (const s of ['s1', 's2', 's3'] as const) {
       if (pad.buffered(s, tk, 5)) {
         pad.consume(s);
-        this.startMove(f, f.def.moves[s]);
-        return true;
+        return this.startMove(f, f.def.moves[s]);
       }
     }
     for (const b of ['p', 'k'] as const) {
@@ -650,8 +692,13 @@ export class Game {
   }
 
   startMove(f: Fighter, m: Move) {
+    if (RANGED_MOVES[f.ch].includes(m.id)) {
+      if (f.rangedCooldown > 0) return false;
+      if (++f.rangedUses === 3) f.rangedCooldown = 300;
+    }
     if (f.ch === 'rickzera' && m.id === 's3') {
-      if (f.y < 0 && f.airJumps >= 2) return;
+      if (f.y < 0 && f.airJumps >= 2) return false;
+      if(f.idx===0)this.challengeEvent('jump');
       f.airJumps = f.y < 0 ? f.airJumps + 1 : 1;
       f.vy = -f.def.jumpVy;
       f.y = Math.min(f.y, -1);
@@ -685,6 +732,7 @@ export class Game {
     if (m.id === 's3' && f.ch === 'caetano') audio.say('Soco pego!', 1.2, 1.1);
     if (m.id === 's1' && f.ch === 'caetano') audio.say('Chute da conspiração!', 1.2, 1.1);
     if (m.id === 's2' && f.ch === 'caetano') audio.say('Dedilho!', 1.3, 1.2);
+    return true;
   }
 
   private tryCancel(f: Fighter): boolean {
@@ -701,8 +749,7 @@ export class Game {
       for (const s of ['s1', 's2', 's3'] as const) {
         if (pad.buffered(s, tk, 4)) {
           pad.consume(s);
-          this.startMove(f, f.def.moves[s]);
-          return true;
+          return this.startMove(f, f.def.moves[s]);
         }
       }
       if (!m.air && m.rank < 3) {
@@ -799,6 +846,7 @@ export class Game {
           pad.consume('up');
           f.vy = -def.jumpVy;
           f.vx = ((pad.held.right ? 1 : 0) - (pad.held.left ? 1 : 0)) * def.jumpVx;
+          if(f.idx===0)this.challengeEvent('jump');
           f.state = 'jump';
           f.stateT = 0;
           f.airAttacked = false;
@@ -811,6 +859,7 @@ export class Game {
         // dash (toque duplo)
         const dashDir = pad.pressedAt[fwd] === tk && tk - pad.prevAt[fwd] <= 14 ? 1 : pad.pressedAt[back] === tk && tk - pad.prevAt[back] <= 14 ? -1 : 0;
         if (dashDir !== 0 && !f.crouch && !f.guard) {
+          if(f.idx===0)this.challengeEvent('dash');
           f.state = 'dash';
           f.stateT = 0;
           f.vx = dashDir * f.facing * (dashDir > 0 ? def.dashVx : def.dashVx * 0.85);
@@ -1173,6 +1222,11 @@ export class Game {
   }
 
   private dealDamage(a: Fighter, d: Fighter, dmg: number) {
+    if(a.idx===0) {
+      this.challengeEvent('hits');
+      this.challengeEvent('damage',dmg);
+      if(this.seq?.kind.startsWith('super') && this.challengeSuperSerial!==a.serial) {this.challengeSuperSerial=a.serial;this.challengeEvent('super');}
+    }
     if (this.training) {
       this.train.lastDmg = Math.round(dmg);
       d.comboDmg += dmg;
@@ -1200,6 +1254,7 @@ export class Game {
 
     // --- agarrões ---
     if (m.grab) {
+      if(a.idx===0 && m.kind==='special')this.challengeEvent('special',1,m.id);
       if (tracked) a.connected = true;
       if (m.grab === 'super') this.startSeq(({ caetano: 'superC', orango: 'superO', tubarao: 'superT', rickzera: 'superR', bieu: 'superB', nomad: 'superN', renngotti: 'superG', aneninha: 'superA' } as const)[a.ch], a, d);
       else this.startSeq(m.grab, a, d);
@@ -1209,6 +1264,7 @@ export class Game {
     const blocked = d.guard && d.y === 0 && (d.state === 'ground' || d.state === 'block') && !m.unblockable && (m.level !== 'low' || d.crouch) && (m.level !== 'high' || !d.crouch);
     if (tracked) a.connected = true;
     if (blocked) {
+      if (d.idx === 0) this.challengeEvent('block');
       const chip = m.dmg * (m.pierce ?? (m.kind === 'special' ? 0.12 : 0.04));
       const prev = d.hp;
       d.hp = Math.max(m.kind === 'special' ? 0 : 1, d.hp - chip);
@@ -1234,9 +1290,11 @@ export class Game {
     }
 
     // --- acerto ---
+    if (a.idx === 0) { if(m.level==='low')this.challengeEvent('low'); if(m.air)this.challengeEvent('air'); if(m.kind==='special')this.challengeEvent('special',1,m.id); }
     const air = d.y < 0 || d.state === 'launched';
     if (d.state === 'hit' || d.state === 'launched') d.comboHits++;
     else d.comboHits = 1;
+    if (a.idx === 0) this.challengeEvent('combo',d.comboHits);
     const scale = [1, 1, 0.9, 0.8, 0.7, 0.6, 0.5, 0.45][Math.min(d.comboHits - 1, 7)];
     const dmg = Math.max(1, m.dmg * scale);
     this.dealDamage(a, d, dmg);
@@ -1518,6 +1576,7 @@ export class Game {
   private seqHit(a: Fighter, d: Fighter, dmg: number, power: number, color: string) {
     this.dealDamage(a, d, dmg);
     d.comboHits++;
+    if(a.idx===0)this.challengeEvent('combo',d.comboHits);
     const px = d.x + rand(-14, 14);
     const py = FLOOR_Y + d.y - rand(60, 120);
     audio.hit(Math.min(power, 3));
@@ -1863,7 +1922,7 @@ export class Game {
     if (t === 35) audio.tone(85, 0.8, 'sawtooth', 0.25, 340);
     if (t === 70) {
       s.x0 = d.x;
-      this.seqHit(a, d, 300, 4, a.def.glow);
+      this.seqHit(a, d, 275, 4, a.def.glow);
       this.flash = { c: '#e9d5ff', a: 0.9 };
       this.shake = 42;
       this.hitstop = 12;
@@ -1897,7 +1956,7 @@ export class Game {
     d.poseOverride = t < 60 ? 'grabbed' : t < 105 ? 'air' : 'down';
     if (t < 35) d.x = a.x + f * 300;
     if (t === 35) {
-      const move: Move = { ...a.def.moves.s1, id: 'arena', dmg: 310, kind: 'super' };
+      const move: Move = { ...a.def.moves.s1, id: 'arena', dmg: 285, kind: 'super' };
       this.projectiles.push({ owner: a.idx, kind: 'bazooka', x: a.x + f * 70, y: -105, vx: f * 10, life: 30, serial: a.serial, move, age: 0, radius: 24 });
       audio.noise(0.25, 0.3, 1500, 'lowpass');
       audio.tone(120, 0.3, 'sawtooth', 0.24, 40);
@@ -1911,7 +1970,7 @@ export class Game {
     if (t === 60) {
       this.projectiles = this.projectiles.filter((p) => p.kind !== 'bazooka' || p.owner !== a.idx);
       s.x0 = d.x;
-      this.seqHit(a, d, 310, 4.5, '#fde68a');
+      this.seqHit(a, d, 285, 4.5, '#fde68a');
       this.expl = { t: 0, color: '#f59e0b', dur: 65 };
       this.flash = { c: '#fff7d6', a: 1 };
       this.shake = 48;
@@ -2303,6 +2362,7 @@ export class Game {
     if (!this.training) return;
     const d = this.f[1];
     const a = this.f[0];
+    if(a.crouch&&a.y===0)this.challengeEvent('crouch');
     for (const f of this.f) {
       if (f.state === 'ground' && f.hp < f.maxHp) {
         this.train.idle++;

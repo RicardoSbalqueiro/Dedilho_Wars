@@ -13,6 +13,7 @@ export default defineConfig({
   plugins: [react(), tailwindcss(), viteSingleFile({ useRecommendedBuildConfig: false })],
   base: "./",
   build: {
+    outDir: "dist/client",
     assetsDir: "",
     assetsInlineLimit: (filePath) => !filePath.endsWith(".mp3"),
     cssCodeSplit: false,

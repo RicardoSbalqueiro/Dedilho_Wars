@@ -1,3 +1,4 @@
+import { touchInput } from './touch';
 export type Action = 'left' | 'right' | 'up' | 'down' | 'p' | 'k' | 'block' | 's1' | 's2' | 's3' | 'super';
 
 export const ACTIONS: Action[] = ['left', 'right', 'up', 'down', 'p', 'k', 'block', 's1', 's2', 's3', 'super'];
@@ -151,11 +152,12 @@ export class Pad {
     }
     this.held[a] = down;
   }
-  pollKeys(b: Bindings, tick: number) {
+  pollKeys(b: Bindings, tick: number, touch = false) {
     for (const a of ACTIONS) {
       const [c1, c2] = b[a];
-      this.set(a, (!!c1 && keyboard.down.has(c1)) || (!!c2 && keyboard.down.has(c2)), tick);
+      this.set(a, (!!c1 && keyboard.down.has(c1)) || (!!c2 && keyboard.down.has(c2)) || (touch && touchInput.held.has(a)), tick);
     }
+    if (touch) for (const a of touchInput.consume()) if (this.pressedAt[a] !== tick) this.tap(a,tick);
   }
   buffered(a: Action, tick: number, win = 6) {
     return tick - this.pressedAt[a] <= win;

@@ -4,7 +4,7 @@ Jogo de luta 2D com oito lutadores, seis cenários e rádio integrada.
 
 ## Jogar
 
-Acesse https://dedilho-wars-luta.pithyblimp1.chatgpt.site em um computador com teclado. Para jogar offline, abra /baixar/ e baixe o ZIP completo. Extraia toda a pasta e abra **JOGAR.html** com Chrome, Edge ou Firefox atualizado. Não remova a pasta src/assets/radio: ela contém as sete músicas usadas pelo jogo offline. Clique na abertura para ativar o áudio.
+Acesse https://dedilho-wars-luta.pithyblimp1.chatgpt.site em um computador, celular ou tablet com navegador atualizado. Os modos locais também funcionam offline. Para jogar offline, abra /baixar/ e baixe o ZIP completo. Extraia toda a pasta e abra **JOGAR.html** com Chrome, Edge ou Firefox atualizado. Não remova a pasta src/assets/radio: ela contém as sete músicas usadas pelo jogo offline. Clique na abertura para ativar o áudio.
 
 O ZIP inclui tanto o jogo pronto como o código-fonte. O index.html da raiz é a entrada de desenvolvimento do Vite; para jogar diretamente use JOGAR.html. A versão online carrega as músicas do próprio site sob demanda, e a versão extraída usa os MP3 locais, sem streaming externo. O narrador usa as vozes disponíveis no navegador/sistema.
 
@@ -37,6 +37,39 @@ Aneninha avança com o Soco de Osasco e lança o adversário para continuar comb
 
 Todos possuem golpes fracos/médios/fortes, ataques agachados e aéreos, defesa alta/baixa, dash, combos, barra de ULT, retratos, animações de reação e vitória, IA e treinamento. Os ganhos de ULT estão em metade do valor original; o custo continua em 100 e o treinamento mantém a barra livre.
 
+## Online e contas
+
+Abra **ONLINE**, registre um **usuário** (3–24 letras, números ou _) e uma **senha** (8–128 caracteres). O cadastro não solicita nem armazena e-mail. A conta fica no banco do jogo e pode ser usada em outro dispositivo; a sessão dura até sete dias ou até sair da conta.
+
+1. Um jogador cria uma sala e compartilha seu código de oito caracteres.
+2. O amigo entra na própria conta e informa esse código.
+3. Cada um escolhe seu lutador e confirma **PRONTO**. O criador escolhe a arena e clica em **LUTAR!**.
+4. Após o resultado, ambos voltam à sala e confirmam novamente para uma revanche ou outro confronto.
+
+Cada jogador usa seus controles de P1, incluindo os botões de toque no celular. O criador simula a partida e envia o estado ao convidado. A conexão WebRTC transmite diretamente quando possível; uma retransmissão HTTP no próprio servidor mantém a partida disponível em redes que bloqueiam P2P. O indicador mostra a conexão e o atraso estimado. Não há pausa no online; o menu permite sair. Uma interrupção prolongada bloqueia o avanço da partida enquanto a conexão é restabelecida.
+
+O servidor valida sessões, participação, confirmação dos jogadores e a sequência de cada partida. Senhas usam PBKDF2-SHA256 com salt individual; apenas hashes de sessão são guardados no banco. Cookies de produção são HttpOnly, Secure e SameSite=Strict. Operações de escrita verificam a origem, e cadastro/login têm limites de tentativas. Os dados ficam no D1 do site; não há credenciais de conta no código distribuído.
+
+## Celular e tablet
+
+Os menus têm botões e formulários em tamanho nativo. Durante a luta aparece um direcional de toque com diagonais, salto e agachamento, além de soco, chute, defesa, três especiais e ULT. Vários dedos podem ser usados juntos; toques rápidos são registrados. O botão MENU abre a pausa local ou a saída da partida online.
+
+É possível jogar na vertical, com a arena em 16:9 acima dos controles, ou na horizontal. A mudança de orientação preserva a partida. Música, configurações e desafios também têm telas adaptadas. Os botões de toque controlam o P1 no versus local; o segundo jogador pode usar um teclado conectado.
+
+## Desafios de treinamento
+
+Entre em **TREINAMENTO** e toque/clique em **DESAFIOS**. Há 12 objetivos com progresso real: cinco acertos, três ataques baixos, dois aéreos, cinco saltos, três dashes, três segundos agachado, três bloqueios contra IA, combo de três acertos, os três especiais diferentes, 500 de dano acumulado, acertar uma ULT e completar um cooldown de distância. Este último exige um personagem com golpes à distância.
+
+Selecionar um desafio reinicia as posições; o desafio de defesa ativa a IA. Conquistas concluídas são lembradas neste navegador. Você pode repetir qualquer desafio ou voltar ao treinamento livre. Na pausa também é possível trocar o comportamento do oponente sem teclado.
+
+## Balanceamento e limite de distância
+
+Após três usos de golpes à distância, o lutador passa cinco segundos sem poder iniciar outro golpe à distância. O contador é compartilhado entre seus especiais: uma rajada inteira conta como um uso, independentemente de acertar. Corpo a corpo, defesa, movimento e ULT continuam disponíveis. O HUD mostra usos e tempo restante. A pausa local congela o relógio; um novo round reinicia o limite. A regra vale para humanos, IA, treinamento e online.
+
+Entram no limite os projéteis, as pichações, os gritos e o Dedilho Supremo do Orangotango. Caetano e Tubarão mantêm seus especiais de contato. Os ganhos de ULT continuam em ×0,5.
+
+Bieubatman recebeu redução de aproximadamente 9% nos normais, Chave de Fenda 88→80, Rato 46→42, Pichação 18→16 e Prestígio 300→275. Nomad tem normais em ×1, Burger 58→52, cada tiro 23→20, Boomerang 42→38 e Arena 310→285. Alguns especiais também recuperam mais lentamente, mantendo seus movimentos e identidades.
+
 ## Controles padrão
 
 | Ação | P1 | P2 |
@@ -62,22 +95,28 @@ Os MP3 enviados estão incluídos em 96 kbps estéreo, completos, para reduzir o
 
 ## Continuar o desenvolvimento
 
-Instale Node.js 22.12+ ou 24 LTS. Dentro desta pasta:
+Instale Node.js 22.13+ ou 24 LTS. Dentro desta pasta:
 
 ```sh
 npm ci
 npm run dev
 ```
 
-Abra o endereço informado pelo Vite, normalmente http://localhost:5173. A primeira instalação precisa de internet.
+O comando compila o jogo, aplica as migrações apenas no banco local e abre o servidor em http://127.0.0.1:8787. A primeira instalação precisa de internet.
 
 ```sh
 npm run typecheck
 npm run build
+npm run db:local
+npm test
 npm run preview
 ```
 
-O build produz dist/index.html com desenhos, scripts e estilos incorporados, e os sete arquivos MP3 na mesma pasta dist. Para distribuir um novo build, mantenha toda a pasta dist junta; copiar somente o HTML perde os arquivos de música. O JOGAR.html desta entrega foi preparado para usar os MP3 em src/assets/radio, preservando uma única cópia dos áudios no ZIP.
+O build produz `dist/server/index.js` (API), `dist/server/wrangler.json` (configuração local), `dist/.openai/hosting.json` e `dist/client/` (jogo e MP3s). Pare o servidor de preview antes de recompilar. `npm run dev:client` abre apenas o cliente Vite; as contas e salas precisam do servidor completo.
+
+O esquema está em `db/schema.ts`. Após alterações, rode `npm run db:generate` e revise os novos SQLs em `drizzle/`. Migrações já aplicadas são preservadas. `npm run db:local` aplica apenas as pendentes no preview; o Sites aplica as hospedadas durante a publicação. O manifesto mantém a identidade do site e declara o binding lógico DB.
+
+Para gerar o ZIP offline e a página de download após o build, use `python3 scripts/package.py`. O pacote inclui código, servidor, migrações, testes e JOGAR.html com uma única cópia das sete músicas em src/assets/radio. O online usa o site hospedado; os modos locais, desafios e controles móveis continuam disponíveis no HTML extraído.
 
 ## Organização e créditos
 
