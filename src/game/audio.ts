@@ -1,4 +1,9 @@
-// Motor de áudio 100% sintetizado (Web Audio API) — sem arquivos externos.
+// Música original sintetizada + rádio com os raps locais enviados pelo usuário.
+import { RADIO_TRACKS, isRadioStation } from './radio';
+import type { RadioSnapshot, RadioStation } from './radio';
+
+type MusicMode = 'menu' | 'fight' | 'victory' | null;
+const RADIO_STORE = 'dedilho-wars-radio-v1';
 
 export interface AudioSettings {
   music: number;
@@ -18,12 +23,134 @@ class AudioEngine {
   private timer: number | null = null;
   private step = 0;
   private nextTime = 0;
-  private mode: 'menu' | 'fight' | 'victory' | null = null;
+  private mode: MusicMode = null;
+  private requestedMode: MusicMode = null;
+  private radioElement: HTMLAudioElement | null = null;
+  private radioListeners = new Set<() => void>();
+  private radioPaused = false;
+  private radioRequest = 0;
+  private radioState: RadioSnapshot = {
+    station: 'original', playing: false, loading: false, error: null,
+    currentTime: 0, duration: 0, volume: this.settings.music,
+  };
+
+  constructor() {
+    try {
+      const saved = JSON.parse(localStorage.getItem(RADIO_STORE) || 'null');
+      if (isRadioStation(saved?.station)) this.radioState = { ...this.radioState, station: saved.station };
+      this.radioPaused = saved?.paused === true;
+    } catch { /* configurações ausentes ou inválidas usam a rádio original */ }
+  }
+
+  getRadioSnapshot = () => this.radioState;
+  subscribeRadio = (listener: () => void) => {
+    this.radioListeners.add(listener);
+    return () => { this.radioListeners.delete(listener); };
+  };
+
+  private publishRadio(update: Partial<RadioSnapshot> = {}) {
+    this.radioState = { ...this.radioState, ...update, volume: this.settings.music };
+    this.radioListeners.forEach((listener) => listener());
+  }
+
+  private saveRadio() {
+    try { localStorage.setItem(RADIO_STORE, JSON.stringify({ station: this.radioState.station, paused: this.radioPaused })); }
+    catch { /* tocar música continua funcionando sem armazenamento */ }
+  }
+
+  private ensureRadioElement() {
+    if (this.radioElement) return this.radioElement;
+    const element = new Audio();
+    element.preload = 'metadata';
+    element.volume = this.settings.music;
+    element.addEventListener('timeupdate', () => this.publishRadio({ currentTime: element.currentTime }));
+    element.addEventListener('loadedmetadata', () => this.publishRadio({ duration: Number.isFinite(element.duration) ? element.duration : 0 }));
+    element.addEventListener('playing', () => this.publishRadio({ playing: true, loading: false, error: null }));
+    element.addEventListener('pause', () => this.publishRadio({ playing: false }));
+    element.addEventListener('waiting', () => {
+      if (!this.radioPaused) this.publishRadio({ loading: true });
+    });
+    element.addEventListener('ended', () => {
+      if (this.radioPaused || this.radioState.station === 'original') return;
+      // A estação original é infinita; a sequência automática percorre os quatro raps.
+      const i = RADIO_TRACKS.findIndex((track) => track.id === this.radioState.station);
+      this.selectRadio(RADIO_TRACKS[i >= RADIO_TRACKS.length - 1 ? 1 : i + 1].id);
+    });
+    element.addEventListener('error', () => this.publishRadio({ playing: false, loading: false, error: 'Não foi possível carregar esta faixa. Tente tocar novamente ou escolha outra.' }));
+    this.radioElement = element;
+    return element;
+  }
+
+  private async playRadioElement() {
+    const station = RADIO_TRACKS.find((track) => track.id === this.radioState.station)!;
+    if (!station.url || this.radioPaused) return;
+    const request = ++this.radioRequest;
+    const element = this.ensureRadioElement();
+    if (element.getAttribute('src') !== station.url) {
+      element.src = station.url;
+      this.publishRadio({ currentTime: 0, duration: 0 });
+    }
+    this.publishRadio({ loading: true, error: null });
+    try {
+      await element.play();
+      if (request === this.radioRequest && !this.radioPaused) this.publishRadio({ playing: true, loading: false, error: null });
+    } catch (error) {
+      if (request !== this.radioRequest) return;
+      if (error instanceof DOMException && error.name === 'AbortError') return;
+      this.publishRadio({ playing: false, loading: false, error: 'Clique em Tocar para liberar o áudio no navegador.' });
+    }
+  }
+
+  selectRadio(station: RadioStation) {
+    if (!isRadioStation(station)) return;
+    this.radioRequest++;
+    this.radioElement?.pause();
+    this.synthMusic(null);
+    this.radioPaused = false;
+    this.publishRadio({ station, playing: false, loading: false, error: null, currentTime: 0, duration: 0 });
+    this.saveRadio();
+    if (station === 'original') {
+      this.init();
+      this.synthMusic(this.requestedMode || 'menu');
+    } else {
+      // Selecting an entry is a user gesture; the MP3 can start without Web Audio.
+      const element = this.ensureRadioElement();
+      element.currentTime = 0;
+      void this.playRadioElement();
+    }
+  }
+
+  toggleRadio() {
+    this.radioPaused = this.radioState.playing || this.radioState.loading;
+    this.radioRequest++;
+    this.saveRadio();
+    if (this.radioPaused) {
+      this.radioElement?.pause();
+      this.synthMusic(null);
+      this.publishRadio({ playing: false, loading: false });
+    } else if (this.radioState.station === 'original') {
+      this.init();
+      this.synthMusic(this.requestedMode || 'menu');
+    } else void this.playRadioElement();
+  }
+
+  nextRadio(direction: 1 | -1 = 1) {
+    const i = RADIO_TRACKS.findIndex((track) => track.id === this.radioState.station);
+    this.selectRadio(RADIO_TRACKS[(i + direction + RADIO_TRACKS.length) % RADIO_TRACKS.length].id);
+  }
+
+  seekRadio(time: number) {
+    if (!this.radioElement || !Number.isFinite(time)) return;
+    const duration = this.radioElement.duration;
+    if (!Number.isFinite(duration) || duration <= 0) return;
+    this.radioElement.currentTime = Math.min(duration, Math.max(0, time));
+    this.publishRadio({ currentTime: this.radioElement.currentTime });
+  }
   private fightBoost = 0;
 
   init() {
     if (this.ctx) {
-      if (this.ctx.state === 'suspended') this.ctx.resume();
+      if (this.ctx.state === 'suspended') void this.ctx.resume().catch(() => {});
       return;
     }
     try {
@@ -47,10 +174,8 @@ class AudioEngine {
     this.noiseBuf = c.createBuffer(1, len, c.sampleRate);
     const d = this.noiseBuf.getChannelData(0);
     for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
-    if (this.mode) {
-      const m = this.mode;
-      this.mode = null;
-      this.music(m);
+    if (!this.radioPaused && this.radioState.station === 'original' && this.requestedMode) {
+      this.synthMusic(this.requestedMode);
     }
   }
 
@@ -60,9 +185,12 @@ class AudioEngine {
   }
 
   private applySettings() {
-    if (!this.ctx) return;
-    this.sfxGain.gain.value = this.settings.sfx;
-    this.musicGain.gain.value = this.settings.music * 0.55;
+    if (this.radioElement) this.radioElement.volume = this.settings.music;
+    if (this.ctx) {
+      this.sfxGain.gain.value = this.settings.sfx;
+      this.musicGain.gain.value = this.mode && this.radioState.station === 'original' && !this.radioPaused ? this.settings.music * 0.55 : 0;
+    }
+    this.publishRadio();
   }
 
   // ---------- primitivas ----------
@@ -220,21 +348,38 @@ class AudioEngine {
     this.fightBoost = v;
   }
 
-  music(kind: 'menu' | 'fight' | 'victory' | null) {
+  music(kind: MusicMode) {
+    this.requestedMode = kind;
+    if (this.radioState.station !== 'original') {
+      this.synthMusic(null);
+      if (!this.radioPaused && !this.radioState.playing && !this.radioState.loading && kind) void this.playRadioElement();
+      return;
+    }
+    this.synthMusic(this.radioPaused ? null : kind);
+  }
+
+  private synthMusic(kind: MusicMode) {
     if (kind === this.mode && this.timer !== null) return;
     this.mode = kind;
     if (this.timer !== null) {
       clearInterval(this.timer);
       this.timer = null;
     }
-    if (!kind || !this.ctx) return;
+    if (this.musicGain) this.musicGain.gain.value = kind ? this.settings.music * 0.55 : 0;
+    if (!kind || !this.ctx) {
+      if (this.radioState.station === 'original') this.publishRadio({ playing: false, loading: false });
+      return;
+    }
     this.step = 0;
     this.nextTime = this.ctx.currentTime + 0.1;
     this.timer = window.setInterval(() => this.schedule(), 30);
+    if (this.radioState.station === 'original') this.publishRadio({ playing: true, loading: false, error: null });
   }
 
   stopMusic() {
-    this.music(null);
+    this.requestedMode = null;
+    this.synthMusic(null);
+    // A estação escolhida pelo jogador continua entre partidas e menus.
   }
 
   private schedule() {

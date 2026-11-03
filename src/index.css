@@ -117,3 +117,13 @@ canvas {
 input[type='range'] {
   accent-color: #a855f7;
 }
+
+.pause-menu .fight-btn {
+  padding-top: 7px !important;
+  padding-bottom: 7px !important;
+  font-size: 20px !important;
+}
+.fight-btn:disabled {
+  transform: skewX(-14deg);
+  box-shadow: none;
+}

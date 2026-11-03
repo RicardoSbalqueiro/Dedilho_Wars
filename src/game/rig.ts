@@ -1,4 +1,4 @@
-// Esqueletos articulados e desenho vetorial dos quatro lutadores.
+// Esqueletos articulados e desenho vetorial de todos os lutadores.
 import type { CharId, Pose } from './data';
 import { CHARS } from './data';
 
@@ -14,6 +14,7 @@ export interface DrawOpts {
   expr?: 'n' | 'hit' | 'shout';
   glow?: number; // 0..1 olhos brilhando
   glowColor?: string;
+  poseName?: string; // nome da pose para acessórios articulados
   kiss?: boolean; // pose de finalização do Tubarão Fiscal
 }
 
@@ -22,6 +23,8 @@ const G = {
   orango: { T: 62, th: 34, sh: 30, ua: 52, fo: 50, headR: 21, foot: 17, hOff: 0.85, hFwd: 6 },
   tubarao: { T: 66, th: 46, sh: 42, ua: 38, fo: 35, headR: 23, foot: 17, hOff: 0.9, hFwd: 4 },
   rickzera: { T: 57, th: 44, sh: 43, ua: 32, fo: 30, headR: 17, foot: 16, hOff: 1.15, hFwd: 2 },
+  bieu: { T: 58, th: 44, sh: 43, ua: 34, fo: 31, headR: 17, foot: 15, hOff: 1.15, hFwd: 2 },
+  nomad: { T: 55, th: 37, sh: 35, ua: 34, fo: 31, headR: 20, foot: 17, hOff: 1.0, hFwd: 3 },
 };
 
 const rad = (d: number) => (d * Math.PI) / 180;
@@ -156,7 +159,9 @@ export function drawHead(ctx: CanvasRenderingContext2D, ch: CharId, r: number, o
   if (ch === 'caetano') headCaetano(ctx, r, o);
   else if (ch === 'orango') headOrango(ctx, r, o);
   else if (ch === 'tubarao') headTubarao(ctx, r, o);
-  else headRickzera(ctx, r, o);
+  else if (ch === 'rickzera') headRickzera(ctx, r, o);
+  else if (ch === 'bieu') headBieu(ctx, r, o);
+  else headNomad(ctx, r, o);
 }
 
 function eyeGlow(ctx: CanvasRenderingContext2D, x: number, y: number, r: number, color: string, amt: number) {
@@ -188,10 +193,17 @@ function headCaetano(ctx: CanvasRenderingContext2D, r: number, o: DrawOpts) {
     ctx.lineWidth = Math.max(1, cr * 0.18);
     ctx.stroke();
   };
-  // cabelo de trás
-  for (let i = 0; i < 13; i++) {
-    const a = rad(100 + i * 20);
-    curl(Math.cos(a) * r * 0.92 - r * 0.02, Math.sin(a) * r * 0.9 - r * 0.05, r * 0.36);
+  // Afro arredondado: volume acima das têmporas, sem mechas longas na nuca.
+  ell(ctx, -r * 0.15, -r * 0.68, r * 1.14, r * 1.0, HAIR, '#05030a', r * 0.06);
+  for (let i = 0; i <= 15; i++) {
+    const a = rad(145 + i * 13.3);
+    curl(Math.cos(a) * r * 1.03 - r * 0.14, Math.sin(a) * r * 0.93 - r * 0.64, r * 0.32);
+  }
+  // Cachos internos dão densidade, sem criar uma cauda atrás da cabeça.
+  for (let row = 0; row < 3; row++) for (let i = 0; i < 5; i++) {
+    const x = (-0.83 + i * 0.35 + (row % 2) * 0.1) * r;
+    const y = (-1.2 + row * 0.31) * r;
+    if (x * x / (r * r) + (y / r + 0.65) ** 2 < 1.05) curl(x, y, r * 0.27);
   }
   // orelha
   ell(ctx, -r * 0.5, r * 0.2, r * 0.14, r * 0.21, SKIN2, OUT, 1.5);
@@ -408,7 +420,9 @@ export function drawRig(ctx: CanvasRenderingContext2D, ch: CharId, rig: Rig, pos
   if (ch === 'caetano') drawCaetano(ctx, rig, pose, o);
   else if (ch === 'orango') drawOrango(ctx, rig, pose, o);
   else if (ch === 'tubarao') drawTubarao(ctx, rig, pose, o);
-  else drawRickzera(ctx, rig, pose, o);
+  else if (ch === 'rickzera') drawRickzera(ctx, rig, pose, o);
+  else if (ch === 'bieu') drawBieu(ctx, rig, pose, o);
+  else drawNomad(ctx, rig, pose, o);
 }
 
 function unit(a: P2, b: P2): P2 {
@@ -963,6 +977,244 @@ function drawRickzera(ctx: CanvasRenderingContext2D, r: Rig, pose: Pose, o: Draw
   arm(p.eF, p.wF, true);
 }
 
+function headBieu(ctx: CanvasRenderingContext2D, r: number, o: DrawOpts) {
+  const skin = '#c78d60';
+  const shade = '#9c6448';
+  const hair = '#241b22';
+  const edge = '#211823';
+  // Afro curto e compacto. Caetano tem um volume muito maior no mesmo raio.
+  ell(ctx, -r * 0.13, -r * 0.48, r * 0.78, r * 0.73, hair, edge, r * 0.05);
+  for (let i = 0; i < 11; i++) {
+    const a = rad(160 + i * 18);
+    const x = Math.cos(a) * r * 0.68 - r * 0.1;
+    const y = Math.sin(a) * r * 0.68 - r * 0.45;
+    circ(ctx, x, y, r * 0.22, hair, '#100b11', r * 0.035);
+    ctx.beginPath(); ctx.arc(x, y, r * 0.12, 3.3, 5.5); ctx.strokeStyle = '#59424a'; ctx.lineWidth = r * 0.03; ctx.stroke();
+  }
+  ell(ctx, -r * 0.46, r * 0.16, r * 0.17, r * 0.24, shade, edge, r * 0.04);
+  ctx.beginPath();
+  ctx.moveTo(-r * 0.46, -r * 0.42);
+  ctx.quadraticCurveTo(r * 0.18, -r * 0.75, r * 0.77, -r * 0.42);
+  ctx.lineTo(r * 0.9, -r * 0.05); ctx.lineTo(r * 1.04, r * 0.2); ctx.lineTo(r * 0.88, r * 0.31);
+  ctx.quadraticCurveTo(r * 0.92, r * 0.88, r * 0.32, r * 0.96);
+  ctx.quadraticCurveTo(-r * 0.34, r * 0.82, -r * 0.46, r * 0.28);
+  ctx.closePath(); ctx.fillStyle = skin; ctx.fill(); ctx.strokeStyle = edge; ctx.lineWidth = r * 0.065; ctx.stroke();
+  poly(ctx, [{ x: -r * 0.4, y: -r * 0.2 }, { x: -r * 0.11, y: -r * 0.3 }, { x: -r * 0.04, y: r * 0.54 }, { x: r * 0.26, y: r * 0.88 }, { x: -r * 0.27, y: r * 0.6 }], '#b37b56', undefined, 0);
+  if (o.expr === 'hit') {
+    strokePath(ctx, [{ x: r * 0.13, y: -r * 0.05 }, { x: r * 0.42, y: r * 0.04 }, { x: r * 0.14, y: r * 0.13 }], edge, r * 0.06);
+  } else {
+    ell(ctx, r * 0.34, r * 0.02, r * 0.17, r * 0.1, '#fff3dd', edge, r * 0.04);
+    circ(ctx, r * 0.39, r * 0.02, r * 0.085, '#533622', edge, r * 0.02);
+    circ(ctx, r * 0.41, r * 0.02, r * 0.04, '#08090d', undefined, 0);
+    circ(ctx, r * 0.36, -r * 0.01, r * 0.025, '#fff', undefined, 0);
+  }
+  strokePath(ctx, [{ x: r * 0.1, y: -r * 0.16 }, { x: r * 0.31, y: -r * 0.23 }, { x: r * 0.55, y: -r * 0.14 }], hair, r * 0.09);
+  strokePath(ctx, [{ x: r * 0.63, y: -r * 0.15 }, { x: r * 0.82, y: -r * 0.1 }], hair, r * 0.07);
+  strokePath(ctx, [{ x: r * 0.73, y: r * 0.1 }, { x: r * 0.78, y: r * 0.28 }, { x: r * 0.64, y: r * 0.3 }], shade, r * 0.04);
+  // Bigode preenchido e cavanhaque baixo.
+  poly(ctx, [{ x: r * 0.28, y: r * 0.44 }, { x: r * 0.49, y: r * 0.39 }, { x: r * 0.58, y: r * 0.44 }, { x: r * 0.71, y: r * 0.4 }, { x: r * 0.87, y: r * 0.48 }, { x: r * 0.66, y: r * 0.53 }, { x: r * 0.5, y: r * 0.49 }, { x: r * 0.28, y: r * 0.54 }], hair, undefined, 0);
+  poly(ctx, [{ x: r * 0.24, y: r * 0.73 }, { x: r * 0.35, y: r * 0.92 }, { x: r * 0.57, y: r * 0.94 }, { x: r * 0.74, y: r * 0.73 }, { x: r * 0.57, y: r * 0.78 }, { x: r * 0.4, y: r * 0.76 }], hair, undefined, 0);
+  if (o.expr === 'shout') {
+    ell(ctx, r * 0.58, r * 0.64, r * 0.2, r * 0.14, '#592328', edge, r * 0.04);
+    ell(ctx, r * 0.58, r * 0.55, r * 0.16, r * 0.035, '#fff6e5');
+  } else strokePath(ctx, [{ x: r * 0.31, y: r * 0.62 }, { x: r * 0.57, y: r * 0.66 }, { x: r * 0.81, y: r * 0.57 }], '#693a2f', r * 0.05);
+  // Cachos da linha frontal sem cauda na nuca.
+  for (let i = 0; i < 5; i++) circ(ctx, r * (-0.4 + i * 0.26), -r * (0.46 + (i % 2) * 0.1), r * 0.2, hair, '#100b11', r * 0.035);
+  if ((o.glow || 0) > 0) eyeGlow(ctx, r * 0.4, 0, r * 1.4, o.glowColor || '#e9b5ff', o.glow!);
+}
+
+function headNomad(ctx: CanvasRenderingContext2D, r: number, o: DrawOpts) {
+  const skin = '#e7b48b';
+  const shade = '#bf835f';
+  const edge = '#32202a';
+  const beard = '#60402c';
+  // Cabeça robusta, nuca loira e barba cheia escura.
+  ell(ctx, -r * 0.31, -r * 0.19, r * 0.61, r * 0.59, '#b98b3e', edge, r * 0.05);
+  ell(ctx, -r * 0.55, r * 0.18, r * 0.19, r * 0.26, shade, edge, r * 0.04);
+  ctx.beginPath(); ctx.moveTo(-r * 0.58, -r * 0.4);
+  ctx.quadraticCurveTo(r * 0.16, -r * 0.87, r * 0.77, -r * 0.48);
+  ctx.quadraticCurveTo(r * 1.03, r * 0.2, r * 0.88, r * 0.64);
+  ctx.quadraticCurveTo(r * 0.52, r * 1.04, -r * 0.14, r * 0.86);
+  ctx.quadraticCurveTo(-r * 0.68, r * 0.56, -r * 0.58, -r * 0.4);
+  ctx.closePath(); ctx.fillStyle = skin; ctx.fill(); ctx.lineWidth = r * 0.06; ctx.strokeStyle = edge; ctx.stroke();
+  // Barba alonga o queixo, sem cobrir nariz e bochecha.
+  poly(ctx, [{ x: -r * 0.49, y: r * 0.15 }, { x: -r * 0.22, y: r * 0.38 }, { x: r * 0.1, y: r * 0.47 }, { x: r * 0.61, y: r * 0.44 }, { x: r * 0.86, y: r * 0.27 }, { x: r * 0.9, y: r * 0.64 }, { x: r * 0.55, y: r * 0.99 }, { x: r * 0.11, y: r * 0.95 }, { x: -r * 0.42, y: r * 0.62 }], beard, edge, r * 0.035);
+  for (let i = 0; i < 4; i++) strokePath(ctx, [{ x: r * (-0.19 + i * 0.22), y: r * 0.73 }, { x: r * (-0.1 + i * 0.22), y: r * 0.87 }], '#82603b', r * 0.025);
+  if (o.expr === 'hit') strokePath(ctx, [{ x: r * 0.1, y: -r * 0.13 }, { x: r * 0.36, y: -r * 0.03 }, { x: r * 0.1, y: r * 0.06 }], edge, r * 0.06);
+  else {
+    ell(ctx, r * 0.28, -r * 0.06, r * 0.16, r * 0.11, '#fff8e8', edge, r * 0.04);
+    circ(ctx, r * 0.34, -r * 0.05, r * 0.085, '#5d8f9d', edge, r * 0.025);
+    circ(ctx, r * 0.36, -r * 0.05, r * 0.042, '#15232b', undefined, 0);
+    circ(ctx, r * 0.32, -r * 0.09, r * 0.023, '#fff', undefined, 0);
+  }
+  strokePath(ctx, [{ x: r * 0.05, y: -r * 0.26 }, { x: r * 0.25, y: -r * 0.32 }, { x: r * 0.49, y: -r * 0.23 }], '#76502d', r * 0.1);
+  ell(ctx, r * 0.78, r * 0.14, r * 0.28, r * 0.24, '#e9b38b', '#b47a5b', r * 0.035);
+  // Bigode arqueado e boca para animações de dano/vitória.
+  ell(ctx, r * 0.48, r * 0.39, r * 0.36, r * 0.12, '#513421', undefined, 0, -0.05);
+  if (o.expr === 'shout') {
+    ell(ctx, r * 0.5, r * 0.59, r * 0.23, r * 0.17, '#371c24', edge, r * 0.035);
+    ell(ctx, r * 0.5, r * 0.49, r * 0.17, r * 0.035, '#fff0d5');
+  } else strokePath(ctx, [{ x: r * 0.22, y: r * 0.57 }, { x: r * 0.47, y: r * 0.62 }, { x: r * 0.76, y: r * 0.53 }], '#e3b18a', r * 0.04);
+  // Boné vermelho com círculo branco e M.
+  ctx.beginPath(); ctx.moveTo(-r * 0.87, -r * 0.4);
+  ctx.quadraticCurveTo(-r * 0.97, -r * 1.1, -r * 0.23, -r * 1.26);
+  ctx.quadraticCurveTo(r * 0.68, -r * 1.37, r * 0.84, -r * 0.59);
+  ctx.closePath(); ctx.fillStyle = '#df3c42'; ctx.fill(); ctx.strokeStyle = '#691c31'; ctx.lineWidth = r * 0.06; ctx.stroke();
+  poly(ctx, [{ x: -r * 0.8, y: -r * 0.44 }, { x: r * 0.7, y: -r * 0.62 }, { x: r * 1.25, y: -r * 0.32 }, { x: r * 0.51, y: -r * 0.32 }], '#b92537', '#691c31', r * 0.045);
+  ell(ctx, r * 0.16, -r * 0.9, r * 0.28, r * 0.26, '#fff3df', '#b62135', r * 0.03, -0.05);
+  strokePath(ctx, [{ x: -r * 0.01, y: -r * 0.78 }, { x: r * 0.01, y: -r * 1.0 }, { x: r * 0.14, y: -r * 0.86 }, { x: r * 0.27, y: -r * 1.01 }, { x: r * 0.31, y: -r * 0.79 }], '#d7353f', r * 0.06);
+  strokePath(ctx, [{ x: -r * 0.64, y: -r * 0.76 }, { x: -r * 0.4, y: -r * 1.08 }], '#f3766a', r * 0.045);
+  if ((o.glow || 0) > 0) eyeGlow(ctx, r * 0.34, -r * 0.05, r * 1.4, o.glowColor || '#ffad55', o.glow!);
+}
+
+function drawBieu(ctx: CanvasRenderingContext2D, r: Rig, pose: Pose, o: DrawOpts) {
+  const p = r.p;
+  const { at } = bodyAxes(p);
+  const skin = '#c78d60'; const shade = '#9c6448'; const edge = '#241b28';
+  const arm = (e: P2, w: P2, front: boolean) => {
+    cap(ctx, p.sh, e, 19, 16, front ? skin : shade, edge, 2.1);
+    cap(ctx, e, w, 16, 10.5, front ? skin : shade, edge, 2);
+    const u = unit(e, w);
+    strokePath(ctx, [{ x: p.sh.x + 3, y: p.sh.y + 2 }, { x: e.x + 2, y: e.y - 4 }], '#e0ad7d', 1.7);
+    const h = { x: w.x + u.x * 4, y: w.y + u.y * 4 };
+    circ(ctx, h.x, h.y, 7.4, skin, edge, 1.8);
+    if (front && pose.finger > 0.5) cap(ctx, h, { x: h.x + u.x * 18, y: h.y + u.y * 18 }, 5.3, 3.5, skin, edge, 1.2);
+    else strokePath(ctx, [{ x: h.x + u.x * 5 - u.y * 4, y: h.y + u.y * 5 + u.x * 4 }, { x: h.x + u.x * 5 + u.y * 4, y: h.y + u.y * 5 - u.x * 4 }], shade, 1.2);
+  };
+  const leg = (k: P2, a: P2, t: P2, back: boolean) => {
+    cap(ctx, p.hip, k, 24, 20, back ? '#15131e' : '#28232e', edge, 2.2);
+    cap(ctx, k, a, 21, 15, back ? '#15131e' : '#28232e', edge, 2.1);
+    strokePath(ctx, [{ x: k.x - 5, y: k.y - 2 }, { x: a.x - 4, y: a.y - 8 }], '#49414f', 1.8);
+    const u = unit(a, t); const n = { x: -u.y, y: u.x };
+    const shin = unit(k, a);
+    cap(ctx, { x: a.x - shin.x * 10, y: a.y - shin.y * 10 }, a, 17, 17, '#e4e3e7', edge, 2);
+    cap(ctx, a, t, 16, 13, '#f4f1ee', edge, 2);
+    strokePath(ctx, [{ x: a.x + n.x * 6, y: a.y + n.y * 6 }, { x: t.x + n.x * 6, y: t.y + n.y * 6 }], '#a69cae', 3);
+    strokePath(ctx, [{ x: a.x - n.x * 4 + u.x * 2, y: a.y - n.y * 4 + u.y * 2 }, { x: a.x + n.x * 3 + u.x * 5, y: a.y + n.y * 3 + u.y * 5 }], '#9b87af', 1.2);
+    if (!back) strokePath(ctx, [{ x: a.x - 4, y: a.y - 5 }, { x: a.x + 4, y: a.y - 5 }], '#a268d6', 2);
+  };
+  arm(p.eB, p.wB, false); leg(p.kB, p.aB, p.tB, true);
+  cap(ctx, p.sh, p.head, 12, 12, shade, edge, 1.8);
+  // Regata branca com recortes dos ombros; os braços permanecem expostos.
+  poly(ctx, [at(-0.08, -17), at(-0.08, 17), at(0.77, 23), at(1.07, 15), at(1.06, 8), at(0.85, 6), at(0.85, -6), at(1.06, -9), at(1.07, -15), at(0.77, -21)], '#f5f1f4', edge, 2.2);
+  poly(ctx, [at(-0.08, -17), at(0.74, -21), at(0.95, -15), at(0.18, -11)], '#d0c7d6', undefined, 0);
+  strokePath(ctx, [at(1.03, 8), at(0.8, 4), at(0.8, -4), at(1.03, -9)], '#b5a6bf', 2);
+  strokePath(ctx, [at(0.05, -17), at(0.05, 17)], '#7b3caf', 4);
+  strokePath(ctx, [at(0.03, 3), at(0.03, 14)], '#e5be47', 1.8);
+  strokePath(ctx, [at(0.3, -8), at(0.38, 1), at(0.3, 10)], '#d4cdd7', 1.5);
+  // Corrente prateada, desenhada em pequenos elos sobre o peito.
+  const a = at(1.08, -6); const b = at(1.08, 9); const c = at(0.72, 3);
+  ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.quadraticCurveTo(c.x - 5, c.y + 7, b.x, b.y); ctx.strokeStyle = '#5a5367'; ctx.lineWidth = 3.8; ctx.stroke();
+  ctx.strokeStyle = '#eef0f5'; ctx.lineWidth = 2; ctx.stroke();
+  ell(ctx, c.x, c.y + 1, 2.6, 3.5, '#dce0ec', '#8c8496', 1);
+  leg(p.kF, p.aF, p.tF, false);
+  ctx.save(); ctx.translate(p.head.x, p.head.y); ctx.rotate(rad(pose.lean + pose.head) * 0.6 + pose.rot); headBieu(ctx, 17, { ...o, expr: o.expr || (pose.mouth > 0.5 ? 'shout' : 'n') }); ctx.restore();
+  arm(p.eF, p.wF, true);
+  drawHeldAccessory(ctx, 'bieu', p, o);
+}
+
+function drawNomad(ctx: CanvasRenderingContext2D, r: Rig, pose: Pose, o: DrawOpts) {
+  const p = r.p; const { at } = bodyAxes(p);
+  const edge = '#2c2130'; const blue = '#3576bb'; const shade = '#21518d'; const red = '#df4147';
+  const arm = (e: P2, w: P2, front: boolean) => {
+    cap(ctx, p.sh, e, 23, 20, front ? red : '#aa293d', edge, 2.2);
+    cap(ctx, e, w, 20, 13, front ? red : '#aa293d', edge, 2.2);
+    const u = unit(e, w); const n = { x: -u.y, y: u.x };
+    cap(ctx, { x: w.x - u.x * 4, y: w.y - u.y * 4 }, w, 15, 15, '#cdd0df', edge, 1.6);
+    const h = { x: w.x + u.x * 6, y: w.y + u.y * 6 };
+    circ(ctx, h.x, h.y, 9, '#faf4ec', edge, 2);
+    if (front && pose.finger > 0.5) cap(ctx, h, { x: h.x + u.x * 20, y: h.y + u.y * 20 }, 7, 5, '#faf4ec', edge, 1.6);
+    else for (let i = -1; i <= 1; i++) strokePath(ctx, [{ x: h.x + u.x * 3 + n.x * i * 4, y: h.y + u.y * 3 + n.y * i * 4 }, { x: h.x + u.x * 7 + n.x * i * 4, y: h.y + u.y * 7 + n.y * i * 4 }], '#b8b2c3', 1.2);
+  };
+  const leg = (k: P2, a: P2, t: P2, back: boolean) => {
+    cap(ctx, p.hip, k, 27, 23, back ? shade : blue, edge, 2.3);
+    cap(ctx, k, a, 23, 17, back ? shade : blue, edge, 2.2);
+    strokePath(ctx, [{ x: k.x - 5, y: k.y - 1 }, { x: a.x - 4, y: a.y - 7 }], '#578fc5', 1.7);
+    cap(ctx, a, t, 19, 16, '#815338', edge, 2.2);
+    const u = unit(a, t); const n = { x: -u.y, y: u.x };
+    strokePath(ctx, [{ x: a.x + n.x * 7, y: a.y + n.y * 7 }, { x: t.x + n.x * 7, y: t.y + n.y * 7 }], '#422f2f', 4.4);
+    strokePath(ctx, [{ x: a.x + u.x * 3 - n.x * 4, y: a.y + u.y * 3 - n.y * 4 }, { x: a.x + u.x * 7 + n.x * 3, y: a.y + u.y * 7 + n.y * 3 }], '#c19b67', 1.5);
+  };
+  arm(p.eB, p.wB, false); leg(p.kB, p.aB, p.tB, true);
+  cap(ctx, p.sh, p.head, 15, 16, '#d49a72', edge, 2);
+  // Camisa vermelha no torso atarracado, com jardineira azul por cima.
+  poly(ctx, [at(-0.1, -24), at(-0.1, 25), at(0.47, 29), at(0.96, 24), at(1.1, 17), at(1.1, -17), at(0.96, -24), at(0.47, -27)], red, edge, 2.5);
+  poly(ctx, [at(-0.12, -24), at(-0.12, 25), at(0.5, 29), at(0.7, 20), at(0.76, 14), at(0.76, -13), at(0.7, -20), at(0.5, -27)], blue, edge, 2.3);
+  poly(ctx, [at(-0.12, -24), at(0.58, -25), at(0.67, -17), at(-0.12, -11)], shade, undefined, 0);
+  strokePath(ctx, [at(1.09, -13), at(0.67, -12)], '#3e83c6', 8);
+  strokePath(ctx, [at(1.09, 14), at(0.67, 13)], '#3e83c6', 8);
+  const button1 = at(0.73, -12); const button2 = at(0.73, 13);
+  circ(ctx, button1.x, button1.y, 3.4, '#f3cc55', '#86622f', 1.1);
+  circ(ctx, button2.x, button2.y, 3.4, '#f3cc55', '#86622f', 1.1);
+  poly(ctx, [at(0.56, -7), at(0.56, 10), at(0.31, 9), at(0.26, 2), at(0.31, -7)], '#2b66a9', '#5c9ed5', 1.2);
+  leg(p.kF, p.aF, p.tF, false);
+  ctx.save(); ctx.translate(p.head.x, p.head.y); ctx.rotate(rad(pose.lean + pose.head) * 0.5 + pose.rot); headNomad(ctx, 20, { ...o, expr: o.expr || (pose.mouth > 0.5 ? 'shout' : 'n') }); ctx.restore();
+  arm(p.eF, p.wF, true);
+  drawHeldAccessory(ctx, 'nomad', p, o);
+}
+
+function drawHeldAccessory(ctx: CanvasRenderingContext2D, ch: 'bieu' | 'nomad', p: Record<string, P2>, o: DrawOpts) {
+  const name = o.poseName || '';
+  const u = unit(p.eF, p.wF);
+  ctx.save(); ctx.translate(p.wF.x + u.x * 7, p.wF.y + u.y * 7); ctx.rotate(Math.atan2(u.y, u.x));
+  const edge = '#221a2d';
+  if (ch === 'bieu' && name === 'driver_a') {
+    // Chave de fenda: cabo amarelo/roxo e lâmina reta metálica.
+    cap(ctx, { x: -8, y: 0 }, { x: 5, y: 0 }, 8, 7, '#edc642', edge, 1.5);
+    strokePath(ctx, [{ x: -6, y: 0 }, { x: 2, y: 0 }], '#8e4eb1', 2);
+    cap(ctx, { x: 5, y: 0 }, { x: 31, y: 0 }, 3.4, 2.5, '#d4dce7', edge, 1);
+    poly(ctx, [{ x: 30, y: -2 }, { x: 37, y: -3 }, { x: 37, y: 3 }, { x: 30, y: 2 }], '#aeb8ca', edge, 1);
+  } else if (ch === 'bieu' && name === 'rat_a') {
+    // Rato cartunesco erguido antes do arremesso; o projétil é desenhado pelo combate.
+    ctx.beginPath(); ctx.moveTo(-10, 1); ctx.bezierCurveTo(-27, -4, -30, 13, -16, 12); ctx.strokeStyle = '#d5919c'; ctx.lineWidth = 2.5; ctx.stroke();
+    ell(ctx, 5, -2, 15, 8.5, '#85808d', edge, 1.6, -0.08);
+    poly(ctx, [{ x: 13, y: -7 }, { x: 26, y: -1 }, { x: 13, y: 4 }], '#9b95a2', edge, 1.4);
+    circ(ctx, 11, -9, 5, '#ada0ad', edge, 1.1); circ(ctx, 11, -9, 2.8, '#d2a3b8', undefined, 0);
+    circ(ctx, 19, -3, 1.5, '#11111a', undefined, 0); circ(ctx, 26, -1, 1.8, '#dca4b5', undefined, 0);
+    strokePath(ctx, [{ x: 21, y: 1 }, { x: 28, y: 5 }], '#e8e0eb', 0.8);
+    strokePath(ctx, [{ x: 22, y: 0 }, { x: 30, y: 1 }], '#e8e0eb', 0.8);
+  } else if (ch === 'bieu' && name === 'spray_a') {
+    ctx.rotate(-Math.PI / 2);
+    cap(ctx, { x: 0, y: -6 }, { x: 0, y: 11 }, 12, 12, '#8a4ca8', edge, 1.6);
+    ctx.fillStyle = '#e9d344'; ctx.fillRect(-5, -2, 10, 8);
+    ctx.fillStyle = '#cfd4e1'; ctx.fillRect(-5, -10, 10, 5);
+    ctx.fillStyle = '#41364e'; ctx.fillRect(0, -13, 5, 4);
+    strokePath(ctx, [{ x: -3, y: 1 }, { x: 3, y: 4 }], '#492953', 1.2);
+  } else if (ch === 'bieu' && name === 'drive') {
+    ctx.rotate(-Math.atan2(u.y, u.x));
+    circ(ctx, 7, -2, 18, '#2b2534', '#e4c854', 3);
+    circ(ctx, 7, -2, 13, 'rgba(0,0,0,0)', '#867c94', 2.5);
+    strokePath(ctx, [{ x: -9, y: -3 }, { x: 7, y: -2 }, { x: 17, y: 11 }], '#867c94', 3);
+    circ(ctx, 7, -2, 4.5, '#a561c7', edge, 1.1);
+  } else if (ch === 'nomad' && name === 'burger_a') {
+    ell(ctx, 10, -2, 16, 10, '#e8aa54', '#82512f', 1.5);
+    cap(ctx, { x: -3, y: 1 }, { x: 23, y: 1 }, 5, 5, '#68402f', edge, 1);
+    strokePath(ctx, [{ x: -3, y: -2 }, { x: 4, y: 0 }, { x: 11, y: -2 }, { x: 17, y: 0 }, { x: 23, y: -2 }], '#7caf41', 3);
+    poly(ctx, [{ x: -2, y: 0 }, { x: 22, y: 0 }, { x: 12, y: 5 }], '#f2d151', undefined, 0);
+    for (let i = 0; i < 5; i++) strokePath(ctx, [{ x: i * 4, y: -7 + (i % 2) }, { x: i * 4 + 1, y: -8 + (i % 2) }], '#fff1bd', 1.2);
+  } else if (ch === 'nomad' && name === 'glock_a') {
+    // Silhueta de pistola cartunesca, com cano destacado e empunhadura.
+    poly(ctx, [{ x: -4, y: -8 }, { x: 29, y: -8 }, { x: 29, y: -2 }, { x: 9, y: -1 }, { x: 5, y: 10 }, { x: -3, y: 7 }], '#586171', edge, 1.7);
+    strokePath(ctx, [{ x: -1, y: -6 }, { x: 25, y: -6 }], '#9aa4b7', 1.4);
+    ctx.fillStyle = '#eb884f'; ctx.fillRect(27, -7, 3, 4);
+    strokePath(ctx, [{ x: 7, y: -1 }, { x: 11, y: 3 }, { x: 5, y: 4 }], edge, 1.5);
+  } else if (ch === 'nomad' && name === 'boomerang_a') {
+    poly(ctx, [{ x: -3, y: 1 }, { x: 12, y: -20 }, { x: 17, y: -18 }, { x: 11, y: -2 }, { x: 30, y: 2 }, { x: 29, y: 8 }, { x: 6, y: 5 }], '#e9ca6b', '#825337', 1.8);
+    strokePath(ctx, [{ x: 9, y: -7 }, { x: 15, y: -9 }], '#c1533d', 2.5);
+    strokePath(ctx, [{ x: 17, y: 2 }, { x: 16, y: 7 }], '#c1533d', 2.5);
+  } else if (ch === 'nomad' && name === 'bazooka') {
+    // Tubo do lançador apoiado na mão; o disparo e a explosão ficam no render.
+    cap(ctx, { x: -31, y: -8 }, { x: 39, y: -8 }, 19, 19, '#5b7444', edge, 2);
+    cap(ctx, { x: 32, y: -8 }, { x: 40, y: -8 }, 23, 23, '#8f9c67', edge, 1.6);
+    cap(ctx, { x: -32, y: -8 }, { x: -27, y: -8 }, 23, 23, '#424c3b', edge, 1.6);
+    ell(ctx, 40, -8, 3, 9, '#252b30', '#c0c4a4', 1.5);
+    poly(ctx, [{ x: -2, y: 0 }, { x: 8, y: 0 }, { x: 4, y: 13 }, { x: -4, y: 11 }], '#535849', edge, 1.4);
+    strokePath(ctx, [{ x: 3, y: -18 }, { x: 3, y: -25 }, { x: 13, y: -25 }], '#b9bd9f', 2.5);
+    strokePath(ctx, [{ x: -18, y: -12 }, { x: 24, y: -12 }], '#8da46a', 2);
+  }
+  ctx.restore();
+}
+
 // ------------------------------------------------------------ retratos
 export function drawPortrait(ctx: CanvasRenderingContext2D, ch: CharId, x: number, y: number, size: number, o: DrawOpts, flip = false) {
   ctx.save();
@@ -980,6 +1232,6 @@ export function drawFullBody(ctx: CanvasRenderingContext2D, ch: CharId, x: numbe
   ctx.save();
   ctx.translate(x, y);
   ctx.scale(flip ? -scale : scale, scale);
-  drawRig(ctx, ch, rig, pose, { time });
+  drawRig(ctx, ch, rig, pose, { time, poseName });
   ctx.restore();
 }

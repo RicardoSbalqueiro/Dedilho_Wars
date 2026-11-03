@@ -3,11 +3,12 @@ import { Game } from '../game/engine';
 import type { GameConfig } from '../game/engine';
 import { render } from '../game/render';
 import { W, H } from '../game/stage';
+import { keyLabel } from '../game/input';
 import { CHARS } from '../game/data';
 import { audio } from '../game/audio';
 import { getStage, SkewBtn } from './common';
 
-export function GameScreen({ cfg, onExit, onSelect }: { cfg: GameConfig; onExit: () => void; onSelect: () => void }) {
+export function GameScreen({ cfg, onExit, onSelect, onRadio, inputSuspended = false }: { cfg: GameConfig; onExit: () => void; onSelect: () => void; onRadio: () => void; inputSuspended?: boolean }) {
   const ref = useRef<HTMLCanvasElement>(null);
   const gameRef = useRef<Game | null>(null);
   const [paused, setPaused] = useState(false);
@@ -48,12 +49,12 @@ export function GameScreen({ cfg, onExit, onSelect }: { cfg: GameConfig; onExit:
 
   // navegação por teclado nos menus de pausa / vitória
   useEffect(() => {
-    if (!paused && result === null) return;
+    if (inputSuspended || (!paused && result === null)) return;
     const onKey = (e: KeyboardEvent) => {
       if (!['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight', 'KeyS', 'KeyW', 'Enter', 'Space'].includes(e.code)) return;
       e.preventDefault();
       if (e.repeat) return;
-      const n = paused ? (cfg.mode === 'training' ? 5 : 4) : 3;
+      const n = paused ? (cfg.mode === 'training' ? 6 : 5) : 3;
       if (e.code === 'ArrowDown' || e.code === 'KeyS' || (!paused && e.code === 'ArrowRight')) setSel((s) => (s + 1) % n);
       if (e.code === 'ArrowUp' || e.code === 'KeyW' || (!paused && e.code === 'ArrowLeft')) setSel((s) => (s + n - 1) % n);
       if (e.code === 'Enter' || e.code === 'Space') {
@@ -64,7 +65,7 @@ export function GameScreen({ cfg, onExit, onSelect }: { cfg: GameConfig; onExit:
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [paused, result, sel, cfg.mode]);
+  }, [paused, result, sel, cfg.mode, inputSuspended]);
 
   const g = gameRef.current;
   const rematch = () => {
@@ -82,10 +83,10 @@ export function GameScreen({ cfg, onExit, onSelect }: { cfg: GameConfig; onExit:
   return (
     <div ref={overlayRef} className="absolute inset-0">
       <canvas ref={ref} width={W} height={H} className="absolute inset-0" />
-      <div className="absolute bottom-[3px] left-1/2 -translate-x-1/2 text-[10px] tracking-widest text-white/50 pointer-events-none">ESC / P : PAUSA</div>
+      <div className="absolute bottom-[3px] left-1/2 -translate-x-1/2 text-[10px] tracking-widest text-white/50 pointer-events-none">P1: {keyLabel(cfg.bindings[0].down[0])} AGACHAR · P2: {keyLabel(cfg.bindings[1].down[0])} AGACHAR · ESC / P: PAUSA</div>
 
       {paused && (
-        <div className="absolute inset-0 bg-black/70 flex flex-col items-center justify-center gap-2 fade-in">
+        <div className="pause-menu absolute inset-0 bg-black/80 flex flex-col items-center justify-center gap-2 fade-in">
           <div className="title-main text-5xl text-white mb-2" style={{ textShadow: '0 0 20px #a855f7, 4px 4px 0 #000' }}>
             PAUSADO
           </div>
@@ -111,14 +112,18 @@ export function GameScreen({ cfg, onExit, onSelect }: { cfg: GameConfig; onExit:
               <MB idx={3} sel={sel} setSel={setSel} onClick={onSelect}>
                 TROCAR LUTADORES
               </MB>
-              <MB idx={4} sel={sel} setSel={setSel} onClick={onExit}>
+              <MB idx={4} sel={sel} setSel={setSel} onClick={onRadio} color="#f472b6">
+                ESTAÇÃO DE RÁDIO
+              </MB>
+              <MB idx={5} sel={sel} setSel={setSel} onClick={onExit}>
                 MENU PRINCIPAL
               </MB>
             </>
           ) : (
             <>
               <MB idx={2} sel={sel} setSel={setSel} onClick={onSelect}>TROCAR LUTADORES</MB>
-              <MB idx={3} sel={sel} setSel={setSel} onClick={onExit}>MENU PRINCIPAL</MB>
+              <MB idx={3} sel={sel} setSel={setSel} onClick={onRadio} color="#f472b6">ESTAÇÃO DE RÁDIO</MB>
+              <MB idx={4} sel={sel} setSel={setSel} onClick={onExit}>MENU PRINCIPAL</MB>
             </>
           )}
           <div className="mt-3 text-[10px] text-white/60 text-center leading-5">

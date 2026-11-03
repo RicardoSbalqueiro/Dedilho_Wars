@@ -3,6 +3,7 @@ import { Frame } from './ui/common';
 import { CharSelect, Controls, DifficultySelect, MainMenu, Settings, Splash } from './ui/Screens';
 import type { MenuChoice } from './ui/Screens';
 import { GameScreen } from './ui/GameScreen';
+import { RadioPanel } from './ui/Radio';
 import { audio } from './game/audio';
 import { loadBindings } from './game/input';
 import { applyPrefs, loadPrefs } from './game/prefs';
@@ -18,6 +19,9 @@ export default function App() {
   const [char, setChar] = useState<CharId>('caetano');
   const [opponent, setOpponent] = useState<CharId>('orango');
   const [gameKey, setGameKey] = useState(0);
+  const [radioOpen, setRadioOpen] = useState(false);
+  const openRadio = useCallback(() => setRadioOpen(true), []);
+  const closeRadio = useCallback(() => setRadioOpen(false), []);
 
   useEffect(() => {
     document.title = 'DEDILHO WARS';
@@ -46,7 +50,8 @@ export default function App() {
     } else if (c === 'training') {
       setMode('training');
       setScreen('select');
-    } else if (c === 'controls') setScreen('controls');
+    } else if (c === 'radio') setRadioOpen(true);
+    else if (c === 'controls') setScreen('controls');
     else setScreen('settings');
   }, []);
 
@@ -59,7 +64,7 @@ export default function App() {
   return (
     <Frame>
       {screen === 'splash' && <Splash onStart={start} />}
-      {screen === 'menu' && <MainMenu onChoose={choose} />}
+      {screen === 'menu' && <MainMenu onChoose={choose} suspended={radioOpen} />}
       {screen === 'diff' && (
         <DifficultySelect
           onPick={(d) => {
@@ -88,7 +93,8 @@ export default function App() {
       )}
       {screen === 'controls' && <Controls onBack={toMenu} />}
       {screen === 'settings' && <Settings onBack={toMenu} />}
-      {screen === 'game' && <GameScreen key={gameKey} cfg={cfg} onExit={toMenu} onSelect={toSelect} />}
+      {screen === 'game' && <GameScreen key={gameKey} cfg={cfg} onExit={toMenu} onSelect={toSelect} onRadio={openRadio} inputSuspended={radioOpen} />}
+      {radioOpen && <RadioPanel onBack={closeRadio} />}
     </Frame>
   );
 }

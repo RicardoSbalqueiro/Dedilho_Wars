@@ -15,6 +15,7 @@ export type Mode = 'ai' | 'versus' | 'training';
 export type State = 'ground' | 'jump' | 'dash' | 'attack' | 'hit' | 'block' | 'launched' | 'down' | 'getup' | 'seq' | 'cine' | 'win';
 
 export const GRAV = 0.85;
+export const METER_GAIN_SCALE = 0.5;
 export const settings = { shake: 1, hitboxes: false };
 
 export interface GameConfig {
@@ -103,7 +104,7 @@ export interface Fighter {
 }
 
 interface Seq {
-  kind: 'puxao' | 'mordida' | 'engole' | 'superC' | 'superO' | 'superT' | 'superR';
+  kind: 'puxao' | 'mordida' | 'engole' | 'superC' | 'superO' | 'superT' | 'superR' | 'superB' | 'superN';
   a: Fighter;
   d: Fighter;
   t: number;
@@ -113,7 +114,13 @@ interface Seq {
 
 export interface Projectile {
   owner: 0 | 1;
-  kind: 'franco' | 'pix';
+  kind: 'franco' | 'pix' | 'rat' | 'spray' | 'burger' | 'bullet' | 'boomerang' | 'bazooka';
+  age?: number;
+  returning?: boolean;
+  hitMask?: number;
+  hitCount?: number;
+  lastHitAt?: number;
+  radius?: number;
   x: number;
   y: number;
   vx: number;
@@ -448,7 +455,8 @@ export class Game {
         if (d === 1) aiAct(this, b, 'normal');
         else if (d === 2) {
           b.pad.set('block', true, this.tick);
-          b.pad.set('down', !!a.move && a.move.level === 'low', this.tick);
+          const incomingLow = this.projectiles.some((p) => p.owner !== b.idx && p.move.level === 'low' && Math.abs(p.x - b.x) < 280 && (b.x - p.x) * p.vx > 0);
+          b.pad.set('down', (!!a.move && a.move.level === 'low') || incomingLow, this.tick);
         } else if (d === 0) b.pad.reset();
         a.meter = b.meter = 100;
       }
@@ -864,6 +872,7 @@ export class Game {
         }
         break;
       case 'block':
+        f.crouch = pad.held.down;
         f.blockstun--;
         f.x += f.vx;
         f.vx *= 0.86;
@@ -947,10 +956,11 @@ export class Game {
     }
     const a0 = m.startup;
     const a1 = m.startup + m.active;
-    const ranged = f.ch === 'rickzera' && (m.id === 's1' || m.id === 's2');
+    const rangedKind = this.projectileKind(f, m);
+    const ranged = rangedKind !== null;
     f.hbActive = !ranged && t >= a0 && t < a1 && !f.hitDone;
     if (f.ch === 'tubarao' && m.id === 's3') f.armor = t >= 4 && t < a1;
-    if (ranged && (t === a0 || (m.id === 's2' && (t === a0 + 8 || t === a0 + 16)))) this.spawnProjectile(f, m);
+    if (ranged && (t === a0 || ((rangedKind === 'pix' || rangedKind === 'bullet') && (t === a0 + 8 || t === a0 + 16)))) this.spawnProjectile(f, m);
     this.moveFx(f, m, t, o);
     if (f.connected && this.tryCancel(f)) return;
     f.moveT++;
@@ -1000,11 +1010,22 @@ export class Game {
     void col;
   }
 
+  private projectileKind(f: Fighter, m: Move): Projectile['kind'] | null {
+    if (f.ch === 'rickzera') return m.id === 's1' ? 'franco' : m.id === 's2' ? 'pix' : null;
+    if (f.ch === 'bieu') return m.id === 's2' ? 'rat' : m.id === 's3' ? 'spray' : null;
+    if (f.ch === 'nomad') return m.id === 's1' ? 'burger' : m.id === 's2' ? 'bullet' : m.id === 's3' ? 'boomerang' : null;
+    return null;
+  }
+
   private spawnProjectile(f: Fighter, m: Move) {
-    const kind = m.id === 's1' ? 'franco' : 'pix';
-    this.projectiles.push({ owner: f.idx, kind, x: f.x + f.facing * 65, y: -104, vx: f.facing * (kind === 'franco' ? 12 : 16), life: 85, serial: f.serial, move: m });
-    audio.tone(kind === 'franco' ? 640 : 950, 0.12, 'triangle', 0.15, 1500);
-    this.spark(f.x + f.facing * 60, FLOOR_Y - 105, f.def.glow, 5, 4, 2, 12);
+    const kind = this.projectileKind(f, m);
+    if (!kind) return;
+    const speed = { franco: 12, pix: 16, rat: 8, spray: 0, burger: 9, bullet: 20, boomerang: 11, bazooka: 20 }[kind];
+    const y = kind === 'rat' ? -18 : kind === 'bullet' ? -145 : kind === 'spray' ? -70 : -104;
+    const radius = kind === 'spray' ? 62 : kind === 'rat' ? 14 : kind === 'bullet' ? 6 : kind === 'burger' ? 25 : 20;
+    this.projectiles.push({ owner: f.idx, kind, x: f.x + f.facing * (kind === 'spray' ? 115 : 65), y, vx: f.facing * speed, life: kind === 'spray' ? 64 : kind === 'boomerang' ? 110 : 95, serial: f.serial, move: m, age: 0, radius });
+    audio.tone(kind === 'bullet' ? 220 : kind === 'rat' ? 900 : 640, 0.1, 'triangle', 0.14, kind === 'bullet' ? 70 : 1500);
+    this.spark(f.x + f.facing * 60, FLOOR_Y + y, f.def.glow, 5, 4, 2, 12);
   }
 
   private updateProjectiles() {
@@ -1013,15 +1034,38 @@ export class Game {
       return;
     }
     this.projectiles = this.projectiles.filter((p) => {
+      p.age = (p.age ?? 0) + 1;
+      const a = this.f[p.owner];
+      if (p.kind === 'boomerang') {
+        if (!p.returning && (p.age >= 32 || p.x < 35 || p.x > 1565)) p.returning = true;
+        if (p.returning) {
+          p.vx = clamp((a.x - p.x) * 0.16, -13, 13);
+          p.y += (a.y - 100 - p.y) * 0.1;
+          if (Math.abs(p.x - a.x) < 24) return false;
+        }
+      }
       p.x += p.vx;
       p.life--;
       if (p.life <= 0 || p.x < -40 || p.x > 1640) return false;
-      const a = this.f[p.owner];
       const d = this.opp(a);
       if (d.invuln > 0 || d.armor || ['down', 'getup', 'seq', 'cine', 'win'].includes(d.state)) return true;
-      const box = { x0: p.x - 20, x1: p.x + 20, y0: p.y - 15, y1: p.y + 15 };
+      const phaseMask = p.returning ? 2 : 1;
+      if (p.kind === 'boomerang' && ((p.hitMask ?? 0) & phaseMask)) return true;
+      if (p.kind === 'spray' && ((p.hitCount ?? 0) >= 4 || p.age - (p.lastHitAt ?? -99) < 14)) return true;
+      const r = p.radius ?? 20;
+      const ry = p.kind === 'spray' ? 55 : p.kind === 'bullet' ? 6 : 15;
+      const box = { x0: p.x - r, x1: p.x + r, y0: p.y - ry, y1: p.y + ry };
       if (!this.overlap(box, this.hurtBox(d))) return true;
-      this.applyHit(a, d, p.move, { x: p.x, y: FLOOR_Y + p.y, dir: Math.sign(p.vx), serial: p.serial });
+      this.applyHit(a, d, p.move, { x: p.x, y: FLOOR_Y + p.y, dir: Math.sign(p.vx) || a.facing, serial: p.serial });
+      if (p.kind === 'boomerang') {
+        p.hitMask = (p.hitMask ?? 0) | phaseMask;
+        return true;
+      }
+      if (p.kind === 'spray') {
+        p.lastHitAt = p.age;
+        p.hitCount = (p.hitCount ?? 0) + 1;
+        return true;
+      }
       return false;
     });
   }
@@ -1114,6 +1158,10 @@ export class Game {
     for (const [x, y] of hits) this.applyHit(x, y);
   }
 
+  private gainMeter(f: Fighter, amount: number) {
+    f.meter = Math.min(100, f.meter + amount * METER_GAIN_SCALE);
+  }
+
   private dealDamage(a: Fighter, d: Fighter, dmg: number) {
     if (this.training) {
       this.train.lastDmg = Math.round(dmg);
@@ -1124,8 +1172,8 @@ export class Game {
       d.hp = Math.max(0, d.hp - dmg);
       d.comboDmg += dmg;
     }
-    a.meter = Math.min(100, a.meter + dmg * 0.16);
-    d.meter = Math.min(100, d.meter + dmg * 0.11);
+    this.gainMeter(a, dmg * 0.16);
+    this.gainMeter(d, dmg * 0.11);
   }
 
   private applyHit(a: Fighter, d: Fighter, m = a.move!, impact?: { x: number; y: number; dir: number; serial: number }) {
@@ -1143,7 +1191,7 @@ export class Game {
     // --- agarrões ---
     if (m.grab) {
       if (tracked) a.connected = true;
-      if (m.grab === 'super') this.startSeq(({ caetano: 'superC', orango: 'superO', tubarao: 'superT', rickzera: 'superR' } as const)[a.ch], a, d);
+      if (m.grab === 'super') this.startSeq(({ caetano: 'superC', orango: 'superO', tubarao: 'superT', rickzera: 'superR', bieu: 'superB', nomad: 'superN' } as const)[a.ch], a, d);
       else this.startSeq(m.grab, a, d);
       return;
     }
@@ -1155,8 +1203,8 @@ export class Game {
       const prev = d.hp;
       d.hp = Math.max(m.kind === 'special' ? 0 : 1, d.hp - chip);
       d.dispHp = Math.max(d.hp, d.dispHp);
-      a.meter = Math.min(100, a.meter + m.dmg * 0.08);
-      d.meter = Math.min(100, d.meter + m.dmg * 0.05);
+      this.gainMeter(a, m.dmg * 0.08);
+      this.gainMeter(d, m.dmg * 0.05);
       d.state = 'block';
       d.stateT = 0;
       d.blockstun = m.blockstun;
@@ -1345,7 +1393,7 @@ export class Game {
     f.turn = 1;
     f.glow = 1;
     f.aura = 1;
-    f.poseOverride = f.ch === 'orango' || f.ch === 'tubarao' ? 'roar' : 'taunt';
+    f.poseOverride = f.ch === 'orango' || f.ch === 'tubarao' ? 'roar' : f.ch === 'bieu' ? 'drive' : f.ch === 'nomad' ? 'bazooka' : 'taunt';
     this.cine = { f, t: 0, dur: f.ch === 'caetano' ? 100 : f.ch === 'orango' ? 120 : 75 };
     this.moveBanner = { text: f.def.superName, color: f.def.color, t: 0, dur: 150 };
     this.flash = { c: f.def.glow, a: 0.8 };
@@ -1383,7 +1431,7 @@ export class Game {
         audio.boom(1);
       }
     }
-    if (f.ch === 'tubarao' || f.ch === 'rickzera') {
+    if (f.ch !== 'caetano' && f.ch !== 'orango') {
       if (c.t === 1) {
         audio.tone(f.ch === 'tubarao' ? 160 : 520, 0.7, 'sawtooth', 0.22, 1000);
         audio.say(f.def.superName, f.ch === 'tubarao' ? 0.7 : 1.1, 1.05);
@@ -1428,7 +1476,7 @@ export class Game {
   }
 
   private startSeq(kind: Seq['kind'], a: Fighter, d: Fighter) {
-    const dur = { puxao: 86, mordida: 78, engole: 100, superC: 215, superO: 215, superT: 150, superR: 170 }[kind];
+    const dur = { puxao: 86, mordida: 78, engole: 100, superC: 215, superO: 215, superT: 150, superR: 170, superB: 160, superN: 150 }[kind];
     this.seq = { kind, a, d, t: 0, dur, x0: d.x };
     a.state = 'seq';
     d.state = 'seq';
@@ -1552,6 +1600,10 @@ export class Game {
       this.updateSuperT(s);
     } else if (s.kind === 'superR') {
       this.updateSuperR(s);
+    } else if (s.kind === 'superB') {
+      this.updateSuperB(s);
+    } else if (s.kind === 'superN') {
+      this.updateSuperN(s);
     } else if (s.kind === 'superC') {
       this.updateSuperC(s);
     } else {
@@ -1669,6 +1721,93 @@ export class Game {
       d.rotAdd = -u * Math.PI;
       d.poseOverride = t > 152 ? 'down' : 'air';
       if (t > 152) a.poseOverride = 'win';
+    }
+  }
+
+  private updateSuperB(s: Seq) {
+    const { a, d, t } = s;
+    const f = a.facing;
+    this.camOv = { x: (a.x + d.x) / 2, zoom: t < 70 ? 1.1 : 1.3 };
+    this.camOvT = 2;
+    a.poseOverride = t < 112 ? 'drive' : 'win';
+    a.aura = 1;
+    d.poseOverride = t < 70 ? 'grabbed' : t < 112 ? 'air' : 'down';
+    if (t < 70) {
+      a.x += f * (t < 35 ? 0.5 : 2);
+      d.x = a.x + f * 112;
+      if (t % 5 === 0) this.dust(a.x - f * 55, FLOOR_Y, 3);
+    }
+    if (t === 35) audio.tone(85, 0.8, 'sawtooth', 0.25, 340);
+    if (t === 70) {
+      s.x0 = d.x;
+      this.seqHit(a, d, 300, 4, a.def.glow);
+      this.flash = { c: '#e9d5ff', a: 0.9 };
+      this.shake = 42;
+      this.hitstop = 12;
+      this.text(d.x, FLOOR_Y - 170, 'PRESTÍGIO!', a.def.glow, 47);
+      for (let i = 0; i < 5; i++) this.ring(d.x, FLOOR_Y - 80, i % 2 ? '#ffffff' : a.def.color, 140 + i * 55, 28, 7);
+      audio.boom(1.5);
+    }
+    if (t >= 70 && t < 112) {
+      const u = (t - 70) / 42;
+      d.x = s.x0 + f * 310 * u;
+      d.y = -245 * Math.sin(u * Math.PI);
+      d.rotAdd = -u * Math.PI * 3;
+    }
+    if (t >= 112) {
+      d.y = 0;
+      d.rotAdd = 0;
+      if (t === 112) {
+        this.dust(d.x, FLOOR_Y, 18);
+        this.ring(d.x, FLOOR_Y, a.def.color, 230, 24, 8);
+      }
+    }
+  }
+
+  private updateSuperN(s: Seq) {
+    const { a, d, t } = s;
+    const f = a.facing;
+    this.camOv = { x: (a.x + d.x) / 2, zoom: t < 60 ? 1.3 : 1.1 };
+    this.camOvT = 2;
+    a.poseOverride = t < 100 ? 'bazooka' : 'win';
+    a.aura = a.glow = 1;
+    d.poseOverride = t < 60 ? 'grabbed' : t < 105 ? 'air' : 'down';
+    if (t < 35) d.x = a.x + f * 300;
+    if (t === 35) {
+      const move: Move = { ...a.def.moves.s1, id: 'arena', dmg: 310, kind: 'super' };
+      this.projectiles.push({ owner: a.idx, kind: 'bazooka', x: a.x + f * 70, y: -105, vx: f * 10, life: 30, serial: a.serial, move, age: 0, radius: 24 });
+      audio.noise(0.25, 0.3, 1500, 'lowpass');
+      audio.tone(120, 0.3, 'sawtooth', 0.24, 40);
+    }
+    // The bazooka is simulated in this cinematic; its impact is synchronized below.
+    for (const p of this.projectiles.filter((p) => p.kind === 'bazooka' && p.owner === a.idx)) {
+      p.x += p.vx;
+      p.age = (p.age ?? 0) + 1;
+      p.life--;
+    }
+    if (t === 60) {
+      this.projectiles = this.projectiles.filter((p) => p.kind !== 'bazooka' || p.owner !== a.idx);
+      s.x0 = d.x;
+      this.seqHit(a, d, 310, 4.5, '#fde68a');
+      this.expl = { t: 0, color: '#f59e0b', dur: 65 };
+      this.flash = { c: '#fff7d6', a: 1 };
+      this.shake = 48;
+      this.hitstop = 12;
+      this.text(d.x, FLOOR_Y - 180, 'ARENA!', '#fde68a', 60);
+      for (let i = 0; i < 7; i++) this.ring(d.x, FLOOR_Y - 90, i % 2 ? '#fff7d6' : '#f97316', 130 + i * 65, 28 + i * 2, 9);
+      this.spark(d.x, FLOOR_Y - 85, '#fde68a', 55, 15, 5, 30);
+      audio.boom(1.8);
+    }
+    if (t >= 60 && t < 105) {
+      const u = (t - 60) / 45;
+      d.x = s.x0 + f * 250 * u;
+      d.y = -225 * Math.sin(u * Math.PI);
+      d.rotAdd = -u * Math.PI * 2;
+    }
+    if (t >= 105) {
+      d.y = 0;
+      d.rotAdd = 0;
+      if (t === 105) this.dust(d.x, FLOOR_Y, 20);
     }
   }
 

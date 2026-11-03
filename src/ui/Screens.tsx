@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { CHARS, CHAR_IDS } from '../game/data';
-import type { CharId } from '../game/data';
+import { CHARS, CHAR_CATEGORIES } from '../game/data';
+import type { CharId, CharCategory } from '../game/data';
 import type { Difficulty, Mode } from '../game/engine';
 import { audio } from '../game/audio';
 import { ACTIONS, ACTION_LABELS, DEFAULT_BINDINGS, keyLabel, loadBindings, saveBindings } from '../game/input';
@@ -41,13 +41,14 @@ function Title({ big }: { big?: boolean }) {
 }
 
 // ------------------------------------------------------------------ MENU PRINCIPAL
-export type MenuChoice = 'play' | 'versus' | 'training' | 'controls' | 'settings';
+export type MenuChoice = 'play' | 'versus' | 'training' | 'controls' | 'settings' | 'radio';
 
-export function MainMenu({ onChoose }: { onChoose: (c: MenuChoice) => void }) {
+export function MainMenu({ onChoose, suspended = false }: { onChoose: (c: MenuChoice) => void; suspended?: boolean }) {
   const items: [MenuChoice, string, string][] = [
     ['play', 'JOGAR', '#a855f7'],
     ['versus', 'VERSUS LOCAL', '#f59e0b'],
     ['training', 'TREINAMENTO', '#22c55e'],
+    ['radio', 'ESTAÇÃO DE RÁDIO', '#f472b6'],
     ['controls', 'CONTROLES', '#38bdf8'],
     ['settings', 'CONFIGURAÇÕES', '#ef4444'],
   ];
@@ -55,7 +56,7 @@ export function MainMenu({ onChoose }: { onChoose: (c: MenuChoice) => void }) {
   useEffect(() => { audio.music('menu'); }, []);
   useEffect(() => {
     const k = (e: KeyboardEvent) => {
-      if (!['ArrowDown', 'ArrowUp', 'KeyS', 'KeyW', 'Enter', 'Space'].includes(e.code)) return;
+      if (suspended || !['ArrowDown', 'ArrowUp', 'KeyS', 'KeyW', 'Enter', 'Space'].includes(e.code)) return;
       e.preventDefault();
       if (e.repeat) return;
       if (e.code === 'ArrowDown' || e.code === 'KeyS') {
@@ -74,7 +75,7 @@ export function MainMenu({ onChoose }: { onChoose: (c: MenuChoice) => void }) {
     window.addEventListener('keydown', k);
     return () => window.removeEventListener('keydown', k);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sel, onChoose]);
+  }, [sel, onChoose, suspended]);
   return (
     <div className="absolute inset-0">
       <ArtCanvas variant="menu" />
@@ -82,7 +83,7 @@ export function MainMenu({ onChoose }: { onChoose: (c: MenuChoice) => void }) {
       <div className="absolute left-8 top-10">
         <Title />
       </div>
-      <div className="absolute left-8 top-[156px] flex flex-col gap-[6px]">
+      <div className="absolute left-8 top-[140px] flex flex-col gap-[6px]">
         {items.map(([k, label, color], i) => (
           <SkewBtn
             key={k}
@@ -153,6 +154,9 @@ export function DifficultySelect({ onPick, onBack }: { onPick: (d: Difficulty) =
 }
 
 // ------------------------------------------------------------------ SELEÇÃO DE PERSONAGEM
+const CATEGORY_ORDER: CharCategory[] = ['Streamers', 'Viewers', 'Memes'];
+const categoryOf = (ch: CharId): CharCategory => CATEGORY_ORDER.find((category) => (CHAR_CATEGORIES[category] as readonly CharId[]).includes(ch)) || 'Streamers';
+
 const MODE_TITLE: Record<Mode, string> = { ai: 'CONTRA O COMPUTADOR', versus: 'VERSUS LOCAL', training: 'TREINAMENTO' };
 
 export function CharSelect({ mode, difficulty, initialP1 = 'caetano', initialP2 = 'orango', onPick, onBack }: {
@@ -161,10 +165,17 @@ export function CharSelect({ mode, difficulty, initialP1 = 'caetano', initialP2 
 }) {
   const [phase, setPhase] = useState<0 | 1>(0);
   const [picks, setPicks] = useState<[CharId, CharId]>([initialP1, initialP2]);
+  const [categories, setCategories] = useState<[CharCategory, CharCategory]>([categoryOf(initialP1), categoryOf(initialP2)]);
+  const remembered = useRef<Partial<Record<CharCategory, CharId>>[]>([
+    { [categoryOf(initialP1)]: initialP1 }, { [categoryOf(initialP2)]: initialP2 },
+  ]);
   const [locked, setLocked] = useState(false);
   const lockedRef = useRef(false);
   const timerRef = useRef<number | undefined>(undefined);
   const sel = picks[phase];
+  const category = categories[phase];
+  const roster = CHAR_CATEGORIES[category] as readonly CharId[];
+  const hasSelection = roster.includes(sel);
   const d = CHARS[sel];
   const bindings = loadBindings()[phase];
   const opponentLabel = mode === 'ai' ? 'COMPUTADOR' : mode === 'versus' ? 'JOGADOR 2' : 'OPONENTE DE TREINO';
@@ -177,11 +188,23 @@ export function CharSelect({ mode, difficulty, initialP1 = 'caetano', initialP2 
 
   const select = (ch: CharId) => {
     if (lockedRef.current) return;
+    remembered.current[phase][category] = ch;
     setPicks((prev) => phase === 0 ? [ch, prev[1]] : [prev[0], ch]);
     audio.select();
   };
-  const confirm = () => {
+  const changeCategory = (next: CharCategory) => {
     if (lockedRef.current) return;
+    setCategories((prev) => phase === 0 ? [next, prev[1]] : [prev[0], next]);
+    const available = CHAR_CATEGORIES[next] as readonly CharId[];
+    const candidate = remembered.current[phase][next] || available[0];
+    if (candidate) {
+      remembered.current[phase][next] = candidate;
+      setPicks((prev) => phase === 0 ? [candidate, prev[1]] : [prev[0], candidate]);
+    }
+    audio.select();
+  };
+  const confirm = () => {
+    if (lockedRef.current || !hasSelection) return;
     audio.confirm();
     if (phase === 0) {
       setPhase(1);
@@ -199,14 +222,20 @@ export function CharSelect({ mode, difficulty, initialP1 = 'caetano', initialP2 
 
   useEffect(() => {
     const k = (e: KeyboardEvent) => {
-      const codes = ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'KeyA', 'KeyD', 'KeyW', 'KeyS', 'Enter', 'Space', 'Escape'];
+      const codes = ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'KeyA', 'KeyD', 'KeyW', 'KeyS', 'KeyQ', 'KeyE', 'Tab', 'Enter', 'Space', 'Escape'];
       if (!codes.includes(e.code)) return;
       e.preventDefault();
       if (e.repeat || lockedRef.current) return;
-      const index = CHAR_IDS.indexOf(sel);
-      if (e.code === 'ArrowLeft' || e.code === 'KeyA') select(CHAR_IDS[(index + 3) % 4]);
-      if (e.code === 'ArrowRight' || e.code === 'KeyD') select(CHAR_IDS[(index + 1) % 4]);
-      if (['ArrowUp', 'ArrowDown', 'KeyW', 'KeyS'].includes(e.code)) select(CHAR_IDS[(index + 2) % 4]);
+      if (e.code === 'KeyQ' || e.code === 'KeyE' || e.code === 'Tab') {
+        const delta = e.code === 'KeyQ' || (e.code === 'Tab' && e.shiftKey) ? -1 : 1;
+        changeCategory(CATEGORY_ORDER[(CATEGORY_ORDER.indexOf(category) + delta + CATEGORY_ORDER.length) % CATEGORY_ORDER.length]);
+      }
+      const index = roster.indexOf(sel);
+      if (roster.length) {
+        if (e.code === 'ArrowLeft' || e.code === 'KeyA') select(roster[(index + roster.length - 1) % roster.length]);
+        if (e.code === 'ArrowRight' || e.code === 'KeyD') select(roster[(index + 1) % roster.length]);
+        if (['ArrowUp', 'ArrowDown', 'KeyW', 'KeyS'].includes(e.code)) select(roster[(index + (roster.length > 2 ? 2 : 1)) % roster.length]);
+      }
       if (e.code === 'Enter' || e.code === 'Space') confirm();
       if (e.code === 'Escape') back();
     };
@@ -215,8 +244,8 @@ export function CharSelect({ mode, difficulty, initialP1 = 'caetano', initialP2 
   });
 
   return (
-    <div className="absolute inset-0" data-select-phase={phase}>
-      <ArtCanvas variant="select" selected={sel} />
+    <div className="absolute inset-0" data-select-phase={phase} data-select-category={category}>
+      <ArtCanvas variant="select" selected={hasSelection ? sel : undefined} />
       <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(90deg,rgba(6,3,15,.94),rgba(6,3,15,.55) 30%,transparent 48%,rgba(6,3,15,.9) 69%)' }} />
       <div className="absolute left-6 top-4 title-main text-[28px]">ESCOLHA OS LUTADORES</div>
       <div className="absolute right-6 top-5 text-[10px] tracking-[.16em] text-white/65">{MODE_TITLE[mode]}{mode === 'ai' ? ` · ${diffName}` : ''}</div>
@@ -230,38 +259,47 @@ export function CharSelect({ mode, difficulty, initialP1 = 'caetano', initialP2 
           </button>
         ))}
       </div>
-      <div className="absolute left-6 top-[147px] w-[296px]">
-        <div className="text-[10px] tracking-[.2em] text-white/60 mb-3">{phase === 0 ? '01 / SEU LUTADOR' : `02 / ${opponentLabel}`}</div>
+      <div className="absolute left-6 top-[140px] w-[296px]">
+        <div role="tablist" aria-label="Categorias de lutadores" className="flex gap-1 mb-3">
+          {CATEGORY_ORDER.map((tab) => <button key={tab} type="button" role="tab" data-category={tab} aria-selected={category === tab} disabled={locked} onClick={() => changeCategory(tab)}
+            className="flex-1 text-[10px] py-[9px] border transition-colors cursor-pointer"
+            style={{ background: category === tab ? '#8b5cf6' : '#130b22dd', borderColor: category === tab ? '#ddd6fe' : '#ffffff33', color: category === tab ? '#fff' : '#b9accd' }}>{tab.toUpperCase()}</button>)}
+        </div>
+        <div className="text-[9px] tracking-[.2em] text-white/60 mb-2">{phase === 0 ? '01 / SEU LUTADOR' : `02 / ${opponentLabel}`}</div>
         <div className="grid grid-cols-2 gap-[10px]">
-          {CHAR_IDS.map((ch, i) => {
+          {roster.map((ch, i) => {
             const c = CHARS[ch];
             const active = sel === ch;
             return (
               <button key={ch} type="button" data-char={ch} aria-label={`Selecionar ${c.name}`} aria-pressed={active} disabled={locked}
                 onClick={() => select(ch)}
                 className="relative text-left border-2 overflow-hidden transition-all cursor-pointer"
-                style={{ height: 120, borderColor: active ? c.glow : '#ffffff33', background: `linear-gradient(135deg,${c.color}${active ? '88' : '33'},#090511)`, boxShadow: active ? `0 0 18px ${c.color}77` : 'none', transform: active ? 'translateY(-2px)' : undefined }}>
+                style={{ height: 100, borderColor: active ? c.glow : '#ffffff33', background: `linear-gradient(135deg,${c.color}${active ? '88' : '33'},#090511)`, boxShadow: active ? `0 0 18px ${c.color}77` : 'none', transform: active ? 'translateY(-2px)' : undefined }}>
                 <div className="absolute top-2 left-2 text-[9px] text-white/40">0{i + 1}</div>
-                <FighterPortrait ch={ch} size={34} className="absolute top-1 left-[36px]" />
+                <FighterPortrait ch={ch} size={29} className="absolute top-0 left-[41px]" />
                 <div className="absolute bottom-2 left-2 right-1 title-main text-[13px] leading-4" style={{ color: active ? '#fff' : c.glow }}>{c.name}</div>
-                {ch === 'tubarao' || ch === 'rickzera' ? <div className="absolute right-1 top-1 text-[7px] bg-white text-black px-1">NOVO</div> : null}
+                {ch === 'nomad' || ch === 'bieu' ? <div className="absolute right-1 top-1 text-[7px] bg-white text-black px-1">NOVO</div> : null}
               </button>
             );
           })}
         </div>
-        <div className="text-[10px] mt-3 leading-4 text-white/55">Todos podem enfrentar todos.<br />Também vale escolher o mesmo lutador.</div>
+        {roster.length === 0 && <div className="h-[210px] border border-dashed border-white/25 flex flex-col items-center justify-center text-center px-5 bg-black/30">
+          <div className="title-main text-[25px] text-white/80">EM BREVE</div>
+          <p className="text-[11px] leading-4 text-white/55 mt-3">Os viewers terão seu lugar na arena.<br />Escolha outra categoria para lutar.</p>
+        </div>}
+        <div className="text-[9px] mt-2 leading-[13px] text-white/55">Q / E ou TAB: trocar categoria<br />Todos podem se enfrentar, inclusive espelhados.</div>
       </div>
-      <div className="absolute left-[344px] top-[424px] w-[286px] text-center pointer-events-none">
+      {hasSelection && <div className="absolute left-[344px] top-[424px] w-[286px] text-center pointer-events-none">
         <div className="title-main text-[22px]" style={{ color: d.glow, textShadow: '2px 2px 0 #000' }}>{d.short}</div>
         <div className="text-[9px] tracking-wider text-white/70 mt-1">{d.title}</div>
-      </div>
+      </div>}
       <div className="absolute right-6 top-[147px] w-[284px]">
-        <FighterDetails ch={sel} bindings={bindings} />
+        {hasSelection ? <FighterDetails ch={sel} bindings={bindings} /> : <div className="mt-20 text-center text-white/45 text-sm leading-6">Novos desafiantes estão chegando.<br />STREAMERS e MEMES já estão prontos para lutar.</div>}
       </div>
       <div className="absolute left-8 right-8 bottom-[28px] flex justify-between items-center">
         <SkewBtn small onClick={back}>VOLTAR</SkewBtn>
         <div className="text-[9px] tracking-wider text-white/60">SETAS / WASD ESCOLHER · ENTER CONFIRMAR</div>
-        <SkewBtn small active color={d.color} onClick={confirm}>{locked ? 'PREPARE-SE!' : phase === 0 ? 'CONFIRMAR P1' : 'LUTAR!'}</SkewBtn>
+        <SkewBtn small active disabled={!hasSelection || locked} color={hasSelection ? d.color : '#555'} onClick={confirm}>{locked ? 'PREPARE-SE!' : !hasSelection ? 'EM BREVE' : phase === 0 ? 'CONFIRMAR P1' : 'LUTAR!'}</SkewBtn>
       </div>
       <div className="absolute bottom-2 w-full text-center text-[9px] text-white/40">ESC VOLTAR · CLIQUE NOS PAINÉIS P1 / P2 PARA REVISAR A ESCOLHA</div>
       {locked && <div className="absolute inset-0 bg-white/50 pointer-events-none fade-in" style={{ animationDuration: '.4s' }} />}

@@ -1,7 +1,14 @@
 // Dados dos personagens: atributos, golpes (frame data) e poses do esqueleto.
 
-export const CHAR_IDS = ['caetano', 'orango', 'tubarao', 'rickzera'] as const;
+export const CHAR_IDS = ['caetano', 'orango', 'tubarao', 'rickzera', 'bieu', 'nomad'] as const;
 export type CharId = (typeof CHAR_IDS)[number];
+
+export const CHAR_CATEGORIES = {
+  Streamers: ['rickzera', 'caetano', 'nomad', 'bieu'],
+  Memes: ['tubarao', 'orango'],
+  Viewers: [],
+} as const satisfies Record<string, readonly CharId[]>;
+export type CharCategory = keyof typeof CHAR_CATEGORIES;
 
 export interface Pose {
   lean: number;
@@ -164,8 +171,8 @@ const caetanoMoves: Record<string, Move> = Object.fromEntries([
   mv('kH', { rank: 3, startup: 10, active: 5, recovery: 21, dmg: 70, hitstun: 23, blockstun: 15, kb: 8, kbBlock: 5, hb: [20, 125, 70, 165], poses: ['kH_s', 'kH_a'], trail: 'fa', hitstop: 9, shake: 5, power: 1.2, launch: 6, launchVx: 6 }),
   mv('cP', { rank: 1, startup: 5, active: 3, recovery: 9, dmg: 25, hitstun: 13, blockstun: 8, kb: 2, hb: [20, 100, 50, 95], poses: ['cP_s', 'cP_a'], trail: 'fw', hitstop: 5 }),
   mv('cK', { rank: 2, startup: 8, active: 4, recovery: 22, dmg: 50, hitstun: 22, blockstun: 12, kb: 6, hb: [10, 135, 0, 35], level: 'low', poses: ['cK_s', 'cK_a'], trail: 'fa', hitstop: 8, power: 1, launch: 5, launchVx: 4 }),
-  mv('jP', { rank: 2, air: true, startup: 5, active: 10, recovery: 0, dmg: 50, hitstun: 18, blockstun: 12, kb: 4, hb: [10, 95, 20, 125], poses: ['jP_s', 'jP_a'], trail: 'fw', hitstop: 7, power: 0.9 }),
-  mv('jK', { rank: 2, air: true, startup: 6, active: 10, recovery: 0, dmg: 55, hitstun: 19, blockstun: 12, kb: 5, hb: [5, 100, -10, 85], poses: ['jK_s', 'jK_a'], trail: 'fa', hitstop: 7, power: 1 }),
+  mv('jP', { rank: 2, air: true, level: 'high', startup: 5, active: 10, recovery: 0, dmg: 50, hitstun: 18, blockstun: 12, kb: 4, hb: [10, 95, 20, 125], poses: ['jP_s', 'jP_a'], trail: 'fw', hitstop: 7, power: 0.9 }),
+  mv('jK', { rank: 2, air: true, level: 'high', startup: 6, active: 10, recovery: 0, dmg: 55, hitstun: 19, blockstun: 12, kb: 5, hb: [5, 100, -10, 85], poses: ['jK_s', 'jK_a'], trail: 'fa', hitstop: 7, power: 1 }),
   mv('s1', {
     kind: 'special', rank: 9, startup: 12, active: 8, recovery: 22, whiff: 8, dmg: 90, hitstun: 26, blockstun: 16, kb: 9, kbBlock: 6, hb: [10, 155, 25, 155],
     launch: 8, launchVx: 7, hitstop: 10, shake: 9, power: 2, poses: ['chute_s', 'chute_a'], trail: 'fa', advance: [10, 20, 4], label: 'CHUTE DA CONSPIRAÇÃO', turn: [3, 14], sound: 'purple',
@@ -244,8 +251,8 @@ const orangoMoves: Record<string, Move> = Object.fromEntries([
   mv('kH', { rank: 3, startup: 14, active: 5, recovery: 27, dmg: 95, hitstun: 25, blockstun: 16, kb: 10, kbBlock: 6, hb: [20, 150, 30, 140], poses: ['kH_s', 'kH_a'], trail: 'fa', hitstop: 11, shake: 8, power: 1.6, launch: 7, launchVx: 7 }),
   mv('cP', { rank: 1, startup: 7, active: 3, recovery: 12, dmg: 34, hitstun: 14, blockstun: 9, kb: 3, hb: [25, 135, 30, 80], poses: ['cP_s', 'cP_a'], trail: 'fw', hitstop: 6 }),
   mv('cK', { rank: 2, startup: 11, active: 4, recovery: 26, dmg: 65, hitstun: 22, blockstun: 13, kb: 7, hb: [10, 130, 0, 35], level: 'low', poses: ['cK_s', 'cK_a'], trail: 'fa', hitstop: 9, shake: 4, power: 1.2, launch: 5, launchVx: 5 }),
-  mv('jP', { rank: 2, air: true, startup: 7, active: 10, recovery: 0, dmg: 65, hitstun: 19, blockstun: 13, kb: 5, hb: [10, 120, 0, 110], poses: ['jP_s', 'jP_a'], trail: 'fw', hitstop: 8, power: 1.1 }),
-  mv('jK', { rank: 2, air: true, startup: 8, active: 10, recovery: 0, dmg: 70, hitstun: 20, blockstun: 13, kb: 6, hb: [5, 105, -15, 80], poses: ['jK_s', 'jK_a'], trail: 'fa', hitstop: 8, power: 1.2 }),
+  mv('jP', { rank: 2, air: true, level: 'high', startup: 7, active: 10, recovery: 0, dmg: 65, hitstun: 19, blockstun: 13, kb: 5, hb: [10, 120, 0, 110], poses: ['jP_s', 'jP_a'], trail: 'fw', hitstop: 8, power: 1.1 }),
+  mv('jK', { rank: 2, air: true, level: 'high', startup: 8, active: 10, recovery: 0, dmg: 70, hitstun: 20, blockstun: 13, kb: 6, hb: [5, 105, -15, 80], poses: ['jK_s', 'jK_a'], trail: 'fa', hitstop: 8, power: 1.2 }),
   mv('s1', {
     kind: 'special', rank: 9, startup: 24, active: 7, recovery: 28, whiff: 10, dmg: 140, hitstun: 28, blockstun: 18, kb: 11, kbBlock: 7, hb: [60, 280, 95, 135],
     launch: 7, launchVx: 8, hitstop: 13, shake: 16, power: 2.5, poses: ['dedo_s', 'dedo_a'], advance: [20, 27, 5], dedilho: true, label: 'DEDILHO SUPREMO', charge: true, sound: 'red',
@@ -323,6 +330,50 @@ Object.assign(rickzeraMoves, Object.fromEntries([
   mv('s1', { kind: 'special', rank: 9, startup: 12, active: 3, recovery: 19, whiff: 5, dmg: 52, hitstun: 20, blockstun: 12, kb: 5, kbBlock: 3, hb: [20, 105, 80, 145], hitstop: 7, shake: 5, power: 1.3, poses: ['franco_s', 'franco_a'], label: 'ARREMESSO DO FRANCO SUÍÇO' }),
   mv('s2', { kind: 'special', rank: 9, startup: 18, active: 7, recovery: 23, whiff: 9, dmg: 24, hitstun: 17, blockstun: 10, kb: 2.5, kbBlock: 2, hb: [20, 125, 60, 145], hitstop: 4, shake: 3, power: 1.1, poses: ['pix_s', 'pix_a'], label: 'LINHAS DO PIX' }),
   mv('s3', { kind: 'special', rank: 9, startup: 3, active: 12, recovery: 12, whiff: 5, dmg: 34, hitstun: 18, blockstun: 12, kb: 4, hb: [5, 110, -15, 130], launch: 5, launchVx: 3, hitstop: 6, shake: 5, power: 1.3, poses: ['double_s', 'double_a'], trail: 'fa', label: 'DOUBLE JUMP' }),
+]));
+
+
+// ---------------------------------------------------------------- BIEUBATMAN E NOMAD LOBBY
+const bieuPoses: Record<string, Pose> = {
+  ...Object.fromEntries(Object.entries(rickzeraPoses).map(([k, p]) => [k, { ...p }])),
+  idle: cp({ lean: 4, fa1: 50, fa2: -65, ba1: 105, ba2: -70, fl1: 72, fl2: 94, bl1: 110, bl2: 86 }),
+  driver_s: cp({ lean: -12, fa1: 65, fa2: -115, ba1: 100, ba2: -75 }),
+  driver_a: cp({ lean: 28, fa1: -12, fa2: -4, ba1: 110, ba2: -80, finger: 1 }),
+  rat_s: cp({ lean: 22, fa1: 80, fa2: -85, ba1: 105, ba2: -60 }),
+  rat_a: cp({ lean: 42, fa1: 35, fa2: 6, ba1: 105, ba2: -50, fl1: 40, fl2: 110, bl1: 135, bl2: 78 }),
+  spray_s: cp({ lean: -10, fa1: 25, fa2: -75, ba1: 105, ba2: -60 }),
+  spray_a: cp({ lean: 12, fa1: -8, fa2: -4, ba1: 110, ba2: -70, finger: 1 }),
+  spray: cp({ lean: 12, fa1: -8, fa2: -4, ba1: 110, ba2: -70, finger: 1 }),
+  drive: cp({ lean: -6, fa1: -8, fa2: -30, ba1: -15, ba2: -38, fl1: 30, fl2: 112, bl1: 145, bl2: 65 }),
+};
+const nomadPoses: Record<string, Pose> = {
+  ...Object.fromEntries(Object.entries(rickzeraPoses).map(([k, p]) => [k, { ...p }])),
+  idle: cp({ lean: 9, fa1: 65, fa2: -55, ba1: 112, ba2: -55, fl1: 68, fl2: 98, bl1: 118, bl2: 84 }),
+  burger_s: cp({ lean: -12, fa1: 70, fa2: -125, ba1: 105, ba2: -55 }),
+  burger_a: cp({ lean: 20, fa1: -8, fa2: -2, ba1: 110, ba2: -70 }),
+  glock_s: cp({ lean: -4, fa1: 15, fa2: -70, ba1: -8, ba2: -95 }),
+  glock_a: cp({ lean: 7, fa1: -10, fa2: 0, ba1: -18, ba2: -6, finger: 1 }),
+  boomerang_s: cp({ lean: -18, fa1: -90, fa2: -140, ba1: 110, ba2: -60 }),
+  boomerang_a: cp({ lean: 24, fa1: -10, fa2: -8, ba1: 120, ba2: -75 }),
+  bazooka: cp({ lean: -8, fa1: -14, fa2: -10, ba1: -35, ba2: -20, fl1: 65, fl2: 100, bl1: 120, bl2: 80 }),
+};
+function copyNormals(dmgScale: number, startup: number, reach: number): Record<string, Move> {
+  return Object.fromEntries(Object.entries(caetanoMoves).filter(([, m]) => m.kind === 'normal').map(([id, m]) => [id, {
+    ...m, startup: Math.max(3, m.startup + startup), dmg: Math.round(m.dmg * dmgScale),
+    hb: [m.hb[0], m.hb[1] + reach, m.hb[2], m.hb[3]] as Move['hb'],
+  }]));
+}
+const bieuMoves = copyNormals(1.15, 1, 8);
+Object.assign(bieuMoves, Object.fromEntries([
+  mv('s1', { kind: 'special', rank: 9, startup: 11, active: 6, recovery: 23, whiff: 11, dmg: 88, hitstun: 25, blockstun: 15, kb: 7, kbBlock: 4, hb: [20, 150, 70, 146], pierce: 0.35, hitstop: 9, shake: 9, power: 1.8, poses: ['driver_s', 'driver_a'], advance: [7, 15, 3.5], label: 'CHAVE DE FENDA', trail: 'fw' }),
+  mv('s2', { kind: 'special', rank: 9, startup: 16, active: 3, recovery: 25, whiff: 6, dmg: 46, hitstun: 21, blockstun: 13, kb: 4, kbBlock: 2, hb: [20, 100, 0, 35], level: 'low', hitstop: 6, shake: 4, power: 1.2, poses: ['rat_s', 'rat_a'], label: 'JOGAR RATO' }),
+  mv('s3', { kind: 'special', rank: 9, startup: 19, active: 7, recovery: 25, whiff: 8, dmg: 18, hitstun: 15, blockstun: 9, kb: 1, kbBlock: 1, hb: [20, 155, 10, 130], hitstop: 3, shake: 3, power: 0.8, poses: ['spray_s', 'spray_a'], label: 'PICHAÇÃO' }),
+]));
+const nomadMoves = copyNormals(1.07, 1, 5);
+Object.assign(nomadMoves, Object.fromEntries([
+  mv('s1', { kind: 'special', rank: 9, startup: 15, active: 3, recovery: 23, whiff: 8, dmg: 58, hitstun: 23, blockstun: 14, kb: 6, kbBlock: 3, hb: [20, 120, 65, 145], hitstop: 8, shake: 6, power: 1.4, poses: ['burger_s', 'burger_a'], label: 'MARIO BURGER' }),
+  mv('s2', { kind: 'special', rank: 9, startup: 12, active: 5, recovery: 27, whiff: 7, dmg: 23, hitstun: 16, blockstun: 9, kb: 2, kbBlock: 1.5, hb: [20, 120, 135, 155], level: 'high', hitstop: 3, shake: 3, power: 0.9, poses: ['glock_s', 'glock_a'], label: 'RAJADA DE GLOCK' }),
+  mv('s3', { kind: 'special', rank: 9, startup: 17, active: 4, recovery: 26, whiff: 9, dmg: 42, hitstun: 22, blockstun: 12, kb: 3, kbBlock: 2, hb: [20, 120, 70, 140], hitstop: 6, shake: 5, power: 1.3, poses: ['boomerang_s', 'boomerang_a'], label: 'BOOMERANG' }),
 ]));
 
 export const CHARS: Record<CharId, CharDef> = {
@@ -425,6 +476,34 @@ export const CHARS: Record<CharId, CharDef> = {
     ],
     superName: 'WISE 6X', quote: 'TRANSFERÊNCIA CONCLUÍDA. SEIS VEZES.',
     bio: 'Moletom preto, cabelo castanho e energia verde. Controla a distância com dinheiro, Pix e salto duplo.',
+  },
+  bieu: {
+    id: 'bieu', name: 'BIEUBATMAN', short: 'BIEU', title: 'O PRESTÍGIO DA RUA',
+    color: '#a855f7', color2: '#581c87', glow: '#e9d5ff',
+    hp: 1080, walk: 3.9, walkBack: 3.1, jumpVy: 16, jumpVx: 4.8, dashVx: 10, dashDur: 16,
+    pushW: 30, hurtH: 178, crouchH: 110, moves: bieuMoves, poses: bieuPoses,
+    attrs: [{ label: 'VELOCIDADE', v: 3 }, { label: 'FORÇA', v: 4 }, { label: 'ALCANCE', v: 4 }, { label: 'RESISTÊNCIA', v: 4 }, { label: 'MOBILIDADE', v: 3 }],
+    specials: [
+      { key: 'U', name: 'CHAVE DE FENDA', desc: 'Estocada de perto que atravessa parte da defesa.' },
+      { key: 'I', name: 'JOGAR RATO', desc: 'Rato pelo chão: pule ou use defesa agachada.' },
+      { key: 'O', name: 'PICHAÇÃO', desc: 'Nuvem de tinta que permanece e pressiona com até quatro acertos.' },
+    ],
+    superName: 'PRESTÍGIO', quote: 'PASSANDO COM PRESTÍGIO.',
+    bio: 'Regata branca, cachos curtos e atitude. Combina pressão de perto, rato rasteiro e controle com tinta.',
+  },
+  nomad: {
+    id: 'nomad', name: 'NOMAD LOBBY', short: 'NOMAD', title: 'O DONO DA ARENA',
+    color: '#f59e0b', color2: '#9a3412', glow: '#fde68a',
+    hp: 1100, walk: 3.6, walkBack: 2.9, jumpVy: 15.8, jumpVx: 4.5, dashVx: 9.4, dashDur: 16,
+    pushW: 33, hurtH: 171, crouchH: 104, moves: nomadMoves, poses: nomadPoses,
+    attrs: [{ label: 'VELOCIDADE', v: 3 }, { label: 'FORÇA', v: 4 }, { label: 'ALCANCE', v: 5 }, { label: 'RESISTÊNCIA', v: 4 }, { label: 'MOBILIDADE', v: 3 }],
+    specials: [
+      { key: 'U', name: 'MARIO BURGER', desc: 'Arremessa um hambúrguer que empurra o adversário.' },
+      { key: 'I', name: 'RAJADA DE GLOCK', desc: 'Três disparos altos: agache para evitar ou defenda em pé.' },
+      { key: 'O', name: 'BOOMERANG', desc: 'Vai e volta, podendo acertar uma vez em cada trajeto.' },
+    ],
+    superName: 'ARENA', quote: 'BEM-VINDO À MINHA ARENA.',
+    bio: 'Boné vermelho, macacão azul e barba loira. Domina a distância com lanche, rajada e boomerang.',
   },
 };
 

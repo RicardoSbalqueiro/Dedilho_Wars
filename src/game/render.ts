@@ -154,6 +154,12 @@ function drawFx(ctx: CanvasRenderingContext2D, g: Game, f: Fighter, time: number
         ctx.restore();
       }
     }
+    if (f.ch === 'bieu' && m.id === 's1' && t >= m.startup - 2 && t < m.startup + m.active) {
+      spear(ctx, p.wF.x + 10, p.wF.y, p.wF.x + 95, 13, '#e9d5ff');
+    }
+    if (f.ch === 'bieu' && m.id === 's3' && t >= m.startup && t < m.startup + m.active + 8) {
+      spear(ctx, p.wF.x + 10, p.wF.y, p.wF.x + 100, 40, '#c084fc');
+    }
     if (m.kind === 'super' && t % 2 === 0) orb(ctx, p.hip.x - 20, p.hip.y - 30, 70, glow, 0.5);
   }
   const s = g.seq;
@@ -297,7 +303,7 @@ function drawTrail(ctx: CanvasRenderingContext2D, f: Fighter) {
 }
 
 function drawFighter(ctx: CanvasRenderingContext2D, g: Game, f: Fighter, time: number, reflect = false) {
-  if (f.hidden) return;
+  if (f.hidden || (g.seq?.kind === 'superB' && g.seq.a === f && g.seq.t < 112)) return;
   ctx.save();
   ctx.translate(f.x, FLOOR_Y + f.y);
   ctx.scale(f.facing * f.turn, 1);
@@ -307,7 +313,7 @@ function drawFighter(ctx: CanvasRenderingContext2D, g: Game, f: Fighter, time: n
     ctx.translate(0, 70);
   }
   if (!reflect) drawAura(ctx, f, time);
-  drawRig(ctx, f.ch, f.rig, f.pose, { time, expr: f.expr, glow: f.glow, glowColor: f.def.glow });
+  drawRig(ctx, f.ch, f.rig, f.pose, { time, expr: f.expr, glow: f.glow, glowColor: f.def.glow, poseName: f.poseOverride || (f.move ? f.move.poses[f.moveT >= f.move.startup ? 1 : 0] : 'idle') });
   if (!reflect) drawFx(ctx, g, f, time);
   ctx.restore();
 }
@@ -321,13 +327,45 @@ function heart(ctx: CanvasRenderingContext2D, x: number, y: number, size: number
   ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.stroke(); ctx.restore();
 }
 
+function drawVehicles(ctx: CanvasRenderingContext2D, g: Game) {
+  const s = g.seq;
+  if (!s || s.kind !== 'superB' || s.t >= 112) return;
+  const { a, t } = s;
+  ctx.save(); ctx.translate(a.x + a.facing * 45, FLOOR_Y - 8); ctx.scale(a.facing, 1);
+  ctx.translate(0, Math.sin(t * 0.9) * 2);
+  const body = ctx.createLinearGradient(0, -100, 0, 0);
+  body.addColorStop(0, '#48404f'); body.addColorStop(0.5, '#211b29'); body.addColorStop(1, '#09080e');
+  ctx.fillStyle = body; ctx.strokeStyle = '#110919'; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.moveTo(-140, -10); ctx.lineTo(-140, -48);ctx.lineTo(-90,-59);
+  ctx.lineTo(-64,-98);ctx.lineTo(21,-103);ctx.lineTo(65,-62);ctx.lineTo(127,-52);ctx.lineTo(148,-25);ctx.lineTo(144,-9);ctx.closePath();ctx.fill();ctx.stroke();
+  // Windshield and open driver's window.
+  ctx.fillStyle='#9dd1df';ctx.beginPath();ctx.moveTo(19,-94);ctx.lineTo(55,-64);ctx.lineTo(23,-66);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#110c18';ctx.fillRect(-63,-92,78,39);
+  ctx.save();ctx.translate(-15,-74);drawHead(ctx,'bieu',19,{time:t,expr:'shout'});ctx.restore();
+  ctx.strokeStyle='#d8b4fe';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(-100,-42);ctx.lineTo(83,-42);ctx.stroke();
+  ctx.font='italic 900 18px sans-serif';ctx.fillStyle='#f3e8ff';ctx.textAlign='center';ctx.fillText('PRESTÍGIO',-22,-16);
+  // Graffiti crown and purple paint strokes.
+  ctx.strokeStyle='#facc15';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(64,-25);ctx.lineTo(61,-40);ctx.lineTo(72,-31);ctx.lineTo(80,-46);ctx.lineTo(87,-31);ctx.lineTo(97,-39);ctx.lineTo(94,-25);ctx.closePath();ctx.stroke();
+  ctx.fillStyle='#fef3c7';ctx.fillRect(126,-46,17,13);ctx.fillStyle='#f87171';ctx.fillRect(-141,-42,10,10);
+  for (const x of [-89,91]) {
+    ctx.fillStyle='#0b0910';ctx.beginPath();ctx.arc(x,-5,27,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle='#8b8595';ctx.lineWidth=4;ctx.beginPath();ctx.arc(x,-5,17,0,Math.PI*2);ctx.stroke();
+    ctx.save();ctx.translate(x,-5);ctx.rotate(t*0.5);ctx.strokeStyle='#d1cbd9';ctx.lineWidth=3;
+    for(let i=0;i<5;i++){ctx.rotate(Math.PI*2/5);ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(14,0);ctx.stroke();}ctx.restore();
+  }
+  ctx.restore();
+}
+
 function drawProjectiles(ctx: CanvasRenderingContext2D, g: Game) {
   for (const shot of g.projectiles) {
     const facing = shot.vx >= 0 ? 1 : -1;
+    const color = g.f[shot.owner].def.glow;
     ctx.save(); ctx.translate(shot.x, FLOOR_Y + shot.y); ctx.scale(facing, 1);
-    const tail = ctx.createLinearGradient(-85, 0, 10, 0);
-    tail.addColorStop(0, '#22c55e00'); tail.addColorStop(1, '#86efacbb');
-    ctx.fillStyle = tail; ctx.fillRect(-85, -8, 85, 16);
+    if (shot.kind !== 'spray') {
+      const tail = ctx.createLinearGradient(-85, 0, 10, 0);
+      tail.addColorStop(0, color + '00'); tail.addColorStop(1, color + 'bb');
+      ctx.fillStyle = tail; ctx.fillRect(-85, -6, 85, 12);
+    }
     if (shot.kind === 'franco') {
       ctx.rotate(Math.sin(g.tick * 0.3) * 0.15);
       ctx.shadowColor = '#4ade80'; ctx.shadowBlur = 15;
@@ -338,7 +376,7 @@ function drawProjectiles(ctx: CanvasRenderingContext2D, g: Game) {
       ctx.fillStyle = '#dc2626'; ctx.fillRect(10, -9, 9, 9);
       ctx.fillStyle = '#fff'; ctx.fillRect(14, -8, 2, 7); ctx.fillRect(11, -5, 7, 2);
       ctx.fillStyle = '#0f172a'; ctx.font = 'bold 9px sans-serif'; ctx.textAlign = 'left'; ctx.fillText('100', -20, 8);
-    } else {
+    } else if (shot.kind === 'pix') {
       ctx.shadowColor = '#4ade80'; ctx.shadowBlur = 18;
       ctx.strokeStyle = '#86efac'; ctx.lineWidth = 5; ctx.lineJoin = 'round';
       for (const dx of [-10, 10]) {
@@ -347,6 +385,40 @@ function drawProjectiles(ctx: CanvasRenderingContext2D, g: Game) {
       }
       ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5;
       ctx.beginPath(); ctx.moveTo(-38, 0); ctx.lineTo(35, 0); ctx.stroke();
+    } else if (shot.kind === 'rat') {
+      const hop = Math.sin(g.tick * 0.8) * 3;ctx.translate(0,hop);
+      ctx.strokeStyle='#d9a8bb';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(-17,3);ctx.bezierCurveTo(-55,-8,-40,20,-68,11);ctx.stroke();
+      ctx.fillStyle='#796570';ctx.strokeStyle='#201721';ctx.lineWidth=2;
+      ctx.beginPath();ctx.ellipse(0,0,21,11,-.1,0,Math.PI*2);ctx.fill();ctx.stroke();
+      ctx.beginPath();ctx.moveTo(12,-8);ctx.lineTo(34,2);ctx.lineTo(15,10);ctx.closePath();ctx.fill();ctx.stroke();
+      ctx.fillStyle='#d2a1b4';ctx.beginPath();ctx.arc(12,-10,6,0,Math.PI*2);ctx.fill();ctx.stroke();
+      ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(23,-2,3,0,Math.PI*2);ctx.fill();ctx.fillStyle='#171119';ctx.beginPath();ctx.arc(24,-2,1.5,0,Math.PI*2);ctx.fill();
+      ctx.strokeStyle='#211827';ctx.lineWidth=1;for(let i=0;i<3;i++){ctx.beginPath();ctx.moveTo(30,2);ctx.lineTo(43, i*4-3);ctx.stroke();}
+    } else if (shot.kind === 'spray') {
+      ctx.globalAlpha=Math.min(0.8,shot.life/20);
+      for(let i=0;i<9;i++) {
+        const angle=i*Math.PI*2/9;const r=35+Math.sin(g.tick*.1+i)*8;
+        ctx.fillStyle=i%2?'#c084fc55':'#a855f766';ctx.beginPath();ctx.arc(Math.cos(angle)*r,Math.sin(angle)*r*.6,22+Math.sin(i+g.tick*.1)*5,0,Math.PI*2);ctx.fill();
+      }
+      ctx.strokeStyle='#f5d0fe';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(-22,8);ctx.lineTo(-26,-17);ctx.lineTo(-10,-7);ctx.lineTo(0,-26);ctx.lineTo(10,-7);ctx.lineTo(26,-17);ctx.lineTo(22,8);ctx.closePath();ctx.stroke();
+      ctx.font='italic 900 12px sans-serif';ctx.textAlign='center';ctx.fillStyle='#fff';ctx.fillText('BIEU',0,24);
+    } else if (shot.kind === 'burger') {
+      ctx.rotate(Math.sin(g.tick*.15)*.15);ctx.lineWidth=2;ctx.strokeStyle='#6b3315';
+      ctx.fillStyle='#e8a63e';ctx.beginPath();ctx.ellipse(0,-7,27,16,0,Math.PI,Math.PI*2);ctx.lineTo(27,-7);ctx.closePath();ctx.fill();ctx.stroke();
+      ctx.fillStyle='#bb3524';ctx.fillRect(-27,-6,54,5);ctx.fillStyle='#58a339';ctx.fillRect(-29,-1,58,5);ctx.fillStyle='#f5d24a';ctx.beginPath();ctx.moveTo(-25,4);ctx.lineTo(25,4);ctx.lineTo(12,13);ctx.lineTo(-7,8);ctx.closePath();ctx.fill();
+      ctx.fillStyle='#54311f';ctx.fillRect(-27,7,54,10);ctx.strokeRect(-27,7,54,10);ctx.fillStyle='#e8a63e';ctx.beginPath();ctx.roundRect(-26,16,52,9,5);ctx.fill();ctx.stroke();
+      ctx.fillStyle='#fff0be';for(let i=0;i<7;i++)ctx.fillRect(-17+i*5,-14-Math.sin(i)*3,2,2);
+    } else if (shot.kind === 'bullet') {
+      ctx.shadowColor='#facc15';ctx.shadowBlur=12;ctx.fillStyle='#fef08a';ctx.beginPath();ctx.roundRect(-12,-3,24,6,3);ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(-35,0);ctx.lineTo(13,0);ctx.stroke();
+    } else if (shot.kind === 'boomerang') {
+      ctx.rotate((shot.age??g.tick)*0.5);ctx.fillStyle='#ef4444';ctx.strokeStyle='#fff';ctx.lineWidth=3;
+      ctx.beginPath();ctx.moveTo(-30,-21);ctx.quadraticCurveTo(7,-21,29,23);ctx.lineTo(17,28);ctx.quadraticCurveTo(2,3,-32,-8);ctx.closePath();ctx.fill();ctx.stroke();
+      ctx.strokeStyle='#fef3c7';ctx.lineWidth=6;ctx.beginPath();ctx.moveTo(-8,-13);ctx.lineTo(-15,-2);ctx.moveTo(13,3);ctx.lineTo(5,12);ctx.stroke();
+    } else if (shot.kind === 'bazooka') {
+      ctx.fillStyle='#f97316';ctx.beginPath();ctx.moveTo(-30,-11);ctx.lineTo(-70-Math.sin(g.tick)*15,0);ctx.lineTo(-30,11);ctx.closePath();ctx.fill();
+      ctx.fillStyle='#17151b';ctx.strokeStyle='#facc15';ctx.lineWidth=3;ctx.beginPath();ctx.roundRect(-33,-18,62,36,16);ctx.fill();ctx.stroke();
+      ctx.fillStyle='#fff';ctx.beginPath();ctx.ellipse(12,-6,8,5,-.3,0,Math.PI*2);ctx.fill();ctx.fillStyle='#111';ctx.beginPath();ctx.arc(16,-6,2,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='#fff';for(let i=0;i<4;i++){ctx.beginPath();ctx.moveTo(-4+i*8,5);ctx.lineTo(2+i*8,5);ctx.lineTo(-1+i*8,12);ctx.closePath();ctx.fill();}
     }
     ctx.restore();
   }
@@ -811,7 +883,7 @@ function drawCine(ctx: CanvasRenderingContext2D, g: Game) {
     ctx.save();
     ctx.translate(W / 2, 128);
     ctx.scale(s, s);
-    label(ctx, f.ch === 'orango' ? 'GRAAAAAAWRRR!!!' : f.ch === 'tubarao' ? 'FISCALIZAÇÃO TOTAL!' : 'TRANSFERÊNCIA EM 6X!', 0, 0, 46, f.def.glow, f.def.color2, 'center', -0.18, 12);
+    label(ctx, f.ch === 'orango' ? 'GRAAAAAAWRRR!!!' : f.ch === 'tubarao' ? 'FISCALIZAÇÃO TOTAL!' : f.ch === 'bieu' ? 'PRESTÍGIO NAS RUAS!' : f.ch === 'nomad' ? 'BEM-VINDO À ARENA!' : 'TRANSFERÊNCIA EM 6X!', 0, 0, 46, f.def.glow, f.def.color2, 'center', -0.18, 12);
     ctx.restore();
   }
   ctx.restore();
@@ -888,6 +960,7 @@ export function render(ctx: CanvasRenderingContext2D, g: Game, stage: Stage, tim
       }
     }
   }
+  drawVehicles(ctx, g);
   drawProjectiles(ctx, g);
   for (const p of g.parts) drawParticle(ctx, p);
   ctx.restore();

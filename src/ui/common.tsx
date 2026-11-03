@@ -43,6 +43,8 @@ const POSES: Record<CharId, string[]> = {
   orango: ['idle', 'idle', 'pH_a', 'idle', 'dedo_a', 'idle', 'roar', 'idle', 'kH_a', 'win'],
   tubarao: ['idle', 'idle', 'bite_a', 'idle', 'fin_a', 'idle', 'roar', 'idle', 'kiss', 'win'],
   rickzera: ['idle', 'idle', 'franco_a', 'idle', 'pix_a', 'idle', 'double_a', 'idle', 'taunt', 'win'],
+  bieu: ['idle', 'idle', 'driver_a', 'idle', 'rat_a', 'idle', 'spray_a', 'idle', 'taunt', 'win'],
+  nomad: ['idle', 'idle', 'burger_a', 'idle', 'glock_a', 'idle', 'boomerang_a', 'idle', 'taunt', 'win'],
 };
 
 export function ArtCanvas({ variant, selected }: { variant: ArtVariant; selected?: CharId }) {
@@ -69,15 +71,15 @@ export function ArtCanvas({ variant, selected }: { variant: ArtVariant; selected
       stage.drawLights(ctx, camX, null, 0);
       ctx.restore();
       if (v === 'menu' || v === 'splash') {
-        const positions = v === 'splash' ? [200, 385, 600, 790] : [460, 610, 760, 900];
+        const positions = v === 'splash' ? [110, 255, 400, 550, 700, 845] : [425, 520, 615, 710, 810, 905];
         CHAR_IDS.forEach((ch, i) => {
           const x = positions[i];
-          const sc = v === 'splash' ? 1.32 : 1.25;
+          const sc = v === 'splash' ? 1.13 : .97;
           glowBehind(ctx, x, CHARS[ch].color, t + i * 20, .72);
-          drawFullBody(ctx, ch, x, v === 'splash' ? 480 : FLOOR_Y, sc, t, POSES[ch][Math.floor((t + i * 28) / 110) % 10], i > 1);
+          drawFullBody(ctx, ch, x, v === 'splash' ? 480 : FLOOR_Y, sc, t, POSES[ch][Math.floor((t + i * 28) / 110) % 10], i >= 3);
         });
-      } else {
-        const ch = sel || 'caetano';
+      } else if (sel) {
+        const ch = sel;
         glowBehind(ctx, 488, CHARS[ch].color, t, .95);
         drawFullBody(ctx, ch, 488, 422, 1.48, t, POSES[ch][Math.floor(t / 130) % 10]);
       }
@@ -144,14 +146,18 @@ export function Panel({ children, className = '', style }: { children: ReactNode
   );
 }
 
-export function SkewBtn({ children, onClick, active, onHover, color = '#a855f7', small, medium }: { children: ReactNode; onClick?: () => void; active?: boolean; onHover?: () => void; color?: string; small?: boolean; medium?: boolean }) {
+export function SkewBtn({ children, onClick, active, onHover, color = '#a855f7', small, medium, disabled = false }: { children: ReactNode; onClick?: () => void; active?: boolean; onHover?: () => void; color?: string; small?: boolean; medium?: boolean; disabled?: boolean }) {
   return (
     <button
+      type="button"
+      disabled={disabled}
       onClick={onClick}
       onMouseEnter={onHover}
       className="fight-btn"
       style={{
         ['--c' as string]: color,
+        opacity: disabled ? .4 : 1,
+        cursor: disabled ? 'not-allowed' : 'pointer',
         padding: small ? '6px 22px' : medium ? '7px 36px' : '10px 40px',
         fontSize: small ? 16 : medium ? 21 : 24,
         minWidth: small ? 0 : medium ? 300 : 330,
