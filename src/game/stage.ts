@@ -1,14 +1,26 @@
 // Arenas em camadas com parallax; a geometria do combate é igual em todos os mapas.
 import { buildOutdoorScene } from './stage-scenes';
-export const STAGE_IDS = ['neto', 'dojo', 'liberdade', 'curitiba', 'piaui', 'planalto'] as const;
+import { buildExtraScene, drawExtraStageDetails } from './extra-stage-scenes';
+export const STAGE_IDS = ['neto', 'dojo', 'liberdade', 'curitiba', 'piaui', 'planalto', 'casebre', 'praca', 'osasco', 'bolivia', 'morro', 'campo', 'casabranca', 'letsgay', 'ngb', 'zoologico', 'termodinamica'] as const;
 export type StageId = (typeof STAGE_IDS)[number];
-export const STAGES: Record<StageId, { id: StageId; name: string; subtitle: string; accent: string }> = {
+export const STAGES: Record<StageId, { id: StageId; name: string; subtitle: string; accent: string; credit?: string }> = {
   neto: { id: 'neto', name: 'Neto Supermercados', subtitle: 'OFERTAS E COMBATE NA CALÇADA', accent: '#3b82f6' },
   dojo: { id: 'dojo', name: 'Dojo Senbukan', subtitle: 'O DOJO CLÁSSICO DO DEDILHO', accent: '#a855f7' },
   liberdade: { id: 'liberdade', name: 'Liberdade SP', subtitle: 'LANTERNAS NO CORAÇÃO DE SÃO PAULO', accent: '#ef4444' },
   curitiba: { id: 'curitiba', name: 'Curitiba', subtitle: 'JARDIM BOTÂNICO E ARAUCÁRIAS', accent: '#4ade80' },
   piaui: { id: 'piaui', name: 'Piauí', subtitle: 'SERRA, CAATINGA E SOL', accent: '#fb923c' },
   planalto: { id: 'planalto', name: 'Palácio do Planalto', subtitle: 'A ARENA MODERNISTA DE BRASÍLIA', accent: '#38bdf8' },
+  casebre: { id: 'casebre', name: 'Casebre', subtitle: 'QUINTAL PEQUENO, BRIGA GRANDE', accent: '#d9a86c' },
+  praca: { id: 'praca', name: 'Praça do Dedilhador', subtitle: 'O MONUMENTO DA COMUNIDADE', accent: '#c084fc' },
+  osasco: { id: 'osasco', name: 'Osasco', subtitle: 'A CIDADE NÃO PARA', accent: '#fbbf24' },
+  bolivia: { id: 'bolivia', name: 'Bolívia', subtitle: 'COMBATE NAS ALTURAS DOS ANDES', accent: '#f87171' },
+  morro: { id: 'morro', name: 'Morro do Bieu', subtitle: 'RESPEITA A COMUNIDADE', accent: '#fb7185' },
+  campo: { id: 'campo', name: 'Campo do futebol dos campeões', subtitle: 'O CLÁSSICO DO DEDILHO', accent: '#4ade80' },
+  casabranca: { id: 'casabranca', name: 'Casa Branca com Ovnis', subtitle: 'VISITANTES DE OUTRA GALÁXIA', accent: '#a3e635', credit: 'Jalam' },
+  letsgay: { id: 'letsgay', name: 'Praia do Lets Gay', subtitle: 'SOL, MAR E TODAS AS CORES', accent: '#f472b6', credit: 'Jalam e Diegão' },
+  ngb: { id: 'ngb', name: 'Lugar do NGB News', subtitle: 'A NOTÍCIA AO VIVO NA ARENA', accent: '#22d3ee' },
+  zoologico: { id: 'zoologico', name: 'Zoológico do Orangotango', subtitle: 'BEM-VINDOS AO REINO DA SELVA', accent: '#86efac' },
+  termodinamica: { id: 'termodinamica', name: 'Praia da Termodinâmica', subtitle: 'CALOR, ONDAS E ENTROPIA', accent: '#fb923c' },
 };
 
 export const W = 960;
@@ -350,7 +362,7 @@ export class Stage {
       sign.fillStyle = '#170d22dd'; sign.fillRect(617, 52, 366, 39);
       sign.font = "900 23px 'Russo One',Impact,sans-serif"; sign.textAlign = 'center'; sign.fillStyle = '#f7dca9'; sign.fillText('DOJO SENBUKAN', 800, 80);
     } else {
-      const scene = buildOutdoorScene(id, STAGE_W, H);
+      const scene = buildExtraScene(id, STAGE_W, H) ?? buildOutdoorScene(id, STAGE_W, H);
       this.sky = scene.sky; this.mountains = scene.mountains; this.hall = scene.hall; this.floor = scene.floor;
     }
     const skins = ['#f1c8a0', '#c98d5c', '#8d5a3a', '#e8b58a', '#6b4430'];
@@ -388,6 +400,7 @@ export class Stage {
     ctx.save();
     this.layer(ctx, camX, zoom, 0.35);
     ctx.drawImage(this.hall, 0, 0);
+    drawExtraStageDetails(ctx, this.id, time);
     // lanternas
     for (let i = 0; this.id === 'dojo' && i < 10; i++) {
       const x = 90 + i * 168;

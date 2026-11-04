@@ -1,7 +1,8 @@
+import { rememberMatch, leaderboard, profile, submitResult } from './progression.js';
 // Public game API. Application accounts use usernames, never email addresses.
-const VERSION = 'dw-online-1';
+const VERSION = 'dw-online-2';
 const CHARS = ['caetano','orango','tubarao','rickzera','bieu','nomad','renngotti','aneninha'];
-const STAGES = ['neto','dojo','liberdade','curitiba','piaui','planalto'];
+const STAGES = ['neto','dojo','liberdade','curitiba','piaui','planalto','casebre','praca','osasco','bolivia','morro','campo','casabranca','letsgay','ngb','zoologico','termodinamica'];
 const COOKIE = 'dw_session';
 const encoder = new TextEncoder();
 class HttpError extends Error { constructor(status,message) { super(message); this.status=status; } }
@@ -57,7 +58,7 @@ export default {
       if(path==='/api/health'&&req.method==='GET'){await db.prepare('SELECT id FROM users LIMIT 1').first();return json({online:true,protocol:VERSION})}
       if(path==='/api/session'&&req.method==='GET')return json({user:await session(req,db,false),protocol:VERSION});
       if(['/api/auth/register','/api/auth/login'].includes(path)&&req.method==='POST') {
-        const b=await body(req,2048),username=typeof b.username==='string'?b.username.trim():'',password=b.password;
+        const b=await body(req,4096),username=typeof b.username==='string'?b.username.trim():'',password=b.password;
         if(!/^[A-Za-z0-9_]{3,24}$/.test(username)||typeof password!=='string'||password.length<8||password.length>128)fail(400,'Use um usuário com 3 a 24 letras, números ou _ e uma senha com 8 a 128 caracteres.');
         const key=username.toLowerCase();
         await limit(db,'auth-user:'+await digest(key),20,900);
@@ -86,7 +87,11 @@ export default {
         if(token)await db.prepare('DELETE FROM sessions WHERE token_hash=?').bind(await digest(token)).run();
         return json({ok:true},200,{'Set-Cookie':cookie('',url.protocol==='https:',0)});
       }
+      if(path==='/api/leaderboard'&&req.method==='GET')return await leaderboard(db,url,json);
       const user=await session(req,db);
+      if(path==='/api/profile'&&req.method==='GET')return await profile(db,user,json);
+      const resultPath=path.match(/^\/api\/results\/([a-f0-9-]{36})$/);
+      if(resultPath&&req.method==='POST')return await submitResult(db,user,resultPath[1],await body(req,2048),json,fail,now());
       if(path==='/api/rooms'&&req.method==='POST') {
         await limit(db,'create:'+user.id,10,300);
         const code=Array.from(crypto.getRandomValues(new Uint8Array(8)),x=>'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[x%32]).join('');
@@ -133,6 +138,7 @@ export default {
         const updated=await db.prepare("UPDATE rooms SET status='playing',epoch=?,host_state=NULL,guest_input=NULL,host_n=0,guest_n=0 WHERE code=? AND status!='playing' AND host_ready=1 AND guest_ready=1 AND guest_id IS NOT NULL AND host_seen>? AND guest_seen>? RETURNING code").bind(epoch,code,now()-15,now()-15).first();
         if(!updated)fail(409,'Os dois jogadores precisam estar conectados e prontos.');
         await db.prepare('DELETE FROM signals WHERE room=?').bind(code).run();
+        await rememberMatch(db,code,epoch,now());
       } else if(op==='finish') {
         if(!host)fail(403,'Somente o criador pode finalizar.');
         await db.prepare("UPDATE rooms SET status='finished',host_ready=0,guest_ready=0 WHERE code=? AND epoch=?").bind(code,b.epoch).run();
@@ -146,7 +152,7 @@ export default {
         if(b.epoch!==r.epoch||!['playing','finished'].includes(r.status))fail(409,'Esta partida foi encerrada.');
         if(!Number.isSafeInteger(b.n)||b.n<1||b.n>1e9)fail(400,'Sequência inválida.');
         const value=host?b.state:b.input;
-        if(host?(!value||value.v!==VERSION||!Array.isArray(value.f)||value.f.length!==2):(!value||!Number.isInteger(value.mask)||value.mask<0||value.mask>2047||!Array.isArray(value.events)||value.events.length>32||value.events.some(e=>!e||!Number.isSafeInteger(e.id)||e.id<1||!Number.isInteger(e.mask)||e.mask<0||e.mask>2047)))fail(400,'Estado inválido.');
+        if(host?(!value||value.v!==VERSION||!Array.isArray(value.f)||value.f.length!==2):(!value||!Number.isInteger(value.mask)||value.mask<0||value.mask>4095||!Array.isArray(value.events)||value.events.length>32||value.events.some(e=>!e||!Number.isSafeInteger(e.id)||e.id<1||!Number.isInteger(e.mask)||e.mask<0||e.mask>4095)))fail(400,'Estado inválido.');
         await db.prepare(`UPDATE rooms SET ${host?'host_state':'guest_input'}=?,${side}_n=?,${side}_seen=? WHERE code=? AND epoch=? AND ${side}_n<?`).bind(JSON.stringify(value),b.n,now(),code,r.epoch,b.n).run();
         const fresh=await member(db,code,user),peer=host?'guest':'host';
         return json({n:fresh[peer+'_n'],value:JSON.parse(fresh[host?'guest_input':'host_state']||'null'),seen:fresh[peer+'_seen'],status:fresh.status});

@@ -1,3 +1,4 @@
+import { drawFinisherArt } from './finishers-art';
 import { RANGED_MOVES } from './data';
 // Renderização: mundo, personagens, efeitos, HUD e cinemáticas dos supers.
 import type { Game, Fighter, Particle } from './engine';
@@ -462,7 +463,7 @@ function drawProjectiles(ctx: CanvasRenderingContext2D, g: Game) {
       for(let i=0;i<5;i++){ctx.beginPath();ctx.moveTo(-35+i*17,16);ctx.lineTo(-35+i*17,27+(i%3)*8);ctx.stroke();}ctx.restore();
       heart(ctx,28,40,9,'#ec4899');
     } else if (shot.kind === 'microphone') {
-      ctx.rotate((shot.age??g.tick)*.22);
+      if(shot.anchored){ctx.strokeStyle=shot.resonating?'#fef08a':'#cbd5e1';ctx.lineWidth=3;ctx.beginPath();ctx.ellipse(0,0,shot.radius||48,12,0,0,Math.PI*2);ctx.stroke();ctx.rotate(-Math.PI/2);}else ctx.rotate((shot.age??g.tick)*.22);
       ctx.fillStyle='#1f2937';ctx.strokeStyle='#cbd5e1';ctx.lineWidth=2;
       ctx.beginPath();ctx.roundRect(-6,-4,12,36,4);ctx.fill();ctx.stroke();
       ctx.fillStyle='#4b5563';ctx.beginPath();ctx.ellipse(0,-13,12,16,0,0,Math.PI*2);ctx.fill();ctx.stroke();
@@ -751,6 +752,10 @@ function drawHUD(ctx: CanvasRenderingContext2D, g: Game) {
     const text = f.rangedCooldown > 0 ? `DISTÂNCIA: ${(f.rangedCooldown / 60).toFixed(1)}s` : `DISTÂNCIA: ${f.rangedUses}/3`;
     label(ctx, text, right ? W - 48 : 48, 86, 11, f.rangedCooldown ? '#fb7185' : '#ddd6fe', '#150a1e', right ? 'right' : 'left', 0, 3);
   }
+  for(const f of g.f){const x=f.idx===0?48:W-48,align=f.idx===0?'left':'right';
+    if(f.ch==='caetano'&&f.precision>0)label(ctx,'PRECISÃO PRONTA',x,102,11,'#fef08a','#150a1e',align,0,3);
+    if(f.ch==='orango'&&f.momentum>0)label(ctx,`ÍMPETO ${f.momentum}/3`,x,102,11,'#fb923c','#150a1e',align,0,3);
+  }
   // timer
   ctx.save();
   ctx.beginPath();
@@ -982,6 +987,7 @@ function drawCine(ctx: CanvasRenderingContext2D, g: Game) {
 // ------------------------------------------------------------------ render principal
 export function render(ctx: CanvasRenderingContext2D, g: Game, stage: Stage, time: number) {
   ctx.save();
+  if(g.finisher){drawFinisherArt(ctx,g.f[g.finisher.winner].ch,g.f[1-g.finisher.winner].ch,g.finisher.t,g.finisher.dur);ctx.restore();return;}
   ctx.fillStyle = '#000';
   ctx.fillRect(0, 0, W, H);
   const sh = g.shake * settings.shake;

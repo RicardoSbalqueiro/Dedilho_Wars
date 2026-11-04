@@ -22,6 +22,8 @@ class AudioEngine {
   private noiseBuf: AudioBuffer | null = null;
   private timer: number | null = null;
   private step = 0;
+  private arenaTheme='dojo';
+  setArena(id:string){this.arenaTheme=['bolivia'].includes(id)?'andes':['letsgay','termodinamica'].includes(id)?'beach':['casabranca','ngb'].includes(id)?'cosmic':id==='zoologico'?'jungle':['dojo','liberdade'].includes(id)?'dojo':'urban';}
   private nextTime = 0;
   private mode: MusicMode = null;
   private requestedMode: MusicMode = null;
@@ -385,7 +387,7 @@ class AudioEngine {
   private schedule() {
     const c = this.ctx;
     if (!c || !this.mode) return;
-    const tempo = this.mode === 'fight' ? 158 : this.mode === 'menu' ? 96 : 120;
+    const tempo = this.mode === 'fight' ? ({andes:144,beach:134,cosmic:150,jungle:166,urban:158,dojo:158}[this.arenaTheme]||158) : this.mode === 'menu' ? 96 : 120;
     const stepDur = 60 / tempo / 4;
     while (this.nextTime < c.currentTime + 0.15) {
       this.playStep(this.step, this.nextTime - c.currentTime, stepDur);
@@ -399,8 +401,9 @@ class AudioEngine {
   }
 
   private playStep(s: number, delay: number, sd: number) {
-    const D = 146.83;
-    const scale = [0, 1, 5, 7, 8]; // escala "In" japonesa
+    const theme=this.mode==='fight'?this.arenaTheme:'dojo';
+    const D = theme==='andes'?174.61:theme==='beach'?164.81:theme==='cosmic'?130.81:146.83;
+    const scale = theme==='andes'||theme==='beach'?[0,2,4,7,9]:theme==='cosmic'?[0,2,4,6,8]:theme==='jungle'||theme==='urban'?[0,3,5,7,10]:[0, 1, 5, 7, 8]; // escala "In" japonesa
     const deg = (i: number) => scale[((i % 5) + 5) % 5] + 12 * Math.floor(i / 5);
     const m = this.musicGain;
     const st = s % 16;
@@ -410,6 +413,8 @@ class AudioEngine {
       const snare = [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1];
       if (kick[st]) this.tone(150, 0.16, 'sine', 0.9, 38, delay, m);
       if (snare[st]) this.noise(0.12, 0.45, 1800, 'bandpass', delay, undefined, m);
+      if(theme==='jungle'&&st%4===1)this.tone(90,.08,'sine',.25,45,delay,m);
+      if(theme==='beach'&&st%4===2)this.noise(.055,.13,4500,'bandpass',delay,undefined,m);
       if (st % 2 === 0) this.noise(0.03, 0.12, 8000, 'highpass', delay, undefined, m);
       if (st === 0 && bar % 2 === 0) this.tone(110, 0.6, 'sine', 0.7, 55, delay, m);
       const bassPat = [0, -1, 0, 0, -1, 0, 1, -1, 0, -1, 0, 0, 3, -1, 2, 1];

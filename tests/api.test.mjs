@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync,readdirSync } from 'node:fs';
 import { Miniflare } from 'miniflare';
-const mf=new Miniflare({modules:true,scriptPath:'worker/index.js',compatibilityDate:'2025-10-01',d1Databases:['DB']});
+const mf=new Miniflare({modules:true,modulesRules:[{type:'ESModule',include:['**/*.js']}],scriptPath:'worker/index.js',compatibilityDate:'2025-10-01',d1Databases:['DB']});
 try {
  const db=await mf.getD1Database('DB');
  for(const file of readdirSync('drizzle').filter(x=>x.endsWith('.sql'))) {
@@ -37,9 +37,9 @@ try {
  const start=await call(path+'/start',{},a.cookie);assert.equal(start.status,200);const epoch=start.body.room.epoch;assert(epoch);
  assert.equal((await call(path+'/configure',{char:'caetano'},guest.cookie)).status,409);
  assert.equal((await call(path+'/sync',{epoch:'old',n:1,input:8},guest.cookie)).status,409);
- assert.equal((await call(path+'/sync',{epoch,n:1,input:{mask:2048,events:[]}},guest.cookie)).status,400);
+ assert.equal((await call(path+'/sync',{epoch,n:1,input:{mask:4096,events:[]}},guest.cookie)).status,400);
  assert.equal((await call(path+'/sync',{epoch,n:1,input:{mask:16,events:[{id:1,mask:16}]}},outsider.cookie)).status,403);
- const state={v:'dw-online-1',f:[{hp:1000},{hp:900}],g:{tick:10}};
+ const state={v:'dw-online-2',f:[{hp:1000},{hp:900}],g:{tick:10}};
  await call(path+'/sync',{epoch,n:2,state},a.cookie);
  const sync=await call(path+'/sync',{epoch,n:3,input:{mask:16,events:[{id:1,mask:16}]}},guest.cookie);assert.deepEqual(sync.body.value,state);assert.equal(sync.body.n,2);
  const hostSync=await call(path+'/sync',{epoch,n:1,state:{...state,g:{tick:1}}},a.cookie);assert.deepEqual(hostSync.body.value,{mask:16,events:[{id:1,mask:16}]});assert.equal(hostSync.body.n,3);
@@ -51,6 +51,24 @@ try {
  assert.equal((await call(path+'/sync',{epoch,n:4,state:{...state,large:'x'.repeat(70000)}},a.cookie)).status,413);
  assert.equal((await call(path+'/finish',{epoch},guest.cookie)).status,403);
  await call(path+'/finish',{epoch},a.cookie);assert.equal((await call(path,undefined,a.cookie)).body.room.status,'finished');
+ // Ranking requires matching reports from both authenticated participants.
+ await db.prepare('UPDATE matches SET created=? WHERE id=?').bind(Math.floor(Date.now()/1000)-30,epoch).run();
+ const report={winner:0,hostScore:2,guestScore:1,finisher:0};
+ assert.equal((await call('/results/'+epoch,report,outsider.cookie)).status,403);
+ assert.equal((await call('/results/'+epoch,{...report,hostScore:1},a.cookie)).status,400);
+ const pending=await call('/results/'+epoch,report,a.cookie);assert.equal(pending.body.status,'pending');assert.equal(pending.body.award,null);
+ assert.equal((await call('/profile',undefined,a.cookie)).body.user.games,0);
+ const awarded=await call('/results/'+epoch,report,guest.cookie);assert.equal(awarded.body.status,'confirmed');assert.equal(awarded.body.award.xp,40);
+ const repeats=await Promise.all(Array.from({length:6},()=>call('/results/'+epoch,report,a.cookie)));assert(repeats.every(x=>x.status===200));
+ const pa=await call('/profile',undefined,a.cookie),pg=await call('/profile',undefined,guest.cookie);
+ assert.equal(pa.body.user.games,1);assert.equal(pa.body.user.wins,1);assert.equal(pa.body.user.points,3);assert.equal(pa.body.user.xp,120);assert.equal(pa.body.user.finishers,1);assert.equal(pg.body.user.games,1);assert.equal(pg.body.user.losses,1);
+ assert.equal(pa.body.history[0].status,'confirmed');assert.equal(pa.body.history[0].stage,'curitiba');
+ const ranks=await call('/leaderboard');assert.equal(ranks.body.players[0].id,a.body.user.id);assert.equal(ranks.body.players[0].rank,1);
+ assert.equal((await call('/results/'+epoch,{winner:1,hostScore:1,guestScore:2},a.cookie)).status,409);
+ const next=await call('/rooms',{},a.cookie),p2='/rooms/'+next.body.room.code;await call(p2+'/join',{},guest.cookie);await call(p2+'/configure',{ready:true},a.cookie);await call(p2+'/configure',{ready:true},guest.cookie);
+ const nextStart=await call(p2+'/start',{},a.cookie),e2=nextStart.body.room.epoch;await db.prepare('UPDATE matches SET created=? WHERE id=?').bind(Math.floor(Date.now()/1000)-30,e2).run();
+ await call('/results/'+e2,{winner:0,hostScore:2,guestScore:0},a.cookie);const disputed=await call('/results/'+e2,{winner:1,hostScore:0,guestScore:2},guest.cookie);assert.equal(disputed.body.status,'disputed');assert.equal((await call('/profile',undefined,a.cookie)).body.user.games,1);
+ console.log('Progression: two-player confirmation, persisted history, leaderboard, XP/finisher bonus, duplicate/concurrent idempotence and disputed results passed.');
  await call(path+'/leave',{},guest.cookie);const left=await call(path,undefined,a.cookie);assert.equal(left.body.room.guest,null);assert.equal(left.body.room.host.ready,false);
  await call(path+'/leave',{},a.cookie);assert.equal((await call(path,undefined,a.cookie)).status,404);
  await call('/auth/logout',{},login.cookie);assert.equal((await call('/session',undefined,login.cookie)).body.user,null);

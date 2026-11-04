@@ -143,6 +143,7 @@ export function aiAct(g: Game, f: Fighter, diff: Difficulty) {
       tap('super');
       return;
     }
+    if(dist<82&&o.y===0&&o.guard&&o.blockstun<=0&&o.throwShield===0&&r<.3){tap('grab');return;}
     if (f.ch === 'caetano') {
       if (dist > 300) {
         ai.walk = 1;

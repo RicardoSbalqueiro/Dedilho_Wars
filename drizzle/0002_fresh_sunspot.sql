@@ -1,0 +1,1 @@
+ALTER TABLE `match_awards` ADD `applied` integer DEFAULT 0 NOT NULL;

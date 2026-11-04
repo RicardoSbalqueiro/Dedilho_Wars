@@ -8,6 +8,20 @@
       "when": 1793740381307,
       "tag": "0000_clumsy_tiger_shark",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1793758456575,
+      "tag": "0001_gray_bulldozer",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1793759321149,
+      "tag": "0002_fresh_sunspot",
+      "breakpoints": true
     }
   ]
 }

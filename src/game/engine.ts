@@ -1,3 +1,4 @@
+import { matchupLine, FINISHER_CALLS } from './presentation';
 import { challengeDefinition, challengeAvailable, saveChallengeBadge } from './challenges';
 import type { ChallengeId, ChallengeProgress } from './challenges';
 // Lógica de combate (separada da renderização).
@@ -83,6 +84,12 @@ export interface Fighter {
   landLag: number;
   airAttacked: boolean;
   airJumps: number;
+  precision:number;
+  parryCooldown:number;
+  momentum:number;
+  momentumT:number;
+  throwShield:number;
+  throwTechUntil:number;
   rangedUses: number;
   rangedCooldown: number;
   hidden: boolean;
@@ -111,7 +118,7 @@ export interface Fighter {
 }
 
 interface Seq {
-  kind: 'puxao' | 'mordida' | 'engole' | 'superC' | 'superO' | 'superT' | 'superR' | 'superB' | 'superN' | 'superG' | 'superA' | 'moon';
+  kind: 'puxao' | 'mordida' | 'engole' | 'superC' | 'superO' | 'superT' | 'superR' | 'superB' | 'superN' | 'superG' | 'superA' | 'moon' | 'throw';
   a: Fighter;
   d: Fighter;
   t: number;
@@ -124,6 +131,8 @@ export interface Projectile {
   kind: 'franco' | 'pix' | 'rat' | 'spray' | 'burger' | 'bullet' | 'boomerang' | 'bazooka' | 'microphone' | 'osasco';
   age?: number;
   returning?: boolean;
+  anchored?:boolean;
+  resonating?:boolean;
   hitMask?: number;
   hitCount?: number;
   lastHitAt?: number;
@@ -189,6 +198,7 @@ function makeFighter(idx: 0 | 1, ch: CharId, cpu: boolean): Fighter {
     landLag: 0,
     airAttacked: false,
     airJumps: 0,
+    precision:0,parryCooldown:0,momentum:0,momentumT:0,throwShield:0,throwTechUntil:0,
     rangedUses: 0,
     rangedCooldown: 0,
     hidden: false,
@@ -224,7 +234,7 @@ export class Game {
   hitstop = 0;
   slowmo = 0;
   paused = false;
-  phase: 'intro' | 'fight' | 'ko' | 'roundEnd' | 'matchEnd' = 'intro';
+  phase: 'intro' | 'fight' | 'ko' | 'roundEnd' | 'finishWindow' | 'finisher' | 'matchEnd' = 'intro';
   phaseT = 0;
   round = 1;
   winsNeeded = 2;
@@ -254,6 +264,9 @@ export class Game {
   speed = 0; // intensidade de linhas de velocidade
   perfect = false;
   winner = -1;
+  finisher:{winner:0|1;t:number;dur:number}|null=null;
+  finishedBy:0|1|null=null;
+  elapsedTicks=0;
   onEvent: (e: GameEvent) => void;
   onlineInputs: [number, number] = [0, 0];
   onlinePressed: [number, number] = [0, 0];
@@ -263,6 +276,7 @@ export class Game {
 
   constructor(cfg: GameConfig, onEvent: (e: GameEvent) => void) {
     this.cfg = cfg;
+    audio.setArena(cfg.stage||'dojo');
     this.onEvent = onEvent;
     const other = cfg.p2;
     this.f = [makeFighter(0, cfg.p1, false), makeFighter(1, other, cfg.mode === 'ai')];
@@ -294,6 +308,7 @@ export class Game {
       f.meter = 0;
     }
     this.round = 1;
+    this.finisher=null;this.finishedBy=null;this.elapsedTicks=0;
     this.winner = -1;
     this.resetRound();
     audio.music('fight');
@@ -329,6 +344,8 @@ export class Game {
       f.comboHits = f.comboDmg = 0;
       f.juggle = 0;
       f.airJumps = 0;
+      f.throwTechUntil=0;
+      f.precision=f.parryCooldown=f.momentum=f.momentumT=f.throwShield=0;
       f.rangedUses = 0;
       f.rangedCooldown = 0;
       f.airAttacked = false;
@@ -436,6 +453,9 @@ export class Game {
     if (this.paused) return;
     for (const f of this.f) if (f.rangedCooldown > 0 && --f.rangedCooldown === 0) { f.rangedUses = 0; if(f.idx===0)this.challengeEvent('range'); }
     this.pollInputs();
+    if(this.phase==='fight')this.elapsedTicks++;
+    for(const f of this.f){if(f.precision>0)f.precision--;if(f.parryCooldown>0)f.parryCooldown--;if(f.momentumT>0&&--f.momentumT===0)f.momentum=0;}
+    if(this.phase==='finishWindow'||this.phase==='finisher'){this.updateFinish();return;}
     if (this.phase !== 'fight') for (const f of this.f) f.pad.reset();
 
     if (this.camOvT > 0) this.camOvT--;
@@ -460,6 +480,7 @@ export class Game {
     }
 
     if (this.hitstop > 0) {
+      for(const f of this.f)f.pad.freezeBuffers(this.tick);
       this.hitstop--;
       this.updateCamera();
       return;
@@ -501,7 +522,7 @@ export class Game {
         if (d === 1) aiAct(this, b, 'normal');
         else if (d === 2) {
           b.pad.set('block', true, this.tick);
-          const incomingLow = this.projectiles.some((p) => p.owner !== b.idx && p.move.level === 'low' && Math.abs(p.x - b.x) < 280 && (b.x - p.x) * p.vx > 0);
+          const incomingLow = this.projectiles.some((p) => p.owner !== b.idx && p.move.level === 'low' && Math.abs(p.x - b.x) < 280 && (p.vx===0 || (b.x-p.x)*p.vx>0));
           b.pad.set('down', (!!a.move && a.move.level === 'low') || incomingLow, this.tick);
         } else if (d === 0) b.pad.reset();
         a.meter = b.meter = 100;
@@ -531,12 +552,14 @@ export class Game {
           audio.bell();
           audio.say(last ? 'Round final' : `Round ${this.round}`, 0.8, 0.95);
         }
-        if (this.phaseT === 72) {
+        if(this.round===1&&this.phaseT===8)this.text(a.x,FLOOR_Y-225,matchupLine(a.ch,b.ch),a.def.glow,18);
+        if(this.round===1&&this.phaseT===64){this.text(b.x,FLOOR_Y-225,matchupLine(b.ch,a.ch),b.def.glow,18);audio.say(matchupLine(b.ch,a.ch),1.2,1.2);}
+        if (this.phaseT === (this.round===1?125:72)) {
           this.announce('FIGHT!', '', 50, '#fb923c');
           audio.gong();
-          audio.say('Lutem!', 0.7, 1.05);
+          audio.say('Liberou o dedilho!', 1.1, 1.3);
         }
-        if (this.phaseT >= 110) {
+        if (this.phaseT >= (this.round===1?165:110)) {
           this.phase = 'fight';
           this.phaseT = 0;
         }
@@ -553,19 +576,21 @@ export class Game {
         break;
       case 'ko': {
         const loser = a.ko ? a : b;
-        if (this.phaseT > 100 && loser.state === 'down') this.endRound(loser === a ? 1 : 0);
+        if(this.phaseT>100&&a.ko&&b.ko&&a.state==='down'&&b.state==='down')this.endRound(-1);
+        else if (this.phaseT > 100 && loser.state === 'down') this.endRound(loser === a ? 1 : 0);
         else if (this.phaseT > 400) this.endRound(loser === a ? 1 : 0);
         break;
       }
       case 'roundEnd':
-        if (this.phaseT >= 210) {
+        if (this.phaseT >= ((a.wins>=this.winsNeeded||b.wins>=this.winsNeeded)?70:160)) {
           const done = a.wins >= this.winsNeeded || b.wins >= this.winsNeeded;
           if (done && a.wins !== b.wins) {
-            this.phase = 'matchEnd';
-            this.phaseT = 0;
             this.winner = a.wins > b.wins ? 0 : 1;
-            audio.music('victory');
-            this.onEvent({ type: 'matchEnd', winner: this.winner });
+            if(this.f[1-this.winner].ko) {
+              this.phase='finishWindow';this.phaseT=0;this.hitstop=this.slowmo=0;
+              for(const f of this.f){const held=f.pad.held.super;f.move=null;f.hbActive=false;f.pad.reset();f.pad.held.super=held;}
+              this.announce('HORA DO FINISHER!', 'ULT PARA FINALIZAR · OU AGUARDE', 240, '#fde047');audio.say('Fecha a conta com um finisher!',1.2,1.15);
+            } else this.completeMatch();
           } else {
             this.round++;
             this.resetRound();
@@ -575,6 +600,30 @@ export class Game {
       default:
         break;
     }
+  }
+
+  requestFinisher(idx:number) {
+    if(this.phase!=='finishWindow'||idx!==this.winner)return false;
+    this.finisher={winner:idx as 0|1,t:0,dur:210};this.finishedBy=idx as 0|1;
+    this.phase='finisher';this.phaseT=0;this.ann=null;this.projectiles=[];this.seq=this.cine=this.clash=null;
+    audio.boom(1.1);audio.say(FINISHER_CALLS[this.f[idx].ch],1.2,1.1);return true;
+  }
+  private updateFinish(){
+    this.phaseT++;
+    if(this.phase==='finishWindow'){
+      const f=this.f[this.winner];
+      if(f.pad.buffered('super',this.tick,8)||(f.cpu&&this.phaseT===70))this.requestFinisher(this.winner);
+      else if(this.phaseT>=240)this.completeMatch();
+    }else if(this.finisher){
+      this.finisher.t++;if(this.finisher.t===95)audio.boom(1.6);
+      if(this.finisher.t>=this.finisher.dur)this.completeMatch();
+    }
+  }
+  private completeMatch(){
+    if(this.phase==='matchEnd')return;
+    this.phase='matchEnd';this.phaseT=0;this.finisher=null;this.ann=null;
+    audio.music('victory');audio.say(this.finishedBy!==null?'Finisher! Vitória absurda!':`Vitória de ${this.f[this.winner].def.short}!`,1.1,1.15);
+    this.onEvent({type:'matchEnd',winner:this.winner});
   }
 
   private timeUp() {
@@ -591,8 +640,6 @@ export class Game {
     this.phaseT = 0;
     this.slowmo = 0;
     if (w < 0) {
-      this.f[0].wins++;
-      this.f[1].wins++;
       this.announce('EMPATE', '', 100, '#fde68a');
       return;
     }
@@ -675,14 +722,18 @@ export class Game {
       this.startSuper(f);
       return true;
     }
+    if(pad.buffered('grab',tk,8)) {
+      pad.consume('grab');
+      return this.startMove(f,{...f.def.moves.pH,id:'throw',kind:'special',startup:9,active:3,recovery:26,whiff:16,dmg:70,grab:'throw',unblockable:true,hb:[0,84,0,170],advance:undefined,poses:['pH_s','pH_a'],label:'AGARRÃO'});
+    }
     for (const s of ['s1', 's2', 's3'] as const) {
-      if (pad.buffered(s, tk, 5)) {
+      if (pad.buffered(s, tk, 8)) {
         pad.consume(s);
         return this.startMove(f, f.def.moves[s]);
       }
     }
     for (const b of ['p', 'k'] as const) {
-      if (pad.buffered(b, tk, 5)) {
+      if (pad.buffered(b, tk, 8)) {
         pad.consume(b);
         this.startMove(f, f.def.moves[this.pickNormal(f, b)]);
         return true;
@@ -692,6 +743,11 @@ export class Game {
   }
 
   startMove(f: Fighter, m: Move) {
+    if(m.id==='throw')f.throwTechUntil=this.tick+12;
+    if(f.y<0&&!m.air&&!(f.ch==='rickzera'&&m.id==='s3'))return false;
+    if(f.ch==='caetano'&&m.id==='s2'&&f.precision>0){m={...m,dmg:73,hitstun:20,label:'DEDILHO: LEITURA PERFEITA'};f.precision=0;}
+    if(f.ch==='aneninha'&&m.id==='s1'&&f.pad.held.down)m={...m,dmg:78,level:'low',hb:[15,145,0,70],launch:4,poses:['cK_s','cK_a'],variant:'low',label:'RASTEIRA DE OSASCO'};
+    if(f.ch==='aneninha'&&m.id==='s2'&&f.pad.held[f.facing>0?'right':'left'])m={...m,variant:'reverse',label:'OSASCO DO OUTRO LADO'};
     if (RANGED_MOVES[f.ch].includes(m.id)) {
       if (f.rangedCooldown > 0) return false;
       if (++f.rangedUses === 3) f.rangedCooldown = 300;
@@ -739,7 +795,8 @@ export class Game {
     const m = f.move!;
     const pad = f.pad;
     const tk = this.tick;
-    if (!f.connected || this.phase !== 'fight') return false;
+    if (!f.connected || this.phase !== 'fight' || m.air) return false;
+    if(f.ch==='caetano'&&m.id==='s2'&&f.hitDone&&this.opp(f).state!=='block'&&pad.buffered('s1',tk,8)){pad.consume('s1');return this.startMove(f,f.def.moves.s1);}
     if (m.kind !== 'super' && pad.buffered('super', tk, 4) && this.canSuper(f)) {
       pad.consume('super');
       this.startSuper(f);
@@ -807,6 +864,7 @@ export class Game {
   private updateFighter(f: Fighter, o: Fighter) {
     f.stateT++;
     if (f.invuln > 0) f.invuln--;
+    if (f.throwShield>0) f.throwShield--;
     const def = f.def;
     const pad = f.pad;
     const tk = this.tick;
@@ -842,7 +900,7 @@ export class Game {
           break;
         }
         if (this.tryGroundActions(f)) return;
-        if (!f.crouch && pad.buffered('up', tk, 4)) {
+        if (!f.crouch && pad.buffered('up', tk, 8)) {
           pad.consume('up');
           f.vy = -def.jumpVy;
           f.vx = ((pad.held.right ? 1 : 0) - (pad.held.left ? 1 : 0)) * def.jumpVx;
@@ -873,7 +931,7 @@ export class Game {
           const dir = (pad.held.right ? 1 : 0) - (pad.held.left ? 1 : 0);
           if (dir !== 0) {
             const forward = dir === f.facing;
-            f.vx = dir * (forward ? def.walk : def.walkBack);
+            f.vx += (dir * ((forward ? def.walk : def.walkBack)+(f.ch==='orango'&&forward?f.momentum*.25:0))-f.vx)*.65;
             f.walking = forward ? 1 : -1;
           } else f.vx = 0;
         }
@@ -881,13 +939,14 @@ export class Game {
         break;
       }
       case 'jump': {
+        const steer=(pad.held.right?1:0)-(pad.held.left?1:0);if(steer)f.vx=clamp(f.vx+steer*.28,-def.jumpVx,def.jumpVx);
         if (f.ch === 'rickzera' && f.airJumps < 2 && this.phase === 'fight') {
           if (pad.buffered('s3', tk, 4)) {
             pad.consume('s3');
             this.startMove(f, f.def.moves.s3);
             return;
           }
-          if (pad.buffered('up', tk, 4)) {
+          if (pad.buffered('up', tk, 8)) {
             pad.consume('up');
             f.airJumps++;
             f.vy = -def.jumpVy * 0.92;
@@ -921,7 +980,7 @@ export class Game {
         if (f.hitstun <= 0) {
           f.state = 'ground';
           f.stateT = 0;
-          f.vx = 0;
+          f.vx = 0;f.throwShield=10;f.guard=pad.held.block;f.crouch=pad.held.down;
         }
         break;
       case 'block':
@@ -932,7 +991,7 @@ export class Game {
         if (f.blockstun <= 0) {
           f.state = 'ground';
           f.stateT = 0;
-          f.vx = 0;
+          f.vx = 0;f.throwShield=10;f.guard=pad.held.block;f.crouch=pad.held.down;
         }
         break;
       case 'launched':
@@ -983,7 +1042,7 @@ export class Game {
     f.vx = 0;
     f.state = 'ground';
     f.stateT = 0;
-    f.landLag = 3;
+    f.landLag = 3;f.throwShield=10;
     audio.land();
     this.dust(f.x, FLOOR_Y, 5);
   }
@@ -991,6 +1050,7 @@ export class Game {
   private updateAttack(f: Fighter, o: Fighter) {
     const m = f.move!;
     const t = f.moveT;
+    if(f.ch==='renngotti'&&m.id==='s3'&&t===m.startup)for(const p of this.projectiles)if(p.owner===f.idx&&p.anchored&&!p.resonating){p.resonating=true;p.radius=90;p.life=Math.min(p.life,24);p.move={...p.move,dmg:35,level:'mid',hitstun:20};this.ring(p.x,FLOOR_Y-35,f.def.glow,150,22,5);}
     f.hbActive = false;
     if (m.air) {
       f.vy += GRAV;
@@ -1078,7 +1138,7 @@ export class Game {
     const speed = { franco: 12, pix: 16, rat: 8, spray: 0, burger: 9, bullet: 20, boomerang: 11, bazooka: 20, microphone: 11, osasco: 0 }[kind];
     const y = kind === 'rat' ? -18 : kind === 'bullet' ? -145 : kind === 'spray' || kind === 'osasco' ? -70 : kind === 'microphone' ? -115 : -104;
     const radius = kind === 'osasco' ? 48 : kind === 'spray' ? 62 : kind === 'rat' ? 14 : kind === 'bullet' ? 6 : kind === 'burger' ? 25 : 20;
-    this.projectiles.push({ owner: f.idx, kind, x: f.x + f.facing * (kind === 'spray' || kind === 'osasco' ? 115 : 65), y, vx: f.facing * speed, life: kind === 'osasco' ? 96 : kind === 'spray' ? 64 : kind === 'boomerang' ? 110 : 95, serial: f.serial, move: m, age: 0, radius, vy: kind === 'microphone' ? -2.4 : undefined });
+    this.projectiles.push({ owner: f.idx, kind, x: kind==='osasco'&&m.variant==='reverse'&&Math.abs(f.x-this.opp(f).x)<220?this.opp(f).x+f.facing*80:f.x + f.facing * (kind === 'spray' || kind === 'osasco' ? 115 : 65), y, vx: f.facing * speed, life: kind === 'osasco' ? 96 : kind === 'spray' ? 64 : kind === 'boomerang' ? 110 : 95, serial: f.serial, move: m, age: 0, radius, vy: kind === 'microphone' ? -2.4 : undefined });
     audio.tone(kind === 'bullet' ? 220 : kind === 'rat' ? 900 : 640, 0.1, 'triangle', 0.14, kind === 'bullet' ? 70 : 1500);
     this.spark(f.x + f.facing * 60, FLOOR_Y + y, f.def.glow, 5, 4, 2, 12);
   }
@@ -1100,22 +1160,25 @@ export class Game {
         }
       }
       p.x += p.vx;
-      if (p.kind === 'microphone') {
+      if (p.kind === 'microphone'&&!p.anchored) {
         p.vy = (p.vy ?? 0) + 0.075;
         p.y += p.vy;
+      }
+      if(p.kind==='microphone'&&!p.anchored&&(p.age>=50||p.y>=-18)){
+        p.anchored=true;p.vx=0;p.vy=0;p.y=-14;p.life=80;p.radius=48;p.move={...p.move,dmg:28,level:'low',hitstun:16,kb:3};
       }
       p.life--;
       if (p.life <= 0 || p.x < -40 || p.x > 1640) return false;
       const d = this.opp(a);
-      if (d.invuln > 0 || d.armor || ['down', 'getup', 'seq', 'cine', 'win'].includes(d.state)) return true;
+      if (d.invuln > 0 || (d.state==='launched'&&d.juggle>=4) || ['down', 'getup', 'seq', 'cine', 'win'].includes(d.state)) return true;
       const phaseMask = p.returning ? 2 : 1;
       if (p.kind === 'boomerang' && ((p.hitMask ?? 0) & phaseMask)) return true;
       if ((p.kind === 'spray' || p.kind === 'osasco') && ((p.hitCount ?? 0) >= (p.kind === 'osasco' ? 3 : 4) || p.age - (p.lastHitAt ?? -99) < (p.kind === 'osasco' ? 20 : 14))) return true;
       const r = p.radius ?? 20;
-      const ry = p.kind === 'osasco' ? 65 : p.kind === 'spray' ? 55 : p.kind === 'bullet' ? 6 : 15;
+      const ry = p.kind === 'osasco' ? 65 : p.kind === 'spray' ? 55 : p.anchored?28:p.kind === 'bullet' ? 6 : 15;
       const box = { x0: p.x - r, x1: p.x + r, y0: p.y - ry, y1: p.y + ry };
       if (!this.overlap(box, this.hurtBox(d))) return true;
-      this.applyHit(a, d, p.move, { x: p.x, y: FLOOR_Y + p.y, dir: Math.sign(p.vx) || a.facing, serial: p.serial });
+      this.applyHit(a, d, p.move, { x: p.x, y: FLOOR_Y + p.y, dir: Math.sign(p.vx) || Math.sign(d.x-p.x) || a.facing, serial: p.serial });
       if (p.kind === 'boomerang') {
         p.hitMask = (p.hitMask ?? 0) | phaseMask;
         return true;
@@ -1151,10 +1214,10 @@ export class Game {
 
   private canHit(att: Fighter, def: Fighter) {
     const m = att.move!;
-    if (def.invuln > 0 || def.armor) return false;
+    if (def.invuln > 0) return false;
     const dead = ['down', 'getup', 'seq', 'cine', 'win'];
     if (m.grab === 'super') return !dead.includes(def.state);
-    if (m.grab) return def.y === 0 && ['ground', 'dash', 'block'].includes(def.state);
+    if(m.grab)return def.throwShield===0&&def.y===0&&(def.state==='ground'||def.state==='dash'||(def.state==='block'&&def.blockstun<=0)||(def.state==='attack'&&!!def.move&&(def.armor||def.moveT>=def.move.startup+def.move.active))||(m.grab==='throw'&&def.move?.id==='throw'));
     if (dead.includes(def.state)) return false;
     if (def.state === 'launched' && def.juggle >= 4) return false;
     return true;
@@ -1210,11 +1273,18 @@ export class Game {
         return;
       }
     }
-    const hits: [Fighter, Fighter][] = [];
-    for (const [x, y] of [[a, b], [b, a]] as [Fighter, Fighter][]) {
-      if (x.hbActive && x.move && this.canHit(x, y) && this.overlap(this.boxOf(x), this.hurtBox(y))) hits.push([x, y]);
+    const hits:{a:Fighter;d:Fighter;m:Move;impact:{x:number;y:number;dir:number;serial:number}}[]=[];
+    for(const [x,y] of [[a,b],[b,a]] as [Fighter,Fighter][])if(x.hbActive&&x.move&&this.canHit(x,y)&&this.overlap(this.boxOf(x),this.hurtBox(y))){
+      const ba=this.boxOf(x),bd=this.hurtBox(y);
+      hits.push({a:x,d:y,m:x.move,impact:{x:(Math.max(ba.x0,bd.x0)+Math.min(ba.x1,bd.x1))/2,y:FLOOR_Y+(Math.max(ba.y0,bd.y0)+Math.min(ba.y1,bd.y1))/2,dir:x.facing,serial:x.serial}});
     }
-    for (const [x, y] of hits) this.applyHit(x, y);
+    for(const h of hits){
+      if(h.m.grab&&hits.some(other=>other.d===h.a&&!other.m.grab))continue;
+      if(this.seq)break;
+      this.applyHit(h.a,h.d,h.m,h.impact);
+      if(h.m.grab)break;
+    }
+    if(!this.training&&a.hp<=0&&b.hp<=0){a.ko=b.ko=true;this.phase='ko';}
   }
 
   private gainMeter(f: Fighter, amount: number) {
@@ -1222,6 +1292,7 @@ export class Game {
   }
 
   private dealDamage(a: Fighter, d: Fighter, dmg: number) {
+    if(d.ch==='orango')d.momentum=d.momentumT=0;
     if(a.idx===0) {
       this.challengeEvent('hits');
       this.challengeEvent('damage',dmg);
@@ -1254,7 +1325,12 @@ export class Game {
 
     // --- agarrões ---
     if (m.grab) {
-      if(a.idx===0 && m.kind==='special')this.challengeEvent('special',1,m.id);
+      if(a.ch==='orango'&&m.kind!=='super'){a.momentum=Math.min(3,a.momentum+1);a.momentumT=180;}
+      if(m.grab==='throw'&&(this.tick-d.pad.pressedAt.grab<=8||(d.move?.id==='throw'&&this.tick<=d.throwTechUntil))){
+        for(const f of [a,d]){f.move=null;f.hbActive=false;f.state='ground';f.stateT=0;f.landLag=10;f.throwShield=25;f.pad.consume('grab');}
+        a.vx=-a.facing*4;d.vx=a.facing*4;this.text(px,py-40,'ESCAPOU!', '#bae6fd',28);audio.block();return;
+      }
+      if(a.idx===0 && m.kind==='special' && /^s[123]$/.test(m.id))this.challengeEvent('special',1,m.id);
       if (tracked) a.connected = true;
       if (m.grab === 'super') this.startSeq(({ caetano: 'superC', orango: 'superO', tubarao: 'superT', rickzera: 'superR', bieu: 'superB', nomad: 'superN', renngotti: 'superG', aneninha: 'superA' } as const)[a.ch], a, d);
       else this.startSeq(m.grab, a, d);
@@ -1264,10 +1340,15 @@ export class Game {
     const blocked = d.guard && d.y === 0 && (d.state === 'ground' || d.state === 'block') && !m.unblockable && (m.level !== 'low' || d.crouch) && (m.level !== 'high' || !d.crouch);
     if (tracked) a.connected = true;
     if (blocked) {
+      if(d.ch==='caetano'&&d.parryCooldown===0&&this.tick-d.pad.pressedAt.block<=5){
+        if(d.idx===0)this.challengeEvent('block');
+        d.precision=120;d.parryCooldown=24;d.state='block';d.blockstun=4;d.vx=0;d.move=null;d.hbActive=false;this.gainMeter(d,6);
+        this.flash={c:'#fef3c7',a:.4};this.text(px,py-40,'LEITURA!', '#fef08a',27);this.ring(px,py,'#fef08a',90,18,5);audio.block();return;
+      }
       if (d.idx === 0) this.challengeEvent('block');
-      const chip = m.dmg * (m.pierce ?? (m.kind === 'special' ? 0.12 : 0.04));
+      const chip = m.dmg * Math.min(.2,m.pierce ?? (m.kind === 'special' ? 0.1 : 0.025));
       const prev = d.hp;
-      d.hp = Math.max(m.kind === 'special' ? 0 : 1, d.hp - chip);
+      d.hp = Math.max(this.training||m.kind!=='super'?1:0,d.hp-chip);
       d.dispHp = Math.max(d.hp, d.dispHp);
       this.gainMeter(a, m.dmg * 0.08);
       this.gainMeter(d, m.dmg * 0.05);
@@ -1289,14 +1370,23 @@ export class Game {
       return;
     }
 
+    if(d.armor) {
+      this.dealDamage(a,d,Math.max(1,m.dmg*.75));this.hitstop=Math.max(this.hitstop,4);
+      this.spark(px,py,'#e2e8f0',10,6,3,16);this.text(px,py-30,'ARMADURA', '#cbd5e1',18);audio.hit(.7);
+      if(d.hp<=0){d.armor=false;d.move=null;d.hbActive=false;d.state='launched';d.y=-2;d.vy=-9;d.vx=dir*6;this.triggerKO(a,d);}
+      return;
+    }
+
     // --- acerto ---
-    if (a.idx === 0) { if(m.level==='low')this.challengeEvent('low'); if(m.air)this.challengeEvent('air'); if(m.kind==='special')this.challengeEvent('special',1,m.id); }
+    if (a.idx === 0) { if(m.level==='low')this.challengeEvent('low'); if(m.air)this.challengeEvent('air'); if(m.kind==='special'&&/^s[123]$/.test(m.id))this.challengeEvent('special',1,m.id); }
     const air = d.y < 0 || d.state === 'launched';
     if (d.state === 'hit' || d.state === 'launched') d.comboHits++;
     else d.comboHits = 1;
     if (a.idx === 0) this.challengeEvent('combo',d.comboHits);
     const scale = [1, 1, 0.9, 0.8, 0.7, 0.6, 0.5, 0.45][Math.min(d.comboHits - 1, 7)];
-    const dmg = Math.max(1, m.dmg * scale);
+    const dmg = Math.max(1, m.dmg * scale * (a.ch==='orango'?1+a.momentum*.03:1));
+    if(a.ch==='orango'){a.momentum=Math.min(3,a.momentum+1);a.momentumT=180;}
+    if(d.ch==='orango')d.momentum=d.momentumT=0;
     this.dealDamage(a, d, dmg);
     d.move = null;
     d.hbActive = false;
@@ -1348,6 +1438,7 @@ export class Game {
       this.glowFx(px, py, '#e9d5ff', 130, 14);
       this.spark(px, py, '#e9d5ff', 20, 9, 3, 18);
       this.ring(px, py, '#e9d5ff', 120, 18, 4);
+      this.hitstop=Math.max(this.hitstop,13);audio.purple();this.streak(px,py,0,'#fff7ed');this.streak(px,py,Math.PI,'#c084fc');this.text(px,py-58,m.dmg>55?'PRECISÃO!':'PERFURANTE!', '#f5d0fe',30);
     }
     if (a.ch === 'caetano' && m.id === 's3') {
       this.flash = { c: '#ffffff', a: 0.7 };
@@ -1544,7 +1635,7 @@ export class Game {
   }
 
   private startSeq(kind: Seq['kind'], a: Fighter, d: Fighter) {
-    const dur = { puxao: 86, mordida: 78, engole: 100, superC: 215, superO: 215, superT: 150, superR: 170, superB: 160, superN: 150, superG: 155, superA: 206, moon: 74 }[kind];
+    const dur = { puxao: 86, mordida: 78, engole: 100, superC: 215, superO: 215, superT: 150, superR: 170, superB: 160, superN: 150, superG: 155, superA: 206, moon: 74, throw:60 }[kind];
     this.seq = { kind, a, d, t: 0, dur, x0: d.x };
     a.state = 'seq';
     d.state = 'seq';
@@ -1556,7 +1647,7 @@ export class Game {
     a.crouch = d.crouch = false;
     a.turn = d.turn = 1;
     d.facing = (-a.facing) as 1 | -1;
-    d.comboHits = kind === 'superR' || kind === 'superG' || kind === 'superA' || kind === 'moon' ? 0 : 1;
+    d.comboHits = kind === 'superR' || kind === 'superG' || kind === 'superA' || kind === 'moon' || kind==='throw' ? 0 : 1;
     d.comboDmg = 0;
     if (kind.startsWith('super')) {
       a.y = 0;
@@ -1600,7 +1691,12 @@ export class Game {
       obj.x += (x - obj.x) * k;
     };
 
-    if (s.kind === 'puxao') {
+    if(s.kind==='throw'){
+      a.poseOverride=t<28?'pH_s':'pH_a';d.poseOverride=t<28?'grabbed':'air';
+      if(t<28){d.x=a.x+f*60;d.y=-Math.sin(t/28*Math.PI/2)*55;}
+      if(t===28){s.x0=d.x;this.seqHit(a,d,70,1.6,a.def.glow);}
+      if(t>=28){const u=Math.min(1,(t-28)/27);d.x=s.x0+f*145*u;d.y=-100*Math.sin(u*Math.PI);d.rotAdd=-u*Math.PI;if(t>55)d.poseOverride='down';}
+    } else if (s.kind === 'puxao') {
       this.camOv = { x: (a.x + d.x) / 2, zoom: 1.35 };
       this.camOvT = 2;
       if (t <= 8) {

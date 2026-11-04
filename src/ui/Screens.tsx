@@ -1,3 +1,4 @@
+import { FIGHTER_STYLE } from '../game/presentation';
 import { useEffect, useRef, useState } from 'react';
 import { CHARS, CHAR_CATEGORIES } from '../game/data';
 import type { CharId, CharCategory } from '../game/data';
@@ -43,7 +44,7 @@ function Title({ big }: { big?: boolean }) {
 }
 
 // ------------------------------------------------------------------ MENU PRINCIPAL
-export type MenuChoice = 'play' | 'versus' | 'training' | 'controls' | 'settings' | 'radio' | 'online';
+export type MenuChoice = 'play' | 'versus' | 'training' | 'controls' | 'settings' | 'radio' | 'online' | 'profile';
 
 export function MainMenu({ onChoose, onRadio, suspended = false }: { onChoose: (c: MenuChoice) => void; onRadio: () => void; suspended?: boolean }) {
   const items: [MenuChoice, string, string][] = [
@@ -51,6 +52,7 @@ export function MainMenu({ onChoose, onRadio, suspended = false }: { onChoose: (
     ['online', 'ONLINE', '#22d3ee'],
     ['versus', 'VERSUS LOCAL', '#f59e0b'],
     ['training', 'TREINAMENTO', '#22c55e'],
+    ['profile', 'PERFIL E RANKING', '#facc15'],
     ['controls', 'CONTROLES', '#38bdf8'],
     ['settings', 'CONFIGURAÇÕES', '#ef4444'],
   ];
@@ -85,7 +87,7 @@ export function MainMenu({ onChoose, onRadio, suspended = false }: { onChoose: (
       <div className="absolute left-8 top-10">
         <Title />
       </div>
-      <div className="absolute left-8 top-[125px] flex flex-col gap-[5px]">
+      <div className="absolute left-8 top-[115px] flex flex-col gap-[4px]">
         {items.map(([k, label, color], i) => (
           <SkewBtn
             key={k}
@@ -296,7 +298,7 @@ export function CharSelect({ mode, difficulty, initialP1 = 'caetano', initialP2 
       </div>
       {hasSelection && <div className="absolute left-[344px] top-[424px] w-[286px] text-center pointer-events-none">
         <div className="title-main text-[22px]" style={{ color: d.glow, textShadow: '2px 2px 0 #000' }}>{d.short}</div>
-        <div className="text-[9px] tracking-wider text-white/70 mt-1">{d.title}</div>
+        <div className="text-[9px] tracking-wider text-white/70 mt-1">{FIGHTER_STYLE[sel].name} · {d.title}</div>
       </div>}
       <div className="absolute right-6 top-[147px] w-[284px]">
         {hasSelection ? <FighterDetails ch={sel} bindings={bindings} /> : <div className="mt-20 text-center text-white/45 text-sm leading-6">Novos desafiantes estão chegando.<br />STREAMERS e ESPECIAIS já estão prontos para lutar.</div>}
@@ -341,6 +343,7 @@ export function StageSelect({ p1, p2, initialStage = 'dojo', onPick, onBack, onR
   p1: CharId; p2: CharId; initialStage?: StageId; onPick: (stage: StageId) => void;
   onBack: () => void; onRadio: () => void; suspended?: boolean;
 }) {
+  const [page,setPage]=useState(Math.floor(STAGE_IDS.indexOf(initialStage)/6));
   const [selected, setSelected] = useState<StageId | 'random'>(initialStage);
   const [locked, setLocked] = useState(false);
   const lockedRef = useRef(false);
@@ -360,6 +363,7 @@ export function StageSelect({ p1, p2, initialStage = 'dojo', onPick, onBack, onR
   const select = (id: StageId | 'random') => {
     if (lockedRef.current || suspended) return;
     setSelected(id);
+    if(id!=='random')setPage(Math.floor(STAGE_IDS.indexOf(id)/6));
     audio.select();
   };
   useEffect(() => {
@@ -388,14 +392,14 @@ export function StageSelect({ p1, p2, initialStage = 'dojo', onPick, onBack, onR
         <span style={{ color: CHARS[p1].glow }}>{CHARS[p1].name}</span><span className="title-main text-amber-300 text-[18px]">VS</span><span style={{ color: CHARS[p2].glow }}>{CHARS[p2].name}</span>
       </div>
       <div className="absolute top-[108px] left-6 right-6 grid grid-cols-3 gap-3">
-        {STAGE_IDS.map((id, index) => {
+        {STAGE_IDS.slice(page*6,page*6+6).map((id, index) => {
           const info = STAGES[id];
           return <button key={id} type="button" data-stage={id} aria-label={`Selecionar mapa ${info.name}`} aria-pressed={selected === id} onClick={() => select(id)} disabled={locked}
             className="relative overflow-hidden h-[136px] border-2 text-left cursor-pointer transition-transform"
             style={{ borderColor: selected === id ? info.accent : '#ffffff33', transform: selected === id ? 'translateY(-2px)' : undefined, boxShadow: selected === id ? `0 0 20px ${info.accent}55` : undefined }}>
             <StagePreview stageId={id} className="absolute inset-0 w-full h-full" />
             <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg,transparent 25%,rgba(0,0,0,.95))' }} />
-            <span className="absolute top-2 left-2 text-[9px] px-1 bg-black/60 text-white/70">0{index + 1}</span>
+            <span className="absolute top-2 left-2 text-[9px] px-1 bg-black/60 text-white/70">{String(page*6+index+1).padStart(2,'0')}</span>
             <div className="absolute left-3 right-3 bottom-3"><div className="title-main text-[18px]" style={{ color: selected === id ? info.accent : '#fff' }}>{info.name}</div><div className="text-[9px] text-white/65 mt-1">{info.subtitle}</div></div>
           </button>;
         })}
@@ -405,7 +409,7 @@ export function StageSelect({ p1, p2, initialStage = 'dojo', onPick, onBack, onR
         style={{ borderColor: selected === 'random' ? '#fcd34d' : '#ffffff33', background: selected === 'random' ? '#785311cc' : '#0a061acc' }}>
         <span className="title-main text-[17px]">? ALEATÓRIO</span><span className="text-[8px] text-white/50 float-right mt-1">SURPREENDA-ME</span>
       </button>
-      <div className="absolute right-6 top-[412px] text-right"><div className="title-main text-[17px]" style={{ color: STAGES[preview].accent }}>{selected === 'random' ? 'O DESTINO ESCOLHE A ARENA' : STAGES[preview].name}</div><div className="text-[9px] mt-1 text-white/50">Mesmo elenco, novos cenários para cada luta.</div></div>
+      <div className="absolute left-[348px] top-[404px] flex items-center gap-2"><button aria-label="Página anterior de mapas" className="border border-white/25 px-3 py-3 cursor-pointer disabled:opacity-30" disabled={page===0} onClick={()=>setPage(page-1)}>◀</button><span className="text-xs">{page+1}/{Math.ceil(STAGE_IDS.length/6)}</span><button aria-label="Próxima página de mapas" className="border border-white/25 px-3 py-3 cursor-pointer disabled:opacity-30" disabled={page>=Math.ceil(STAGE_IDS.length/6)-1} onClick={()=>setPage(page+1)}>▶</button></div><div className="absolute right-6 top-[412px] text-right max-w-[350px]"><div className="title-main text-[17px]" style={{ color: STAGES[preview].accent }}>{selected === 'random' ? 'O DESTINO ESCOLHE A ARENA' : STAGES[preview].name}</div><div className="text-[9px] mt-1 text-white/50">{STAGES[preview].credit?`Ideia: ${STAGES[preview].credit}`:'17 arenas para cada confronto.'}</div></div>
       <div className="absolute bottom-7 left-8 right-8 flex items-center justify-between">
         <SkewBtn small onClick={onBack} disabled={locked}>LUTADORES</SkewBtn>
         <span className="text-[8px] tracking-wider text-white/55">SETAS / WASD ESCOLHER · ENTER CONFIRMAR</span>
@@ -462,7 +466,7 @@ export function Controls({ onBack }: { onBack: () => void }) {
         <div className="title-main text-xl px-3 py-1 mb-1" style={{ background: `linear-gradient(90deg, ${d.color}, transparent)` }}>
           JOGADOR {p + 1} — <span className="text-white/90 text-base">qualquer lutador</span>
         </div>
-        <div className="grid" style={{ gridTemplateColumns: '1fr 120px 120px', gap: 3 }}>
+        <div className="grid" style={{ gridTemplateColumns: '1fr 120px 120px', gap: 2 }}>
           <div className="text-[10px] text-white/50">AÇÃO</div>
           <div className="text-[10px] text-white/50 text-center">TECLA</div>
           <div className="text-[10px] text-white/50 text-center">ALTERNATIVA</div>
@@ -477,7 +481,7 @@ export function Controls({ onBack }: { onBack: () => void }) {
                   <button
                     key={s}
                     onClick={() => setListen({ p, a, s })}
-                    className="text-[12px] py-[3px] border"
+                    className="text-[12px] py-[1px] border"
                     style={{ background: on ? d.color : 'rgba(255,255,255,0.08)', borderColor: on ? '#fff' : 'rgba(255,255,255,0.2)', color: '#fff' }}
                   >
                     {on ? 'PRESSIONE...' : keyLabel(b[p][a][s])}
@@ -502,9 +506,9 @@ export function Controls({ onBack }: { onBack: () => void }) {
       {panel(1)}
       <div className="absolute left-4 right-4 text-[11px] leading-[15px] text-white/80" style={{ top: 392 }}>
         <b className="text-yellow-300">GOLPES NORMAIS:</b> soco/chute parado = <b>fraco</b> · <b>→ + botão</b> = <b>médio</b> · <b>← + botão</b> = <b>forte</b> · <b>↓ + botão</b> = agachado · no ar = golpe aéreo. <b className="text-yellow-300">COMBOS:</b> aperte o botão em sequência
-        (fraco → médio → forte) e cancele em um especial ou super quando acertar. <b className="text-yellow-300">DEFESA:</b> segure Defesa (↓ + Defesa para golpes baixos). Agarrões (Puxão de Camisa) ignoram a defesa. <b className="text-yellow-300">DASH:</b> toque duas vezes ← ou →.{' '}
+        (fraco → médio → forte) e cancele em um especial ou super quando acertar. <b className="text-yellow-300">DEFESA:</b> segure Defesa (↓ + Defesa para golpes baixos). Agarrões ignoram defesa: G / Num7 de perto. Agarrar junto escapa. <b className="text-yellow-300">DASH:</b> toque duas vezes ← ou →.{' '}
         <b className="text-yellow-300">DEDILHO CLASH:</b> Dedilho vs Dedilho → aperte SOCO repetidamente! <b className="text-yellow-300">PAUSA:</b> ESC ou P. <b className="text-yellow-300">TREINO:</b> R reinicia posições, T troca o dummy. Teclado sem numpad? O Jogador 2 também usa , . / ; &apos; Enter e Shift direito
-        (clique em qualquer tecla acima para reconfigurar). Teclados comuns podem bloquear combinações de várias teclas (ghosting).
+        (clique em qualquer tecla acima para reconfigurar). FINISHER: use ULT após o KO decisivo.
       </div>
       <div className="absolute bottom-3 w-full flex justify-center gap-4">
         <SkewBtn small onClick={reset} color="#f59e0b">

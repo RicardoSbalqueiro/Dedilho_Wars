@@ -57,7 +57,7 @@ export interface Move {
   power: number;
   poses: [string, string];
   advance?: [number, number, number];
-  grab?: 'puxao' | 'mordida' | 'engole' | 'moon' | 'super';
+  grab?: 'puxao' | 'mordida' | 'engole' | 'moon' | 'super' | 'throw';
   dedilho?: boolean;
   pierce?: number;
   unblockable?: boolean;
@@ -65,6 +65,7 @@ export interface Move {
   label?: string;
   turn?: [number, number];
   charge?: boolean;
+  variant?: 'low' | 'reverse';
   sound?: 'purple' | 'red';
 }
 
@@ -464,7 +465,7 @@ export const CHARS: Record<CharId, CharDef> = {
     ],
     superName: 'CONSPIRAÇÃO ABSOLUTA',
     quote: 'ERA TUDO PARTE DA CONSPIRAÇÃO.',
-    bio: 'Musculoso, sem camisa, calça laranja e faixa roxa. Mestre dos combos, da velocidade e da confiança infinita.',
+    bio: 'Técnico: defesa precisa carrega um Dedilho reforçado. Confirme o Dedilho em Chute para estender combos.',
   },
   orango: {
     id: 'orango',
@@ -500,7 +501,7 @@ export const CHARS: Record<CharId, CharDef> = {
     ],
     superName: 'INSTINTO PRIMORDIAL',
     quote: 'O REI DA SELVA NÃO PRECISA DE FAIXA.',
-    bio: 'Um orangotango furioso. Força bruta, alcance absurdo e agarrões devastadores.',
+    bio: 'Agressivo: acertos acumulam Ímpeto, aumentando dano e avanço. Agarrões punem rivais defensivos.',
   },
   tubarao: {
     id: 'tubarao', name: 'TUBARÃO FISCAL', short: 'TUBARÃO', title: 'O FISCAL DOS SETE MARES',
@@ -570,7 +571,7 @@ export const CHARS: Record<CharId, CharDef> = {
       { key: 'O', name: 'GRITO ALTO', desc: 'Onda sonora à frente: interrompe golpes e empurra. Pode ser defendida.' },
     ],
     superName: 'TILT', quote: 'A MESA NÃO AGUENTOU O TILT.',
-    bio: 'Moletom branco, óculos escuros e headset. Lança o rival à lua e controla a luta com microfone e voz.',
+    bio: 'Alcance: o microfone vira armadilha ao cair. Grito amplia sua zona de ressonância; agarrão lunar abre juggle.',
   },
   aneninha: {
     id: 'aneninha', name: 'ANENINHA', short: 'ANENINHA', title: 'OSASCO NO CORAÇÃO, BOLÍVIA NO RITMO',
@@ -584,7 +585,7 @@ export const CHARS: Record<CharId, CharDef> = {
       { key: 'O', name: 'GRITO ALTO', desc: 'Onda de voz frontal que interrompe e empurra. Pode ser defendida.' },
     ],
     superName: 'YO SOY DE BOLIVIA', quote: 'OSASCO NO CORAÇÃO, BOLÍVIA NO RITMO!',
-    bio: 'Capuz amarelo, cachos e saia rosa bordada. Junta pressão de Osasco, voz forte e uma horda de dançarinas.',
+    bio: 'Imprevisível: baixo + ESP 1 vira rasteira; frente + ESP 2 pinta atrás do rival próximo. Alterne alturas e lados.',
   },
 };
 

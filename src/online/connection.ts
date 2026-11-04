@@ -50,7 +50,7 @@ export class FightConnection {
   }
   private accept(p:Packet) {
     if(!Number.isSafeInteger(p.n)||p.n<=this.received)return;
-    if(this.host?(p.type!=='input'||!p.input||!Number.isInteger(p.input.mask)||p.input.mask<0||p.input.mask>2047||!Array.isArray(p.input.events)||p.input.events.length>32):(p.type!=='state'||!p.state))return;
+    if(this.host?(p.type!=='input'||!p.input||!Number.isInteger(p.input.mask)||p.input.mask<0||p.input.mask>4095||!Array.isArray(p.input.events)||p.input.events.length>32):(p.type!=='state'||!p.state))return;
     this.received=p.n;this.peerSeen=performance.now();
     if(this.host)this.cb.input(p.input!);else this.cb.state(p.state!);
   }

@@ -1,7 +1,7 @@
 import { touchInput } from './touch';
-export type Action = 'left' | 'right' | 'up' | 'down' | 'p' | 'k' | 'block' | 's1' | 's2' | 's3' | 'super';
+export type Action = 'left' | 'right' | 'up' | 'down' | 'p' | 'k' | 'block' | 's1' | 's2' | 's3' | 'super' | 'grab';
 
-export const ACTIONS: Action[] = ['left', 'right', 'up', 'down', 'p', 'k', 'block', 's1', 's2', 's3', 'super'];
+export const ACTIONS: Action[] = ['left', 'right', 'up', 'down', 'p', 'k', 'block', 's1', 's2', 's3', 'super', 'grab'];
 
 export const ACTION_LABELS: Record<Action, string> = {
   left: 'Esquerda',
@@ -15,6 +15,7 @@ export const ACTION_LABELS: Record<Action, string> = {
   s2: 'Especial 2',
   s3: 'Especial 3',
   super: 'Super Especial',
+  grab: 'Agarrão',
 };
 
 export type Bindings = Record<Action, [string, string]>;
@@ -32,6 +33,7 @@ export const DEFAULT_BINDINGS: [Bindings, Bindings] = [
     s2: ['KeyI', ''],
     s3: ['KeyO', ''],
     super: ['KeyH', ''],
+    grab: ['KeyG', ''],
   },
   {
     left: ['ArrowLeft', ''],
@@ -45,6 +47,7 @@ export const DEFAULT_BINDINGS: [Bindings, Bindings] = [
     s2: ['Numpad5', 'Quote'],
     s3: ['Numpad6', 'Enter'],
     super: ['Numpad0', 'ShiftRight'],
+    grab: ['Numpad7', 'KeyB'],
   },
 ];
 
@@ -57,6 +60,11 @@ export function loadBindings(): [Bindings, Bindings] {
       const parsed = JSON.parse(raw);
       const out = JSON.parse(JSON.stringify(DEFAULT_BINDINGS)) as [Bindings, Bindings];
       for (let i = 0; i < 2; i++) for (const a of ACTIONS) if (parsed?.[i]?.[a]) out[i][a] = parsed[i][a];
+      for(let i=0;i<2;i++)if(!parsed?.[i]?.grab){
+        const used=new Set(ACTIONS.filter(a=>a!=='grab').flatMap(a=>out[i][a]));
+        const options=i===0?['KeyG','KeyF','KeyV','KeyQ']:['Numpad7','KeyB','Numpad8','KeyN'];
+        out[i].grab=[options.find(c=>!used.has(c))||'',''];
+      }
       return out;
     }
   } catch {
@@ -161,6 +169,12 @@ export class Pad {
   }
   buffered(a: Action, tick: number, win = 6) {
     return tick - this.pressedAt[a] <= win;
+  }
+  freezeBuffers(tick:number) {
+    for(const a of ACTIONS) {
+      if(this.pressedAt[a]<tick && tick-this.pressedAt[a]<=8)this.pressedAt[a]++;
+      if(this.prevAt[a]<tick && tick-this.prevAt[a]<=14)this.prevAt[a]++;
+    }
   }
   consume(a: Action) {
     this.pressedAt[a] = -999;

@@ -11,6 +11,8 @@ const stageCache = new Map<StageId, Stage>();
 export function getStage(id: StageId = 'dojo') {
   let stage = stageCache.get(id);
   if (!stage) { stage = new Stage(id); stageCache.set(id, stage); }
+  stageCache.delete(id);stageCache.set(id,stage);
+  while(stageCache.size>8)stageCache.delete(stageCache.keys().next().value!);
   return stage;
 }
 

@@ -1,3 +1,4 @@
+import { Profile } from './ui/Profile';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { MobileMenu, MobileRadio, MobileShell } from './ui/MobileMenu';
 import { useMobile } from './ui/TouchControls';
@@ -14,7 +15,7 @@ import type { CharId } from './game/data';
 import type { Difficulty, GameConfig, Mode } from './game/engine';
 import type { StageId } from './game/stage';
 
-type Screen = 'splash' | 'menu' | 'diff' | 'select' | 'controls' | 'settings' | 'stage' | 'game' | 'online';
+type Screen = 'splash' | 'menu' | 'diff' | 'select' | 'controls' | 'settings' | 'stage' | 'game' | 'online' | 'profile';
 
 export default function App() {
   const mobile = useMobile();
@@ -58,6 +59,7 @@ export default function App() {
       setMode('training');
       setScreen('select');
     } else if (c === 'online') setScreen('online');
+    else if (c === 'profile') setScreen('profile');
     else if (c === 'radio') setRadioOpen(true);
     else if (c === 'controls') setScreen('controls');
     else setScreen('settings');
@@ -69,18 +71,20 @@ export default function App() {
     [mode, char, opponent, stageId, difficulty, gameKey],
   );
 
-  if (mobile && screen !== 'game' && screen !== 'online') return <>
+  if (mobile && screen !== 'game' && screen !== 'online' && screen !== 'profile') return <>
     <MobileMenu key={screen} screen={screen} mode={mode} p1={char} p2={opponent} stage={stageId} onStart={start} onChoose={choose} onRadio={openRadio}
       onBack={() => screen === 'stage' ? toSelect() : screen === 'select' && mode === 'ai' ? setScreen('diff') : toMenu()}
       onDifficulty={d=>{setDifficulty(d);setScreen('select')}}
       onPick={(c,other)=>{setChar(c);setOpponent(other);setScreen('stage')}}
       onStage={id=>{setStageId(id);setGameKey(k=>k+1);audio.music('fight');setScreen('game')}}/>
     {radioOpen && <MobileRadio onBack={closeRadio}/>}</>;
+  if(mobile&&screen==='profile')return <MobileShell><Profile mobile onBack={toMenu} onLogin={()=>setScreen('online')}/></MobileShell>;
   if (mobile && screen === 'online') return <MobileShell><Online mobile onBack={toMenu}/></MobileShell>;
   return (
     <Frame game={screen === 'game'}>
       {screen === 'splash' && <Splash onStart={start} />}
       {screen === 'menu' && <MainMenu onChoose={choose} onRadio={openRadio} suspended={radioOpen} />}
+      {screen === 'profile' && <Profile onBack={toMenu} onLogin={()=>setScreen('online')}/>}
       {screen === 'online' && <Online onBack={toMenu}/>}
       {screen === 'diff' && (
         <DifficultySelect

@@ -1,3 +1,7 @@
+import { FIGHTER_STYLE } from '../game/presentation';
+import { FINISHER_NAMES } from '../game/finishers-art';
+import { rememberLocal } from '../game/progression';
+import { FinisherPrompt } from './FinisherPrompt';
 import { useEffect, useRef, useState } from 'react';
 import { TrainingChallenges } from './TrainingChallenges';
 import { GameOverlay, TouchControls } from './TouchControls';
@@ -13,6 +17,7 @@ import { getStage, SkewBtn } from './common';
 export function GameScreen({ cfg, onExit, onSelect, onMap, onRadio, inputSuspended = false }: { cfg: GameConfig; onExit: () => void; onSelect: () => void; onMap: () => void; onRadio: () => void; inputSuspended?: boolean }) {
   const ref = useRef<HTMLCanvasElement>(null);
   const gameRef = useRef<Game | null>(null);
+  const [cinematic,setCinematic]=useState(false);
   const [paused, setPaused] = useState(false);
   const [result, setResult] = useState<number | null>(null);
   const [sel, setSel] = useState(0);
@@ -27,15 +32,17 @@ export function GameScreen({ cfg, onExit, onSelect, onMap, onRadio, inputSuspend
     const game = new Game(cfg, (e) => {
       if (e.type === 'pause') { setPaused(!!e.paused); setSel(0); }
       if (e.type === 'matchEnd') {
+        rememberLocal(game);
         window.clearTimeout(resultTimerRef.current);
         resultTimerRef.current = window.setTimeout(() => { setResult(e.winner ?? 0); setSel(0); }, 700);
       }
     });
     gameRef.current = game;
     (window as unknown as { __game?: Game }).__game = game;
-    let raf = 0;
+    let raf = 0,lastCinematic=false;
     const loop = (now: number) => {
       game.advance(now);
+      if((game.phase==='finisher')!==lastCinematic){lastCinematic=game.phase==='finisher';setCinematic(lastCinematic);}
       render(ctx, game, stage, game.tick);
       raf = requestAnimationFrame(loop);
     };
@@ -86,10 +93,11 @@ export function GameScreen({ cfg, onExit, onSelect, onMap, onRadio, inputSuspend
   return (
     <div ref={overlayRef} className="absolute inset-0">
       {cfg.mode === 'training' && <TrainingChallenges gameRef={gameRef}/>}
+      <FinisherPrompt gameRef={gameRef}/>
       <canvas ref={ref} width={W} height={H} className="absolute inset-0" />
-      <div className="absolute bottom-[3px] left-1/2 -translate-x-1/2 text-[10px] tracking-widest text-white/50 pointer-events-none">P1: {keyLabel(cfg.bindings[0].down[0])} AGACHAR · P2: {keyLabel(cfg.bindings[1].down[0])} AGACHAR · ESC / P: PAUSA</div>
+      {!cinematic && !paused && result===null && <div className="absolute bottom-[3px] left-1/2 -translate-x-1/2 text-[10px] tracking-widest text-white/50 pointer-events-none">P1: {keyLabel(cfg.bindings[0].down[0])} AGACHAR · P2: {keyLabel(cfg.bindings[1].down[0])} AGACHAR · ESC / P: PAUSA</div>}
 
-      {!paused && result === null && <TouchControls onMenu={() => gameRef.current?.togglePause()}/>}
+      {!paused && !cinematic && result === null && <TouchControls onMenu={() => gameRef.current?.togglePause()}/>}
       {paused && (
         <GameOverlay><div className="pause-menu absolute inset-0 bg-black/80 flex flex-col items-center justify-center gap-2 fade-in">
           <div className="title-main text-5xl text-white mb-2" style={{ textShadow: '0 0 20px #a855f7, 4px 4px 0 #000' }}>
@@ -135,9 +143,9 @@ export function GameScreen({ cfg, onExit, onSelect, onMap, onRadio, inputSuspend
           )}
           {cfg.mode === 'training' && <button className="text-xs py-2 px-4 bg-white/10 rounded cursor-pointer" onClick={() => {if(g){g.train.dummy=(g.train.dummy+1)%4;g.f[1].cpu=g.train.dummy===1;g.f[1].pad.reset();setDummy(g.train.dummy)}}}>OPONENTE: {['PARADO','IA','DEFENDE','P2'][g?.train.dummy ?? dummy]}</button>}
           <div className="mt-3 text-[10px] text-white/60 text-center leading-5">
-            P1: A/D mover · W pular · S agachar · J soco · K chute · L defesa · U/I/O especiais · H super
+            P1: G agarrar · A/D mover · W pular · S agachar · J soco · K chute · L defesa · U/I/O especiais · H super
             <br />
-            P2: Setas · Num 1/2/3 soco/chute/defesa · Num 4/5/6 especiais · Num 0 super (ou , . / ; &apos; Enter ShiftD)
+            P2: Num 7 agarrar · Setas · Num 1/2/3 soco/chute/defesa · Num 4/5/6 especiais · Num 0 super (ou , . / ; &apos; Enter ShiftD)
           </div>
         </div></GameOverlay>
       )}
@@ -146,12 +154,13 @@ export function GameScreen({ cfg, onExit, onSelect, onMap, onRadio, inputSuspend
         <GameOverlay><div className="result-menu absolute inset-0 pointer-events-none fade-in" style={{ background: `linear-gradient(180deg, ${winnerChar.color}55 0%, transparent 35%, transparent 62%, rgba(0,0,0,0.85) 100%)` }}>
           <div className="absolute top-5 w-full text-center">
             <div className="title-main text-[22px] tracking-[0.3em] text-white/90 pop-in">{who}</div>
-            <div className="title-main text-[56px] pop-in" style={{ color: '#fff', WebkitTextStroke: `2px ${winnerChar.color2}`, textShadow: `0 0 28px ${winnerChar.color}, 5px 5px 0 #000`, animationDelay: '0.15s' }}>
+            <div className="title-main victory-name text-[56px] pop-in" style={{ color: '#fff', WebkitTextStroke: `2px ${winnerChar.color2}`, textShadow: `0 0 28px ${winnerChar.color}, 5px 5px 0 #000`, animationDelay: '0.15s' }}>
               {winnerChar.name}
-            </div>
+            </div><div className="mt-3 text-xs text-white/80">{g?.f[0].wins} × {g?.f[1].wins} · {FIGHTER_STYLE[winnerChar.id].victory}</div>
+            {g?.finishedBy!==null&&g?.finishedBy!==undefined&&<div className="title-main text-xl text-amber-300 mt-2">FINISHER · {FINISHER_NAMES[winnerChar.id]}</div>}
           </div>
           <div className="absolute bottom-[112px] w-full text-center slide-up" style={{ animationDelay: '0.5s' }}>
-            <div className="title-main text-[27px] px-8 leading-8" style={{ color: winnerChar.glow, textShadow: `0 0 18px ${winnerChar.color}, 3px 3px 0 #000` }}>
+            <div className="title-main victory-quote text-[27px] px-8 leading-8" style={{ color: winnerChar.glow, textShadow: `0 0 18px ${winnerChar.color}, 3px 3px 0 #000` }}>
               “{winnerChar.quote}”
             </div>
           </div>

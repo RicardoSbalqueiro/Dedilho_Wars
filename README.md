@@ -1,6 +1,6 @@
 # DEDILHO WARS
 
-Jogo de luta 2D com oito lutadores, seis cenários e rádio integrada.
+Jogo de luta 2D com oito lutadores, 17 cenários, finishers, progressão e rádio integrada.
 
 ## Jogar
 
@@ -16,7 +16,26 @@ O ZIP inclui tanto o jogo pronto como o código-fonte. O index.html da raiz é a
 
 Use Q/E ou Tab para trocar de categoria, setas/WASD para escolher e Enter para confirmar. Escolha P1 e depois o adversário; ambos podem usar o mesmo personagem. A próxima tela escolhe o cenário e permite uma seleção aleatória. Há troca de lutadores e de mapa na pausa e após a partida; a revanche mantém o confronto atual.
 
-Cenários: **Neto Supermercados**, **Dojo Senbukan**, **Liberdade SP**, **Curitiba**, **Piauí** e **Palácio do Planalto**. A geometria de combate é compartilhada; cada cenário tem seu próprio desenho, arquitetura e chão. A abertura usa um cenário aleatório e uma demonstração visual de luta entre os oito personagens, sem interferir nos controles do menu ou na rádio.
+Arenas originais: **Neto Supermercados**, **Dojo Senbukan**, **Liberdade SP**, **Curitiba**, **Piauí** e **Palácio do Planalto**. A geometria de combate é compartilhada; cada cenário tem seu próprio desenho, arquitetura e chão. A abertura usa um cenário aleatório e uma demonstração visual de luta entre os oito personagens, sem interferir nos controles do menu ou na rádio.
+
+Novas arenas: **Casebre**, **Praça do Dedilhador**, **Osasco**, **Bolívia**, **Morro do Bieu**, **Campo do futebol dos campeões**, **Casa Branca com Ovnis** (ideia de Jalam), **Praia do Lets Gay** (ideia de Jalam e Diegão), **Lugar do NGB News**, **Zoológico do Orangotango** e **Praia da Termodinâmica**. Todas têm arte, pisos e detalhes animados próprios. A seleção tem três páginas; os 17 mapas também participam do sorteio da abertura e das salas online.
+
+## Combate e estilos
+
+A troca simultânea de golpes resolve os dois contatos; um double KO empata o round. Comandos de combo permanecem disponíveis durante a pausa de impacto, ataques de chão não interrompem a gravidade no ar, e a defesa responde já no primeiro instante após o hitstun. Há aceleração curta de caminhada e controle limitado da direção no salto. Caixas de ataque usam o golpe e a direção capturados no contato, incluindo espelhamento e projéteis; o modo de colisões continua disponível nas configurações.
+
+- **Karatê Caetano — técnico:** uma defesa nos primeiros cinco frames carrega Precisão por dois segundos, sem dano de chip. O próximo Dedilho causa 73 em vez de 55 e pode ser confirmado em Chute da Conspiração num acerto limpo. O Dedilho recebeu impacto, som e efeitos mais fortes.
+- **Orango Tango — pressão:** acertos acumulam até três níveis de Ímpeto, cada um com +3% de dano e mais avanço. Tomar dano ou ficar três segundos sem pressionar encerra o bônus. Seus agarrões continuam próprios.
+- **Renngotti — alcance:** microfones que passam pelo rival se tornam armadilhas baixas por tempo limitado. Grito ressoa nessas zonas, ampliando sua área de efeito. A armadilha pode ser saltada ou defendida.
+- **Aneninha — improviso:** baixo + ESP 1 usa Rasteira de Osasco. Frente + ESP 2 posiciona o muro atrás de um adversário próximo; fora desse alcance mantém o posicionamento normal. As variantes são controladas pelo jogador.
+
+Todos têm um agarrão curto com **G / Num7** ou o botão **AGARRAR**. Pressionar agarrão no mesmo momento permite escapar de um agarrão comum; os agarrões especiais exigem esquiva ou salto. Ataques em recuperação podem ser punidos, mas o rival não pode ser agarrado durante hitstun, blockstun, salto ou proteção de recuperação. Armadura recebe dano reduzido e absorve a interrupção; não é invulnerabilidade. Os outros quatro lutadores e seus especiais foram preservados.
+
+## Finishers e apresentação
+
+Após o KO do round decisivo, o vencedor tem quatro segundos para pressionar **ULT** (H, Num0 ou botão de toque) e executar seu finisher. A janela expira para a vitória normal; o finisher não gasta barra e só o vencedor pode ativá-lo. Cada um dos oito personagens tem uma sequência própria de preparação, impacto e resultado, com props e efeitos de sua identidade. O finisher também é sincronizado no online e aparece no histórico.
+
+Os confrontos têm provocações específicas entre Caetano, Orango, Renngotti e Aneninha. O narrador, os títulos de vitória e os efeitos de impacto acompanham os personagens. A trilha original usa seis variações de ritmo/escala conforme a arena, preservando a rádio e os sete raps completos.
 
 ## Golpes
 
@@ -50,6 +69,14 @@ Cada jogador usa seus controles de P1, incluindo os botões de toque no celular.
 
 O servidor valida sessões, participação, confirmação dos jogadores e a sequência de cada partida. Senhas usam PBKDF2-SHA256 com salt individual; apenas hashes de sessão são guardados no banco. Cookies de produção são HttpOnly, Secure e SameSite=Strict. Operações de escrita verificam a origem, e cadastro/login têm limites de tentativas. Os dados ficam no D1 do site; não há credenciais de conta no código distribuído.
 
+## Perfil, histórico e ranking
+
+**PERFIL E RANKING** mostra partidas, vitórias, derrotas, finishers, XP, nível, título e histórico. As contas e sessões existentes são preservadas. Os níveis liberam títulos de progressão sem alterar atributos do combate.
+
+Cada partida online cria um registro no servidor antes de começar. Para conceder pontos, os dois participantes precisam enviar o mesmo vencedor, placar e finisher. Vitória dá **3 pontos e 100 XP**, derrota dá **40 XP**, e um finisher dá **+20 XP** ao vencedor. Reenvios e confirmações concorrentes concedem a recompensa apenas uma vez. Resultados divergentes ou sem a confirmação do rival ficam fora do ranking; partidas com menos de dez segundos também não pontuam. O ranking público ordena pontos, vitórias, derrotas e nome de usuário e tem páginas de vinte jogadores.
+
+Os modos offline continuam sem cadastro. Resultados do P1 têm histórico e totais próprios neste dispositivo, separados do ranking online. O histórico recente conserva até quarenta registros; os totais de progressão continuam acumulando. Na conta, o perfil mostra as trinta partidas mais recentes.
+
 ## Celular e tablet
 
 Os menus têm botões e formulários em tamanho nativo. Durante a luta aparece um direcional de toque com diagonais, salto e agachamento, além de soco, chute, defesa, três especiais e ULT. Vários dedos podem ser usados juntos; toques rápidos são registrados. O botão MENU abre a pausa local ou a saída da partida online.
@@ -78,7 +105,8 @@ Bieubatman recebeu redução de aproximadamente 9% nos normais, Chave de Fenda 8
 | Pular / agachar | W / S | Setas cima / baixo |
 | Soco / chute / defesa | J / K / L | Num 1 / Num 2 / Num 3 |
 | Especiais | U / I / O | Num 4 / Num 5 / Num 6 |
-| ULT | H | Num 0 |
+| ULT / Finisher | H | Num 0 |
+| Agarrar | G | Num 7 ou B |
 | Pausar | Esc ou P | Esc ou P |
 
 Sem numpad, P2 também usa vírgula, ponto e barra para soco/chute/defesa; ponto e vírgula, apóstrofo e Enter para especiais; Shift direito para ULT. Ative Num Lock. As teclas podem ser alteradas em Controles.
@@ -120,12 +148,14 @@ Para gerar o ZIP offline e a página de download após o build, use `python3 scr
 
 ## Organização e créditos
 
-- src/ui/: menus, seleções de personagem/mapa, rádio e tela de partida.
+- src/ui/: menus, perfil/ranking, seleções de personagem/mapa, rádio, finalizações e tela de partida.
 - src/game/data.ts, engine.ts e ai.ts: personagens, regras, golpes e IA.
 - src/game/rig.ts e render.ts: desenhos articulados e efeitos.
 - src/game/stage.ts e stage-scenes.ts: cenários.
 - src/game/audio.ts e radio.ts: síntese original e playlist.
 - src/assets/radio/: faixas incluídas.
+- worker/: contas, salas e confirmação de resultados; db/schema.ts e drizzle/: esquema e migrações.
+- tests/: regressões de combate, desafios, finishers, contas, histórico e recompensas sem duplicação.
 
 Caetano usa o novo visual sem camisa, porte atlético, calça laranja e faixa roxa. Seu afro permanece maior que o de Bieu. Renngotti usa moletom/cargo brancos, óculos escuros e fones. Aneninha usa capuz amarelo bordado, cachos castanhos, saia rosa em camadas, pompons e botas decoradas, no mesmo estilo desenhado dos demais lutadores.
 
