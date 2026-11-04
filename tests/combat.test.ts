@@ -29,4 +29,4 @@ assert.equal(METER_GAIN_SCALE,.5);assert.equal(CHARS.bieu.moves.s1.dmg,80);asser
  const g=make();touchInput.set(50,['s1']);touchInput.set(50,[]);g.step();assert.equal(g.f[0].serial,1,'quick touch is buffered');g.destroy();touchInput.clear();
 }
 for(const a of CHAR_IDS)for(const b of CHAR_IDS){const g=make(a,b);g.train.dummy=1;for(let i=0;i<1100;i++)g.step();assert(g.f.every(f=>Number.isFinite(f.x)&&Number.isFinite(f.hp)));assert(g.f[1].serial>0);g.destroy()}
-console.log('Combat: all10 fighters cooldown/reset/pause/melee, one charge per burst, modest nerfs, all10 online ULT snapshots and simultaneous touch/keyboard passed.');
+console.log('Combat: all13 fighters cooldown/reset/pause/melee, one charge per burst, modest nerfs, all13 online ULT snapshots and simultaneous touch/keyboard passed.');

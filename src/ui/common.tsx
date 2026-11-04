@@ -87,6 +87,9 @@ const POSES: Record<CharId, string[]> = {
   aneninha: ['idle','dance1','osasco_a','idle','paint_a','dance2','shout_a','idle','win','dance1'],
   santox:['idle','fourth_a','elastic_a','idle','rabbit_a','idle','abstract_a','idle','taunt','win'],
   jao:['idle','chess_a','idle','math_a','idle','ball_a','idle','calculation_a','taunt','win'],
+  jane:['idle','laptop_a','idle','moto_a','idle','kick_a','idle','zord_a','taunt','win'],
+  cristyan:['idle','teep_a','idle','power_a','idle','spin_a','idle','hammock_a','slam_a','win'],
+  eneas:['idle','shout_a','idle','ecg_a','idle','five_a','idle','atom_a','taunt','win'],
 };
 
 export function ArtCanvas({ variant, selected }: { variant: ArtVariant; selected?: CharId }) {
@@ -150,9 +153,9 @@ function drawDemoBrawl(ctx: CanvasRenderingContext2D, t: number, splash: boolean
   const rotation = Math.floor(t / 560) % CHAR_IDS.length;
   const chars = CHAR_IDS.map((_, i) => CHAR_IDS[(i + rotation) % CHAR_IDS.length]);
   const groups = splash
-    ? [{x:100,y:480,s:.68},{x:290,y:460,s:.68},{x:480,y:480,s:.68},{x:670,y:460,s:.68},{x:860,y:480,s:.68}]
-    : [{x:420,y:340,s:.58},{x:610,y:478,s:.8},{x:770,y:338,s:.6},{x:860,y:480,s:.7},{x:590,y:330,s:.58}];
-  groups.forEach((g,i)=>drawDemoPair(ctx,chars[i*2],chars[i*2+1],g.x,g.y,g.s,t+i*47,false));
+    ? [{x:80,y:480,s:.52},{x:215,y:450,s:.52},{x:350,y:480,s:.52},{x:485,y:450,s:.52},{x:620,y:480,s:.52},{x:755,y:450,s:.52},{x:890,y:480,s:.52}]
+    : [{x:420,y:340,s:.5},{x:570,y:478,s:.65},{x:735,y:330,s:.5},{x:865,y:480,s:.62},{x:570,y:320,s:.5},{x:875,y:335,s:.5},{x:735,y:480,s:.58}];
+  groups.forEach((g,i)=>drawDemoPair(ctx,chars[i*2%chars.length],chars[(i*2+1)%chars.length],g.x,g.y,g.s,t+i*47,false));
 }
 
 function drawDemoPair(ctx: CanvasRenderingContext2D, left: CharId, right: CharId, x: number, y: number, scale: number, t: number, extraHit: boolean) {
@@ -229,7 +232,7 @@ export function FighterPortrait({ ch, size = 32, className = '' }: { ch: CharId;
     const ctx = canvas?.getContext('2d');
     if (!canvas || !ctx) return;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawPortrait(ctx, ch, size + 6, ch==='santox'?size*1.45+8:size+8, ch==='santox'?size*.58:size, { time: 0 });
+    drawPortrait(ctx, ch, size + 6, ch==='santox'?size*1.45+8:ch==='eneas'?size*.75+8:size+8, ch==='santox'?size*.58:ch==='eneas'?size*.7:size, { time: 0 });
   }, [ch, size]);
   return <canvas aria-hidden="true" ref={ref} width={(size + 6) * 2} height={(size + 8) * 2} className={className} />;
 }

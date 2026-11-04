@@ -8,7 +8,7 @@ import { captureState, applyState } from '../src/game/net-state';
 (globalThis as any).window={addEventListener(){},removeEventListener(){},setInterval(){return 0}};
 const make=(a:CharId='santox',b:CharId='caetano')=>{keyboard.down.clear();touchInput.clear();const g=new Game({mode:'training',p1:a,p2:b,difficulty:'normal',bindings:DEFAULT_BINDINGS},()=>{});g.train.dummy=3;g.f[0].x=500;g.f[1].x=820;return g;};
 const step=(g:Game,n:number)=>{for(let i=0;i<n;i++)g.step()};
-assert.equal(CHAR_IDS.length,10);assert.deepEqual(CHAR_CATEGORIES.Viewers,['santox','jao']);assert.equal(CHARS.santox.name,'1SANT0X');assert.equal(CHARS.jao.name,'JaoDoPikles');
+assert.equal(CHAR_IDS.length,13);assert.deepEqual(CHAR_CATEGORIES.Viewers,['santox','jao','jane','cristyan']);assert.equal(CHARS.santox.name,'1SANT0X');assert.equal(CHARS.jao.name,'JaoDoPikles');
 for(const [distance,guard,expected] of [[320,false,52],[440,false,0],[320,true,5.2]] as const){
  const g=make();g.f[1].x=500+distance;if(guard)keyboard.down.add('Numpad3');g.startMove(g.f[0],CHARS.santox.moves.s1);step(g,80);assert(Math.abs(g.f[1].maxHp-g.f[1].hp-expected)<.01,'elastic range/block/damage');g.destroy();
 }

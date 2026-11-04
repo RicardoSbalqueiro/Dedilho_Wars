@@ -1,6 +1,6 @@
 // Dados dos personagens: atributos, golpes (frame data) e poses do esqueleto.
 
-export const CHAR_IDS = ['caetano', 'orango', 'tubarao', 'rickzera', 'bieu', 'nomad', 'renngotti', 'aneninha', 'santox', 'jao'] as const;
+export const CHAR_IDS = ['caetano', 'orango', 'tubarao', 'rickzera', 'bieu', 'nomad', 'renngotti', 'aneninha', 'santox', 'jao', 'jane', 'cristyan', 'eneas'] as const;
 export type CharId = (typeof CHAR_IDS)[number];
 
 // Três usos compartilham o mesmo limite por lutador; rajadas contam como um uso.
@@ -9,13 +9,14 @@ export const RANGED_MOVES: Record<CharId, readonly string[]> = {
   bieu: ['s2', 's3'], nomad: ['s1', 's2', 's3'],
   renngotti: ['s2', 's3'], aneninha: ['s2', 's3'],
   santox: ['s1'], jao: ['s1', 's2', 's3'],
+  jane:['s1'],cristyan:[],eneas:['s1','s2','s3'],
 };
 
 
 export const CHAR_CATEGORIES = {
   Streamers: ['rickzera', 'caetano', 'nomad', 'bieu', 'renngotti', 'aneninha'],
-  Especiais: ['tubarao', 'orango'],
-  Viewers: ['santox', 'jao'],
+  Especiais: ['tubarao', 'orango', 'eneas'],
+  Viewers: ['santox', 'jao', 'jane', 'cristyan'],
 } as const satisfies Record<string, readonly CharId[]>;
 export type CharCategory = keyof typeof CHAR_CATEGORIES;
 
@@ -67,6 +68,7 @@ export interface Move {
   turn?: [number, number];
   charge?: boolean;
   variant?: 'low' | 'reverse';
+  spike?: boolean;
   sound?: 'purple' | 'red';
 }
 
@@ -473,6 +475,68 @@ Object.assign(jaoMoves,Object.fromEntries([
   mv('s3',{kind:'special',rank:9,startup:22,active:3,recovery:32,whiff:10,dmg:62,hitstun:25,blockstun:14,kb:10,kbBlock:5,hb:[20,110,65,140],hitstop:10,shake:8,power:1.8,poses:['ball_s','ball_a'],label:'ARREMESSO ABSOLUTO'}),
 ]));
 
+// ---------------------------------------------------------------- JANE / CRISTYAN / ENÉAS
+const janePoses:Record<string,Pose>={
+  ...Object.fromEntries(Object.entries(caetanoPoses).map(([k,p])=>[k,{...p}])),
+  idle:cp({lean:0,head:2,fa1:55,fa2:-80,ba1:112,ba2:-60,fl1:72,fl2:98,bl1:110,bl2:86}),
+  laptop_s:cp({lean:4,fa1:35,fa2:-30,ba1:135,ba2:160,fl1:42,fl2:110,bl1:140,bl2:65}),
+  laptop_a:cp({lean:18,head:14,fa1:30,fa2:-18,ba1:140,ba2:160,fl1:38,fl2:112,bl1:145,bl2:62}),
+  moto_s:cp({lean:24,fa1:15,fa2:-8,ba1:50,ba2:10,fl1:38,fl2:112,bl1:140,bl2:62}),
+  moto_a:cp({lean:-10,fa1:-12,fa2:-4,ba1:25,ba2:-15,fl1:20,fl2:105,bl1:150,bl2:65}),
+  slide_s:cp({lean:45,fa1:120,fa2:160,ba1:150,ba2:170,fl1:20,fl2:125,bl1:160,bl2:35}),
+  slide_a:cp({lean:48,fa1:100,fa2:145,ba1:130,ba2:160,fl1:10,fl2:25,bl1:145,bl2:55}),
+  kick_a:cp({lean:-25,fl1:-20,fl2:-15,bl1:105,bl2:94,fa1:80,fa2:-100}),
+  zord_s:cp({lean:-6,fa1:-80,fa2:-110,ba1:-125,ba2:-155}),
+  zord_a:cp({lean:15,fa1:-10,fa2:-2,ba1:125,ba2:-70,finger:1}),
+  dizzy:cp({lean:12,head:18,fa1:90,fa2:65,ba1:120,ba2:90,mouth:.2}),
+  win:cp({lean:-4,fa1:-65,fa2:-140,ba1:112,ba2:-40}),
+};
+const janeMoves=copyNormals(.78,0,-24);
+for(const m of Object.values(janeMoves))m.hb=[m.hb[0]*.75,Math.max(65,m.hb[1]),m.hb[2]*.58,m.hb[3]*.65];
+Object.assign(janeMoves,Object.fromEntries([
+ mv('s1',{kind:'special',rank:9,startup:18,active:12,recovery:22,whiff:0,dmg:18,hitstun:13,blockstun:8,kb:3,kbBlock:2,hb:[15,85,35,100],hitstop:4,shake:3,power:.8,poses:['laptop_s','laptop_a'],label:'FINGINDO QUE TÁ TRABALHANDO'}),
+ mv('s2',{kind:'special',rank:9,startup:12,active:300,recovery:24,whiff:0,dmg:11,hitstun:13,blockstun:8,kb:3,kbBlock:2,hb:[-65,110,0,115],hitstop:4,shake:4,power:.9,poses:['moto_s','moto_a'],label:'DANDO GRAU DE MOTO'}),
+ mv('s3',{kind:'special',rank:9,startup:22,active:5,recovery:25,whiff:10,dmg:58,hitstun:23,blockstun:13,kb:6,kbBlock:4,hb:[10,100,25,112],launch:4,launchVx:3,hitstop:8,shake:7,power:1.4,poses:['slide_s','kick_a'],advance:[1,17,9],trail:'fa',label:'POR BAIXO, DEPOIS CHUTE'}),
+]));
+const cristyanPoses:Record<string,Pose>={
+ ...Object.fromEntries(Object.entries(caetanoPoses).map(([k,p])=>[k,{...p}])),
+ idle:cp({lean:5,fa1:25,fa2:-100,ba1:75,ba2:-120,fl1:66,fl2:100,bl1:120,bl2:82}),
+ teep_s:cp({lean:-5,fl1:5,fl2:130,fa1:35,fa2:-105,ba1:90,ba2:-110}),
+ teep_a:cp({lean:-24,fl1:-5,fl2:-3,bl1:101,bl2:88,fa1:45,fa2:-105,ba1:100,ba2:-100}),
+ power_s:cp({lean:-26,ba1:135,ba2:-150,fa1:15,fa2:-100}),
+ power_a:cp({lean:28,ba1:-3,ba2:0,fa1:95,fa2:-110,fl1:50,fl2:100,bl1:135,bl2:90}),
+ spin_s:cp({lean:-15,fl1:10,fl2:135,fa1:-50,fa2:-110,ba1:130,ba2:170}),
+ spin_a:cp({lean:-35,fl1:-20,fl2:-18,bl1:100,bl2:90,fa1:-120,fa2:-155,ba1:145,ba2:165}),
+ hammock_s:cp({lean:8,fa1:20,fa2:-15,ba1:150,ba2:160}),
+ hammock_a:cp({lean:-10,fa1:-80,fa2:-120,ba1:-115,ba2:-150,fl1:35,fl2:110,bl1:135,bl2:70}),
+ slam_a:cp({lean:40,fa1:38,fa2:25,ba1:70,ba2:42,fl1:35,fl2:110,bl1:145,bl2:60}),
+};
+const cristyanMoves=copyNormals(.99,1,4);
+Object.assign(cristyanMoves,Object.fromEntries([
+ mv('s1',{kind:'special',rank:9,startup:11,active:4,recovery:23,whiff:10,dmg:62,hitstun:21,blockstun:13,kb:12,kbBlock:5,hb:[20,158,40,132],hitstop:8,shake:7,power:1.5,poses:['teep_s','teep_a'],trail:'fa',label:'CHUTE TEEP EMPURRANDO'}),
+ mv('s2',{kind:'special',rank:9,startup:21,active:4,recovery:32,whiff:16,dmg:90,hitstun:26,blockstun:15,kb:13,kbBlock:6,hb:[15,135,80,145],launch:7,launchVx:10,hitstop:12,shake:13,power:2.1,poses:['power_s','power_a'],trail:'bw',charge:true,label:'SOCO PODEROSO'}),
+ mv('s3',{kind:'special',rank:9,startup:17,active:7,recovery:28,whiff:12,dmg:74,hitstun:23,blockstun:14,kb:8,kbBlock:5,hb:[-45,155,40,160],launch:5,launchVx:5,hitstop:9,shake:9,power:1.8,poses:['spin_s','spin_a'],advance:[10,21,2.4],trail:'fa',turn:[5,22],label:'PIRUETA COM CHUTE'}),
+]));
+const eneasPoses:Record<string,Pose>={
+ ...Object.fromEntries(Object.entries(caetanoPoses).map(([k,p])=>[k,{...p}])),
+ idle:cp({lean:1,fa1:55,fa2:-65,ba1:105,ba2:-65,fl1:77,fl2:94,bl1:107,bl2:88}),
+ shout_s:cp({lean:-15,head:-12,fa1:30,fa2:-80,ba1:115,ba2:-70}),
+ shout_a:cp({lean:20,head:10,fa1:95,fa2:15,ba1:135,ba2:65,mouth:1}),
+ ecg_s:cp({lean:8,fa1:15,fa2:-90,ba1:110,ba2:-60}),
+ ecg_a:cp({lean:18,fa1:-5,fa2:0,ba1:125,ba2:-70,finger:1}),
+ five_s:cp({lean:-8,fa1:-55,fa2:-100,ba1:110,ba2:-65}),
+ five_a:cp({lean:15,fa1:-8,fa2:0,ba1:120,ba2:-65}),
+ six_a:cp({lean:20,fa1:25,fa2:10,ba1:130,ba2:145}),
+ atom_s:cp({lean:-4,fa1:-10,fa2:-105,ba1:110,ba2:-70,finger:1}),
+ atom_a:cp({lean:24,fa1:30,fa2:15,ba1:130,ba2:-40,mouth:1}),
+};
+const eneasMoves=copyNormals(.98,2,10);
+Object.assign(eneasMoves,Object.fromEntries([
+ mv('s1',{kind:'special',rank:9,startup:18,active:8,recovery:28,whiff:12,dmg:60,hitstun:25,blockstun:14,kb:11,kbBlock:6,hb:[15,275,20,180],hitstop:8,shake:10,power:1.7,poses:['shout_s','shout_a'],label:'MEU NOME É ENÉAS!'}),
+ mv('s2',{kind:'special',rank:9,startup:20,active:3,recovery:29,whiff:8,dmg:46,hitstun:22,blockstun:13,kb:6,kbBlock:3,hb:[20,110,65,140],hitstop:7,shake:6,power:1.3,poses:['ecg_s','ecg_a'],label:'DIAGNÓSTICO FATAL'}),
+ mv('s3',{kind:'special',rank:9,startup:22,active:14,recovery:30,whiff:8,dmg:28,hitstun:21,blockstun:11,kb:3,kbBlock:2,hb:[20,110,55,145],launch:8,launchVx:2,hitstop:5,shake:6,power:1.2,poses:['five_s','five_a'],label:'56 NA TESTA!'}),
+]));
+
 export const CHARS: Record<CharId, CharDef> = {
   caetano: {
     id: 'caetano',
@@ -657,6 +721,45 @@ export const CHARS: Record<CharId, CharDef> = {
     ],
     superName:'CHESS IS LIFE',quote:'XEQUE-MATE. A CONTA FECHOU.',
     bio:'Estratégia com xadrez, matemática e basquete. Crie espaço com o tabuleiro, depois confirme a fórmula ou o arremesso.',
+  },
+  jane:{
+    id:'jane',name:'JANE',short:'JANE',title:'PEQUENA NO TAMANHO, GIGANTE NO DEPLOY',
+    color:'#eab308',color2:'#854d0e',glow:'#fef08a',
+    hp:860,walk:4.6,walkBack:3.7,jumpVy:15.8,jumpVx:5.4,dashVx:11,dashDur:14,pushW:20,hurtH:115,crouchH:72,moves:janeMoves,poses:janePoses,
+    attrs:[{label:'VELOCIDADE',v:5},{label:'FORÇA',v:2},{label:'ALCANCE',v:3},{label:'RESISTÊNCIA',v:2},{label:'MOBILIDADE',v:5}],
+    specials:[
+      {key:'U',name:'FINGINDO QUE TÁ TRABALHANDO',desc:'Cochila com o laptop e lança dois comandos Java. Dano baixo; a dupla conta como um uso à distância.'},
+      {key:'I',name:'DANDO GRAU DE MOTO',desc:'Segure ESP 2: até 5 s e seis contatos. Passar de 5 s derruba a moto e deixa Jane tonta por 1 s. Recarga de 3 s.'},
+      {key:'O',name:'POR BAIXO, DEPOIS CHUTE',desc:'Desliza sob o rival próximo e vira para chutar. Ataques baixos interrompem a passagem.'},
+    ],
+    superName:'AREIAZORD',quote:'FUNCIONA NA MINHA MÁQUINA. E NO MEU ROBÔ.',
+    bio:'Adulta de baixa estatura, loira com franja e jaqueta branca. Mobilidade e comandos Java compensam vida e alcance curtos.',
+  },
+  cristyan:{
+    id:'cristyan',name:'CRISTYAN',short:'CRISTYAN',title:'O PESO DO MUAY THAI BAIANO',
+    color:'#f97316',color2:'#7c2d12',glow:'#fed7aa',
+    hp:1060,walk:3.9,walkBack:3.1,jumpVy:15.7,jumpVx:4.6,dashVx:9.6,dashDur:16,pushW:30,hurtH:179,crouchH:109,moves:cristyanMoves,poses:cristyanPoses,
+    attrs:[{label:'VELOCIDADE',v:3},{label:'FORÇA',v:4},{label:'ALCANCE',v:3},{label:'RESISTÊNCIA',v:4},{label:'TÉCNICA',v:4}],
+    specials:[
+      {key:'U',name:'CHUTE TEEP EMPURRANDO',desc:'Chute frontal que afasta o rival. Pode ser defendido; use para controlar o espaço.'},
+      {key:'I',name:'SOCO PODEROSO',desc:'Prepara um soco que arremessa para longe. O erro deixa uma recuperação longa e vulnerável.'},
+      {key:'O',name:'PIRUETA COM CHUTE',desc:'Gira com um chute amplo de um acerto. Sem invulnerabilidade: antecipe ou defenda.'},
+    ],
+    superName:'REDE BAIANA',quote:'DESCANSOU? AGORA ACORDA PRA REVANCHE.',
+    bio:'Pressão de perto com teep, força e giro. Precisa se aproximar e confirmar acertos; não tem projéteis.',
+  },
+  eneas:{
+    id:'eneas',name:'DOUTOR ENÉAS',short:'ENÉAS',title:'CIÊNCIA EM VOLUME MÁXIMO',
+    color:'#22c55e',color2:'#166534',glow:'#fef08a',
+    hp:1080,walk:3.2,walkBack:2.6,jumpVy:15,jumpVx:4,dashVx:8.5,dashDur:17,pushW:31,hurtH:184,crouchH:114,moves:eneasMoves,poses:eneasPoses,
+    attrs:[{label:'VELOCIDADE',v:2},{label:'FORÇA',v:3},{label:'ALCANCE',v:4},{label:'RESISTÊNCIA',v:4},{label:'CIÊNCIA',v:5}],
+    specials:[
+      {key:'U',name:'MEU NOME É ENÉAS!',desc:'Onda sonora de médio alcance que atordoa brevemente e empurra. Pode ser defendida.'},
+      {key:'I',name:'DIAGNÓSTICO FATAL',desc:'Dispara um eletrocardiograma elétrico pelo estetoscópio. No acerto: CASO GRAVE!'},
+      {key:'O',name:'56 NA TESTA!',desc:'O 5 lança e o 6 derruba. Dois projéteis bloqueáveis; a sequência conta como um uso à distância.'},
+    ],
+    superName:'BOMBA ATÔMICA BRASILEIRA',quote:'MEU NOME É ENÉAS!',
+    bio:'Médio alcance com voz, ECG e números. Preparação e recuperação lentas exigem controlar a distância e respeitar a recarga.',
   },
 };
 

@@ -17,10 +17,11 @@ export interface AIState {
   expectSerial: number;
   dashAt: number;
   crouchT: number;
+  bikeUntil:number;
 }
 
 export function newAI(): AIState {
-  return { tapAt: {}, thinkT: 0, walk: 0, stopDist: 120, seen: -1, blockT: 0, blockUntil: -1, blockLow: false, guardT: 0, plan: [], planStep: 0, expectSerial: -1, dashAt: -1, crouchT: 0 };
+  return { tapAt: {}, thinkT: 0, walk: 0, stopDist: 120, seen: -1, blockT: 0, blockUntil: -1, blockLow: false, guardT: 0, plan: [], planStep: 0, expectSerial: -1, dashAt: -1, crouchT: 0,bikeUntil:0 };
 }
 
 const PROFILE = {
@@ -53,6 +54,7 @@ export function aiAct(g: Game, f: Fighter, diff: Difficulty) {
     pad.set(a, true, tk);
     ai.tapAt[a] = tk;
   };
+  if(f.ch==='jane'&&f.move?.id==='s2')pad.set('s2',tk<ai.bikeUntil,tk);
 
   const dx = o.x - f.x;
   const dist = Math.abs(dx);
@@ -167,6 +169,24 @@ export function aiAct(g: Game, f: Fighter, diff: Difficulty) {
         ai.walk = -1;
         ai.stopDist = 400;
       } else ai.guardT = tk + 20 + Math.floor(rnd() * 30);
+    } else if(f.ch==='jane'){
+      if(dist>420){ai.walk=1;ai.stopDist=300;if(f.rangedCooldown===0&&r<P.spec*.5)tap('s1');}
+      else if(dist>180&&f.rangedCooldown===0){tap('s1');ai.walk=dist<230?-1:0;ai.stopDist=270;}
+      else if(dist<120&&f.bikeCooldown===0&&r<P.spec*.35){ai.bikeUntil=tk+45+Math.floor(rnd()*110);tap('s2');ai.walk=0;}
+      else if(dist<150&&r<P.spec*.65){tap('s3');ai.walk=0;}
+      else if(dist<110&&r<P.aggr)startPlan(['p','p','k','s3']);
+      else {ai.walk=dist<180?-1:1;ai.stopDist=260;}
+    } else if(f.ch==='cristyan'){
+      if(dist>270){ai.walk=1;ai.stopDist=140;if(r>.8)ai.dashAt=tk+4;}
+      else if(dist>150){if(r<P.spec*.55)tap('s1');else {ai.walk=1;ai.stopDist=95;}}
+      else if(o.state==='attack'&&o.move&&o.moveT>=o.move.startup+o.move.active&&r<P.spec)tap('s2');
+      else if(r<P.aggr+.1)startPlan(rnd()<.5?['p','p','k','s1']:['k','p','k','s3']);
+      else ai.guardT=tk+22;
+    } else if(f.ch==='eneas'){
+      if(dist>480){ai.walk=1;ai.stopDist=320;}
+      else if(dist>150&&f.rangedCooldown===0){ai.walk=0;tap(dist<275&&r<.35?'s1':r<.7?'s2':'s3');}
+      else if(dist<145&&r<P.aggr)startPlan(['p','k','p','s1']);
+      else {ai.walk=dist<230?-1:1;ai.stopDist=280;if(r>.75)ai.guardT=tk+18;}
     } else if(f.ch==='santox'){
       if(o.state==='attack'&&dist<220&&f.fourthCooldown===0&&r<P.spec*.6){tap('s3');ai.walk=0;}
       else if(dist>390){ai.walk=1;ai.stopDist=280;if(r>.85)tap('up');}

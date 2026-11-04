@@ -1,6 +1,6 @@
 # DEDILHO WARS
 
-Jogo de luta 2D com dez lutadores, 17 cenários, finishers, progressão e rádio integrada.
+Jogo de luta 2D com 13 lutadores, 17 cenários, finishers, progressão e rádio integrada.
 
 ## Jogar
 
@@ -11,12 +11,12 @@ O ZIP inclui tanto o jogo pronto como o código-fonte. O index.html da raiz é a
 ## Seleção e cenários
 
 - **Streamers:** Rickzera, Karatê Caetano, Nomad Lobby, Bieubatman, Renngotti e Aneninha.
-- **Viewers:** 1SANT0X e JaoDoPikles.
-- **Especiais:** Tubarão Fiscal e Orango Tango Bitencourt.
+- **Viewers:** 1SANT0X, JaoDoPikles, Jane e Cristyan.
+- **Especiais:** Tubarão Fiscal, Orango Tango Bitencourt e Doutor Enéas.
 
 Use Q/E ou Tab para trocar de categoria, setas/WASD para escolher e Enter para confirmar. Escolha P1 e depois o adversário; ambos podem usar o mesmo personagem. A próxima tela escolhe o cenário e permite uma seleção aleatória. Há troca de lutadores e de mapa na pausa e após a partida; a revanche mantém o confronto atual.
 
-Arenas originais: **Neto Supermercados**, **Dojo Senbukan**, **Liberdade SP**, **Curitiba**, **Piauí** e **Palácio do Planalto**. A geometria de combate é compartilhada; cada cenário tem seu próprio desenho, arquitetura e chão. A abertura usa um cenário aleatório e uma demonstração visual de luta entre os dez personagens, sem interferir nos controles do menu ou na rádio.
+Arenas originais: **Neto Supermercados**, **Dojo Senbukan**, **Liberdade SP**, **Curitiba**, **Piauí** e **Palácio do Planalto**. A geometria de combate é compartilhada; cada cenário tem seu próprio desenho, arquitetura e chão. A abertura usa um cenário aleatório e uma demonstração visual de luta entre os 13 personagens, sem interferir nos controles do menu ou na rádio.
 
 Novas arenas: **Casebre**, **Praça do Dedilhador**, **Osasco**, **Bolívia**, **Morro do Bieu**, **Campo do futebol dos campeões**, **Casa Branca com Ovnis** (ideia de Jalam), **Praia do Lets Gay** (ideia de Jalam e Diegão), **Lugar do NGB News**, **Zoológico do Orangotango** e **Praia da Termodinâmica**. Todas têm arte, pisos e detalhes animados próprios. A seleção tem três páginas; os 17 mapas também participam do sorteio da abertura e das salas online.
 
@@ -39,9 +39,23 @@ Todos têm um agarrão curto com **G / Num7** ou o botão **AGARRAR**. Pressiona
 
 Ambos têm os modos locais, IA, treino, online, controles de toque, falas, perfil/histórico e finalização do restante do elenco. O desafio Arsenal completo reconhece uma esquiva real com a Quarta Parede e um rival em movimento afetado pelo Tabuleiro; o simples uso dessas habilidades não conclui o objetivo.
 
+## Jane, Cristyan e Doutor Enéas
+
+**Jane (Viewer)** é uma mulher adulta de baixa estatura: cabelo loiro em bob com franja reta, jaqueta branca, corpo pequeno de cerca de 60% da altura de Caetano. Tem 860 HP, normais de alcance curto e dano em ×0,78. Seus comandos Java saem do laptop em uma dupla de 18+18; a dupla conta como um uso à distância.
+
+Para **Dando Grau de Moto**, segure **I / Num5 / ESP 2**. Jane fica parada girando a moto por até cinco segundos. O giro acelera, mas só permite **seis contatos**, com intervalo mínimo de meio segundo e dano de 11 a 15 por contato, inclusive contando contatos defendidos. Não há armadura ou invulnerabilidade; ataques e agarrões podem interromper. Soltar antes do limite evita a queda e inicia a recuperação. **Segurar além de cinco segundos derruba a moto e deixa Jane tonta e vulnerável por exatamente um segundo.** O HUD mostra o tempo, os contatos e a tontura. Soltar, cair ou ser interrompida inicia a **recarga de três segundos**. A pausa congela esses tempos; um novo round os reinicia.
+
+O terceiro especial desliza fisicamente por baixo de um rival próximo, vira para ele e chuta por 58. A passagem usa uma caixa baixa e pode ser interrompida por ataques baixos; não concede invulnerabilidade. **AreiaZord** cria um robô branco e amarelo com ampulheta e um laser de cinco pulsos, 250 no total. Finisher: **Deploy do AreiaZord**.
+
+**Cristyan (Viewer)** tem 1060 HP e normais em ×0,99. Teep causa 62 e empurra; Soco Poderoso causa 90 e arremessa, mas tem 21 quadros de preparação e recuperação longa; Pirueta causa 74 em um único acerto. Nenhum desses golpes dá armadura ou invulnerabilidade. **Rede Baiana** põe o rival para dormir numa rede, seguida de salto e impacto que quebra a rede; 260 no total. Finisher: **Sentença da Rede**.
+
+**Doutor Enéas (Especiais)** tem 1080 HP e mobilidade mais lenta. Seu grito causa 60 em médio alcance e atordoa brevemente; o ECG causa 46 e mostra **CASO GRAVE!**. **56 na Testa!** lança com o 5 (28) e derruba com o 6 (34): ambos podem ser defendidos e a dupla conta como um uso. Seus três especiais compartilham o limite geral de distância. **Bomba Atômica Brasileira** é uma cinemática cartunesca com óculos, discurso rápido, botão vermelho, míssil 56 e explosão verde/amarela; causa 275 no total e termina com “MEU NOME É ENÉAS!”. Finisher: **56 no Placar**.
+
+Os três têm IA, normais, defesa, agarrão, desafios, ULT, finisher, falas e suporte completo a partidas locais, celular, online e histórico. As Ultimates precisam capturar em alcance finito e podem errar. O restante do elenco mantém seus atributos.
+
 ## Finishers e apresentação
 
-Após o KO do round decisivo, o vencedor tem quatro segundos para pressionar **ULT** (H, Num0 ou botão de toque) e executar seu finisher. A janela expira para a vitória normal; o finisher não gasta barra e só o vencedor pode ativá-lo. Cada um dos dez personagens tem uma sequência própria de preparação, impacto e resultado, com props e efeitos de sua identidade. O finisher também é sincronizado no online e aparece no histórico.
+Após o KO do round decisivo, o vencedor tem quatro segundos para pressionar **ULT** (H, Num0 ou botão de toque) e executar seu finisher. A janela expira para a vitória normal; o finisher não gasta barra e só o vencedor pode ativá-lo. Cada um dos 13 personagens tem uma sequência própria de preparação, impacto e resultado, com props e efeitos de sua identidade. O finisher também é sincronizado no online e aparece no histórico.
 
 Os confrontos têm provocações específicas entre Caetano, Orango, Renngotti e Aneninha. O narrador, os títulos de vitória e os efeitos de impacto acompanham os personagens. A trilha original usa seis variações de ritmo/escala conforme a arena, preservando a rádio e os sete raps completos.
 
@@ -59,6 +73,9 @@ Os confrontos têm provocações específicas entre Caetano, Orango, Renngotti e
 | Aneninha | Soco de Osasco | Pichar Muro para representar Osasco | Grito Alto | Yo Soy de Bolivia. |
 | 1SANT0X | Soco elástico a longa distância | Chute do Coelho | Quebrar a Quarta Parede | Abstração |
 | JaoDoPikles | Tabuleiro de Xadrez | Símbolos da Matemática | Arremesso Absoluto | Chess is Life |
+| Jane | Fingindo que tá Trabalhando | Dando Grau de Moto | Por baixo, depois chute | AreiaZord |
+| Cristyan | Chute Teep Empurrando | Soco Poderoso | Pirueta com Chute | Rede Baiana |
+| Doutor Enéas | Meu Nome é Enéas! | Diagnóstico Fatal | 56 na Testa! | Bomba Atômica Brasileira |
 
 Renngotti arremessa o oponente para o alto e permite continuar com um combo aéreo. O microfone é um projétil em arco; o grito tem alcance frontal e empurrão, mas pode ser defendido. TILT usa uma mesa em uma sequência cinematográfica.
 
@@ -103,7 +120,7 @@ Selecionar um desafio reinicia as posições; o desafio de defesa ativa a IA. Co
 
 Após três usos de golpes à distância, o lutador passa cinco segundos sem poder iniciar outro golpe à distância. O contador é compartilhado entre seus especiais: uma rajada inteira conta como um uso, independentemente de acertar. Corpo a corpo, defesa, movimento e ULT continuam disponíveis. O HUD mostra usos e tempo restante. A pausa local congela o relógio; um novo round reinicia o limite. A regra vale para humanos, IA, treinamento e online.
 
-Entram no limite os projéteis, as pichações, os gritos, o Dedilho Supremo do Orangotango, o Soco Elástico e os três especiais de JaoDoPikles. Caetano e Tubarão mantêm seus especiais de contato. Os ganhos de ULT continuam em ×0,5.
+Entram no limite os projéteis, as pichações, os gritos, o Dedilho Supremo do Orangotango, o Soco Elástico, os comandos Java de Jane e os três especiais de JaoDoPikles e Enéas. Caetano e Tubarão mantêm seus especiais de contato. Os ganhos de ULT continuam em ×0,5.
 
 Bieubatman recebeu redução de aproximadamente 9% nos normais, Chave de Fenda 88→80, Rato 46→42, Pichação 18→16 e Prestígio 300→275. Nomad tem normais em ×1, Burger 58→52, cada tiro 23→20, Boomerang 42→38 e Arena 310→285. Alguns especiais também recuperam mais lentamente, mantendo seus movimentos e identidades.
 

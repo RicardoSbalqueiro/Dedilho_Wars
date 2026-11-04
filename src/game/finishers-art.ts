@@ -3,6 +3,7 @@ import { CHARS } from './data';
 import type { CharId } from './data';
 import { drawBolivianDancer, drawFullBody, drawPortrait } from './rig';
 import { drawViewerFinisher } from './viewer-art';
+import { drawTrioFinisher } from './trio-art';
 
 export const FINISHER_NAMES: Record<CharId, string> = {
   caetano: 'MIL DEDILHOS DO DESTINO',
@@ -15,9 +16,10 @@ export const FINISHER_NAMES: Record<CharId, string> = {
   aneninha: 'APOTEOSE BOLIVIANA',
   santox:'FORA DO ROTEIRO',
   jao:'XEQUE-MATE ABSOLUTO',
+  jane:'DEPLOY DO AREIAZORD',cristyan:'SENTENÇA DA REDE',eneas:'56 NO PLACAR',
 };
 
-type ClassicChar = Exclude<CharId, 'santox' | 'jao'>;
+type ClassicChar = Exclude<CharId, 'santox' | 'jao' | 'jane' | 'cristyan' | 'eneas'>;
 const CAPTIONS: Record<ClassicChar, [string, string, string]> = {
   caetano: ['Um dedo. Precisão absoluta.', 'Uma rajada de pontos de pressão!', 'Cada dedilho encontrou seu destino.'],
   orango: ['A arena sente o chamado da selva.', 'Força primal! O chão vira um tambor.', 'O rei da selva fez a arena tremer.'],
@@ -253,6 +255,7 @@ const SCENES: Record<ClassicChar, (ctx: CanvasRenderingContext2D, loser: CharId,
 
 /** Cena em coordenadas de tela 960×540; t e duration são ticks do motor. */
 export function drawFinisherArt(ctx: CanvasRenderingContext2D, winner: CharId, loser: CharId, t: number, duration: number): void {
+  if(winner==='jane'||winner==='cristyan'||winner==='eneas'){drawTrioFinisher(ctx,winner,loser,t,duration);return;}
   if(winner==='santox'||winner==='jao'){drawViewerFinisher(ctx,winner,loser,t,duration);return;}
   const time = clamp(t / Math.max(1, duration)) * 210;
   const phase = time < 44 ? 0 : time < 157 ? 1 : 2;
