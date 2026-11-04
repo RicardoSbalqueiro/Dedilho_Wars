@@ -1,7 +1,7 @@
 import { rememberMatch, leaderboard, profile, submitResult } from './progression.js';
 // Public game API. Application accounts use usernames, never email addresses.
-const VERSION = 'dw-online-2';
-const CHARS = ['caetano','orango','tubarao','rickzera','bieu','nomad','renngotti','aneninha'];
+const VERSION = 'dw-online-3';
+const CHARS = ['caetano','orango','tubarao','rickzera','bieu','nomad','renngotti','aneninha','santox','jao'];
 const STAGES = ['neto','dojo','liberdade','curitiba','piaui','planalto','casebre','praca','osasco','bolivia','morro','campo','casabranca','letsgay','ngb','zoologico','termodinamica'];
 const COOKIE = 'dw_session';
 const encoder = new TextEncoder();

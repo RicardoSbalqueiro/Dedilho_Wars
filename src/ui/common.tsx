@@ -85,6 +85,8 @@ const POSES: Record<CharId, string[]> = {
   nomad: ['idle', 'idle', 'burger_a', 'idle', 'glock_a', 'idle', 'boomerang_a', 'idle', 'taunt', 'win'],
   renngotti: ['idle', 'idle', 'pM_a', 'idle', 'kH_a', 'idle', 'taunt', 'idle', 'pH_a', 'win'],
   aneninha: ['idle','dance1','osasco_a','idle','paint_a','dance2','shout_a','idle','win','dance1'],
+  santox:['idle','fourth_a','elastic_a','idle','rabbit_a','idle','abstract_a','idle','taunt','win'],
+  jao:['idle','chess_a','idle','math_a','idle','ball_a','idle','calculation_a','taunt','win'],
 };
 
 export function ArtCanvas({ variant, selected }: { variant: ArtVariant; selected?: CharId }) {
@@ -143,13 +145,13 @@ export function ArtCanvas({ variant, selected }: { variant: ArtVariant; selected
 }
 
 // Demonstração coreografada sem controles, áudio ou instâncias do motor de partida.
-// Cada dupla alterna ataques, acertos e recuos. Os oito lutadores aparecem em quatro duplas.
+// Cada dupla alterna ataques, acertos e recuos. As duplas alternam o elenco completo.
 function drawDemoBrawl(ctx: CanvasRenderingContext2D, t: number, splash: boolean) {
   const rotation = Math.floor(t / 560) % CHAR_IDS.length;
   const chars = CHAR_IDS.map((_, i) => CHAR_IDS[(i + rotation) % CHAR_IDS.length]);
   const groups = splash
-    ? [{x:120,y:480,s:.9},{x:360,y:470,s:.9},{x:600,y:480,s:.9},{x:840,y:470,s:.9}]
-    : [{x:430,y:354,s:.65},{x:610,y:478,s:.9},{x:770,y:350,s:.65},{x:860,y:480,s:.8}];
+    ? [{x:100,y:480,s:.68},{x:290,y:460,s:.68},{x:480,y:480,s:.68},{x:670,y:460,s:.68},{x:860,y:480,s:.68}]
+    : [{x:420,y:340,s:.58},{x:610,y:478,s:.8},{x:770,y:338,s:.6},{x:860,y:480,s:.7},{x:590,y:330,s:.58}];
   groups.forEach((g,i)=>drawDemoPair(ctx,chars[i*2],chars[i*2+1],g.x,g.y,g.s,t+i*47,false));
 }
 
@@ -227,7 +229,7 @@ export function FighterPortrait({ ch, size = 32, className = '' }: { ch: CharId;
     const ctx = canvas?.getContext('2d');
     if (!canvas || !ctx) return;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawPortrait(ctx, ch, size + 6, size + 8, size, { time: 0 });
+    drawPortrait(ctx, ch, size + 6, ch==='santox'?size*1.45+8:size+8, ch==='santox'?size*.58:size, { time: 0 });
   }, [ch, size]);
   return <canvas aria-hidden="true" ref={ref} width={(size + 6) * 2} height={(size + 8) * 2} className={className} />;
 }

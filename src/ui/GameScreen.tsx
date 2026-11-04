@@ -42,7 +42,7 @@ export function GameScreen({ cfg, onExit, onSelect, onMap, onRadio, inputSuspend
     let raf = 0,lastCinematic=false;
     const loop = (now: number) => {
       game.advance(now);
-      if((game.phase==='finisher')!==lastCinematic){lastCinematic=game.phase==='finisher';setCinematic(lastCinematic);}
+      if((game.phase==='finisher'||!!game.seq?.kind.startsWith('super'))!==lastCinematic){lastCinematic=game.phase==='finisher'||!!game.seq?.kind.startsWith('super');setCinematic(lastCinematic);}
       render(ctx, game, stage, game.tick);
       raf = requestAnimationFrame(loop);
     };

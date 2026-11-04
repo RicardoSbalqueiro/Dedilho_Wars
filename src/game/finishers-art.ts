@@ -2,6 +2,7 @@
 import { CHARS } from './data';
 import type { CharId } from './data';
 import { drawBolivianDancer, drawFullBody, drawPortrait } from './rig';
+import { drawViewerFinisher } from './viewer-art';
 
 export const FINISHER_NAMES: Record<CharId, string> = {
   caetano: 'MIL DEDILHOS DO DESTINO',
@@ -12,9 +13,12 @@ export const FINISHER_NAMES: Record<CharId, string> = {
   nomad: 'LOBBY FECHADO',
   renngotti: 'RESSONÂNCIA LUNAR',
   aneninha: 'APOTEOSE BOLIVIANA',
+  santox:'FORA DO ROTEIRO',
+  jao:'XEQUE-MATE ABSOLUTO',
 };
 
-const CAPTIONS: Record<CharId, [string, string, string]> = {
+type ClassicChar = Exclude<CharId, 'santox' | 'jao'>;
+const CAPTIONS: Record<ClassicChar, [string, string, string]> = {
   caetano: ['Um dedo. Precisão absoluta.', 'Uma rajada de pontos de pressão!', 'Cada dedilho encontrou seu destino.'],
   orango: ['A arena sente o chamado da selva.', 'Força primal! O chão vira um tambor.', 'O rei da selva fez a arena tremer.'],
   tubarao: ['A fiscalização chegou por mar.', 'Na malha fina de uma maré gigante!', 'Fiscalizado, carimbado e devolvido à praia.'],
@@ -245,10 +249,11 @@ function aneninha(ctx: CanvasRenderingContext2D, loser: CharId, t: number) {
   if (t > 95) text(ctx, 'YO SOY DE BOLIVIA!', 580, 126, 36, '#fff3a8', 650);
 }
 
-const SCENES: Record<CharId, (ctx: CanvasRenderingContext2D, loser: CharId, time: number) => void> = { caetano, orango, tubarao, rickzera, bieu, nomad, renngotti, aneninha };
+const SCENES: Record<ClassicChar, (ctx: CanvasRenderingContext2D, loser: CharId, time: number) => void> = { caetano, orango, tubarao, rickzera, bieu, nomad, renngotti, aneninha };
 
 /** Cena em coordenadas de tela 960×540; t e duration são ticks do motor. */
 export function drawFinisherArt(ctx: CanvasRenderingContext2D, winner: CharId, loser: CharId, t: number, duration: number): void {
+  if(winner==='santox'||winner==='jao'){drawViewerFinisher(ctx,winner,loser,t,duration);return;}
   const time = clamp(t / Math.max(1, duration)) * 210;
   const phase = time < 44 ? 0 : time < 157 ? 1 : 2;
   const def = CHARS[winner];

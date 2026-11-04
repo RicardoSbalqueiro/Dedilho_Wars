@@ -32,14 +32,14 @@ try {
  assert.equal((await call(path+'/start',{},guest.cookie)).status,403);
  assert.equal((await call(path+'/start',{},a.cookie)).status,409);
  assert.equal((await call(path+'/configure',{char:'not-a-fighter'},a.cookie)).status,400);
- await call(path+'/configure',{char:'aneninha',stage:'curitiba',ready:true},a.cookie);
- const gcfg=await call(path+'/configure',{char:'nomad',stage:'piaui',ready:true},guest.cookie);assert.equal(gcfg.body.room.stage,'curitiba');
+ await call(path+'/configure',{char:'santox',stage:'curitiba',ready:true},a.cookie);
+ const gcfg=await call(path+'/configure',{char:'jao',stage:'piaui',ready:true},guest.cookie);assert.equal(gcfg.body.room.stage,'curitiba');
  const start=await call(path+'/start',{},a.cookie);assert.equal(start.status,200);const epoch=start.body.room.epoch;assert(epoch);
  assert.equal((await call(path+'/configure',{char:'caetano'},guest.cookie)).status,409);
  assert.equal((await call(path+'/sync',{epoch:'old',n:1,input:8},guest.cookie)).status,409);
  assert.equal((await call(path+'/sync',{epoch,n:1,input:{mask:4096,events:[]}},guest.cookie)).status,400);
  assert.equal((await call(path+'/sync',{epoch,n:1,input:{mask:16,events:[{id:1,mask:16}]}},outsider.cookie)).status,403);
- const state={v:'dw-online-2',f:[{hp:1000},{hp:900}],g:{tick:10}};
+ const state={v:'dw-online-3',f:[{hp:1000},{hp:900}],g:{tick:10}};
  await call(path+'/sync',{epoch,n:2,state},a.cookie);
  const sync=await call(path+'/sync',{epoch,n:3,input:{mask:16,events:[{id:1,mask:16}]}},guest.cookie);assert.deepEqual(sync.body.value,state);assert.equal(sync.body.n,2);
  const hostSync=await call(path+'/sync',{epoch,n:1,state:{...state,g:{tick:1}}},a.cookie);assert.deepEqual(hostSync.body.value,{mask:16,events:[{id:1,mask:16}]});assert.equal(hostSync.body.n,3);
@@ -62,7 +62,7 @@ try {
  const repeats=await Promise.all(Array.from({length:6},()=>call('/results/'+epoch,report,a.cookie)));assert(repeats.every(x=>x.status===200));
  const pa=await call('/profile',undefined,a.cookie),pg=await call('/profile',undefined,guest.cookie);
  assert.equal(pa.body.user.games,1);assert.equal(pa.body.user.wins,1);assert.equal(pa.body.user.points,3);assert.equal(pa.body.user.xp,120);assert.equal(pa.body.user.finishers,1);assert.equal(pg.body.user.games,1);assert.equal(pg.body.user.losses,1);
- assert.equal(pa.body.history[0].status,'confirmed');assert.equal(pa.body.history[0].stage,'curitiba');
+ assert.equal(pa.body.history[0].host_char,'santox');assert.equal(pa.body.history[0].guest_char,'jao');assert.equal(pa.body.history[0].status,'confirmed');assert.equal(pa.body.history[0].stage,'curitiba');
  const ranks=await call('/leaderboard');assert.equal(ranks.body.players[0].id,a.body.user.id);assert.equal(ranks.body.players[0].rank,1);
  assert.equal((await call('/results/'+epoch,{winner:1,hostScore:1,guestScore:2},a.cookie)).status,409);
  const next=await call('/rooms',{},a.cookie),p2='/rooms/'+next.body.room.code;await call(p2+'/join',{},guest.cookie);await call(p2+'/configure',{ready:true},a.cookie);await call(p2+'/configure',{ready:true},guest.cookie);

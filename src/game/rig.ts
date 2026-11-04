@@ -17,9 +17,12 @@ export interface DrawOpts {
   poseName?: string; // nome da pose para acessórios articulados
   costume?: number;
   kiss?: boolean; // pose de finalização do Tubarão Fiscal
+  stretch?: number; // alcance visual da luva elástica, em unidades do mundo
 }
 
 const G = {
+  santox: { T: 60, th: 46, sh: 43, ua: 35, fo: 32, headR: 20, foot: 18, hOff: 1.1, hFwd: 1 },
+  jao: { T: 58, th: 43, sh: 42, ua: 32, fo: 30, headR: 18, foot: 16, hOff: 1.1, hFwd: 2 },
   aneninha: { T: 54, th: 40, sh: 39, ua: 29, fo: 27, headR: 17, foot: 14, hOff: 1.1, hFwd: 2 },
   caetano: { T: 58, th: 44, sh: 44, ua: 32, fo: 30, headR: 17, foot: 14, hOff: 1.15, hFwd: 2 },
   orango: { T: 62, th: 34, sh: 30, ua: 52, fo: 50, headR: 21, foot: 17, hOff: 0.85, hFwd: 6 },
@@ -121,7 +124,7 @@ function circ(ctx: CanvasRenderingContext2D, x: number, y: number, r: number, fi
   }
 }
 
-function ell(ctx: CanvasRenderingContext2D, x: number, y: number, rx: number, ry: number, fill: string, stroke?: string, lw = 2, rot = 0) {
+function ell(ctx: CanvasRenderingContext2D, x: number, y: number, rx: number, ry: number, fill: string | CanvasGradient, stroke?: string, lw = 2, rot = 0) {
   ctx.beginPath();
   ctx.ellipse(x, y, Math.max(0.1, rx), Math.max(0.1, ry), rot, 0, Math.PI * 2);
   ctx.fillStyle = fill;
@@ -159,7 +162,9 @@ function tufts(ctx: CanvasRenderingContext2D, a: P2, b: P2, w: number, n: number
 
 // ------------------------------------------------------------ CABEÇAS
 export function drawHead(ctx: CanvasRenderingContext2D, ch: CharId, r: number, o: DrawOpts) {
-  if (ch === 'caetano') headCaetano(ctx, r, o);
+  if (ch === 'santox') headSantox(ctx, r, o);
+  else if (ch === 'jao') headJao(ctx, r, o);
+  else if (ch === 'caetano') headCaetano(ctx, r, o);
   else if (ch === 'orango') headOrango(ctx, r, o);
   else if (ch === 'tubarao') headTubarao(ctx, r, o);
   else if (ch === 'rickzera') headRickzera(ctx, r, o);
@@ -422,7 +427,9 @@ function headOrango(ctx: CanvasRenderingContext2D, r: number, o: DrawOpts) {
 
 // ------------------------------------------------------------ CORPOS
 export function drawRig(ctx: CanvasRenderingContext2D, ch: CharId, rig: Rig, pose: Pose, o: DrawOpts) {
-  if (ch === 'caetano') drawCaetano(ctx, rig, pose, o);
+  if (ch === 'santox') drawSantox(ctx, rig, pose, o);
+  else if (ch === 'jao') drawJao(ctx, rig, pose, o);
+  else if (ch === 'caetano') drawCaetano(ctx, rig, pose, o);
   else if (ch === 'orango') drawOrango(ctx, rig, pose, o);
   else if (ch === 'tubarao') drawTubarao(ctx, rig, pose, o);
   else if (ch === 'rickzera') drawRickzera(ctx, rig, pose, o);
@@ -1371,6 +1378,176 @@ export function drawBolivianDancer(ctx:CanvasRenderingContext2D,x:number,y:numbe
   const rig=computeRig('aneninha',pose);
   ctx.save();ctx.translate(x,y-Math.abs(Math.sin(time*Math.PI/12))*7*scale);ctx.scale(flip?-scale:scale,scale);
   drawRig(ctx,'aneninha',rig,pose,{time,poseName:key,costume});ctx.restore();
+}
+
+// ------------------------------------------------------------ VIEWERS
+function headSantox(ctx: CanvasRenderingContext2D, r: number, o: DrawOpts) {
+  const edge = '#21102e', purple = '#9454dc', shade = '#6836aa';
+  const front = o.poseName === 'fourth_a' || o.poseName === 'fourth_s';
+  const offset = front ? 0 : r * .14;
+  const sway = Math.sin(o.time * .055) * r * .045;
+  // As orelhas compridas conservam a silhueta mesmo nos retratos menores.
+  const ear = (x: number, bend: number, back: boolean) => {
+    ctx.beginPath();ctx.moveTo(x-r*.16,-r*.53);
+    ctx.bezierCurveTo(x-r*.4+ bend*.2,-r*1.4,x-r*.43+bend,-r*2.54,x+bend,-r*2.63);
+    ctx.bezierCurveTo(x+r*.48+bend,-r*2.73,x+r*.24+bend*.45,-r*1.33,x+r*.15,-r*.56);
+    ctx.closePath();ctx.fillStyle=back?shade:purple;ctx.fill();ctx.strokeStyle=edge;ctx.lineWidth=r*.075;ctx.stroke();
+    ctx.beginPath();ctx.moveTo(x-r*.02,-r*.86);ctx.bezierCurveTo(x-r*.15+bend*.3,-r*1.55,x-r*.12+bend,-r*2.34,x+r*.06+bend,-r*2.38);
+    ctx.strokeStyle=back?'#a879e0':'#d29bf6';ctx.lineWidth=r*.12;ctx.lineCap='round';ctx.stroke();ctx.lineCap='butt';
+  };
+  ear(-r*.55,-r*.33+sway,true);ear(r*.5,r*.55-sway,false);
+  const g=ctx.createLinearGradient(-r,-r,r,r);g.addColorStop(0,'#c085ef');g.addColorStop(.47,purple);g.addColorStop(1,'#7136b0');
+  ell(ctx,offset,-r*.02,r*1.13,r*.9,g,edge,r*.08);
+  ctx.beginPath();ctx.ellipse(offset,-r*.09,r*.96,r*.72,-.05,Math.PI*1.04,Math.PI*1.84);ctx.strokeStyle='#d09df5';ctx.lineWidth=r*.035;ctx.stroke();
+  const eye=(x:number,tilt:number)=>{
+    if(o.expr==='hit'){
+      strokePath(ctx,[{x:x-r*.17,y:-r*.25},{x:x+r*.1,y:-r*.1},{x:x-r*.14,y:r*.03}],edge,r*.08);return;
+    }
+    ctx.save();ctx.translate(x,-r*.2);ctx.rotate(tilt);
+    poly(ctx,[{x:-r*.37,y:-r*.03},{x:r*.35,y:-r*.07},{x:r*.32,y:r*.22},{x:-r*.33,y:r*.23}],'#fff0c9',edge,r*.045);
+    ctx.fillStyle='#25152d';ctx.fillRect(-r*.03,-r*.04,r*.19,r*.26);
+    ctx.fillStyle='#b477e6';ctx.fillRect(-r*.38,-r*.16,r*.77,r*.16);
+    strokePath(ctx,[{x:-r*.38,y:-r*.02},{x:r*.37,y:-r*.07}],edge,r*.055);ctx.restore();
+  };
+  eye(offset-r*.48,-.08);eye(offset+r*.48,-.16);
+  // Grande sorriso amarelo segmentado, marca central do personagem.
+  ctx.beginPath();ctx.moveTo(offset-r*.91,r*.19);
+  ctx.quadraticCurveTo(offset-r*.05,r*.51,offset+r*.95,r*.08);
+  ctx.quadraticCurveTo(offset+r*.74,r*.84,offset-r*.03,r*.86);
+  ctx.quadraticCurveTo(offset-r*.73,r*.79,offset-r*.91,r*.19);
+  ctx.closePath();ctx.fillStyle=o.expr==='shout'?'#f4c65d':'#ffe397';ctx.fill();ctx.strokeStyle=edge;ctx.lineWidth=r*.065;ctx.stroke();
+  ctx.save();ctx.clip();
+  ctx.strokeStyle='#b98542';ctx.lineWidth=r*.025;
+  for(let i=0;i<6;i++){const x=offset+(-.68+i*.28)*r;ctx.beginPath();ctx.moveTo(x,r*.25);ctx.lineTo(x+r*.05,r*.89);ctx.stroke();}
+  ctx.beginPath();ctx.moveTo(offset-r*.91,r*.46);ctx.quadraticCurveTo(offset,r*.7,offset+r*.94,r*.36);ctx.stroke();ctx.restore();
+  if(o.expr==='shout')ell(ctx,offset+r*.05,r*.7,r*.19,r*.09,'#5b225c',undefined,0);
+  if((o.glow||0)>0){eyeGlow(ctx,offset-r*.4,-r*.09,r*1.4,o.glowColor||'#f3b8ff',o.glow!);eyeGlow(ctx,offset+r*.55,-r*.14,r*1.4,o.glowColor||'#f3b8ff',o.glow!);}
+}
+
+function headJao(ctx: CanvasRenderingContext2D, r: number, o: DrawOpts) {
+  const edge='#211a24',skin='#bd825e',shade='#955d44',hair='#231b20';
+  ell(ctx,-r*.19,-r*.19,r*.82,r*.94,hair,edge,r*.055);
+  ell(ctx,-r*.58,r*.14,r*.18,r*.26,shade,edge,r*.045);
+  ctx.beginPath();ctx.moveTo(-r*.59,-r*.46);ctx.quadraticCurveTo(r*.07,-r*.94,r*.65,-r*.5);
+  ctx.lineTo(r*.85,-r*.04);ctx.lineTo(r*1.04,r*.18);ctx.lineTo(r*.87,r*.3);
+  ctx.quadraticCurveTo(r*.94,r*.69,r*.48,r*.95);ctx.quadraticCurveTo(-r*.11,r*1.02,-r*.49,r*.53);ctx.closePath();
+  ctx.fillStyle=skin;ctx.fill();ctx.strokeStyle=edge;ctx.lineWidth=r*.06;ctx.stroke();
+  poly(ctx,[{x:-r*.53,y:-r*.26},{x:-r*.22,y:-r*.3},{x:-r*.05,y:r*.51},{x:r*.27,y:r*.88},{x:-r*.24,y:r*.68}],shade,undefined,0);
+  const eye=(x:number,y:number,scale:number)=>{
+    if(o.expr==='hit'){strokePath(ctx,[{x:x-r*.14,y:y-r*.07},{x:x+r*.11,y},{x:x-r*.12,y:y+r*.08}],edge,r*.055);return;}
+    ell(ctx,x,y,r*.17*scale,r*.1*scale,'#fff7ea',edge,r*.035,-.1);
+    circ(ctx,x+r*.04,y-r*.005,r*.07*scale,'#4f3327',edge,r*.02);circ(ctx,x+r*.06,y-r*.005,r*.034*scale,'#151119',undefined,0);
+    circ(ctx,x+r*.02,y-r*.035,r*.023*scale,'#fff',undefined,0);
+  };
+  eye(r*.22,-r*.065,1);eye(r*.7,-r*.08,.69);
+  strokePath(ctx,[{x:r*.02,y:-r*.24},{x:r*.22,y:-r*.31},{x:r*.45,y:-r*.23}],hair,r*.085);
+  strokePath(ctx,[{x:r*.58,y:-r*.26},{x:r*.77,y:-r*.27},{x:r*.9,y:-r*.2}],hair,r*.07);
+  strokePath(ctx,[{x:r*.68,y:r*.02},{x:r*.76,y:r*.22},{x:r*.63,y:r*.29}],shade,r*.045);
+  // Bigode fino e barba baixa deixam a expressão jovem e sorridente.
+  strokePath(ctx,[{x:r*.32,y:r*.44},{x:r*.49,y:r*.4},{x:r*.63,y:r*.43},{x:r*.82,y:r*.42}],'#51352b',r*.05);
+  poly(ctx,[{x:r*.1,y:r*.65},{x:r*.22,y:r*.86},{x:r*.48,y:r*.95},{x:r*.73,y:r*.78},{x:r*.81,y:r*.62},{x:r*.63,y:r*.79},{x:r*.34,y:r*.79}],hair,undefined,0);
+  if(o.expr==='hit')strokePath(ctx,[{x:r*.34,y:r*.6},{x:r*.58,y:r*.55},{x:r*.76,y:r*.63}],'#61392e',r*.055);
+  else {
+    ctx.beginPath();ctx.moveTo(r*.25,r*.53);ctx.quadraticCurveTo(r*.59,r*.64,r*.88,r*.44);
+    ctx.quadraticCurveTo(r*.77,r*(o.expr==='shout'?.83:.74),r*.48,r*.74);ctx.quadraticCurveTo(r*.29,r*.7,r*.25,r*.53);
+    ctx.fillStyle='#50252b';ctx.fill();ctx.strokeStyle=edge;ctx.lineWidth=r*.035;ctx.stroke();
+    poly(ctx,[{x:r*.3,y:r*.55},{x:r*.83,y:r*.48},{x:r*.72,y:r*.61},{x:r*.43,y:r*.65}],'#fff2d8',undefined,0);
+  }
+  // Cachos curtos, com a lateral aparente; o volume é menor que o afro do Caetano.
+  for(let row=0;row<3;row++)for(let i=0;i<6;i++){
+    const x=(-.64+i*.26+(row%2)*.07)*r,y=(-.88+row*.19)*r;
+    if(row===0&&(i===0||i===5))continue;
+    circ(ctx,x,y,r*(row===0?.23:.21),hair,edge,r*.025);
+    ctx.beginPath();ctx.arc(x-r*.03,y-r*.03,r*.1,Math.PI,Math.PI*1.85);ctx.strokeStyle='#564038';ctx.lineWidth=r*.035;ctx.stroke();
+  }
+  if((o.glow||0)>0)eyeGlow(ctx,r*.28,-r*.07,r*1.5,o.glowColor||'#c4b5fd',o.glow!);
+}
+
+function drawSantox(ctx:CanvasRenderingContext2D,r:Rig,pose:Pose,o:DrawOpts){
+  const p=r.p,{at}=bodyAxes(p),edge='#281035';
+  const abstract=o.poseName==='abstract_a',purple=abstract?'#281531':'#9050cf',shadow=abstract?'#100d1b':'#603393';
+  const pink=abstract?'#1b1027':'#e33ea1',pinkShadow=abstract?'#110e1d':'#ab287d';
+  const stretch=Math.max(0,o.stretch||0);
+  // O desenho do braço elástico não modifica os pontos do esqueleto do motor.
+  const wF=stretch>0?{x:Math.max(p.sh.x+24,stretch-22.5),y:p.sh.y+4}:p.wF;
+  const eF=stretch>0?{x:p.sh.x+(wF.x-p.sh.x)*.46,y:p.sh.y+2}:p.eF;
+  const glove=(e:P2,w:P2,front:boolean)=>{
+    const u=unit(e,w);ctx.save();ctx.translate(w.x+u.x*6,w.y+u.y*6);ctx.rotate(Math.atan2(u.y,u.x));
+    cap(ctx,{x:-5,y:0},{x:7,y:0},16,19,front?'#f6cf58':'#c99d41',edge,1.8);
+    ell(ctx,1,-7,6,4,front?'#ffe58f':'#e0bb60',edge,1.4,.28);
+    for(let i=-1;i<=1;i++)strokePath(ctx,[{x:6,y:i*4},{x:10,y:i*4}],'#b98b3b',1);
+    if(front&&pose.finger>.5&&stretch===0)cap(ctx,{x:7,y:-4},{x:24,y:-5},6,4,'#f6cf58',edge,1.3);
+    ctx.restore();
+  };
+  const arm=(e:P2,w:P2,front:boolean)=>{
+    cap(ctx,p.sh,e,13,11,front?purple:shadow,edge,2);cap(ctx,e,w,11,9,front?purple:shadow,edge,1.8);
+    if(front)strokePath(ctx,[{x:p.sh.x,y:p.sh.y-3},{x:e.x,y:e.y-3},{x:w.x,y:w.y-3}],abstract?'#663176':'#bd82e8',1.5);
+    glove(e,w,front);
+  };
+  const leg=(k:P2,a:P2,t:P2,back:boolean)=>{
+    cap(ctx,p.hip,k,20,16,back?pinkShadow:pink,edge,2.2);cap(ctx,k,a,16,14,back?pinkShadow:pink,edge,2);
+    strokePath(ctx,[{x:k.x-4,y:k.y},{x:a.x-4,y:a.y-4}],abstract?'#572263':back?'#cf3e9f':'#ff85ce',1.8);
+    const u=unit(a,t);cap(ctx,a,{x:t.x+u.x*5,y:t.y+u.y*5},20,22,back?shadow:purple,edge,2);
+    strokePath(ctx,[{x:a.x-u.y*8,y:a.y+u.x*8},{x:t.x-u.y*9,y:t.y+u.x*9}],abstract?'#8d489d':'#bd82e8',2.3);
+  };
+  circ(ctx,p.hip.x-19,p.hip.y-5,8,purple,edge,1.8);
+  arm(p.eB,p.wB,false);leg(p.kB,p.aB,p.tB,true);
+  cap(ctx,p.sh,p.head,10,10,purple,edge,1.8);
+  poly(ctx,[at(-.05,-12),at(-.05,13),at(.64,16),at(1.08,12),at(1.08,-12),at(.64,-14)],purple,edge,2.1);
+  poly(ctx,[at(-.08,-13),at(-.08,14),at(.5,17),at(.78,12),at(.8,-11),at(.5,-15)],pink,edge,2.1);
+  strokePath(ctx,[at(1.07,-9),at(.72,-8)],pinkShadow,6.5);strokePath(ctx,[at(1.07,10),at(.72,10)],pink,6.5);
+  const b1=at(.76,-8),b2=at(.76,10);circ(ctx,b1.x,b1.y,2.4,'#f6ce56',edge,.9);circ(ctx,b2.x,b2.y,2.4,'#f6ce56',edge,.9);
+  poly(ctx,[at(.46,-7),at(.46,8),at(.2,7),at(.16,0),at(.2,-7)],pinkShadow,'#f37fc9',1.1);
+  leg(p.kF,p.aF,p.tF,false);
+  if(abstract){
+    const eye=at(.63,0);ell(ctx,eye.x,eye.y,11,5,'#f5d466',edge,1.1);ell(ctx,eye.x,eye.y,2,5,'#25102d');
+    for(const q of [p.kF,p.eB]){ell(ctx,q.x,q.y,6,3.5,'#f5d466',edge,1);ell(ctx,q.x,q.y,1.5,3.5,'#25102d');}
+  }
+  ctx.save();ctx.translate(p.head.x,p.head.y);ctx.rotate((o.poseName?.startsWith('fourth')?0:rad(pose.lean+pose.head)*.5)+pose.rot);
+  headSantox(ctx,20,{...o,expr:o.expr||'n'});ctx.restore();arm(eF,wF,true);
+}
+
+function drawJao(ctx:CanvasRenderingContext2D,r:Rig,pose:Pose,o:DrawOpts){
+  const p=r.p,{at}=bodyAxes(p),edge='#211b29',black='#252531',shade='#171722',light='#494753',skin='#bd825e';
+  const arm=(e:P2,w:P2,front:boolean)=>{
+    cap(ctx,p.sh,e,22,19,front?black:shade,edge,2.1);cap(ctx,e,w,19,12,front?black:shade,edge,2);
+    strokePath(ctx,[{x:e.x-4,y:e.y-4},{x:w.x-3,y:w.y-6}],front?light:'#363440',1.7);
+    const u=unit(e,w),h={x:w.x+u.x*5,y:w.y+u.y*5};
+    cap(ctx,{x:w.x-u.x*4,y:w.y-u.y*4},w,13,12,'#e1dfe3',edge,1.4);circ(ctx,h.x,h.y,7.5,front?skin:'#a36e51',edge,1.7);
+    if(front&&pose.finger>.5)cap(ctx,h,{x:h.x+u.x*17,y:h.y+u.y*17},5.2,3.5,skin,edge,1.3);
+    else strokePath(ctx,[{x:h.x+u.x*4-u.y*4,y:h.y+u.y*4+u.x*4},{x:h.x+u.x*4+u.y*4,y:h.y+u.y*4-u.x*4}],'#8a543d',1.1);
+  };
+  const leg=(k:P2,a:P2,t:P2,back:boolean)=>{
+    cap(ctx,p.hip,k,25,21,back?shade:black,edge,2.2);cap(ctx,k,a,21,15,back?shade:black,edge,2);
+    strokePath(ctx,[{x:k.x-4,y:k.y},{x:a.x-3,y:a.y-9}],back?'#34313d':light,1.7);
+    const u=unit(a,t),n={x:-u.y,y:u.x};cap(ctx,a,t,18,16,'#24232e',edge,2.1);
+    strokePath(ctx,[{x:a.x+n.x*7,y:a.y+n.y*7},{x:t.x+n.x*7,y:t.y+n.y*7}],'#ede9e7',3.8);
+    strokePath(ctx,[{x:a.x+u.x*2-n.x*3,y:a.y+u.y*2-n.y*3},{x:a.x+u.x*6+n.x*4,y:a.y+u.y*6+n.y*4}],'#fff7eb',1.3);
+  };
+  arm(p.eB,p.wB,false);leg(p.kB,p.aB,p.tB,true);cap(ctx,p.sh,p.head,12,12,skin,edge,1.8);
+  // Gola alta e fileira de botões dourados do uniforme preto.
+  poly(ctx,[at(-.15,-17),at(-.15,18),at(.55,22),at(1.08,17),at(1.13,11),at(1.13,-12),at(.74,-21)],black,edge,2.3);
+  poly(ctx,[at(-.15,-17),at(.61,-21),at(1.08,-15),at(.99,-7),at(-.15,-8)],shade,undefined,0);
+  poly(ctx,[at(1.03,-10),at(1.03,12),at(1.28,10),at(1.29,-9)],'#d8d4db',edge,1.5);
+  poly(ctx,[at(1.06,-7),at(1.06,9),at(1.28,8),at(1.29,-6)],black,edge,1.3);
+  strokePath(ctx,[at(1.03,3),at(-.13,3)],'#65606c',1.3);
+  for(let i=0;i<5;i++){const q=at(.13+i*.185,5.5);circ(ctx,q.x,q.y,2,'#d6b85f','#77653c',.8);circ(ctx,q.x-.5,q.y-.5,.6,'#f8e6a3',undefined,0);}
+  strokePath(ctx,[at(.15,-15),at(.45,-8),at(.66,-14)],light,1.3);
+  leg(p.kF,p.aF,p.tF,false);
+  ctx.save();ctx.translate(p.head.x,p.head.y);ctx.rotate(rad(pose.lean+pose.head)*.5+pose.rot);headJao(ctx,18,{...o,expr:o.expr|| (pose.mouth>.5?'shout':'n')});ctx.restore();
+  arm(p.eF,p.wF,true);
+  // A bola só aparece na preparação; o projétil do combate é independente.
+  if(o.poseName==='ball_s'){
+    const x=p.wF.x+9,y=p.wF.y-3;circ(ctx,x,y,15,'#d97a39',edge,1.6);
+    ctx.save();ctx.beginPath();ctx.arc(x,y,14,0,Math.PI*2);ctx.clip();
+    strokePath(ctx,[{x:x-15,y},{x:x+15,y}],'#683b2d',1.2);strokePath(ctx,[{x,y:y-15},{x,y:y+15}],'#683b2d',1.2);
+    ctx.beginPath();ctx.ellipse(x,y,8,17,.4,0,Math.PI*2);ctx.strokeStyle='#683b2d';ctx.lineWidth=1.2;ctx.stroke();ctx.restore();
+  }
+  if(o.poseName==='chess_s'||o.poseName==='calculation_s'){
+    const x=p.wF.x+9,y=p.wF.y-18;ctx.save();ctx.shadowColor='#bca8f5';ctx.shadowBlur=10;
+    ell(ctx,x,y+9,8,3,'#e3d5ff',edge,1);poly(ctx,[{x:x-6,y:y+8},{x:x-3,y:y-5},{x:x+3,y:y-5},{x:x+6,y:y+8}],'#bba9e5',edge,1.1);
+    circ(ctx,x,y-8,4,'#f2eaff',edge,1);strokePath(ctx,[{x,y:y-18},{x,y:y-11}],'#f2eaff',2);strokePath(ctx,[{x:x-3,y:y-15},{x:x+3,y:y-15}],'#f2eaff',2);ctx.restore();
+  }
 }
 
 // ------------------------------------------------------------ retratos

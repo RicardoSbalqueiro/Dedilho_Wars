@@ -1,6 +1,6 @@
 // Dados dos personagens: atributos, golpes (frame data) e poses do esqueleto.
 
-export const CHAR_IDS = ['caetano', 'orango', 'tubarao', 'rickzera', 'bieu', 'nomad', 'renngotti', 'aneninha'] as const;
+export const CHAR_IDS = ['caetano', 'orango', 'tubarao', 'rickzera', 'bieu', 'nomad', 'renngotti', 'aneninha', 'santox', 'jao'] as const;
 export type CharId = (typeof CHAR_IDS)[number];
 
 // Três usos compartilham o mesmo limite por lutador; rajadas contam como um uso.
@@ -8,13 +8,14 @@ export const RANGED_MOVES: Record<CharId, readonly string[]> = {
   caetano: [], orango: ['s1'], tubarao: [], rickzera: ['s1', 's2'],
   bieu: ['s2', 's3'], nomad: ['s1', 's2', 's3'],
   renngotti: ['s2', 's3'], aneninha: ['s2', 's3'],
+  santox: ['s1'], jao: ['s1', 's2', 's3'],
 };
 
 
 export const CHAR_CATEGORIES = {
   Streamers: ['rickzera', 'caetano', 'nomad', 'bieu', 'renngotti', 'aneninha'],
   Especiais: ['tubarao', 'orango'],
-  Viewers: [],
+  Viewers: ['santox', 'jao'],
 } as const satisfies Record<string, readonly CharId[]>;
 export type CharCategory = keyof typeof CHAR_CATEGORIES;
 
@@ -430,6 +431,48 @@ Object.assign(aneninhaMoves, Object.fromEntries([
   mv('s3', { kind: 'special', rank: 9, startup: 18, active: 8, recovery: 25, whiff: 10, dmg: 65, hitstun: 27, blockstun: 15, kb: 12, kbBlock: 7, hb: [10, 275, 15, 185], hitstop: 8, shake: 11, power: 1.8, poses: ['shout_s', 'shout_a'], label: 'GRITO ALTO' }),
 ]));
 
+// ---------------------------------------------------------------- VIEWERS
+const santoxPoses: Record<string, Pose> = {
+  ...Object.fromEntries(Object.entries(caetanoPoses).map(([k,p])=>[k,{...p}])),
+  idle: cp({lean:-5,head:6,fa1:65,fa2:-50,ba1:110,ba2:-35,fl1:77,fl2:96,bl1:108,bl2:87}),
+  elastic_s: cp({lean:-20,fa1:85,fa2:-130,ba1:110,ba2:-40}),
+  elastic_a: cp({lean:18,fa1:-5,fa2:0,ba1:115,ba2:-60,fl1:58,fl2:100,bl1:124,bl2:82}),
+  rabbit_s: cp({lean:-16,fl1:10,fl2:145,fa1:80,fa2:-90}),
+  rabbit_a: cp({lean:-28,fl1:-18,fl2:-12,bl1:108,bl2:135,fa1:100,fa2:-110}),
+  fourth_s: cp({lean:-4,head:-10,fa1:25,fa2:-85,ba1:120,ba2:-70}),
+  fourth_a: cp({lean:0,head:0,fa1:30,fa2:-20,ba1:130,ba2:155,finger:1}),
+  abstract_s: cp({lean:-8,fa1:-60,fa2:-100,ba1:-130,ba2:-160}),
+  abstract_a: cp({lean:17,fa1:-15,fa2:-5,ba1:150,ba2:155,mouth:1}),
+  taunt: cp({lean:0,head:0,fa1:30,fa2:-20,ba1:130,ba2:155,finger:1}),
+  win: cp({lean:-6,head:5,fa1:40,fa2:-20,ba1:115,ba2:160}),
+};
+const santoxMoves=copyNormals(.9,1,4);
+Object.assign(santoxMoves,Object.fromEntries([
+  mv('s1',{kind:'special',rank:9,startup:20,active:4,recovery:30,whiff:12,dmg:52,hitstun:21,blockstun:12,kb:6,kbBlock:3,hb:[45,370,80,145],hitstop:9,shake:7,power:1.5,poses:['elastic_s','elastic_a'],label:'SOCO ELÁSTICO A LONGA DISTÂNCIA'}),
+  mv('s2',{kind:'special',rank:9,air:true,startup:13,active:6,recovery:24,whiff:10,dmg:68,hitstun:22,blockstun:13,kb:6,kbBlock:4,hb:[15,155,20,130],level:'high',launch:5,launchVx:4,hitstop:9,shake:8,power:1.7,poses:['rabbit_s','rabbit_a'],trail:'fa',label:'CHUTE DO COELHO'}),
+  mv('s3',{kind:'special',rank:9,startup:8,active:18,recovery:28,whiff:0,dmg:0,hitstun:0,blockstun:0,kb:0,hb:[0,0,0,0],hitstop:0,shake:0,power:0,poses:['fourth_s','fourth_a'],label:'QUEBRAR A QUARTA PAREDE'}),
+]));
+const jaoPoses:Record<string,Pose>={
+  ...Object.fromEntries(Object.entries(caetanoPoses).map(([k,p])=>[k,{...p}])),
+  idle:cp({lean:2,head:-3,fa1:55,fa2:-80,ba1:104,ba2:-65,fl1:75,fl2:94,bl1:110,bl2:88}),
+  chess_s:cp({lean:-12,fa1:30,fa2:-105,ba1:100,ba2:-70}),
+  chess_a:cp({lean:25,fa1:35,fa2:5,ba1:110,ba2:-60,fl1:48,fl2:108,bl1:133,bl2:78,finger:1}),
+  math_s:cp({lean:-8,fa1:50,fa2:-115,ba1:110,ba2:-65}),
+  math_a:cp({lean:16,fa1:-10,fa2:-5,ba1:110,ba2:-80,finger:1}),
+  ball_s:cp({lean:-18,fa1:-65,fa2:-100,ba1:-100,ba2:-130}),
+  ball_a:cp({lean:25,fa1:-8,fa2:0,ba1:115,ba2:-80,fl1:54,fl2:98,bl1:125,bl2:85}),
+  calculation_s:cp({lean:-5,fa1:-60,fa2:-95,ba1:-130,ba2:-155}),
+  calculation_a:cp({lean:8,fa1:10,fa2:-5,ba1:155,ba2:165,finger:1}),
+  taunt:cp({lean:-4,fa1:20,fa2:-95,ba1:108,ba2:-65,finger:1}),
+  win:cp({lean:-4,fa1:68,fa2:-165,ba1:104,ba2:-15}),
+};
+const jaoMoves=copyNormals(.95,1,0);
+Object.assign(jaoMoves,Object.fromEntries([
+  mv('s1',{kind:'special',rank:9,startup:24,active:1,recovery:30,whiff:0,dmg:0,hitstun:0,blockstun:0,kb:0,hb:[0,0,0,0],hitstop:0,power:.7,poses:['chess_s','chess_a'],label:'TABULEIRO DE XADREZ'}),
+  mv('s2',{kind:'special',rank:9,startup:18,active:3,recovery:26,whiff:8,dmg:44,hitstun:21,blockstun:12,kb:5,kbBlock:3,hb:[20,110,70,140],hitstop:7,shake:5,power:1.3,poses:['math_s','math_a'],label:'SÍMBOLOS DA MATEMÁTICA'}),
+  mv('s3',{kind:'special',rank:9,startup:22,active:3,recovery:32,whiff:10,dmg:62,hitstun:25,blockstun:14,kb:10,kbBlock:5,hb:[20,110,65,140],hitstop:10,shake:8,power:1.8,poses:['ball_s','ball_a'],label:'ARREMESSO ABSOLUTO'}),
+]));
+
 export const CHARS: Record<CharId, CharDef> = {
   caetano: {
     id: 'caetano',
@@ -586,6 +629,34 @@ export const CHARS: Record<CharId, CharDef> = {
     ],
     superName: 'YO SOY DE BOLIVIA', quote: 'OSASCO NO CORAÇÃO, BOLÍVIA NO RITMO!',
     bio: 'Imprevisível: baixo + ESP 1 vira rasteira; frente + ESP 2 pinta atrás do rival próximo. Alterne alturas e lados.',
+  },
+  santox: {
+    id:'santox',name:'1SANT0X',short:'1SANT0X',title:'O COELHO FORA DO ROTEIRO',
+    color:'#c026d3',color2:'#581c87',glow:'#f5d0fe',
+    hp:950,walk:4.15,walkBack:3.3,jumpVy:16.4,jumpVx:5,dashVx:10,dashDur:15,
+    pushW:26,hurtH:186,crouchH:111,moves:santoxMoves,poses:santoxPoses,
+    attrs:[{label:'VELOCIDADE',v:4},{label:'FORÇA',v:2},{label:'ALCANCE',v:5},{label:'RESISTÊNCIA',v:2},{label:'MOBILIDADE',v:4}],
+    specials:[
+      {key:'U',name:'SOCO ELÁSTICO A LONGA DISTÂNCIA',desc:'Alcance de 370, dano moderado e recuperação longa. Pode ser bloqueado; conta no limite de longa distância.'},
+      {key:'I',name:'CHUTE DO COELHO',desc:'Pequeno salto com chute alto que lança. Defenda em pé e puna a aterrissagem.'},
+      {key:'O',name:'QUEBRAR A QUARTA PAREDE',desc:'Olha para a câmera e sorri: evita golpes por 0,3 s após a preparação. Recarga de 8 s e recuperação vulnerável.'},
+    ],
+    superName:'ABSTRAÇÃO',quote:'VOCÊ ESTÁ JOGANDO. EU ESTOU OLHANDO.',
+    bio:'Alcance elástico e esquiva calculada. Acerte à média distância; a Quarta Parede exige antecipação e não causa dano.',
+  },
+  jao: {
+    id:'jao',name:'JaoDoPikles',short:'JAODOPIKLES',title:'CADA ROUND É UMA EQUAÇÃO',
+    color:'#818cf8',color2:'#312e81',glow:'#e0e7ff',
+    hp:990,walk:3.8,walkBack:3.1,jumpVy:15.6,jumpVx:4.5,dashVx:9.1,dashDur:16,
+    pushW:28,hurtH:177,crouchH:108,moves:jaoMoves,poses:jaoPoses,
+    attrs:[{label:'VELOCIDADE',v:3},{label:'FORÇA',v:3},{label:'ALCANCE',v:4},{label:'RESISTÊNCIA',v:3},{label:'TÉCNICA',v:5}],
+    specials:[
+      {key:'U',name:'TABULEIRO DE XADREZ',desc:'Uma zona por vez, por até 3 s: reduz em 35% o avanço no chão. Pule para escapar; acertar Jao desfaz o tabuleiro.'},
+      {key:'I',name:'SÍMBOLOS DA MATEMÁTICA',desc:'Dispara uma fórmula em linha reta. Um acerto, dano moderado, sem perseguição.'},
+      {key:'O',name:'ARREMESSO ABSOLUTO',desc:'Bola em arco com um quique: atordoa e empurra. Pode ser defendida ou saltada.'},
+    ],
+    superName:'CHESS IS LIFE',quote:'XEQUE-MATE. A CONTA FECHOU.',
+    bio:'Estratégia com xadrez, matemática e basquete. Crie espaço com o tabuleiro, depois confirme a fórmula ou o arremesso.',
   },
 };
 

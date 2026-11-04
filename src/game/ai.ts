@@ -130,7 +130,7 @@ export function aiAct(g: Game, f: Fighter, diff: Difficulty) {
     const n = Math.max(1, Math.min(list.length, P.combo));
     ai.plan = list.slice(0, n);
     if (rnd() < P.spec && n >= 2) {
-      const choices: Action[] = f.ch === 'caetano' ? ['s1', 's2', 's3'] : f.ch === 'renngotti' ? ['s2', 's3'] : ['s1', 's3'];
+      const choices: Action[] = f.ch === 'caetano' ? ['s1', 's2', 's3'] : f.ch==='santox'?['s1','s2']:f.ch==='jao'?['s2','s3']:f.ch === 'renngotti' ? ['s2', 's3'] : ['s1', 's3'];
       ai.plan[n - 1] = choices[Math.floor(rnd() * choices.length)];
     }
     ai.planStep = 0;
@@ -167,6 +167,21 @@ export function aiAct(g: Game, f: Fighter, diff: Difficulty) {
         ai.walk = -1;
         ai.stopDist = 400;
       } else ai.guardT = tk + 20 + Math.floor(rnd() * 30);
+    } else if(f.ch==='santox'){
+      if(o.state==='attack'&&dist<220&&f.fourthCooldown===0&&r<P.spec*.6){tap('s3');ai.walk=0;}
+      else if(dist>390){ai.walk=1;ai.stopDist=280;if(r>.85)tap('up');}
+      else if(dist>180){ai.walk=dist<240?-1:0;ai.stopDist=270;if(f.rangedCooldown===0&&r<P.spec+.1)tap('s1');else if(r>.8)ai.walk=1;}
+      else if(r<P.spec*.5){tap('s2');ai.walk=0;}
+      else if(r<P.aggr+.15)startPlan(['p','p','k','s1']);
+      else {ai.walk=-1;ai.stopDist=260;}
+    } else if(f.ch==='jao'){
+      if(dist>570){ai.walk=1;ai.stopDist=400;}
+      else if(dist>180&&f.rangedCooldown===0){
+        ai.walk=0;
+        if(!g.projectiles.some(p=>p.kind==='chess'&&p.owner===f.idx&&p.life>0)&&dist<380&&r<.35)tap('s1');
+        else tap(r<.65?'s2':'s3');
+      }else if(dist<150&&r<P.aggr)startPlan(['p','p','k','s3']);
+      else {ai.walk=dist<260?-1:1;ai.stopDist=310;if(r>.85)tap('up');}
     } else if (f.ch === 'rickzera') {
       if (dist > 270) {
         ai.walk = dist > 620 ? 1 : 0;

@@ -1,4 +1,5 @@
 import { drawFinisherArt } from './finishers-art';
+import { drawViewerSuper, drawFourthWall, drawViewerProjectile, drawChessFloor } from './viewer-art';
 import { RANGED_MOVES } from './data';
 // Renderização: mundo, personagens, efeitos, HUD e cinemáticas dos supers.
 import type { Game, Fighter, Particle } from './engine';
@@ -330,7 +331,10 @@ function drawFighter(ctx: CanvasRenderingContext2D, g: Game, f: Fighter, time: n
     ctx.translate(0, 70);
   }
   if (!reflect) drawAura(ctx, f, time);
-  drawRig(ctx, f.ch, f.rig, f.pose, { time, expr: f.expr, glow: f.glow, glowColor: f.def.glow, poseName: f.poseOverride || (f.move ? f.move.poses[f.moveT >= f.move.startup ? 1 : 0] : 'idle') });
+  const m=f.move;
+  const stretch=f.ch==='santox'&&m?.id==='s1'?370*Math.min(1,m.startup?f.moveT/m.startup:1,Math.max(0,1-(f.moveT-m.startup-m.active)/m.recovery)):undefined;
+  if(f.ch==='santox'&&f.invuln>0&&m?.id==='s3')ctx.globalAlpha*=.6;
+  drawRig(ctx, f.ch, f.rig, f.pose, { time, expr: f.expr, glow: f.glow, glowColor: f.def.glow, stretch, poseName: f.poseOverride || (f.move ? f.move.poses[f.moveT >= f.move.startup ? 1 : 0] : 'idle') });
   if (!reflect) drawFx(ctx, g, f, time);
   ctx.restore();
 }
@@ -420,6 +424,7 @@ function drawVehicles(ctx: CanvasRenderingContext2D, g: Game) {
 
 function drawProjectiles(ctx: CanvasRenderingContext2D, g: Game) {
   for (const shot of g.projectiles) {
+    if(shot.kind==='chess'||shot.life<=0)continue;
     const facing = shot.vx >= 0 ? 1 : -1;
     const color = g.f[shot.owner].def.glow;
     ctx.save(); ctx.translate(shot.x, FLOOR_Y + shot.y); ctx.scale(facing, 1);
@@ -428,7 +433,9 @@ function drawProjectiles(ctx: CanvasRenderingContext2D, g: Game) {
       tail.addColorStop(0, color + '00'); tail.addColorStop(1, color + 'bb');
       ctx.fillStyle = tail; ctx.fillRect(-85, -6, 85, 12);
     }
-    if (shot.kind === 'franco') {
+    if(shot.kind==='formula'||shot.kind==='basketball'){
+      drawViewerProjectile(ctx,shot.kind,shot.age??g.tick);
+    }else if (shot.kind === 'franco') {
       ctx.rotate(Math.sin(g.tick * 0.3) * 0.15);
       ctx.shadowColor = '#4ade80'; ctx.shadowBlur = 15;
       ctx.fillStyle = '#dbeafe'; ctx.strokeStyle = '#15803d'; ctx.lineWidth = 2;
@@ -661,7 +668,7 @@ function drawBar(ctx: CanvasRenderingContext2D, g: Game, f: Fighter, side: 0 | 1
   ctx.fillStyle = gp;
   ctx.fillRect(px - 32, 6, 64, 64);
   const hurt = f.state === 'hit' || f.state === 'launched' || f.hp / f.maxHp < 0.2;
-  drawPortrait(ctx, f.ch, px + (side === 0 ? -2 : 2), 42, f.ch === 'caetano' ? 22 : 20, { time: g.tick, expr: hurt ? 'hit' : 'n', glow: f.glow }, side === 1);
+  drawPortrait(ctx, f.ch, px + (side === 0 ? -2 : 2), f.ch==='santox'?49:42, f.ch==='santox'?14:f.ch === 'caetano' ? 22 : 20, { time: g.tick, expr: hurt ? 'hit' : 'n', glow: f.glow }, side === 1);
   ctx.restore();
   ctx.beginPath();
   ctx.arc(px, 38, 30, 0, Math.PI * 2);
@@ -755,6 +762,7 @@ function drawHUD(ctx: CanvasRenderingContext2D, g: Game) {
   for(const f of g.f){const x=f.idx===0?48:W-48,align=f.idx===0?'left':'right';
     if(f.ch==='caetano'&&f.precision>0)label(ctx,'PRECISÃO PRONTA',x,102,11,'#fef08a','#150a1e',align,0,3);
     if(f.ch==='orango'&&f.momentum>0)label(ctx,`ÍMPETO ${f.momentum}/3`,x,102,11,'#fb923c','#150a1e',align,0,3);
+    if(f.ch==='santox')label(ctx,f.fourthCooldown>0?`QUARTA PAREDE: ${(f.fourthCooldown/60).toFixed(1)}s`:'QUARTA PAREDE PRONTA',x,102,11,f.fourthCooldown?'#f0abfc':'#fde68a','#150a1e',align,0,3);
   }
   // timer
   ctx.save();
@@ -978,7 +986,7 @@ function drawCine(ctx: CanvasRenderingContext2D, g: Game) {
     ctx.save();
     ctx.translate(W / 2, 128);
     ctx.scale(s, s);
-    label(ctx, f.ch === 'orango' ? 'GRAAAAAAWRRR!!!' : f.ch === 'tubarao' ? 'FISCALIZAÇÃO TOTAL!' : f.ch === 'bieu' ? 'PRESTÍGIO NAS RUAS!' : f.ch === 'nomad' ? 'BEM-VINDO À ARENA!' : f.ch === 'renngotti' ? 'O TILT É INEVITÁVEL!' : f.ch === 'aneninha' ? '¡YO SOY DE BOLIVIA!' : 'TRANSFERÊNCIA EM 6X!', 0, 0, 46, f.def.glow, f.def.color2, 'center', -0.18, 12);
+    label(ctx, f.ch === 'orango' ? 'GRAAAAAAWRRR!!!' : f.ch === 'tubarao' ? 'FISCALIZAÇÃO TOTAL!' : f.ch === 'bieu' ? 'PRESTÍGIO NAS RUAS!' : f.ch === 'nomad' ? 'BEM-VINDO À ARENA!' : f.ch === 'renngotti' ? 'O TILT É INEVITÁVEL!' : f.ch === 'aneninha' ? '¡YO SOY DE BOLIVIA!' : f.ch==='santox'?'FORA DO ROTEIRO!':f.ch==='jao'?'XEQUE-MATE!':'TRANSFERÊNCIA EM 6X!', 0, 0, 46, f.def.glow, f.def.color2, 'center', -0.18, 12);
     ctx.restore();
   }
   ctx.restore();
@@ -988,6 +996,7 @@ function drawCine(ctx: CanvasRenderingContext2D, g: Game) {
 export function render(ctx: CanvasRenderingContext2D, g: Game, stage: Stage, time: number) {
   ctx.save();
   if(g.finisher){drawFinisherArt(ctx,g.f[g.finisher.winner].ch,g.f[1-g.finisher.winner].ch,g.finisher.t,g.finisher.dur);ctx.restore();return;}
+  if(g.seq&&(g.seq.a.ch==='santox'||g.seq.a.ch==='jao')&&g.seq.kind.startsWith('super')){drawViewerSuper(ctx,g.seq.a.ch,g.seq.d.ch,g.seq.t,g.seq.dur);ctx.restore();return;}
   ctx.fillStyle = '#000';
   ctx.fillRect(0, 0, W, H);
   const sh = g.shake * settings.shake;
@@ -1006,6 +1015,7 @@ export function render(ctx: CanvasRenderingContext2D, g: Game, stage: Stage, tim
   ctx.scale(g.cam.zoom, g.cam.zoom);
   ctx.translate(-g.cam.x, -FLOOR_Y);
   stage.drawFloor(ctx);
+  for(const p of g.projectiles)if(p.kind==='chess'&&p.life>0){ctx.save();ctx.translate(p.x,FLOOR_Y);ctx.globalAlpha=Math.min(1,(p.age??0)/8,p.life/20);drawChessFloor(ctx,(p.radius??110)*2,time);ctx.restore();}
   let tint: string | null = null;
   let tintAmt = 0;
   if (g.expl) {
@@ -1120,6 +1130,7 @@ export function render(ctx: CanvasRenderingContext2D, g: Game, stage: Stage, tim
   }
   drawCine(ctx, g);
   drawHUD(ctx, g);
+  for(const f of g.f)if(f.ch==='santox'&&f.move?.id==='s3'&&f.moveT>=f.move.startup&&f.moveT<f.move.startup+f.move.active)drawFourthWall(ctx,f.moveT-f.move.startup,f.move.active);
   drawClashUI(ctx, g);
   drawAnn(ctx, g);
   ctx.restore();

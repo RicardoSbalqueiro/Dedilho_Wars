@@ -1,6 +1,6 @@
 # DEDILHO WARS
 
-Jogo de luta 2D com oito lutadores, 17 cenários, finishers, progressão e rádio integrada.
+Jogo de luta 2D com dez lutadores, 17 cenários, finishers, progressão e rádio integrada.
 
 ## Jogar
 
@@ -11,12 +11,12 @@ O ZIP inclui tanto o jogo pronto como o código-fonte. O index.html da raiz é a
 ## Seleção e cenários
 
 - **Streamers:** Rickzera, Karatê Caetano, Nomad Lobby, Bieubatman, Renngotti e Aneninha.
-- **Viewers:** Em breve; não permite confirmar um personagem.
+- **Viewers:** 1SANT0X e JaoDoPikles.
 - **Especiais:** Tubarão Fiscal e Orango Tango Bitencourt.
 
 Use Q/E ou Tab para trocar de categoria, setas/WASD para escolher e Enter para confirmar. Escolha P1 e depois o adversário; ambos podem usar o mesmo personagem. A próxima tela escolhe o cenário e permite uma seleção aleatória. Há troca de lutadores e de mapa na pausa e após a partida; a revanche mantém o confronto atual.
 
-Arenas originais: **Neto Supermercados**, **Dojo Senbukan**, **Liberdade SP**, **Curitiba**, **Piauí** e **Palácio do Planalto**. A geometria de combate é compartilhada; cada cenário tem seu próprio desenho, arquitetura e chão. A abertura usa um cenário aleatório e uma demonstração visual de luta entre os oito personagens, sem interferir nos controles do menu ou na rádio.
+Arenas originais: **Neto Supermercados**, **Dojo Senbukan**, **Liberdade SP**, **Curitiba**, **Piauí** e **Palácio do Planalto**. A geometria de combate é compartilhada; cada cenário tem seu próprio desenho, arquitetura e chão. A abertura usa um cenário aleatório e uma demonstração visual de luta entre os dez personagens, sem interferir nos controles do menu ou na rádio.
 
 Novas arenas: **Casebre**, **Praça do Dedilhador**, **Osasco**, **Bolívia**, **Morro do Bieu**, **Campo do futebol dos campeões**, **Casa Branca com Ovnis** (ideia de Jalam), **Praia do Lets Gay** (ideia de Jalam e Diegão), **Lugar do NGB News**, **Zoológico do Orangotango** e **Praia da Termodinâmica**. Todas têm arte, pisos e detalhes animados próprios. A seleção tem três páginas; os 17 mapas também participam do sorteio da abertura e das salas online.
 
@@ -29,11 +29,19 @@ A troca simultânea de golpes resolve os dois contatos; um double KO empata o ro
 - **Renngotti — alcance:** microfones que passam pelo rival se tornam armadilhas baixas por tempo limitado. Grito ressoa nessas zonas, ampliando sua área de efeito. A armadilha pode ser saltada ou defendida.
 - **Aneninha — improviso:** baixo + ESP 1 usa Rasteira de Osasco. Frente + ESP 2 posiciona o muro atrás de um adversário próximo; fora desse alcance mantém o posicionamento normal. As variantes são controladas pelo jogador.
 
-Todos têm um agarrão curto com **G / Num7** ou o botão **AGARRAR**. Pressionar agarrão no mesmo momento permite escapar de um agarrão comum; os agarrões especiais exigem esquiva ou salto. Ataques em recuperação podem ser punidos, mas o rival não pode ser agarrado durante hitstun, blockstun, salto ou proteção de recuperação. Armadura recebe dano reduzido e absorve a interrupção; não é invulnerabilidade. Os outros quatro lutadores e seus especiais foram preservados.
+Todos têm um agarrão curto com **G / Num7** ou o botão **AGARRAR**. Pressionar agarrão no mesmo momento permite escapar de um agarrão comum; os agarrões especiais exigem esquiva ou salto. Ataques em recuperação podem ser punidos, mas o rival não pode ser agarrado durante hitstun, blockstun, salto ou proteção de recuperação. Armadura recebe dano reduzido e absorve a interrupção; não é invulnerabilidade. Os oito lutadores anteriores mantêm seus golpes e atributos.
+
+## Viewers e equilíbrio
+
+**1SANT0X** tem 950 HP e normais com dano em ×0,9. O Soco Elástico alcança 370 unidades, causa 52 de dano, prepara em 20 quadros e recupera em 30 (+12 ao errar); é bloqueável e entra no limite de distância. Chute do Coelho causa 68, salta e exige defesa alta, com 12 quadros vulneráveis ao aterrissar. Quarta Parede não causa dano: tem oito quadros de preparação, **18 quadros (0,3 s) de invulnerabilidade**, 28 de recuperação vulnerável e recarga de **oito segundos**, mostrada no HUD. O rosto vira para a câmera em um close com sorriso; a luta continua. Abstração só captura em alcance finito, causa 240 em quatro impactos e tem arte própria. Seu finisher é **Fora do Roteiro**.
+
+**JaoDoPikles** (JP na referência) tem 990 HP e normais em ×0,95. O Tabuleiro não causa dano: fica à frente por até **três segundos**, com largura de 220 e **35% de lentidão no chão**. Só um tabuleiro por jogador; saltar ou sair da zona permite escapar, e acertar/agarrar Jao desfaz o controle. Símbolos da Matemática é um projétil reto de 44, sem perseguição. Arremesso Absoluto usa uma bola de 62 que atordoa, empurra e quica uma vez, com recuperação longa. Os três especiais compartilham o cooldown de distância. Chess is Life une peças, fórmulas e uma enterrada em quatro impactos de 260 no total; seu finisher é **Xeque-Mate Absoluto**.
+
+Ambos têm os modos locais, IA, treino, online, controles de toque, falas, perfil/histórico e finalização do restante do elenco. O desafio Arsenal completo reconhece uma esquiva real com a Quarta Parede e um rival em movimento afetado pelo Tabuleiro; o simples uso dessas habilidades não conclui o objetivo.
 
 ## Finishers e apresentação
 
-Após o KO do round decisivo, o vencedor tem quatro segundos para pressionar **ULT** (H, Num0 ou botão de toque) e executar seu finisher. A janela expira para a vitória normal; o finisher não gasta barra e só o vencedor pode ativá-lo. Cada um dos oito personagens tem uma sequência própria de preparação, impacto e resultado, com props e efeitos de sua identidade. O finisher também é sincronizado no online e aparece no histórico.
+Após o KO do round decisivo, o vencedor tem quatro segundos para pressionar **ULT** (H, Num0 ou botão de toque) e executar seu finisher. A janela expira para a vitória normal; o finisher não gasta barra e só o vencedor pode ativá-lo. Cada um dos dez personagens tem uma sequência própria de preparação, impacto e resultado, com props e efeitos de sua identidade. O finisher também é sincronizado no online e aparece no histórico.
 
 Os confrontos têm provocações específicas entre Caetano, Orango, Renngotti e Aneninha. O narrador, os títulos de vitória e os efeitos de impacto acompanham os personagens. A trilha original usa seis variações de ritmo/escala conforme a arena, preservando a rádio e os sete raps completos.
 
@@ -49,6 +57,8 @@ Os confrontos têm provocações específicas entre Caetano, Orango, Renngotti e
 | Nomad Lobby | Mario Burger | Rajada de Glock | Boomerang | Arena |
 | Renngotti | Joga pra Lua | Jogar Microfone | Grito Alto | TILT |
 | Aneninha | Soco de Osasco | Pichar Muro para representar Osasco | Grito Alto | Yo Soy de Bolivia. |
+| 1SANT0X | Soco elástico a longa distância | Chute do Coelho | Quebrar a Quarta Parede | Abstração |
+| JaoDoPikles | Tabuleiro de Xadrez | Símbolos da Matemática | Arremesso Absoluto | Chess is Life |
 
 Renngotti arremessa o oponente para o alto e permite continuar com um combo aéreo. O microfone é um projétil em arco; o grito tem alcance frontal e empurrão, mas pode ser defendido. TILT usa uma mesa em uma sequência cinematográfica.
 
@@ -93,7 +103,7 @@ Selecionar um desafio reinicia as posições; o desafio de defesa ativa a IA. Co
 
 Após três usos de golpes à distância, o lutador passa cinco segundos sem poder iniciar outro golpe à distância. O contador é compartilhado entre seus especiais: uma rajada inteira conta como um uso, independentemente de acertar. Corpo a corpo, defesa, movimento e ULT continuam disponíveis. O HUD mostra usos e tempo restante. A pausa local congela o relógio; um novo round reinicia o limite. A regra vale para humanos, IA, treinamento e online.
 
-Entram no limite os projéteis, as pichações, os gritos e o Dedilho Supremo do Orangotango. Caetano e Tubarão mantêm seus especiais de contato. Os ganhos de ULT continuam em ×0,5.
+Entram no limite os projéteis, as pichações, os gritos, o Dedilho Supremo do Orangotango, o Soco Elástico e os três especiais de JaoDoPikles. Caetano e Tubarão mantêm seus especiais de contato. Os ganhos de ULT continuam em ×0,5.
 
 Bieubatman recebeu redução de aproximadamente 9% nos normais, Chave de Fenda 88→80, Rato 46→42, Pichação 18→16 e Prestígio 300→275. Nomad tem normais em ×1, Burger 58→52, cada tiro 23→20, Boomerang 42→38 e Arena 310→285. Alguns especiais também recuperam mais lentamente, mantendo seus movimentos e identidades.
 
