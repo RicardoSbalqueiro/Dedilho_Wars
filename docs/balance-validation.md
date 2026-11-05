@@ -26,7 +26,6 @@ A lista inclui documentação, fontes, testes e artefatos gerados. Os arquivos e
 
 - `README.md`
 - `dist/client/baixar/Dedilho-Wars-projeto.zip`
-- `dist/client/baixar/index.html`
 - `dist/client/index.html`
 - `dist/server/index.js`
 - `docs/audit-baseline.md`
