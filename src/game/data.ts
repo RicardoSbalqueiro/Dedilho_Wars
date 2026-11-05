@@ -69,6 +69,7 @@ export interface Move {
   charge?: boolean;
   variant?: 'low' | 'reverse';
   spike?: boolean;
+  recoveryPose?: string;
   sound?: 'purple' | 'red';
 }
 
@@ -534,7 +535,7 @@ const eneasMoves=copyNormals(.98,2,10);
 Object.assign(eneasMoves,Object.fromEntries([
  mv('s1',{kind:'special',rank:9,startup:18,active:8,recovery:28,whiff:12,dmg:60,hitstun:25,blockstun:14,kb:11,kbBlock:6,hb:[15,275,20,180],hitstop:8,shake:10,power:1.7,poses:['shout_s','shout_a'],label:'MEU NOME É ENÉAS!'}),
  mv('s2',{kind:'special',rank:9,startup:20,active:3,recovery:29,whiff:8,dmg:46,hitstun:22,blockstun:13,kb:6,kbBlock:3,hb:[20,110,65,140],hitstop:7,shake:6,power:1.3,poses:['ecg_s','ecg_a'],label:'DIAGNÓSTICO FATAL'}),
- mv('s3',{kind:'special',rank:9,startup:22,active:14,recovery:30,whiff:8,dmg:28,hitstun:21,blockstun:11,kb:3,kbBlock:2,hb:[20,110,55,145],launch:8,launchVx:2,hitstop:5,shake:6,power:1.2,poses:['five_s','five_a'],label:'56 NA TESTA!'}),
+ mv('s3',{kind:'special',rank:9,startup:22,active:14,recovery:30,whiff:8,dmg:28,hitstun:21,blockstun:11,kb:3,kbBlock:2,hb:[20,110,55,145],launch:8,launchVx:2,hitstop:5,shake:6,power:1.2,poses:['five_s','five_a'],recoveryPose:'six_a',label:'56 NA TESTA!'}),
 ]));
 
 export const CHARS: Record<CharId, CharDef> = {
@@ -762,5 +763,21 @@ export const CHARS: Record<CharId, CharDef> = {
     bio:'Médio alcance com voz, ECG e números. Preparação e recuperação lentas exigem controlar a distância e respeitar a recarga.',
   },
 };
+
+// Only quick grounded normals get a one-frame adjustment. Heavy/special risk is intact.
+for(const def of Object.values(CHARS))for(const move of Object.values(def.moves))
+  if(move.kind==='normal'&&!move.air&&move.rank===1)move.startup=Math.max(3,move.startup-1);
+
+export function movePhase(move:Move,frame:number,connected:boolean){
+  if(frame<move.startup)return {phase:'startup' as const,progress:0};
+  if(frame<move.startup+move.active)return {phase:'active' as const,progress:0};
+  const duration=move.recovery+(connected?0:move.whiff);
+  return {phase:'recovery' as const,progress:Math.min(1,Math.max(0,(frame-move.startup-move.active+1)/Math.max(1,duration)))};
+}
+
+// Presentation strength only: never changes damage, hitstun or knockback.
+export function impactStrength(move:Move){
+  return move.kind==='normal'?(move.rank===1?.55:move.rank===2?1:1.65):move.power;
+}
 
 export const NORMAL_BY_RANK: Record<string, string[]> = { p: ['pL', 'pM', 'pH'], k: ['kL', 'kM', 'kH'] };

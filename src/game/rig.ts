@@ -40,9 +40,15 @@ const rad = (d: number) => (d * Math.PI) / 180;
 const pol = (o: P2, ang: number, len: number): P2 => ({ x: o.x + Math.cos(rad(ang)) * len, y: o.y + Math.sin(rad(ang)) * len });
 
 export function lerpPose(a: Pose, b: Pose, k: number): Pose {
-  const o: any = {};
-  for (const key in a) o[key] = (a as any)[key] + ((b as any)[key] - (a as any)[key]) * k;
-  return o as Pose;
+  if(k<=0)return {...a};
+  if(k>=1)return {...b};
+  const o={...a};
+  for (const key of Object.keys(a) as (keyof Pose)[]) {
+    let delta=b[key]-a[key];
+    if(/^(fa|ba|fl|bl)[12]$/.test(key))delta=((delta+180)%360+360)%360-180;
+    o[key]=a[key]+delta*k;
+  }
+  return o;
 }
 
 export function computeRig(ch: CharId, pose: Pose): Rig {

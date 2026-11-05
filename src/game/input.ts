@@ -2,6 +2,9 @@ import { touchInput } from './touch';
 export type Action = 'left' | 'right' | 'up' | 'down' | 'p' | 'k' | 'block' | 's1' | 's2' | 's3' | 'super' | 'grab';
 
 export const ACTIONS: Action[] = ['left', 'right', 'up', 'down', 'p', 'k', 'block', 's1', 's2', 's3', 'super', 'grab'];
+// Includes the press frame: ages 0 through 8 remain executable.
+export const INPUT_BUFFER_FRAMES = 9;
+export const DASH_TAP_FRAMES = 14;
 
 export const ACTION_LABELS: Record<Action, string> = {
   left: 'Esquerda',
@@ -114,15 +117,18 @@ export function keyLabel(code: string): string {
 /** Estado de teclado global (suporta várias teclas simultâneas). */
 export class Keyboard {
   down = new Set<string>();
+  pressed = new Set<string>();
   listeners: ((code: string, e: KeyboardEvent) => void)[] = [];
   private kd = (e: KeyboardEvent) => {
+    if (!e.repeat && !this.down.has(e.code)) this.pressed.add(e.code);
     this.down.add(e.code);
     this.listeners.forEach((l) => l(e.code, e));
   };
   private ku = (e: KeyboardEvent) => {
     this.down.delete(e.code);
   };
-  private blur = () => this.down.clear();
+  private blur = () => { this.down.clear(); this.pressed.clear(); };
+  consumePressed() { const out = new Set(this.pressed); this.pressed.clear(); return out; }
   attach() {
     window.addEventListener('keydown', this.kd);
     window.addEventListener('keyup', this.ku);
@@ -133,6 +139,7 @@ export class Keyboard {
     window.removeEventListener('keyup', this.ku);
     window.removeEventListener('blur', this.blur);
     this.down.clear();
+    this.pressed.clear();
   }
 }
 
@@ -143,6 +150,7 @@ export class Pad {
   held = {} as Record<Action, boolean>;
   pressedAt = {} as Record<Action, number>;
   prevAt = {} as Record<Action, number>;
+  edgeAt = {} as Record<Action, number>;
   constructor() {
     this.reset();
   }
@@ -151,36 +159,45 @@ export class Pad {
       this.held[a] = false;
       this.pressedAt[a] = -999;
       this.prevAt[a] = -999;
+      this.edgeAt[a] = -999;
     }
   }
   set(a: Action, down: boolean, tick: number) {
     if (down && !this.held[a]) {
-      this.prevAt[a] = this.pressedAt[a];
-      this.pressedAt[a] = tick;
+      this.tap(a,tick);
     }
     this.held[a] = down;
   }
-  pollKeys(b: Bindings, tick: number, touch = false) {
+  pollKeys(b: Bindings, tick: number, touch = false, presses: ReadonlySet<string> = keyboard.consumePressed()) {
     for (const a of ACTIONS) {
       const [c1, c2] = b[a];
       this.set(a, (!!c1 && keyboard.down.has(c1)) || (!!c2 && keyboard.down.has(c2)) || (touch && touchInput.held.has(a)), tick);
+      if ((presses.has(c1) || presses.has(c2)) && this.pressedAt[a] !== tick) this.tap(a,tick);
     }
     if (touch) for (const a of touchInput.consume()) if (this.pressedAt[a] !== tick) this.tap(a,tick);
   }
-  buffered(a: Action, tick: number, win = 6) {
-    return tick - this.pressedAt[a] <= win;
+  buffered(a: Action, tick: number, win = INPUT_BUFFER_FRAMES) {
+    const age=tick-this.pressedAt[a];
+    return age>=0 && age<win;
+  }
+  doubleTapped(a:Action,tick:number) {
+    const gap=this.edgeAt[a]-this.prevAt[a];
+    return this.buffered(a,tick) && this.prevAt[a]>=0 && gap>0 && gap<=DASH_TAP_FRAMES;
+  }
+  consumeDash(a:Action) {
+    this.consume(a);this.edgeAt[a]=this.prevAt[a]=-999;
   }
   freezeBuffers(tick:number) {
     for(const a of ACTIONS) {
-      if(this.pressedAt[a]<tick && tick-this.pressedAt[a]<=8)this.pressedAt[a]++;
-      if(this.prevAt[a]<tick && tick-this.prevAt[a]<=14)this.prevAt[a]++;
+      if(this.pressedAt[a]<tick && tick-this.pressedAt[a]<=INPUT_BUFFER_FRAMES)this.pressedAt[a]++;
     }
   }
   consume(a: Action) {
     this.pressedAt[a] = -999;
   }
   tap(a: Action, tick: number) {
-    this.prevAt[a] = this.pressedAt[a];
+    this.prevAt[a] = this.edgeAt[a];
+    this.edgeAt[a] = tick;
     this.pressedAt[a] = tick;
   }
 }

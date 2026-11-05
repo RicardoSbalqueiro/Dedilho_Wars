@@ -1,7 +1,7 @@
 import { drawFinisherArt } from './finishers-art';
 import { drawViewerSuper, drawFourthWall, drawViewerProjectile, drawChessFloor } from './viewer-art';
 import { drawTrioSuper, drawTrioProjectile, drawTrioMoveFx, drawJaneBike, drawJaneBikeFall, drawJaneDizzy } from './trio-art';
-import { RANGED_MOVES } from './data';
+import { RANGED_MOVES, movePhase } from './data';
 // Renderização: mundo, personagens, efeitos, HUD e cinemáticas dos supers.
 import type { Game, Fighter, Particle } from './engine';
 import { settings } from './engine';
@@ -333,15 +333,16 @@ function drawFighter(ctx: CanvasRenderingContext2D, g: Game, f: Fighter, time: n
   }
   if (!reflect) drawAura(ctx, f, time);
   const m=f.move;
+  const frame=Math.max(0,f.moveT-1);
   if(f.ch==='jane'){
     if(m?.id==='s2')drawJaneBike(ctx,time,Math.min(1,f.bikeTicks/300));
     if(f.bikeDizzy>0){drawJaneBikeFall(ctx,60-f.bikeDizzy,60);if(!reflect)drawJaneDizzy(ctx,time);}
   }
-  const stretch=f.ch==='santox'&&m?.id==='s1'?370*Math.min(1,m.startup?f.moveT/m.startup:1,Math.max(0,1-(f.moveT-m.startup-m.active)/m.recovery)):undefined;
+  const stretch=f.ch==='santox'&&m?.id==='s1'?370*Math.min(1,m.startup?frame/m.startup:1,Math.max(0,1-(frame-m.startup-m.active)/m.recovery)):undefined;
   if(f.ch==='santox'&&f.invuln>0&&m?.id==='s3')ctx.globalAlpha*=.6;
-  drawRig(ctx, f.ch, f.rig, f.pose, { time, expr: f.expr, glow: f.glow, glowColor: f.def.glow, stretch, poseName: f.poseOverride || (f.move ? f.move.poses[f.moveT >= f.move.startup ? 1 : 0] : 'idle') });
+  drawRig(ctx, f.ch, f.rig, f.pose, { time, expr: f.expr, glow: f.glow, glowColor: f.def.glow, stretch, poseName: f.poseOverride || f.poseName });
   if (!reflect) drawFx(ctx, g, f, time);
-  if(!reflect&&m&&(f.ch==='jane'||f.ch==='cristyan'||f.ch==='eneas')&&/^s[123]$/.test(m.id)&&f.moveT>=m.startup-3&&f.moveT<m.startup+Math.min(m.active,30)+8)drawTrioMoveFx(ctx,f.ch,m.id,f.moveT-m.startup);
+  if(!reflect&&m&&(f.ch==='jane'||f.ch==='cristyan'||f.ch==='eneas')&&/^s[123]$/.test(m.id)&&frame>=m.startup-3&&frame<m.startup+Math.min(m.active,30)+8)drawTrioMoveFx(ctx,f.ch,m.id,frame-m.startup);
   ctx.restore();
 }
 
@@ -853,14 +854,15 @@ function drawHUD(ctx: CanvasRenderingContext2D, g: Game) {
     ctx.save();
     ctx.fillStyle = 'rgba(8,4,16,0.7)';
     ctx.beginPath();
-    ctx.roundRect(14, 290, 270, 138, 8);
+    ctx.roundRect(14, 290, 270, 156, 8);
     ctx.fill();
     ctx.strokeStyle = '#fbbf24';
     ctx.lineWidth = 2;
     ctx.stroke();
     ctx.restore();
     label(ctx, 'TREINAMENTO', 26, 308, 17, '#fbbf24', '#000', 'left', -0.1, 4);
-    const lines = [`Dummy [T]: ${names[g.train.dummy]}`, `Último dano: ${g.train.lastDmg}`, `Combo: ${g.train.combo} hits  |  ${Math.round(g.train.total)} dano`, `Maior combo: ${g.train.maxCombo} hits`, 'Reiniciar posições [R]'];
+    const outcome={pending:'—',hit:'ACERTO',block:'BLOQUEADO',whiff:'ERRO'}[a.contact];
+    const lines = [`Dummy [T]: ${names[g.train.dummy]}`, `Último dano: ${g.train.lastDmg}`, `Resultado: ${outcome}`, `Combo: ${g.train.combo} hits  |  ${Math.round(g.train.total)} dano`, `Maior combo: ${g.train.maxCombo} hits`, 'Reiniciar posições [R]'];
     ctx.font = `600 14px ${FONT}`;
     ctx.fillStyle = '#fff';
     ctx.textAlign = 'left';
@@ -1140,7 +1142,7 @@ export function render(ctx: CanvasRenderingContext2D, g: Game, stage: Stage, tim
   }
   drawCine(ctx, g);
   drawHUD(ctx, g);
-  for(const f of g.f)if(f.ch==='santox'&&f.move?.id==='s3'&&f.moveT>=f.move.startup&&f.moveT<f.move.startup+f.move.active)drawFourthWall(ctx,f.moveT-f.move.startup,f.move.active);
+  for(const f of g.f)if(f.ch==='santox'&&f.move?.id==='s3'&&movePhase(f.move,Math.max(0,f.moveT-1),f.connected).phase==='active')drawFourthWall(ctx,f.moveT-1-f.move.startup,f.move.active);
   drawClashUI(ctx, g);
   drawAnn(ctx, g);
   ctx.restore();

@@ -37,7 +37,11 @@ export function OnlineGame({room,user,onLobby,onLeave}:{room:Room;user:User;onLo
   let otherInput=0,done=false,lastSend=0,raf=0,stopped=false,lastMask=0,eventId=0,lastEvent=0,physicalPressed=0,lastCinematic=false;
   let pending:{id:number;mask:number}[]=[];
   const link=new FightConnection(room,user,{
-   state:s=>{const hp=game.f.map(f=>f.hp),cine=!!game.cine;if(applyState(game,s)){pending=pending.filter(e=>e.id>(s.inputAck||0));if(game.f.some((f,i)=>f.hp<hp[i]))audio.hit(1);if(game.cine&&!cine){audio.boom(.8);audio.say(game.cine.f.def.superName)}}},
+   state:s=>{const hp=game.f.map(f=>f.hp),previous=game.f.map(f=>f.impact),cine=!!game.cine;if(applyState(game,s)){
+    pending=pending.filter(e=>e.id>(s.inputAck||0));
+    game.f.forEach((f,i)=>{const impact=f.impact;if(impact&&(impact.serial!==previous[i]?.serial||impact.tick!==previous[i]?.tick)){if(impact.kind==='block')audio.block();else audio.hit(impact.strength)}else if(f.hp<hp[i])audio.hit(1)});
+    if(game.cine&&!cine){audio.boom(.8);audio.say(game.cine.f.def.superName)}
+   }},
    input:n=>{otherInput=n.mask;for(const e of n.events)if(e&&Number.isSafeInteger(e.id)&&e.id>lastEvent&&Number.isInteger(e.mask)&&e.mask>=0&&e.mask<=4095){game.onlinePressed[1]|=e.mask;lastEvent=e.id}},status:(s,ms)=>{if(!stopped){setNetwork(s);setPing(ms);if(s!=='RECONECTANDO')setLost('')}},lost:message=>{if(!stopped)setLost(message)},
   });
   link.start();

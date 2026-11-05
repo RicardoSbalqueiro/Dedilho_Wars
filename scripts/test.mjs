@@ -8,5 +8,6 @@ try {
  await build({entryPoints:['tests/expansion.test.ts'],bundle:true,platform:'node',format:'esm',outfile:'.sites-runtime/expansion-test.mjs'});
  await build({entryPoints:['tests/viewers.test.ts'],bundle:true,platform:'node',format:'esm',outfile:'.sites-runtime/viewers-test.mjs'});
  await build({entryPoints:['tests/trio.test.ts'],bundle:true,platform:'node',format:'esm',outfile:'.sites-runtime/trio-test.mjs'});
- for(const path of ['.sites-runtime/combat-test.mjs','.sites-runtime/challenges-test.mjs','.sites-runtime/expansion-test.mjs','.sites-runtime/viewers-test.mjs','.sites-runtime/trio-test.mjs','tests/api.test.mjs']){const r=spawnSync(process.execPath,[path],{stdio:'inherit'});if(r.status!==0)process.exit(r.status||1)}
+ await build({entryPoints:['tests/responsiveness.test.ts'],bundle:true,platform:'node',format:'esm',outfile:'.sites-runtime/responsiveness-test.mjs'});
+ for(const path of ['.sites-runtime/combat-test.mjs','.sites-runtime/challenges-test.mjs','.sites-runtime/expansion-test.mjs','.sites-runtime/viewers-test.mjs','.sites-runtime/trio-test.mjs','.sites-runtime/responsiveness-test.mjs','tests/api.test.mjs']){const r=spawnSync(process.execPath,[path],{stdio:'inherit'});if(r.status!==0)process.exit(r.status||1)}
 } finally {rmSync('.sites-runtime/combat-test.mjs',{force:true})}

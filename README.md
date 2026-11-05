@@ -24,6 +24,14 @@ Novas arenas: **Casebre**, **Praça do Dedilhador**, **Osasco**, **Bolívia**, *
 
 A troca simultânea de golpes resolve os dois contatos; um double KO empata o round. Comandos de combo permanecem disponíveis durante a pausa de impacto, ataques de chão não interrompem a gravidade no ar, e a defesa responde já no primeiro instante após o hitstun. Há aceleração curta de caminhada e controle limitado da direção no salto. Caixas de ataque usam o golpe e a direção capturados no contato, incluindo espelhamento e projéteis; o modo de colisões continua disponível nas configurações.
 
+O buffer de comandos é de **9 frames a 60 Hz** (cerca de 150 ms, incluindo o frame da entrada). Um ataque registrado nos últimos oito frames da recuperação executa no primeiro frame permitido. Teclado e toque preservam apertos rápidos mesmo se o botão for solto entre duas atualizações; segurar um ataque não gera repetição automática. Hitstop, pausa e os frames sem simulação da câmera lenta não gastam a janela. Uma habilidade em cooldown só consome o comando quando puder começar, dentro dessa mesma janela.
+
+Cancelamentos têm **seis frames de confirmação após o contato**, congelados durante o hitstop. Normais progridem estritamente de fraco para médio e forte; num acerto limpo podem passar para um especial e, com 100 de barra, ULT. Um bloqueio permite apenas a progressão dos normais. Erros não permitem cancelar; a exceção Dedilho → Chute da Conspiração de Caetano exige acerto e termina no chute. A moto de Jane e os ataques aéreos mantêm suas restrições. O limite de quatro impactos no juggle permanece.
+
+Normais fracos de chão iniciam um frame mais cedo, com mínimo de três; startup, recuperação e dano dos fortes e especiais são preservados. A defesa e os ataques em buffer respondem também no término do hitstun, blockstun e atraso de aterrissagem. Dashes avançam no frame da ativação e aceitam defesa/ataque após quatro frames de compromisso; precisam de dois novos toques. Caminhada acelera e desacelera em poucos frames, e a direção no ar continua limitada à velocidade de salto, inclusive durante ataques aéreos.
+
+Animação e hitbox usam o mesmo frame de ataque. A pose retorna gradualmente ao neutro durante toda a recuperação, com interpolação das articulações pelo caminho angular mais curto. Acertos leves têm som e partículas curtos; impactos fortes recebem graves, partículas maiores e um flash breve. Bloqueios usam som de defesa e efeitos azuis. O painel de treino mostra **ACERTO**, **BLOQUEADO** ou **ERRO**, incluindo projéteis tardios. O convidado online recebe a mesma pose e o tipo/peso do impacto pelo protocolo `dw-online-5`; ambos devem usar a versão atual do jogo.
+
 - **Karatê Caetano — técnico:** uma defesa nos primeiros cinco frames carrega Precisão por dois segundos, sem dano de chip. O próximo Dedilho causa 73 em vez de 55 e pode ser confirmado em Chute da Conspiração num acerto limpo. O Dedilho recebeu impacto, som e efeitos mais fortes.
 - **Orango Tango — pressão:** acertos acumulam até três níveis de Ímpeto, cada um com +3% de dano e mais avanço. Tomar dano ou ficar três segundos sem pressionar encerra o bônus. Seus agarrões continuam próprios.
 - **Renngotti — alcance:** microfones que passam pelo rival se tornam armadilhas baixas por tempo limitado. Grito ressoa nessas zonas, ampliando sua área de efeito. A armadilha pode ser saltada ou defendida.
@@ -168,6 +176,8 @@ npm run preview
 ```
 
 O build produz `dist/server/index.js` (API), `dist/server/wrangler.json` (configuração local), `dist/.openai/hosting.json` e `dist/client/` (jogo e MP3s). Pare o servidor de preview antes de recompilar. `npm run dev:client` abre apenas o cliente Vite; as contas e salas precisam do servidor completo.
+
+`npm test` inclui 196 casos de responsividade em `tests/responsiveness.test.ts`: limites do buffer, toques entre frames, pausas de impacto, comandos em cooldown, recuperação/defesa, dash, controle aéreo, cancelamentos limitados, punição de erros, diferenciação de impactos, snapshots e poses dos 13 personagens. As suítes anteriores continuam verificando IA, desafios, Ultimates, finishers, moto de Jane e API. A suíte de API abre um servidor apenas em loopback para o banco de testes; o ambiente de execução deve permitir essa conexão local.
 
 O esquema está em `db/schema.ts`. Após alterações, rode `npm run db:generate` e revise os novos SQLs em `drizzle/`. Migrações já aplicadas são preservadas. `npm run db:local` aplica apenas as pendentes no preview; o Sites aplica as hospedadas durante a publicação. O manifesto mantém a identidade do site e declara o binding lógico DB.
 
