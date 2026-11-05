@@ -6,7 +6,7 @@ import { STAGE_IDS, STAGES } from '../game/stage';
 import type { StageId } from '../game/stage';
 import type { Difficulty, Mode } from '../game/engine';
 import { audio } from '../game/audio';
-import { ACTIONS, ACTION_LABELS, DEFAULT_BINDINGS, keyLabel, loadBindings, saveBindings } from '../game/input';
+import { ACTIONS, ACTION_LABELS, DEFAULT_BINDINGS, bindingConflict, bindingNotices, keyLabel, loadBindings, saveBindings } from '../game/input';
 import type { Action, Bindings } from '../game/input';
 import { applyPrefs, loadPrefs, savePrefs } from '../game/prefs';
 import type { Prefs } from '../game/prefs';
@@ -424,6 +424,7 @@ export function StageSelect({ p1, p2, initialStage = 'dojo', onPick, onBack, onR
 export function Controls({ onBack }: { onBack: () => void }) {
   const [b, setB] = useState<[Bindings, Bindings]>(loadBindings());
   const [listen, setListen] = useState<{ p: 0 | 1; a: Action; s: 0 | 1 } | null>(null);
+  const [notice,setNotice]=useState('');
 
   useEffect(() => {
     const k = (e: KeyboardEvent) => {
@@ -433,6 +434,9 @@ export function Controls({ onBack }: { onBack: () => void }) {
           setListen(null);
           return;
         }
+        const conflict=bindingConflict(b,listen.p,listen.a,e.code);
+        if(conflict){setNotice(`${keyLabel(e.code)} já está em ${conflict}. Escolha outra tecla; o controle anterior foi preservado.`);return;}
+        setNotice('');
         setB((prev) => {
           const n = JSON.parse(JSON.stringify(prev)) as [Bindings, Bindings];
           // remove duplicata no mesmo jogador
@@ -450,12 +454,13 @@ export function Controls({ onBack }: { onBack: () => void }) {
     };
     window.addEventListener('keydown', k);
     return () => window.removeEventListener('keydown', k);
-  }, [listen, onBack]);
+  }, [listen, onBack,b]);
 
   const reset = () => {
     const n = JSON.parse(JSON.stringify(DEFAULT_BINDINGS)) as [Bindings, Bindings];
     saveBindings(n);
     setB(n);
+    setNotice('');
   };
 
   const panel = (p: 0 | 1) => {
@@ -472,7 +477,7 @@ export function Controls({ onBack }: { onBack: () => void }) {
           <div className="text-[10px] text-white/50 text-center">ALTERNATIVA</div>
           {ACTIONS.map((a) => (
             <div key={a} className="contents">
-              <div className="text-[13px] flex items-center" style={{ color: a === 'super' ? '#fde047' : '#fff' }}>
+              <div className="text-[12px] leading-[17px] flex items-center" style={{ color: a === 'super' ? '#fde047' : '#fff' }}>
                 {ACTION_LABELS[a]}
               </div>
               {([0, 1] as const).map((s) => {
@@ -481,7 +486,8 @@ export function Controls({ onBack }: { onBack: () => void }) {
                   <button
                     key={s}
                     onClick={() => setListen({ p, a, s })}
-                    className="text-[12px] py-[1px] border"
+                    className="text-[11px] leading-[17px] border cursor-pointer"
+                    aria-label={`P${p+1} ${ACTION_LABELS[a]} ${s===0?'principal':'alternativa'}`}
                     style={{ background: on ? d.color : 'rgba(255,255,255,0.08)', borderColor: on ? '#fff' : 'rgba(255,255,255,0.2)', color: '#fff' }}
                   >
                     {on ? 'PRESSIONE...' : keyLabel(b[p][a][s])}
@@ -504,10 +510,11 @@ export function Controls({ onBack }: { onBack: () => void }) {
       </div>
       {panel(0)}
       {panel(1)}
-      <div className="absolute left-4 right-4 text-[11px] leading-[15px] text-white/80" style={{ top: 392 }}>
+      <div role="status" className="absolute left-4 right-4 text-[10px] leading-[13px] text-amber-200" style={{top:370,maxHeight:32,overflowY:'auto'}}>{notice||bindingNotices(b).join(' ')}</div>
+      <div className="absolute left-4 right-4 text-[10px] leading-[13px] text-white/80" style={{ top: 405 }}>
         <b className="text-yellow-300">GOLPES NORMAIS:</b> soco/chute parado = <b>fraco</b> · <b>→ + botão</b> = <b>médio</b> · <b>← + botão</b> = <b>forte</b> · <b>↓ + botão</b> = agachado · no ar = golpe aéreo. <b className="text-yellow-300">COMBOS:</b> aperte o botão em sequência
-        (fraco → médio → forte) e cancele em um especial ou super quando acertar. <b className="text-yellow-300">DEFESA:</b> segure Defesa (↓ + Defesa para golpes baixos). Agarrões ignoram defesa: G / Num7 de perto. Agarrar junto escapa. <b className="text-yellow-300">DASH:</b> toque duas vezes ← ou →.{' '}
-        <b className="text-yellow-300">DEDILHO CLASH:</b> Dedilho vs Dedilho → aperte SOCO repetidamente! <b className="text-yellow-300">PAUSA:</b> ESC ou P. <b className="text-yellow-300">TREINO:</b> R reinicia posições, T troca o dummy. Teclado sem numpad? O Jogador 2 também usa , . / ; &apos; Enter e Shift direito
+        (fraco → médio → forte) e cancele em um especial ou super quando acertar. <b className="text-yellow-300">DEFESA:</b> segure para altos/médios; ↓ + Defesa para baixos/médios. Pode manter durante hitstun. Aperte até 3 frames antes do contato para defesa perfeita; Caetano tem Leitura de 5 frames e Precisão. Normais não causam chip. Agarrões ignoram defesa: G / Num7 de perto. Agarrar junto escapa. <b className="text-yellow-300">VIRAR:</b> Q / N (padrão) no chão, sem interromper golpes. Mantém direção manual até sofrer golpe, agarrão, ULT ou rotação própria. Q/E continuam trocando categorias nos menus. <b className="text-yellow-300">DASH:</b> toque duas vezes ← ou →.{' '}
+        <b className="text-yellow-300">CHOQUES:</b> Dedilho × Dedilho → SOCO repetidamente; ULT × ULT → seu botão de ULT! <b className="text-yellow-300">PAUSA:</b> ESC ou P. <b className="text-yellow-300">TREINO:</b> R reinicia posições, T troca o dummy. Teclado sem numpad? O Jogador 2 também usa , . / ; &apos; Enter e Shift direito
         (clique em qualquer tecla acima para reconfigurar). FINISHER: use ULT após o KO decisivo.
       </div>
       <div className="absolute bottom-3 w-full flex justify-center gap-4">

@@ -30,7 +30,39 @@ Cancelamentos têm **seis frames de confirmação após o contato**, congelados 
 
 Normais fracos de chão iniciam um frame mais cedo, com mínimo de três; startup, recuperação e dano dos fortes e especiais são preservados. A defesa e os ataques em buffer respondem também no término do hitstun, blockstun e atraso de aterrissagem. Dashes avançam no frame da ativação e aceitam defesa/ataque após quatro frames de compromisso; precisam de dois novos toques. Caminhada acelera e desacelera em poucos frames, e a direção no ar continua limitada à velocidade de salto, inclusive durante ataques aéreos.
 
-Animação e hitbox usam o mesmo frame de ataque. A pose retorna gradualmente ao neutro durante toda a recuperação, com interpolação das articulações pelo caminho angular mais curto. Acertos leves têm som e partículas curtos; impactos fortes recebem graves, partículas maiores e um flash breve. Bloqueios usam som de defesa e efeitos azuis. O painel de treino mostra **ACERTO**, **BLOQUEADO** ou **ERRO**, incluindo projéteis tardios. O convidado online recebe a mesma pose e o tipo/peso do impacto pelo protocolo `dw-online-5`; ambos devem usar a versão atual do jogo.
+Animação e hitbox usam o mesmo frame de ataque. A pose retorna gradualmente ao neutro durante toda a recuperação, com interpolação das articulações pelo caminho angular mais curto. Acertos leves têm som e partículas curtos; impactos fortes recebem graves, partículas maiores e um flash breve. Bloqueios usam som de defesa e efeitos azuis. O painel de treino mostra **ACERTO**, **BLOQUEADO** ou **ERRO**, incluindo projéteis tardios. O convidado online recebe orientação manual, pose, defesa e tipo/peso do impacto pelo protocolo `dw-online-6`; ambos devem usar a versão atual do jogo.
+
+**Virada manual:** P1 usa **Q**, P2 usa **N**, e o celular tem **VIRAR** acima do direcional. Um aperto inverte a orientação atual imediatamente no chão, em neutro, inclusive agachado ou em guarda. A escolha não tem timeout: caminhada, saltos, ataques normais e cruzamentos mantêm a orientação. Outro aperto inverte novamente. Sofrer um acerto, entrar num agarrão, Clash ou ULT encerra a orientação manual; bloqueios comuns não encerram. Jane preserva a virada automática de seu chute após deslizar; os giros de Caetano e Cristyan mantêm sua coreografia. As hitboxes e os novos projéteis usam a direção escolhida; projéteis já lançados conservam sua trajetória, incluindo retornos/quiques próprios.
+
+Virar não cancela ataque, hitstun, blockstun, dash, atraso de aterrissagem, agarrão ou cinematográfica. Nesses estados o comando usa o buffer normal de 9 frames e só executa ao ficar legal; entradas antigas expiram. A virada não altera invulnerabilidade, velocidade, dano, barra ou tempos dos golpes. Q/E continuam trocando categorias na seleção. Controles antigos são preservados: se Q já for agarrão ou outro comando, Virar recebe uma tecla livre. A configuração mostra conflitos e recusa novas atribuições que apagariam outro comando. A tecla de virada também pode ser remapeada com teclado conectado no menu móvel.
+
+**Defesa:** segure **L** para altos e médios, **S + L** para baixos e médios. Ataques que exigem defesa em pé vencem a guarda agachada; agarrões continuam ignorando a defesa. Pode manter o botão durante hitstun: a guarda responde no primeiro frame livre, sem interromper combos verdadeiros ou a recuperação de seus ataques. A defesa não cobre os frames vulneráveis de aterrissagem. A orientação manual não exige um comando adicional para defender.
+
+A **defesa perfeita universal** aceita um novo aperto nos três frames antes do contato (idades 0, 1 e 2). Ela reduz o blockstun para 60%, arredondado para cima, com mínimo de quatro frames, e produz anel ciano e som próprio. Cada aperto só pode gerar uma perfeita; manter o botão, recuperar o controle ou congelar o buffer no hitstop não renova essa janela. Não concede invulnerabilidade. **Karatê Caetano** tem uma janela especial de cinco frames: Leitura zera o chip, deixa quatro frames de blockstun e carrega Precisão por dois segundos, com recarga de 24 frames. Durante a recarga ele ainda pode usar a perfeita universal, sem renovar Precisão. O HUD diferencia guarda/bloqueio alto, baixo e perfeito e mostra **LIVRE PARA RESPONDER** quando o blockstun termina; iniciar outro ataque apaga esse indicador. No celular, uma faixa legível acima dos controles repete a defesa e o momento de responder.
+
+Normais causam **zero chip**. Especiais bloqueáveis usam porcentagens individuais de dano abaixo; a perfeita universal mantém esse chip reduzido, e a Leitura de Caetano o anula. O chip dos especiais não finaliza o adversário.
+
+| Lutador | ESP 1 | ESP 2 | ESP 3 |
+| --- | --- | --- | --- |
+| Caetano | 4% | 8% | 6% |
+| Orango | 6% | 0% | 0% |
+| Tubarão | 5% | 0% | 5% |
+| Rickzera | 2,5% | 1,5% | 2,5% |
+| Bieu | 6% | 3% | 1,5% |
+| Nomad | 3% | 1% | 2% |
+| Renngotti | 0% | 4% | 4% |
+| Aneninha | 4% | 1,5% | 3,5% |
+| 1SANT0X | 3,5% | 4% | 0% |
+| JaoDoPikles | 0% | 2,5% | 3,5% |
+| Jane | 1,5% | 1,5% | 3,5% |
+| Cristyan | 3,5% | 5% | 4% |
+| Enéas | 4% | 3,5% | 2,5% |
+
+Agarrões e habilidades sem dano não usam a tabela de bloqueio. Rajadas e zonas aplicam a taxa em cada contato, mantendo seus limites existentes.
+
+**Batalha de Ultimates:** quando dois avanços de ULT ativos se chocam de frente, a luta entra numa disputa de até 2,5 segundos. Cada jogador deve apertar seu próprio botão de **ULT** repetidamente: H para P1 e Num 0 / Shift direito para P2 por padrão; no online ambos usam sua configuração de P1. No celular, o botão ULT fica destacado e a faixa acima dos controles mostra a disputa e seus toques. Soco não pontua nessa batalha. Segurar o botão ou a repetição automática do teclado não gera toques extras; os comandos que ativaram as Ultimates também não contam. No online, cada toque tem identificação própria e é ligado à batalha atual: toques que chegam juntos são contados individualmente, sem duplicar reenvios.
+
+Nos modos locais, dez toques de vantagem após pelo menos 50 frames podem encerrar a disputa mais cedo. No online há um segundo de preparação, a janela completa de 2,5 segundos para apertar e até 1,5 segundo para conferir toques em trânsito; apertos feitos fora da janela não pontuam. Ao terminar, quem tiver mais toques executa sua própria Ultimate, com a animação e o dano normais, sem multiplicador. As duas barras já foram gastas na ativação. Um empate afasta os dois sem dano e mantém o custo das duas ULTs. A IA usa a mesma taxa de disputa de sua dificuldade. Ativações simultâneas preservam as duas cinematográficas e não deixam um lutador travado. Um rival livre, com barra completa, também pode responder com ULT durante a cinematográfica; hitstun, blockstun, ataques e recuperações comprometidas não podem ser cancelados assim. Ults que não se encontram ainda podem errar e ser punidas. O choque original de Dedilhos continua usando **soco**. O vencedor ainda pode levar a partida ao finisher.
 
 - **Karatê Caetano — técnico:** uma defesa nos primeiros cinco frames carrega Precisão por dois segundos, sem dano de chip. O próximo Dedilho causa 73 em vez de 55 e pode ser confirmado em Chute da Conspiração num acerto limpo. O Dedilho recebeu impacto, som e efeitos mais fortes.
 - **Orango Tango — pressão:** acertos acumulam até três níveis de Ímpeto, cada um com +3% de dano e mais avanço. Tomar dano ou ficar três segundos sem pressionar encerra o bônus. Seus agarrões continuam próprios.
@@ -120,7 +152,7 @@ Os menus têm botões e formulários em tamanho nativo. Durante a luta aparece u
 
 ## Desafios de treinamento
 
-Entre em **TREINAMENTO** e toque/clique em **DESAFIOS**. Há 12 objetivos com progresso real: cinco acertos, três ataques baixos, dois aéreos, cinco saltos, três dashes, três segundos agachado, três bloqueios contra IA, combo de três acertos, os três especiais diferentes, 500 de dano acumulado, acertar uma ULT e completar um cooldown de distância. Este último exige um personagem com golpes à distância.
+Entre em **TREINAMENTO** e toque/clique em **DESAFIOS**. Há 15 objetivos com progresso real: cinco acertos, três ataques baixos, dois aéreos, cinco saltos, três dashes, três segundos agachado, três bloqueios contra IA, combo de três acertos, os três especiais diferentes, 500 de dano acumulado, acertar uma ULT, completar um cooldown de distância, três viradas manuais, três defesas perfeitas e três bloqueios baixos. O cooldown exige um personagem com golpes à distância; os três desafios defensivos ativam a IA.
 
 Selecionar um desafio reinicia as posições; o desafio de defesa ativa a IA. Conquistas concluídas são lembradas neste navegador. Você pode repetir qualquer desafio ou voltar ao treinamento livre. Na pausa também é possível trocar o comportamento do oponente sem teclado.
 
@@ -139,6 +171,7 @@ Bieubatman recebeu redução de aproximadamente 9% nos normais, Chave de Fenda 8
 | Mover | A / D | Setas esquerda / direita |
 | Pular / agachar | W / S | Setas cima / baixo |
 | Soco / chute / defesa | J / K / L | Num 1 / Num 2 / Num 3 |
+| Virar | Q | N |
 | Especiais | U / I / O | Num 4 / Num 5 / Num 6 |
 | ULT / Finisher | H | Num 0 |
 | Agarrar | G | Num 7 ou B |
@@ -177,7 +210,7 @@ npm run preview
 
 O build produz `dist/server/index.js` (API), `dist/server/wrangler.json` (configuração local), `dist/.openai/hosting.json` e `dist/client/` (jogo e MP3s). Pare o servidor de preview antes de recompilar. `npm run dev:client` abre apenas o cliente Vite; as contas e salas precisam do servidor completo.
 
-`npm test` inclui 196 casos de responsividade em `tests/responsiveness.test.ts`: limites do buffer, toques entre frames, pausas de impacto, comandos em cooldown, recuperação/defesa, dash, controle aéreo, cancelamentos limitados, punição de erros, diferenciação de impactos, snapshots e poses dos 13 personagens. As suítes anteriores continuam verificando IA, desafios, Ultimates, finishers, moto de Jane e API. A suíte de API abre um servidor apenas em loopback para o banco de testes; o ambiente de execução deve permitir essa conexão local.
+`npm test` inclui 196 casos de responsividade em `tests/responsiveness.test.ts`, 261 de virada/defesa em `tests/turn-defense.test.ts` e 225 casos de batalha de ULT em `tests/ultimate-clash.test.ts`. A batalha cobre os 169 confrontos entre os 13 lutadores, os dois vencedores, dano normal das Ultimates, empates, custo, comandos de teclado/toque/online, cinematográficas simultâneas, snapshots, IA, erros e finisher. As outras suítes verificam buffer, dois jogadores/lados/cruzamentos, controles antigos, giros próprios, projéteis, hitboxes, defesa perfeita, chip individual, recuperação, os 15 desafios, Ultimates, finishers, moto de Jane e API. A suíte de API abre um servidor apenas em loopback para o banco de testes; o ambiente de execução deve permitir essa conexão local.
 
 O esquema está em `db/schema.ts`. Após alterações, rode `npm run db:generate` e revise os novos SQLs em `drizzle/`. Migrações já aplicadas são preservadas. `npm run db:local` aplica apenas as pendentes no preview; o Sites aplica as hospedadas durante a publicação. O manifesto mantém a identidade do site e declara o binding lógico DB.
 

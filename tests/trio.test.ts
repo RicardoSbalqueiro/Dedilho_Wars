@@ -51,7 +51,7 @@ for(const [move,dmg] of [['s1',62],['s2',90],['s3',74]] as const){
 for(const block of [false,true]){
  const g=make('eneas');if(block)keyboard.down.add('Numpad3');g.startMove(g.f[0],CHARS.eneas.moves.s3);let lift=false,slam=false,shots=0;
  for(let i=0;i<110;i++){g.step();shots=Math.max(shots,g.projectiles.length);if(g.f[1].vy<0&&g.f[1].hp<g.f[1].maxHp)lift=true;if(g.f[1].vy>=9&&g.f[1].hp<g.f[1].maxHp-40)slam=true}
- assert.equal(shots,2);assert.equal(g.f[0].rangedUses,1);assert(Math.abs(g.f[1].maxHp-g.f[1].hp-(block?6.2:62))<.01,'finite 56 damage');if(!block){assert(lift,'5 launches');assert(slam,'6 spikes toward floor')}g.destroy();
+ assert.equal(shots,2);assert.equal(g.f[0].rangedUses,1);assert(Math.abs(g.f[1].maxHp-g.f[1].hp-(block?1.55:62))<.01,'finite 56 damage, reduced individual chip');if(!block){assert(lift,'5 launches');assert(slam,'6 spikes toward floor')}g.destroy();
 }
 for(const [ch,dmg] of [['jane',250],['cristyan',260],['eneas',275]] as const){
  const g=make(ch);g.f[1].x=580;(g as any).startSuper(g.f[0]);step(g,420);assert.equal(g.train.total,dmg,'bounded Ultimate '+ch);g.destroy();

@@ -62,6 +62,7 @@ export interface Move {
   grab?: 'puxao' | 'mordida' | 'engole' | 'moon' | 'super' | 'throw';
   dedilho?: boolean;
   pierce?: number;
+  chip?: number; // Individual blocked damage ratio; normals always deal zero chip.
   unblockable?: boolean;
   trail?: 'fw' | 'bw' | 'fa' | 'ba';
   label?: string;
@@ -763,6 +764,15 @@ export const CHARS: Record<CharId, CharDef> = {
     bio:'Médio alcance com voz, ECG e números. Preparação e recuperação lentas exigem controlar a distância e respeitar a recarga.',
   },
 };
+
+// Multi-hit projectiles/zones cost less chip per contact than committed single hits.
+export const SPECIAL_CHIP:Record<CharId,readonly [number,number,number]>={
+  caetano:[.04,.08,.06],orango:[.06,0,0],tubarao:[.05,0,.05],
+  rickzera:[.025,.015,.025],bieu:[.06,.03,.015],nomad:[.03,.01,.02],
+  renngotti:[0,.04,.04],aneninha:[.04,.015,.035],santox:[.035,.04,0],
+  jao:[0,.025,.035],jane:[.015,.015,.035],cristyan:[.035,.05,.04],eneas:[.04,.035,.025],
+};
+for(const id of CHAR_IDS)for(const [i,key] of ['s1','s2','s3'].entries())CHARS[id].moves[key].chip=SPECIAL_CHIP[id][i];
 
 // Only quick grounded normals get a one-frame adjustment. Heavy/special risk is intact.
 for(const def of Object.values(CHARS))for(const move of Object.values(def.moves))

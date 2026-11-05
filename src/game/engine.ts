@@ -23,6 +23,9 @@ export const GRAV = 0.85;
 export const METER_GAIN_SCALE = 0.5;
 export const CANCEL_CONFIRM_FRAMES = 6;
 export const DASH_COMMIT_FRAMES = 4;
+export const PERFECT_GUARD_FRAMES = 3;
+export const PRECISION_GUARD_FRAMES = 5;
+export const GUARD_READY_FEEDBACK_FRAMES = 36; // UI only; never changes actionable frames.
 export const settings = { shake: 1, hitboxes: false };
 
 export interface GameConfig {
@@ -66,6 +69,7 @@ export interface Fighter {
   vx: number;
   vy: number;
   facing: 1 | -1;
+  manualFacing:boolean;
   hp: number;
   maxHp: number;
   dispHp: number;
@@ -78,7 +82,7 @@ export interface Fighter {
   contact:'pending'|'hit'|'block'|'whiff';
   contactFrame:number;
   poseName:string;
-  impact:{serial:number;kind:'hit'|'block'|'armor';strength:number;tick:number}|null;
+  impact:{serial:number;kind:'hit'|'block'|'perfect'|'precision'|'armor';strength:number;tick:number}|null;
   hitDone: boolean;
   hbActive: boolean;
   serial: number;
@@ -87,6 +91,10 @@ export interface Fighter {
   stunLow: boolean;
   crouch: boolean;
   guard: boolean;
+  guardSpentAt:number;
+  guardResult:'none'|'block'|'perfect'|'precision';
+  guardResultT:number;
+  guardReadyT:number;
   walking: number;
   landLag: number;
   airAttacked: boolean;
@@ -138,9 +146,11 @@ interface Seq {
   dur: number;
   x0: number;
 }
+const SUPER_SEQUENCE={caetano:'superC',orango:'superO',tubarao:'superT',rickzera:'superR',bieu:'superB',nomad:'superN',renngotti:'superG',aneninha:'superA',santox:'superS',jao:'superJ',jane:'superJane',cristyan:'superCristyan',eneas:'superEneas'} as const satisfies Record<CharId,Seq['kind']>;
 
 export interface Projectile {
   owner: 0 | 1;
+  launchFacing?:1|-1;
   kind: 'franco' | 'pix' | 'rat' | 'spray' | 'burger' | 'bullet' | 'boomerang' | 'bazooka' | 'microphone' | 'osasco' | 'chess' | 'formula' | 'basketball' | 'java' | 'ecg' | 'five' | 'six';
   bounces?: number;
   age?: number;
@@ -164,9 +174,13 @@ export interface Cine {
   f: Fighter;
   t: number;
   dur: number;
+  next?:0|1;
 }
 
 export interface Clash {
+  kind:'dedilho'|'super';
+  startedAt:number;
+  pending:[number,number];
   a: Fighter;
   b: Fighter;
   t: number;
@@ -191,6 +205,7 @@ function makeFighter(idx: 0 | 1, ch: CharId, cpu: boolean): Fighter {
     vx: 0,
     vy: 0,
     facing: idx === 0 ? 1 : -1,
+    manualFacing:false,
     hp: def.hp,
     maxHp: def.hp,
     dispHp: def.hp,
@@ -209,6 +224,7 @@ function makeFighter(idx: 0 | 1, ch: CharId, cpu: boolean): Fighter {
     stunLow: false,
     crouch: false,
     guard: false,
+    guardSpentAt:-999,guardResult:'none',guardResultT:0,guardReadyT:0,
     walking: 0,
     landLag: 0,
     airAttacked: false,
@@ -343,6 +359,7 @@ export class Game {
       f.y = 0;
       f.vx = f.vy = 0;
       f.facing = f.idx === 0 ? 1 : -1;
+      f.manualFacing=false;
       f.hp = f.maxHp;
       f.dispHp = f.maxHp;
       f.state = 'ground';
@@ -356,6 +373,7 @@ export class Game {
       f.armor = false;
       f.ko = false;
       f.crouch = f.guard = false;
+      f.guardSpentAt=-999;f.guardResult='none';f.guardResultT=f.guardReadyT=0;
       f.poseOverride = null;
       f.rotAdd = 0;
       f.turn = 1;
@@ -394,10 +412,11 @@ export class Game {
     if (!this.training || id && !challengeAvailable(id,this.f[0].ch)) return;
     this.challenge = id ? {id,current:0,done:false,seen:[]} : null;
     this.challengeSuperSerial = -1;
-    this.train.dummy = id === 'block' ? 1 : 0;
+    const def=id?challengeDefinition(id):null,cpu=!!def&&'cpu' in def&&def.cpu;
+    this.train.dummy = cpu ? 1 : 0;
     this.f[1].cpu = this.train.dummy === 1;
     this.resetPositions();
-    this.f[0].x = 650; this.f[1].x = id === 'block' ? 830 : 760;
+    this.f[0].x = 650; this.f[1].x = cpu ? 830 : 760;
     this.train.lastDmg = this.train.combo = this.train.total = this.train.maxCombo = 0;
   }
 
@@ -461,7 +480,13 @@ export class Game {
     if (this.cfg.online) {
       keyboard.consumePressed();
       for (const f of this.f) {
-        ACTIONS.forEach((a,i) => {f.pad.set(a, !!(this.onlineInputs[f.idx] & (1 << i)), this.tick);if ((this.onlinePressed[f.idx] & (1 << i)) && f.pad.pressedAt[a] !== this.tick) f.pad.tap(a,this.tick)});
+        ACTIONS.forEach((a,i) => {
+          const held=!!(this.onlineInputs[f.idx]&(1<<i));
+          // Remote mash events retain their individual IDs; held masks must not double-count them.
+          if(f.idx===1&&this.clash&&a===(this.clash.kind==='super'?'super':'p'))f.pad.held[a]=held;
+          else f.pad.set(a,held,this.tick);
+          if((this.onlinePressed[f.idx]&(1<<i))&&f.pad.pressedAt[a]!==this.tick)f.pad.tap(a,this.tick);
+        });
         this.onlinePressed[f.idx] = 0;
       }
       return;
@@ -533,6 +558,13 @@ export class Game {
       return;
     }
     if (this.cine) {
+      // A free opponent may commit a full-meter ULT during the rival's cinematic.
+      // Stun, attacks, landing commitment and the initial dash commitment stay locked.
+      const rival=this.opp(this.cine.f);
+      const free=!rival.ko&&rival.y===0&&(rival.state==='ground'&&rival.landLag===0||rival.state==='dash'&&rival.stateT>=DASH_COMMIT_FRAMES);
+      if(this.cine.next===undefined&&free&&rival.pad.buffered('super',this.tick)&&this.canSuper(rival)){
+        rival.pad.consume('super');this.startSuper(rival);
+      }
       this.updateCine();
       this.updateFx();
       this.updateCamera();
@@ -774,8 +806,18 @@ export class Game {
 
   private sampleGuard(f:Fighter){
     f.crouch=f.pad.held.down;
-    f.guard=f.pad.held.block||f.pad.buffered('block',this.tick);
+    f.guard=f.landLag===0&&(f.pad.held.block||f.pad.buffered('block',this.tick));
     if(f.guard)f.pad.consume('block');
+  }
+
+  private orient(f:Fighter,o:Fighter){
+    // No animation, velocity, invulnerability, meter or recovery changes.
+    if(this.phase==='fight'&&f.state==='ground'&&f.y===0&&f.landLag===0&&f.pad.buffered('turn',this.tick)){
+      f.facing=f.facing===1?-1:1;f.manualFacing=true;f.pad.consume('turn');
+      if(f.idx===0)this.challengeEvent('turn');
+      return;
+    }
+    if(!f.manualFacing)f.facing=o.x>=f.x?1:-1;
   }
 
   private tryGroundMobility(f:Fighter){
@@ -846,6 +888,9 @@ export class Game {
     f.hbActive = false;
     f.serial++;
     f.guard = false;
+    f.guardResultT=f.guardReadyT=0;
+    // Jane's slide turns toward the rival on its authored frame 18.
+    if(f.ch==='jane'&&m.id==='s3')f.manualFacing=false;
     f.crouch = m.id === 'cP' || m.id === 'cK';
     f.turn = 1;
     if (m.air) f.airAttacked = true;
@@ -952,6 +997,8 @@ export class Game {
     const previousX=f.x;
     const enteredState=f.state;
     f.stateT++;
+    if(f.guardResultT>0)f.guardResultT--;
+    if(f.guardReadyT>0)f.guardReadyT--;
     if (f.invuln > 0) f.invuln--;
     if (f.throwShield>0) f.throwShield--;
     const def = f.def;
@@ -965,7 +1012,7 @@ export class Game {
       case 'dash': {
         f.y = 0;
         const dashing = f.state === 'dash';
-        if (!dashing) f.facing = o.x >= f.x ? 1 : -1;
+        if (!dashing) this.orient(f,o);
         if (dashing) {
           if(f.stateT>=DASH_COMMIT_FRAMES&&(pad.held.block||pad.buffered('block',tk))){
             f.state='ground';f.stateT=0;f.vx=0;break;
@@ -980,11 +1027,14 @@ export class Game {
           if (f.stateT % 3 === 0) this.dust(f.x - f.facing * 20, FLOOR_Y, 1);
           break;
         }
-        this.sampleGuard(f);
+        f.crouch=pad.held.down;
         if (f.landLag > 0) {
           f.landLag--;
-          if(f.landLag>0){f.vx*=.7;f.x+=f.vx;break;}
+          if(f.landLag>0){f.guard=false;f.vx*=.7;f.x+=f.vx;break;}
         }
+        // Landing commands, including turn/guard, become legal on this frame.
+        if(f.pad.buffered('turn',tk))this.orient(f,o);
+        this.sampleGuard(f);
         if (this.tryGroundActions(f)) return;
         if(this.tryGroundMobility(f))break;
         if (f.guard || f.crouch) {
@@ -1053,6 +1103,7 @@ export class Game {
         if (f.blockstun <= 0) {
           f.state = 'ground';
           f.stateT = 0;
+          f.guardReadyT=GUARD_READY_FEEDBACK_FRAMES;
           f.vx = 0;f.throwShield=10;f.guard=pad.held.block;f.crouch=pad.held.down;
         }
         break;
@@ -1095,7 +1146,7 @@ export class Game {
         break;
     }
     if(f.state==='ground'&&enteredState!=='ground'&&this.phase==='fight'&&!f.ko){
-      this.resetComboOf(f);f.facing=o.x>=f.x?1:-1;this.sampleGuard(f);
+      this.resetComboOf(f);this.orient(f,o);this.sampleGuard(f);
       if(!(enteredState==='dash'&&f.guard)&&f.landLag===0&&!this.tryGroundActions(f))this.tryGroundMobility(f);
     }
     if(f.y===0&&(f.state==='ground'||f.state==='dash')&&this.projectiles.some(p=>p.kind==='chess'&&p.owner!==f.idx&&p.life>0&&Math.abs(p.x-f.x)<(p.radius??110))){
@@ -1224,14 +1275,14 @@ export class Game {
     if (!kind) return;
     if(kind==='chess'){
       this.projectiles=this.projectiles.filter(p=>p.kind!=='chess'||p.owner!==f.idx);
-      this.projectiles.push({owner:f.idx,kind,x:clamp(f.x+f.facing*230,115,1485),y:0,vx:0,life:180,serial:f.serial,move:m,age:0,radius:110});
+      this.projectiles.push({owner:f.idx,launchFacing:f.facing,kind,x:clamp(f.x+f.facing*230,115,1485),y:0,vx:0,life:180,serial:f.serial,move:m,age:0,radius:110});
       this.ring(f.x+f.facing*230,FLOOR_Y-5,f.def.glow,220,25,4);audio.tone(330,.2,'triangle',.14,660);return;
     }
     if(kind==='five'&&f.moveT>m.startup){kind='six';m={...m,dmg:34,launch:0,spike:true,kb:6,hitstun:22,poses:['five_s','six_a']};}
     const speed = { franco: 12, pix: 16, rat: 8, spray: 0, burger: 9, bullet: 20, boomerang: 11, bazooka: 20, microphone: 11, osasco: 0,formula:10,basketball:9,java:10,ecg:11,five:10,six:10 }[kind];
     const y = kind==='java'?-72:kind==='ecg'?-96:kind==='five'||kind==='six'?-100:kind === 'rat' ? -18 : kind === 'bullet' ? -145 : kind === 'spray' || kind === 'osasco' ? -70 : kind === 'microphone' ? -115 : -104;
     const radius = kind === 'osasco' ? 48 : kind === 'spray' ? 62 : kind === 'rat' ? 14 : kind === 'bullet' ? 6 : kind === 'burger' ? 25 : 20;
-    this.projectiles.push({ owner: f.idx, kind, x: kind==='osasco'&&m.variant==='reverse'&&Math.abs(f.x-this.opp(f).x)<220?this.opp(f).x+f.facing*80:f.x + f.facing * (kind === 'spray' || kind === 'osasco' ? 115 : 65), y, vx: f.facing * speed, life: kind === 'osasco' ? 96 : kind === 'spray' ? 64 : kind === 'boomerang' ? 110 : 95, serial: f.serial, move: m, age: 0, radius:kind==='basketball'?23:radius, vy: kind === 'microphone' ? -2.4 : kind==='basketball'?-2.3:undefined });
+    this.projectiles.push({ owner: f.idx, launchFacing:f.facing, kind, x: kind==='osasco'&&m.variant==='reverse'&&Math.abs(f.x-this.opp(f).x)<220?this.opp(f).x+f.facing*80:f.x + f.facing * (kind === 'spray' || kind === 'osasco' ? 115 : 65), y, vx: f.facing * speed, life: kind === 'osasco' ? 96 : kind === 'spray' ? 64 : kind === 'boomerang' ? 110 : 95, serial: f.serial, move: m, age: 0, radius:kind==='basketball'?23:radius, vy: kind === 'microphone' ? -2.4 : kind==='basketball'?-2.3:undefined });
     audio.tone(kind === 'bullet' ? 220 : kind === 'rat' ? 900 : 640, 0.1, 'triangle', 0.14, kind === 'bullet' ? 70 : 1500);
     this.spark(f.x + f.facing * 60, FLOOR_Y + y, f.def.glow, 5, 4, 2, 12);
   }
@@ -1278,7 +1329,7 @@ export class Game {
       const box = { x0: p.x - r, x1: p.x + r, y0: p.y - ry, y1: p.y + ry };
       if (!this.overlap(box, this.hurtBox(d))) return true;
       if(d.invuln>0){if(d.idx===0&&d.ch==='santox'&&d.move?.id==='s3')this.challengeEvent('special',1,'s3');return true;}
-      this.applyHit(a, d, p.move, { x: p.x, y: FLOOR_Y + p.y, dir: Math.sign(p.vx) || Math.sign(d.x-p.x) || a.facing, serial: p.serial });
+      this.applyHit(a, d, p.move, { x: p.x, y: FLOOR_Y + p.y, dir: Math.sign(p.vx) || Math.sign(d.x-p.x) || p.launchFacing || a.facing, serial: p.serial });
       if (p.kind === 'boomerang') {
         p.hitMask = (p.hitMask ?? 0) | phaseMask;
         return true;
@@ -1369,6 +1420,9 @@ export class Game {
   private resolveHits() {
     const [a, b] = this.f;
     if (this.phase !== 'fight') return;
+    if(a.state==='attack'&&b.state==='attack'&&a.move?.kind==='super'&&b.move?.kind==='super'&&a.hbActive&&b.hbActive&&a.facing!==b.facing&&this.overlap(this.boxOf(a),this.boxOf(b))){
+      this.startClash(a,b,'super');return;
+    }
     if (this.clashWindow(a) && this.clashWindow(b)) {
       if (this.overlap(this.boxOf(a), this.boxOf(b))) {
         this.startClash(a, b);
@@ -1439,24 +1493,24 @@ export class Game {
       if (tracked) a.connected = true;
       if(latest)a.contact='hit';
       if(tracked)a.contactFrame=a.moveT;
-      if (m.grab === 'super') this.startSeq(({ caetano: 'superC', orango: 'superO', tubarao: 'superT', rickzera: 'superR', bieu: 'superB', nomad: 'superN', renngotti: 'superG', aneninha: 'superA',santox:'superS',jao:'superJ',jane:'superJane',cristyan:'superCristyan',eneas:'superEneas' } as const)[a.ch], a, d);
+      if (m.grab === 'super') this.startSeq(SUPER_SEQUENCE[a.ch], a, d);
       else this.startSeq(m.grab, a, d);
       return;
     }
 
-    const blocked = d.guard && d.y === 0 && (d.state === 'ground' || d.state === 'block') && !m.unblockable && (m.level !== 'low' || d.crouch) && (m.level !== 'high' || !d.crouch);
+    const blocked = d.guard && d.landLag===0 && d.y === 0 && (d.state === 'ground' || d.state === 'block') && !m.unblockable && (m.level !== 'low' || d.crouch) && (m.level !== 'high' || !d.crouch);
     if (tracked) a.connected = true;
     if(latest)a.contact=blocked?'block':'hit';
     if(tracked)a.contactFrame=a.moveT;
     if (blocked) {
-      this.recordImpact(d,'block',impactStrength(m));
-      if(d.ch==='caetano'&&d.parryCooldown===0&&this.tick-d.pad.edgeAt.block<=5){
-        if(d.idx===0)this.challengeEvent('block');
-        d.precision=120;d.parryCooldown=24;d.state='block';d.blockstun=4;d.vx=0;d.move=null;d.hbActive=false;this.gainMeter(d,6);
-        this.flash={c:'#fef3c7',a:.4};this.text(px,py-40,'LEITURA!', '#fef08a',27);this.ring(px,py,'#fef08a',90,18,5);audio.block();return;
-      }
-      if (d.idx === 0) this.challengeEvent('block');
-      const chip = m.dmg * Math.min(.2,m.pierce ?? (m.kind === 'special' ? 0.1 : 0.025));
+      const age=this.tick-d.pad.edgeAt.block,fresh=d.pad.edgeAt.block!==d.guardSpentAt&&age>=0;
+      const precision=fresh&&d.ch==='caetano'&&d.parryCooldown===0&&age<PRECISION_GUARD_FRAMES;
+      const perfect=fresh&&age<PERFECT_GUARD_FRAMES;
+      const result=precision?'precision':perfect?'perfect':'block';
+      d.guardSpentAt=d.pad.edgeAt.block;d.guardResult=result;d.guardResultT=36;d.guardReadyT=0;
+      this.recordImpact(d,result,impactStrength(m));
+      if (d.idx === 0){this.challengeEvent('block');if(m.level==='low')this.challengeEvent('blockLow');if(perfect||precision)this.challengeEvent('perfect');}
+      const chip = precision||m.kind==='normal'?0:m.dmg*Math.min(.08,m.chip??.04);
       const prev = d.hp;
       d.hp = Math.max(this.training||m.kind!=='super'?1:0,d.hp-chip);
       d.dispHp = Math.max(d.hp, d.dispHp);
@@ -1464,15 +1518,21 @@ export class Game {
       this.gainMeter(d, m.dmg * 0.05);
       d.state = 'block';
       d.stateT = 0;
-      d.blockstun = m.blockstun;
+      d.blockstun = precision?4:perfect?Math.max(4,Math.ceil(m.blockstun*.6)):m.blockstun;
       d.guard = true;
-      d.vx = dir * m.kbBlock * 1.3;
+      d.vx = precision?0:dir*m.kbBlock*1.3;
       d.move = null;
+      d.hbActive=false;
       this.hitstop = Math.max(this.hitstop, Math.round(m.hitstop * 0.6));
       this.shake = Math.max(this.shake, 2 + m.power);
-      audio.block();
-      this.spark(px, py, '#bfe3ff', 6, 5, 3, 12);
-      this.ring(px, py, '#bfe3ff', 36, 12, 3);
+      const color=precision?'#fef08a':perfect?'#67e8f9':'#bfe3ff';
+      if(precision||perfect){
+        if(precision){d.precision=120;d.parryCooldown=24;this.gainMeter(d,6)}
+        this.text(px,py-40,precision?'LEITURA!':'PERFEITA!',color,precision?27:22);
+        this.ring(px,py,color,precision?90:65,18,4);audio.perfectBlock(precision);
+      }else audio.block();
+      this.spark(px, py, color, perfect||precision?10:6, 5, 3, 12);
+      this.ring(px, py, color, 36, 12, 3);
       this.hype = Math.max(this.hype, 0.1);
       if (this.training) this.train.lastDmg = 0;
       if (a.x === d.x) a.x -= dir;
@@ -1481,6 +1541,7 @@ export class Game {
     }
 
     if(d.armor) {
+      d.manualFacing=false;
       this.recordImpact(d,'armor',.7);
       this.dealDamage(a,d,Math.max(1,m.dmg*.75));this.hitstop=Math.max(this.hitstop,4);
       this.spark(px,py,'#e2e8f0',10,6,3,16);this.text(px,py-30,'ARMADURA', '#cbd5e1',18);audio.hit(.7);
@@ -1504,6 +1565,7 @@ export class Game {
     d.move = null;
     d.hbActive = false;
     d.guard = false;
+    d.manualFacing=false;d.guardResultT=d.guardReadyT=0;d.landLag=0;
     d.armor = false;
     d.poseOverride = null;
     d.turn = 1;
@@ -1580,36 +1642,45 @@ export class Game {
   }
 
   // ------------------------------------------------------------ DEDILHO CLASH
-  private startClash(a: Fighter, b: Fighter) {
-    this.clash = { a, b, t: 0, c: [0, 0], m: [a.move!, b.move!], x: (a.x + b.x) / 2 };
+  private startClash(a: Fighter, b: Fighter,kind:Clash['kind']='dedilho') {
+    this.clash = { kind,startedAt:this.tick,pending:[0,0],a, b, t:this.cfg.online?-60:0,c: [0, 0], m: [a.move!, b.move!], x: (a.x + b.x) / 2 };
     for (const f of [a, b]) {
       f.state = 'seq';
-      f.poseOverride = 'dedo_a';
+      f.manualFacing=false;f.guardResultT=f.guardReadyT=0;
+      f.poseOverride = kind==='super'?'rush':'dedo_a';
       f.vx = 0;
       f.move = null;
       f.hbActive = false;
       f.aura = 1;
+      f.armor=false;f.invuln=0;f.glow=0;f.landLag=0;
+      f.pad.consume(kind==='super'?'super':'p');
     }
     audio.clash();
     this.shake = 28;
     this.flash = { c: '#ffffff', a: 0.8 };
     this.moveBanner = null;
-    this.announce('DEDILHO CLASH!', 'APERTE SOCO REPETIDAMENTE!', 150, '#fde047');
+    this.announce(kind==='super'?'BATALHA DE ULTS!':'DEDILHO CLASH!',this.cfg.online?'PREPARE SEU COMANDO!':kind==='super'?'APERTE SUA ULT REPETIDAMENTE!':'APERTE SOCO REPETIDAMENTE!',this.cfg.online?50:150,'#fde047');
   }
 
   private updateClash() {
     const c = this.clash!;
+    const inputFrame=c.t;
     c.t++;
     const mid = (c.a.x + c.b.x) / 2;
     this.camOv = { x: mid, zoom: 1.45 };
     this.camOvT = 2;
     const fs = [c.a, c.b];
+    const action=c.kind==='super'?'super':'p';
+    const active=inputFrame>=0&&inputFrame<150;
     for (let i = 0; i < 2; i++) {
       const f = fs[i];
+      c.c[i]+=c.pending[i];c.pending[i]=0;
+      if(!active){f.pad.consume(action);continue;}
       if (f.cpu || (this.training && i === 1 && this.train.dummy === 1)) {
         if (Math.random() < aiMashRate(this.cfg.difficulty) / 60) c.c[i]++;
-      } else if (f.pad.pressedAt.p === this.tick) {
+      } else if (f.pad.buffered(action,this.tick)) {
         c.c[i]++;
+        f.pad.consume(action);
         audio.tone(500 + c.c[i] * 12, 0.05, 'square', 0.06);
       }
     }
@@ -1622,7 +1693,13 @@ export class Game {
     }
     if (c.t % 12 === 0) audio.clash();
     const diff = c.c[0] - c.c[1];
-    if ((c.t >= 50 && Math.abs(diff) >= 10) || c.t >= 150) {
+    if ((!this.cfg.online&&c.t>=50&&Math.abs(diff)>=10)||c.t>=(this.cfg.online?240:150)) {
+      if(c.kind==='super'&&diff===0){
+        this.clash=null;
+        for(const f of fs){f.state='ground';f.stateT=0;f.poseOverride=null;f.aura=f.glow=0;f.armor=false;f.turn=1;f.landLag=14;f.vx=(Math.sign(f.x-this.opp(f).x)||-f.facing)*4;}
+        this.announce('EMPATE DE ULTS!','AS DUAS BARRAS FORAM GASTAS',65,'#67e8f9');
+        this.ring(mid,FLOOR_Y-100,'#67e8f9',180,24,6);audio.clash();return;
+      }
       const w = diff > 0 ? 0 : diff < 0 ? 1 : Math.random() < 0.5 ? 0 : 1;
       const win = fs[w];
       const lose = fs[1 - w];
@@ -1630,6 +1707,10 @@ export class Game {
       this.clash = null;
       this.announce('', '', 0);
       this.ann = null;
+      if(c.kind==='super'){
+        this.startSeq(SUPER_SEQUENCE[win.ch],win,lose);
+        this.text(win.x,FLOOR_Y-190,'VENCEU A BATALHA DE ULT!',win.def.glow,27);audio.boom(1);return;
+      }
       win.state = 'ground';
       win.poseOverride = null;
       win.aura = 0;
@@ -1659,9 +1740,17 @@ export class Game {
     }
   }
 
+  queueClashInput(side:0|1,startedAt:number,mask:number,frame=this.clash?.t??-1){
+    const c=this.clash,action=c?.kind==='super'?'super':'p';
+    if(!c||c.t<0||c.startedAt!==startedAt||frame<0||frame>=150||!(mask&(1<<ACTIONS.indexOf(action))))return false;
+    c.pending[c.a.idx===side?0:1]++;return true;
+  }
+
   // ------------------------------------------------------------ SEQUÊNCIAS (agarrões e supers)
   private startSuper(f: Fighter) {
+    if(this.cine?.f===f||this.cine?.next===f.idx)return;
     this.interruptBike(f);
+    f.manualFacing=false;f.guardResultT=f.guardReadyT=0;
     if (!this.training) f.meter = 0;
     f.state = 'cine';
     f.stateT = 0;
@@ -1673,6 +1762,12 @@ export class Game {
     f.glow = 1;
     f.aura = 1;
     f.poseOverride = f.ch === 'orango' || f.ch === 'tubarao' ? 'roar' : f.ch === 'bieu' ? 'drive' : f.ch === 'nomad' ? 'bazooka' : f.ch === 'renngotti' ? 'tilt_s' : f.ch === 'aneninha' ? 'roar' : f.ch==='santox'?'abstract_s':f.ch==='jao'?'calculation_s':f.ch==='jane'?'zord_s':f.ch==='cristyan'?'hammock_s':f.ch==='eneas'?'atom_s':'taunt';
+    // Simultaneous activations keep both cinematics instead of stranding one fighter.
+    if(this.cine){this.cine.next=f.idx;return;}
+    this.beginSuperCine(f);
+  }
+
+  private beginSuperCine(f:Fighter){
     this.cine = { f, t: 0, dur: f.ch === 'caetano' ? 100 : f.ch === 'orango' ? 120 : 75 };
     this.moveBanner = { text: f.def.superName, color: f.def.color, t: 0, dur: 150 };
     this.flash = { c: f.def.glow, a: 0.8 };
@@ -1751,6 +1846,7 @@ export class Game {
       f.glow = 1;
       f.aura = 1;
       audio.whoosh(2);
+      if(c.next!==undefined)this.beginSuperCine(this.f[c.next]);
     }
   }
 
@@ -1759,6 +1855,7 @@ export class Game {
     this.seq = { kind, a, d, t: 0, dur, x0: d.x };
     a.state = 'seq';
     d.state = 'seq';
+    for(const f of [a,d]){f.manualFacing=false;f.guardResultT=f.guardReadyT=0;f.landLag=0;}
     this.interruptBike(a);this.interruptBike(d);
     a.move = d.move = null;
     a.hbActive = d.hbActive = false;

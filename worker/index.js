@@ -1,6 +1,7 @@
 import { rememberMatch, leaderboard, profile, submitResult } from './progression.js';
 // Public game API. Application accounts use usernames, never email addresses.
-const VERSION = 'dw-online-5';
+const VERSION = 'dw-online-6';
+const MAX_INPUT_MASK = 8191; // 13 actions; turn is bit 12, existing bit positions stay intact.
 const CHARS = ['caetano','orango','tubarao','rickzera','bieu','nomad','renngotti','aneninha','santox','jao','jane','cristyan','eneas'];
 const STAGES = ['neto','dojo','liberdade','curitiba','piaui','planalto','casebre','praca','osasco','bolivia','morro','campo','casabranca','letsgay','ngb','zoologico','termodinamica'];
 const COOKIE = 'dw_session';
@@ -152,7 +153,9 @@ export default {
         if(b.epoch!==r.epoch||!['playing','finished'].includes(r.status))fail(409,'Esta partida foi encerrada.');
         if(!Number.isSafeInteger(b.n)||b.n<1||b.n>1e9)fail(400,'Sequência inválida.');
         const value=host?b.state:b.input;
-        if(host?(!value||value.v!==VERSION||!Array.isArray(value.f)||value.f.length!==2):(!value||!Number.isInteger(value.mask)||value.mask<0||value.mask>4095||!Array.isArray(value.events)||value.events.length>32||value.events.some(e=>!e||!Number.isSafeInteger(e.id)||e.id<1||!Number.isInteger(e.mask)||e.mask<0||e.mask>4095)))fail(400,'Estado inválido.');
+        const invalidEvent=e=>!e||!Number.isSafeInteger(e.id)||e.id<1||!Number.isInteger(e.mask)||e.mask<0||e.mask>MAX_INPUT_MASK||(e.clash!==undefined&&(!Number.isSafeInteger(e.clash)||e.clash<0))||(e.clashFrame!==undefined&&(!Number.isSafeInteger(e.clashFrame)||e.clashFrame< -60||e.clashFrame>240));
+        const invalid=host?(!value||value.v!==VERSION||!Array.isArray(value.f)||value.f.length!==2):(!value||!Number.isInteger(value.mask)||value.mask<0||value.mask>MAX_INPUT_MASK||!Array.isArray(value.events)||value.events.length>32||value.events.some(invalidEvent));
+        if(invalid)fail(400,'Estado inválido.');
         await db.prepare(`UPDATE rooms SET ${host?'host_state':'guest_input'}=?,${side}_n=?,${side}_seen=? WHERE code=? AND epoch=? AND ${side}_n<?`).bind(JSON.stringify(value),b.n,now(),code,r.epoch,b.n).run();
         const fresh=await member(db,code,user),peer=host?'guest':'host';
         return json({n:fresh[peer+'_n'],value:JSON.parse(fresh[host?'guest_input':'host_state']||'null'),seen:fresh[peer+'_seen'],status:fresh.status});

@@ -1,7 +1,8 @@
 import { api } from './api';
+import { MAX_INPUT_MASK } from '../game/input';
 import type { Room, Signal, User } from './api';
 import type { NetState } from '../game/net-state';
-export interface NetInput {mask:number;events:{id:number;mask:number}[]}
+export interface NetInput {mask:number;events:{id:number;mask:number;clash?:number;clashFrame?:number}[]}
 interface Packet {type:'state'|'input';n:number;state?:NetState;input?:NetInput}
 interface Callbacks {state:(s:NetState)=>void;input:(n:NetInput)=>void;status:(s:string,latency:number)=>void;lost:(message:string)=>void}
 // WebRTC direto para menor atraso; o mesmo servidor da conta retransmite se a rede bloquear P2P.
@@ -50,7 +51,7 @@ export class FightConnection {
   }
   private accept(p:Packet) {
     if(!Number.isSafeInteger(p.n)||p.n<=this.received)return;
-    if(this.host?(p.type!=='input'||!p.input||!Number.isInteger(p.input.mask)||p.input.mask<0||p.input.mask>4095||!Array.isArray(p.input.events)||p.input.events.length>32):(p.type!=='state'||!p.state))return;
+    if(this.host?(p.type!=='input'||!p.input||!Number.isInteger(p.input.mask)||p.input.mask<0||p.input.mask>MAX_INPUT_MASK||!Array.isArray(p.input.events)||p.input.events.length>32||p.input.events.some(e=>!e||!Number.isSafeInteger(e.id)||e.id<1||!Number.isInteger(e.mask)||e.mask<0||e.mask>MAX_INPUT_MASK||e.clash!==undefined&&(!Number.isSafeInteger(e.clash)||e.clash<0)||e.clashFrame!==undefined&&(!Number.isSafeInteger(e.clashFrame)||e.clashFrame< -60||e.clashFrame>240))):(p.type!=='state'||!p.state))return;
     this.received=p.n;this.peerSeen=performance.now();
     if(this.host)this.cb.input(p.input!);else this.cb.state(p.state!);
   }

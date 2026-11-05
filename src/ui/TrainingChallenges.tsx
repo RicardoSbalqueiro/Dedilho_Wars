@@ -15,7 +15,7 @@ export function TrainingChallenges({gameRef}:{gameRef:RefObject<Game|null>}) {
  const current=progress?.id==='crouch'?((progress.current||0)/60).toFixed(1):Math.floor(progress?.current||0);
  const goal=def?.id==='crouch'?'3 s':`${def?.target||0} ${def?.unit||''}`;
  const widget=<div className={mobile?'training-touch-widget':'training-widget absolute right-4 top-[103px] w-[218px] z-10'}>
-  <div className="training-status"><strong>{progress?.done?'✓ DESAFIO CONCLUÍDO':def?.title||'TREINAMENTO LIVRE'}</strong><p>{def?`${current} / ${goal}`:'12 desafios para dominar a luta'}</p>{def&&<div className="training-progress"><i style={{width:`${Math.min(100,100*(progress?.current||0)/def.target)}%`}}/></div>}</div>
+  <div className="training-status"><strong>{progress?.done?'✓ DESAFIO CONCLUÍDO':def?.title||'TREINAMENTO LIVRE'}</strong><p>{def?`${current} / ${goal}`:`${TRAINING_CHALLENGES.length} desafios para dominar a luta`}</p>{def&&<div className="training-progress"><i style={{width:`${Math.min(100,100*(progress?.current||0)/def.target)}%`}}/></div>}</div>
   <button type="button" onClick={show}>DESAFIOS</button>
  </div>;
  return <>{mobile?createPortal(widget,document.body):widget}{open&&<GameOverlay layer={80}><div role="dialog" aria-label="Desafios de treinamento" className="training-dialog absolute inset-0 z-40 bg-[#0b0615f5] text-white p-6 overflow-y-auto">

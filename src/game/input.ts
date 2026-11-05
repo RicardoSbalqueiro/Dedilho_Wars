@@ -1,7 +1,9 @@
 import { touchInput } from './touch';
-export type Action = 'left' | 'right' | 'up' | 'down' | 'p' | 'k' | 'block' | 's1' | 's2' | 's3' | 'super' | 'grab';
+export type Action = 'left' | 'right' | 'up' | 'down' | 'p' | 'k' | 'block' | 's1' | 's2' | 's3' | 'super' | 'grab' | 'turn';
 
-export const ACTIONS: Action[] = ['left', 'right', 'up', 'down', 'p', 'k', 'block', 's1', 's2', 's3', 'super', 'grab'];
+// Append actions to preserve the bit positions of saved/online commands.
+export const ACTIONS: Action[] = ['left', 'right', 'up', 'down', 'p', 'k', 'block', 's1', 's2', 's3', 'super', 'grab', 'turn'];
+export const MAX_INPUT_MASK = (1 << ACTIONS.length) - 1;
 // Includes the press frame: ages 0 through 8 remain executable.
 export const INPUT_BUFFER_FRAMES = 9;
 export const DASH_TAP_FRAMES = 14;
@@ -19,6 +21,7 @@ export const ACTION_LABELS: Record<Action, string> = {
   s3: 'Especial 3',
   super: 'Super Especial',
   grab: 'Agarrão',
+  turn: 'Virar',
 };
 
 export type Bindings = Record<Action, [string, string]>;
@@ -37,6 +40,7 @@ export const DEFAULT_BINDINGS: [Bindings, Bindings] = [
     s3: ['KeyO', ''],
     super: ['KeyH', ''],
     grab: ['KeyG', ''],
+    turn: ['KeyQ', ''],
   },
   {
     left: ['ArrowLeft', ''],
@@ -51,6 +55,7 @@ export const DEFAULT_BINDINGS: [Bindings, Bindings] = [
     s3: ['Numpad6', 'Enter'],
     super: ['Numpad0', 'ShiftRight'],
     grab: ['Numpad7', 'KeyB'],
+    turn: ['KeyN', ''],
   },
 ];
 
@@ -62,11 +67,18 @@ export function loadBindings(): [Bindings, Bindings] {
     if (raw) {
       const parsed = JSON.parse(raw);
       const out = JSON.parse(JSON.stringify(DEFAULT_BINDINGS)) as [Bindings, Bindings];
-      for (let i = 0; i < 2; i++) for (const a of ACTIONS) if (parsed?.[i]?.[a]) out[i][a] = parsed[i][a];
+      const valid=(v:unknown):v is [string,string]=>Array.isArray(v)&&v.length===2&&v.every(c=>typeof c==='string');
+      for (let i = 0; i < 2; i++) for (const a of ACTIONS) if (valid(parsed?.[i]?.[a])) out[i][a] = [parsed[i][a][0],parsed[i][a][1]];
+      // Reserve existing commands first. A legacy Q grab must never be stolen by turn.
       for(let i=0;i<2;i++)if(!parsed?.[i]?.grab){
-        const used=new Set(ACTIONS.filter(a=>a!=='grab').flatMap(a=>out[i][a]));
+        const used=new Set(ACTIONS.filter(a=>a!=='grab'&&a!=='turn').flatMap(a=>out[i][a]));
         const options=i===0?['KeyG','KeyF','KeyV','KeyQ']:['Numpad7','KeyB','Numpad8','KeyN'];
         out[i].grab=[options.find(c=>!used.has(c))||'',''];
+      }
+      for(let i=0;i<2;i++)if(!valid(parsed?.[i]?.turn)){
+        const used=new Set(out.flatMap((b,p)=>ACTIONS.filter(a=>a!=='turn'||p<i||p!==i&&valid(parsed?.[p]?.turn)).flatMap(a=>b[a])));
+        const options=i===0?['KeyQ','KeyF','KeyV','KeyC','KeyZ']:['KeyN','Numpad8','KeyM','BracketRight'];
+        out[i].turn=[options.find(c=>!used.has(c))||'',''];
       }
       return out;
     }
@@ -74,6 +86,26 @@ export function loadBindings(): [Bindings, Bindings] {
     /* ignore */
   }
   return JSON.parse(JSON.stringify(DEFAULT_BINDINGS));
+}
+
+export function bindingConflict(b:[Bindings,Bindings],player:0|1,action:Action,code:string){
+  if(!code)return null;
+  const shortcut:Record<string,string>={Escape:'Pausa',KeyP:'Pausa',KeyR:'Reiniciar treino',KeyT:'Trocar oponente no treino'};
+  if(shortcut[code])return `${shortcut[code]} (atalho do jogo)`;
+  for(const p of [0,1] as const)for(const a of ACTIONS)
+    if((p!==player||a!==action)&&b[p][a].includes(code))return `P${p+1} · ${ACTION_LABELS[a]}`;
+  return null;
+}
+
+export function bindingNotices(b:[Bindings,Bindings]){
+  const messages=new Set<string>();
+  for(const p of [0,1] as const){
+    const standard=DEFAULT_BINDINGS[p].turn[0],owner=bindingConflict(b,p,'turn',standard);
+    if(owner&&!b[p].turn.includes(standard))messages.add(`${keyLabel(standard)} já está em ${owner}; Virar P${p+1}: ${keyLabel(b[p].turn[0])}.`);
+    for(const a of ACTIONS)for(const code of b[p][a]){const other=bindingConflict(b,p,a,code);if(other)messages.add(`${keyLabel(code)}: conflito entre P${p+1} · ${ACTION_LABELS[a]} e ${other}.`)}
+    if(!b[p].turn.some(Boolean))messages.add(`Virar P${p+1} está sem tecla: escolha uma tecla livre.`);
+  }
+  return [...messages];
 }
 
 export function saveBindings(b: [Bindings, Bindings]) {

@@ -773,6 +773,16 @@ function drawHUD(ctx: CanvasRenderingContext2D, g: Game) {
     if(f.ch==='orango'&&f.momentum>0)label(ctx,`ÍMPETO ${f.momentum}/3`,x,102,11,'#fb923c','#150a1e',align,0,3);
     if(f.ch==='santox')label(ctx,f.fourthCooldown>0?`QUARTA PAREDE: ${(f.fourthCooldown/60).toFixed(1)}s`:'QUARTA PAREDE PRONTA',x,102,11,f.fourthCooldown?'#f0abfc':'#fde68a','#150a1e',align,0,3);
     if(f.ch==='jane')label(ctx,f.bikeDizzy>0?`TONTA: ${(f.bikeDizzy/60).toFixed(1)}s`:f.bikeCooldown>0?`MOTO: ${(f.bikeCooldown/60).toFixed(1)}s`:f.move?.id==='s2'?`MOTO: ${(f.bikeTicks/60).toFixed(1)}/5s · ${f.bikeHits}/6`:'MOTO PRONTA · SOLTE ANTES DE 5s',x,102,10,f.bikeDizzy?'#fb7185':'#fef08a','#150a1e',align,0,3);
+    const ready=f.state==='ground'&&f.landLag===0&&!f.ko;
+    const defending=f.guard&&(ready||f.state==='block');
+    if(defending||ready&&f.guardResultT>0){
+      const result=f.guardResultT>0?f.guardResult:'none';
+      const posture=result==='block'?(f.crouch?'BAIXO':'ALTO'):(f.crouch?'BAIXA':'ALTA');
+      const text=result==='precision'?'LEITURA PERFEITA':result==='perfect'?'DEFESA PERFEITA':`${result==='block'?'BLOQUEIO':'DEFESA'} ${posture}`;
+      label(ctx,text,x,118,10,result==='precision'?'#fef08a':result==='perfect'?'#67e8f9':'#bae6fd','#150a1e',align,0,3);
+    }
+    if(ready&&f.guardReadyT>0)label(ctx,'LIVRE PARA RESPONDER',x,132,10,'#86efac','#150a1e',align,0,3);
+    if(f.manualFacing)label(ctx,`MANUAL ${f.facing>0?'→':'←'}`,x,146,10,'#ddd6fe','#150a1e',align,0,3);
   }
   // timer
   ctx.save();
@@ -918,15 +928,20 @@ function drawClashUI(ctx: CanvasRenderingContext2D, g: Game) {
   ctx.strokeRect(x - 6, y - 6, w + 12, 34);
   ctx.restore();
   const pulse = 1 + Math.sin(g.tick * 0.7) * 0.08;
-  const k1 = keyLabel(g.cfg.bindings[0].p[0]);
-  const k2 = keyLabel(g.cfg.bindings[1].p[0]) + (g.cfg.bindings[1].p[1] ? ' / ' + keyLabel(g.cfg.bindings[1].p[1]) : '');
+  const action=c.kind==='super'?'super':'p';
+  const keys=(side:0|1)=>g.cfg.bindings[side][action].filter(Boolean).map(keyLabel).join(' / ')||'—';
+  const k1=keys(0),k2=keys(1);
   ctx.save();
   ctx.translate(W / 2, 400);
   ctx.scale(pulse, pulse);
-  label(ctx, 'SOCO! SOCO! SOCO!', 0, 0, 34, '#fde047', '#3a0a00', 'center', -0.18, 8);
+  const prompt=c.t<0?'PREPARE SEU COMANDO!':g.cfg.online&&c.t>=150?'CONFERINDO TOQUES...':c.kind==='super'?'ULT! ULT! ULT!':'SOCO! SOCO! SOCO!';
+  label(ctx,prompt,0,0,c.t<0||c.t>=150?27:34,'#fde047','#3a0a00','center',-.18,8);
   ctx.restore();
-  if (!c.a.cpu) label(ctx, `P1: ${k1}`, x, y + 50, 16, c.a.def.glow, '#000', 'left', -0.1, 4);
-  if (!c.b.cpu) label(ctx, `P2: ${k2}`, x + w, y + 50, 16, c.b.def.glow, '#000', 'right', 0.1, 4);
+  if(g.cfg.online)label(ctx,`SEU COMANDO: ${k1}`,W/2,y+50,16,'#fde047','#000','center',0,4);
+  else{
+    if (!c.a.cpu) label(ctx, `P1: ${k1}`, x, y + 50, 16, c.a.def.glow, '#000', 'left', -0.1, 4);
+    if (!c.b.cpu) label(ctx, `P2: ${k2}`, x + w, y + 50, 16, c.b.def.glow, '#000', 'right', 0.1, 4);
+  }
 }
 
 function drawCine(ctx: CanvasRenderingContext2D, g: Game) {

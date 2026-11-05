@@ -244,6 +244,11 @@ class AudioEngine {
     this.noise(0.05, 0.3, 3000, 'highpass');
     this.tone(320, 0.07, 'triangle', 0.3, 180);
   }
+  perfectBlock(precision=false) {
+    this.block();
+    this.tone(precision?880:660,.12,'sine',.24,precision?1760:1320);
+    this.tone(precision?1320:990,.18,'triangle',.12,precision?1980:1485);
+  }
   whoosh(p = 1) {
     this.noise(0.12 + 0.06 * p, 0.12 + 0.05 * p, 500, 'bandpass', 0, 2600);
   }

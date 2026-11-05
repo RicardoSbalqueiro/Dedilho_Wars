@@ -97,7 +97,7 @@ export function GameScreen({ cfg, onExit, onSelect, onMap, onRadio, inputSuspend
       <canvas ref={ref} width={W} height={H} className="absolute inset-0" />
       {!cinematic && !paused && result===null && <div className="absolute bottom-[3px] left-1/2 -translate-x-1/2 text-[10px] tracking-widest text-white/50 pointer-events-none">P1: {keyLabel(cfg.bindings[0].down[0])} AGACHAR · P2: {keyLabel(cfg.bindings[1].down[0])} AGACHAR · ESC / P: PAUSA</div>}
 
-      {!paused && !cinematic && result === null && <TouchControls onMenu={() => gameRef.current?.togglePause()}/>}
+      {!paused && !cinematic && result === null && <TouchControls gameRef={gameRef} onMenu={() => gameRef.current?.togglePause()}/>}
       {paused && (
         <GameOverlay><div className="pause-menu absolute inset-0 bg-black/80 flex flex-col items-center justify-center gap-2 fade-in">
           <div className="title-main text-5xl text-white mb-2" style={{ textShadow: '0 0 20px #a855f7, 4px 4px 0 #000' }}>

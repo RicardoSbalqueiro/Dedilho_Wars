@@ -34,5 +34,18 @@ for(const [id,move,count] of [['hits','pL',5],['low','cK',3],['air','jK',2],['da
 {
  const g=make('range');for(let i=0;i<3;i++)g.startMove(g.f[0],g.f[0].def.moves.s3);assert(!g.challenge?.done,'wait is required');step(g,300);assert(g.challenge?.done,'cooldown completed');g.startChallenge(null);assert.equal(g.challenge,null);g.destroy();
 }
-assert.equal(TRAINING_CHALLENGES.length,12);assert.equal(challengeAvailable('range','caetano'),false);assert.equal(challengeAvailable('range','nomad'),true);
-console.log('All12 training challenges completed by actual hits, blocking, movement, combo, super or cooldown. No false block or premature cooldown reward.');
+{
+ const g=make('turn');for(let i=0;i<3;i++){keyboard.down.add('KeyQ');g.step();keyboard.down.clear();g.step()}assert(g.challenge?.done,'3 legal manual turns');g.destroy();
+}
+for(const id of ['perfect','blockLow'] as const){
+ const g=make(id);assert.equal(g.train.dummy,1,'defensive drills activate CPU');g.train.dummy=3;g.f[1].cpu=false;
+ for(let i=0;i<3;i++){
+  keyboard.down.clear();g.resetPositions();g.f[0].x=650;g.f[1].x=725;
+  if(id==='blockLow')keyboard.down.add('KeyS');keyboard.down.add('KeyL');
+  const f=g.f[1];g.startMove(f,f.def.moves[id==='blockLow'?'cK':'pL']);f.moveT=f.move!.startup;g.step();
+  assert.equal(g.f[0].state,'block');
+ }
+ assert(g.challenge?.done,id+' requires three actual blocks');keyboard.down.clear();g.destroy();
+}
+assert.equal(TRAINING_CHALLENGES.length,15);assert.equal(challengeAvailable('range','caetano'),false);assert.equal(challengeAvailable('range','nomad'),true);
+console.log('All15 training challenges completed by actual hits, blocks/perfect/low blocks, turns, movement, combo, super or cooldown. No false defense reward.');

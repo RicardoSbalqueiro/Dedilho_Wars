@@ -60,6 +60,8 @@ export function aiAct(g: Game, f: Fighter, diff: Difficulty) {
   const dist = Math.abs(dx);
   const dir = dx >= 0 ? 1 : -1;
   const canAct = f.state === 'ground' || f.state === 'dash';
+  // Prepare held defense during stun/recovery; the engine alone decides when it is legal.
+  const canPrepareGuard=['ground','dash','hit','block','getup'].includes(f.state)&&!f.ko;
   let block = false;
   let crouch = false;
   let forced: number | null = null;
@@ -70,7 +72,7 @@ export function aiAct(g: Game, f: Fighter, diff: Difficulty) {
     crouch = f.crouch;
   }
   const incoming = g.projectiles.find((p) => p.owner !== f.idx && Math.abs(p.x - f.x) < (p.kind === 'spray' ? 100 : 280) && ((f.x - p.x) * p.vx > 0 || p.kind === 'spray'));
-  if (incoming && canAct && rnd() < P.block * 0.12) ai.guardT = tk + 24;
+  if (incoming && canPrepareGuard && rnd() < P.block * 0.12) ai.guardT = tk + 24;
   if (f.ch === 'rickzera' && f.state === 'jump' && f.airJumps < 2 && f.vy > 0 && dist > 170 && rnd() < P.aggr * 0.08) tap('up');
   if (f.ch === 'renngotti' && f.state === 'jump' && !f.airAttacked && Math.abs(o.y - f.y) < 125 && dist < 150 && rnd() < P.aggr * 0.2) tap(rnd() < 0.5 ? 'p' : 'k');
   const mv = o.move;
@@ -83,14 +85,16 @@ export function aiAct(g: Game, f: Fighter, diff: Difficulty) {
     }
   }
   if (o.state === 'attack' && mv && mv.grab && dist < 170 && P.react < 12 && rnd() < 0.04 && canAct) tap('up');
-  if (tk >= ai.blockT && tk <= ai.blockUntil && canAct) {
+  if (tk >= ai.blockT && tk <= ai.blockUntil && canPrepareGuard) {
     block = true;
     crouch = ai.blockLow;
   }
-  if (tk < ai.guardT && canAct && (dist < 230 || incoming)) {
+  if (tk < ai.guardT && canPrepareGuard && (dist < 230 || incoming)) {
     block = true;
     if (incoming?.move.level === 'low') crouch = true;
   }
+
+  if(f.manualFacing&&f.facing!==dir&&f.state==='ground'&&f.landLag===0)tap('turn');
 
   // ---------- planos de combo ----------
   if (ai.plan.length) {
