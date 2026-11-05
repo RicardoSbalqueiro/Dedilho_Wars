@@ -10,7 +10,7 @@ for sound in sounds:
 with ZipFile(out/'Dedilho-Wars-projeto.zip','w',ZIP_DEFLATED) as z:
  for name in ['README.md','.gitignore','.openai/hosting.json','package.json','package-lock.json','tsconfig.json','vite.config.ts','drizzle.config.ts','index.html']:
   z.write(root/name,'Dedilho-Wars/'+name)
- for folder in ['src','worker','db','drizzle','scripts','tests']:
+ for folder in ['src','worker','db','drizzle','scripts','tests','docs']:
   for p in sorted((root/folder).rglob('*')):
    if p.is_file() and '__pycache__' not in p.parts:z.write(p,'Dedilho-Wars/'+p.relative_to(root).as_posix())
  z.writestr('Dedilho-Wars/JOGAR.html',offline)

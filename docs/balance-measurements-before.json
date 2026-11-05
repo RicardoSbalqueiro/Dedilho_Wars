@@ -1,0 +1,225 @@
+{
+  "method": {
+    "fps": 60,
+    "targets": [
+      "jane",
+      "cristyan",
+      "orango"
+    ],
+    "spacings": "sum of push widths + 5; and + 65",
+    "routesPerTargetSpacing": 245,
+    "maxSteps": 900,
+    "simulations": 19110,
+    "limitations": "Bounded grounded route search; not a proof of the global maximum. No jumps, dash routes, preplaced projectiles, corner positioning, Precision or Momentum setup. Defender guards after first hit; stop at first recovered state. Visual hit counts in older builds may include phantom sequence contacts. No human playtests."
+  },
+  "measurements": [
+    {
+      "character": "caetano",
+      "name": "KARATÊ CAETANO",
+      "hp": 1000,
+      "walk": 4.4,
+      "pushW": 26,
+      "hurtH": 172,
+      "ultimateDamage": 320,
+      "maxObservedCombo": {
+        "damage": 453,
+        "target": "jane",
+        "distance": 51,
+        "route": "cP → k → k → super",
+        "contacts": 14
+      }
+    },
+    {
+      "character": "orango",
+      "name": "ORANGO TANGO BITENCOURT",
+      "hp": 1150,
+      "walk": 3,
+      "pushW": 44,
+      "hurtH": 150,
+      "ultimateDamage": 341,
+      "maxObservedCombo": {
+        "damage": 527.43,
+        "target": "jane",
+        "distance": 69,
+        "route": "cP → k → k → super",
+        "contacts": 12
+      }
+    },
+    {
+      "character": "tubarao",
+      "name": "TUBARÃO FISCAL",
+      "hp": 1230,
+      "walk": 3.25,
+      "pushW": 39,
+      "hurtH": 196,
+      "ultimateDamage": 290,
+      "maxObservedCombo": {
+        "damage": 463.9,
+        "target": "jane",
+        "distance": 64,
+        "route": "cP → k → k → super",
+        "contacts": 3
+      }
+    },
+    {
+      "character": "rickzera",
+      "name": "RICKZERA",
+      "hp": 940,
+      "walk": 4.8,
+      "pushW": 26,
+      "hurtH": 172,
+      "ultimateDamage": 280,
+      "maxObservedCombo": {
+        "damage": 400.7,
+        "target": "jane",
+        "distance": 51,
+        "route": "cP → k → k → super",
+        "contacts": 6
+      }
+    },
+    {
+      "character": "bieu",
+      "name": "BIEUBATMAN",
+      "hp": 1080,
+      "walk": 3.9,
+      "pushW": 30,
+      "hurtH": 178,
+      "ultimateDamage": 275,
+      "maxObservedCombo": {
+        "damage": 414.6,
+        "target": "jane",
+        "distance": 55,
+        "route": "cP → k → k → super",
+        "contacts": 3
+      }
+    },
+    {
+      "character": "nomad",
+      "name": "NOMAD LOBBY",
+      "hp": 1100,
+      "walk": 3.6,
+      "pushW": 33,
+      "hurtH": 171,
+      "ultimateDamage": 285,
+      "maxObservedCombo": {
+        "damage": 418,
+        "target": "jane",
+        "distance": 58,
+        "route": "cP → k → k → super",
+        "contacts": 3
+      }
+    },
+    {
+      "character": "renngotti",
+      "name": "RENNGOTTI",
+      "hp": 1020,
+      "walk": 4.1,
+      "pushW": 29,
+      "hurtH": 180,
+      "ultimateDamage": 315,
+      "maxObservedCombo": {
+        "damage": 448,
+        "target": "jane",
+        "distance": 54,
+        "route": "cP → k → k → super",
+        "contacts": 3
+      }
+    },
+    {
+      "character": "aneninha",
+      "name": "ANENINHA",
+      "hp": 1000,
+      "walk": 4.3,
+      "pushW": 27,
+      "hurtH": 169,
+      "ultimateDamage": 290,
+      "maxObservedCombo": {
+        "damage": 421.1,
+        "target": "jane",
+        "distance": 52,
+        "route": "cP → k → k → super",
+        "contacts": 6
+      }
+    },
+    {
+      "character": "santox",
+      "name": "1SANT0X",
+      "hp": 950,
+      "walk": 4.15,
+      "pushW": 26,
+      "hurtH": 186,
+      "ultimateDamage": 240,
+      "maxObservedCombo": {
+        "damage": 360.7,
+        "target": "jane",
+        "distance": 51,
+        "route": "cP → k → k → super",
+        "contacts": 4
+      }
+    },
+    {
+      "character": "jao",
+      "name": "JaoDoPikles",
+      "hp": 990,
+      "walk": 3.8,
+      "pushW": 28,
+      "hurtH": 177,
+      "ultimateDamage": 260,
+      "maxObservedCombo": {
+        "damage": 387.3,
+        "target": "jane",
+        "distance": 53,
+        "route": "cP → k → k → super",
+        "contacts": 4
+      }
+    },
+    {
+      "character": "jane",
+      "name": "JANE",
+      "hp": 860,
+      "walk": 4.6,
+      "pushW": 20,
+      "hurtH": 115,
+      "ultimateDamage": 250,
+      "maxObservedCombo": {
+        "damage": 354.5,
+        "target": "jane",
+        "distance": 45,
+        "route": "cP → k → k → super",
+        "contacts": 5
+      }
+    },
+    {
+      "character": "cristyan",
+      "name": "CRISTYAN",
+      "hp": 1060,
+      "walk": 3.9,
+      "pushW": 30,
+      "hurtH": 179,
+      "ultimateDamage": 260,
+      "maxObservedCombo": {
+        "damage": 392.1,
+        "target": "jane",
+        "distance": 55,
+        "route": "cP → k → k → super",
+        "contacts": 3
+      }
+    },
+    {
+      "character": "eneas",
+      "name": "DOUTOR ENÉAS",
+      "hp": 1080,
+      "walk": 3.2,
+      "pushW": 31,
+      "hurtH": 184,
+      "ultimateDamage": 275,
+      "maxObservedCombo": {
+        "damage": 406.1,
+        "target": "jane",
+        "distance": 56,
+        "route": "cP → k → k → super",
+        "contacts": 3
+      }
+    }
+  ]
+}

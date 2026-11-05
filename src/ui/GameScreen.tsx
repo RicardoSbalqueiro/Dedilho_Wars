@@ -4,6 +4,7 @@ import { rememberLocal } from '../game/progression';
 import { FinisherPrompt } from './FinisherPrompt';
 import { useEffect, useRef, useState } from 'react';
 import { TrainingChallenges } from './TrainingChallenges';
+import { FrameDataLab } from './FrameDataLab';
 import { GameOverlay, TouchControls } from './TouchControls';
 import { Game } from '../game/engine';
 import type { GameConfig } from '../game/engine';
@@ -22,6 +23,7 @@ export function GameScreen({ cfg, onExit, onSelect, onMap, onRadio, inputSuspend
   const [result, setResult] = useState<number | null>(null);
   const [sel, setSel] = useState(0);
   const [dummy, setDummy] = useState(0);
+  const [frameLabOpen,setFrameLabOpen]=useState(false);
   const resultTimerRef = useRef<number | undefined>(undefined);
   const overlayRef = useRef<HTMLDivElement>(null);
 
@@ -59,7 +61,7 @@ export function GameScreen({ cfg, onExit, onSelect, onMap, onRadio, inputSuspend
 
   // navegação por teclado nos menus de pausa / vitória
   useEffect(() => {
-    if (inputSuspended || (!paused && result === null)) return;
+    if (inputSuspended || frameLabOpen || (!paused && result === null)) return;
     const onKey = (e: KeyboardEvent) => {
       if (!['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight', 'KeyS', 'KeyW', 'Enter', 'Space'].includes(e.code)) return;
       e.preventDefault();
@@ -75,7 +77,7 @@ export function GameScreen({ cfg, onExit, onSelect, onMap, onRadio, inputSuspend
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [paused, result, sel, cfg.mode, inputSuspended]);
+  }, [paused, result, sel, cfg.mode, inputSuspended,frameLabOpen]);
 
   const g = gameRef.current;
   const rematch = () => {
@@ -93,12 +95,13 @@ export function GameScreen({ cfg, onExit, onSelect, onMap, onRadio, inputSuspend
   return (
     <div ref={overlayRef} className="absolute inset-0">
       {cfg.mode === 'training' && <TrainingChallenges gameRef={gameRef}/>}
+      {cfg.mode === 'training' && <FrameDataLab gameRef={gameRef} onOpenChange={setFrameLabOpen}/>}
       <FinisherPrompt gameRef={gameRef}/>
       <canvas ref={ref} width={W} height={H} className="absolute inset-0" />
       {!cinematic && !paused && result===null && <div className="absolute bottom-[3px] left-1/2 -translate-x-1/2 text-[10px] tracking-widest text-white/50 pointer-events-none">P1: {keyLabel(cfg.bindings[0].down[0])} AGACHAR · P2: {keyLabel(cfg.bindings[1].down[0])} AGACHAR · ESC / P: PAUSA</div>}
 
       {!paused && !cinematic && result === null && <TouchControls gameRef={gameRef} onMenu={() => gameRef.current?.togglePause()}/>}
-      {paused && (
+      {paused && !frameLabOpen && (
         <GameOverlay><div className="pause-menu absolute inset-0 bg-black/80 flex flex-col items-center justify-center gap-2 fade-in">
           <div className="title-main text-5xl text-white mb-2" style={{ textShadow: '0 0 20px #a855f7, 4px 4px 0 #000' }}>
             PAUSADO

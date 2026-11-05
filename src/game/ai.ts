@@ -2,6 +2,17 @@
 import type { Game, Fighter, Difficulty } from './engine';
 import type { Action } from './input';
 
+// Include stationary hazards and choose the nearest threat, not array insertion order.
+// Chess has no damage and must not trick the CPU into holding guard forever.
+export function incomingProjectile(g:Game,f:Fighter){
+ return g.projectiles.filter(p=>{
+  if(p.owner===f.idx||p.life<=0||p.move.dmg<=0)return false;
+  const dx=f.x-p.x;
+  if(p.vx===0)return Math.abs(dx)<(p.radius??20)+f.def.pushW+30;
+  return Math.abs(dx)<280&&dx*p.vx>0;
+ }).sort((a,b)=>Math.abs(a.x-f.x)-Math.abs(b.x-f.x))[0];
+}
+
 export interface AIState {
   tapAt: Partial<Record<Action, number>>;
   thinkT: number;
@@ -71,7 +82,7 @@ export function aiAct(g: Game, f: Fighter, diff: Difficulty) {
     block = true;
     crouch = f.crouch;
   }
-  const incoming = g.projectiles.find((p) => p.owner !== f.idx && Math.abs(p.x - f.x) < (p.kind === 'spray' ? 100 : 280) && ((f.x - p.x) * p.vx > 0 || p.kind === 'spray'));
+  const incoming = incomingProjectile(g,f);
   if (incoming && canPrepareGuard && rnd() < P.block * 0.12) ai.guardT = tk + 24;
   if (f.ch === 'rickzera' && f.state === 'jump' && f.airJumps < 2 && f.vy > 0 && dist > 170 && rnd() < P.aggr * 0.08) tap('up');
   if (f.ch === 'renngotti' && f.state === 'jump' && !f.airAttacked && Math.abs(o.y - f.y) < 125 && dist < 150 && rnd() < P.aggr * 0.2) tap(rnd() < 0.5 ? 'p' : 'k');

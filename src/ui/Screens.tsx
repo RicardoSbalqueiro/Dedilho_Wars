@@ -37,8 +37,11 @@ export function Splash({ onStart }: { onStart: () => void }) {
 
 function Title({ big }: { big?: boolean }) {
   return (
+    <div>
     <div className="title-main" style={{ fontSize: big ? 90 : 53, letterSpacing: big ? '0.04em' : '-0.025em', color: '#fff', WebkitTextStroke: `${big ? 2 : 1}px #6d28d9`, textShadow: '0 0 28px #a855f7, 5px 5px 0 #180a30', transform: 'skewX(-8deg) rotate(-2deg)' }}>
       DEDILHO WARS
+    </div>
+    <div className="creator-credit" style={{textAlign:big?'center':'left'}}>By Rickzera</div>
     </div>
   );
 }
@@ -87,7 +90,7 @@ export function MainMenu({ onChoose, onRadio, suspended = false }: { onChoose: (
       <div className="absolute left-8 top-10">
         <Title />
       </div>
-      <div className="absolute left-8 top-[115px] flex flex-col gap-[4px]">
+      <div className="absolute left-8 top-[132px] flex flex-col gap-[3px]">
         {items.map(([k, label, color], i) => (
           <SkewBtn
             key={k}

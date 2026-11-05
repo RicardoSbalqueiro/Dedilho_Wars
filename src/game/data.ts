@@ -272,12 +272,12 @@ const orangoMoves: Record<string, Move> = Object.fromEntries([
     launch: 7, launchVx: 8, hitstop: 13, shake: 16, power: 2.5, poses: ['dedo_s', 'dedo_a'], advance: [20, 27, 5], dedilho: true, label: 'DEDILHO SUPREMO', charge: true, sound: 'red',
   }),
   mv('s2', {
-    kind: 'special', rank: 9, startup: 8, active: 3, recovery: 20, whiff: 18, dmg: 160, hitstun: 0, blockstun: 0, kb: 0, kbBlock: 0, hb: [0, 125, 15, 150],
+    kind: 'special', rank: 9, startup: 16, active: 3, recovery: 20, whiff: 18, dmg: 140, hitstun: 0, blockstun: 0, kb: 0, kbBlock: 0, hb: [0, 105, 15, 150],
     hitstop: 0, shake: 0, power: 2, poses: ['puxao_s', 'puxao_a'], grab: 'puxao', unblockable: true, label: 'PUXÃO DE CAMISA', sound: 'red',
   }),
   mv('s3', {
-    kind: 'special', rank: 9, startup: 10, active: 16, recovery: 24, whiff: 24, dmg: 125, hitstun: 0, blockstun: 0, kb: 0, kbBlock: 0, hb: [0, 100, 0, 70], level: 'low',
-    hitstop: 4, shake: 0, power: 2, poses: ['mord_s', 'mord_a'], advance: [10, 26, 11], grab: 'mordida', label: 'MORDIDA NA PERNA', sound: 'red',
+    kind: 'special', rank: 9, startup: 18, active: 10, recovery: 24, whiff: 24, dmg: 125, hitstun: 0, blockstun: 0, kb: 0, kbBlock: 0, hb: [0, 100, 0, 70], level: 'low',
+    hitstop: 4, shake: 0, power: 2, poses: ['mord_s', 'mord_a'], advance: [18, 28, 9], grab: 'mordida', label: 'MORDIDA NA PERNA', sound: 'red',
   }),
 ]);
 
@@ -330,7 +330,7 @@ const tubaraoMoves: Record<string, Move> = Object.fromEntries(
 );
 Object.assign(tubaraoMoves, Object.fromEntries([
   mv('s1', { kind: 'special', rank: 9, startup: 13, active: 8, recovery: 25, whiff: 12, dmg: 100, hitstun: 27, blockstun: 16, kb: 8, kbBlock: 5, hb: [18, 160, 65, 180], hitstop: 10, shake: 10, power: 2, poses: ['bite_s', 'bite_a'], advance: [8, 22, 6], label: 'MORDIDA' }),
-  mv('s2', { kind: 'special', rank: 9, startup: 11, active: 4, recovery: 28, whiff: 20, dmg: 145, hitstun: 0, blockstun: 0, kb: 0, hb: [0, 118, 5, 180], hitstop: 0, power: 2, poses: ['swallow_s', 'swallow_a'], grab: 'engole', unblockable: true, label: 'ENGOLE' }),
+  mv('s2', { kind: 'special', rank: 9, startup: 18, active: 4, recovery: 28, whiff: 20, dmg: 125, hitstun: 0, blockstun: 0, kb: 0, hb: [0, 96, 5, 180], hitstop: 0, power: 2, poses: ['swallow_s', 'swallow_a'], grab: 'engole', unblockable: true, label: 'ENGOLE' }),
   mv('s3', { kind: 'special', rank: 9, startup: 12, active: 10, recovery: 28, whiff: 16, dmg: 95, hitstun: 28, blockstun: 17, kb: 10, kbBlock: 6, hb: [10, 170, 35, 185], launch: 11, launchVx: 7, hitstop: 12, shake: 14, power: 2.4, poses: ['fin_s', 'fin_a'], advance: [9, 23, 8], label: 'CABEÇADA DE BARBATANA' }),
 ]));
 const rickzeraMoves: Record<string, Move> = Object.fromEntries(
@@ -407,7 +407,7 @@ const renngottiPoses: Record<string, Pose> = {
 };
 const renngottiMoves = copyNormals(1, 0, 7);
 Object.assign(renngottiMoves, Object.fromEntries([
-  mv('s1', { kind: 'special', rank: 9, startup: 10, active: 4, recovery: 26, whiff: 18, dmg: 90, hitstun: 0, blockstun: 0, kb: 0, hb: [0, 120, 0, 176], hitstop: 0, shake: 6, power: 1.8, poses: ['moon_s', 'moon_a'], grab: 'moon', unblockable: true, label: 'JOGA PRA LUA' }),
+  mv('s1', { kind: 'special', rank: 9, startup: 16, active: 4, recovery: 26, whiff: 18, dmg: 90, hitstun: 0, blockstun: 0, kb: 0, hb: [0, 100, 0, 176], hitstop: 0, shake: 6, power: 1.8, poses: ['moon_s', 'moon_a'], grab: 'moon', unblockable: true, label: 'JOGA PRA LUA' }),
   mv('s2', { kind: 'special', rank: 9, startup: 14, active: 3, recovery: 23, whiff: 8, dmg: 60, hitstun: 23, blockstun: 14, kb: 6, kbBlock: 3, hb: [20, 110, 65, 150], hitstop: 8, shake: 6, power: 1.4, poses: ['mic_s', 'mic_a'], label: 'JOGAR MICROFONE' }),
   mv('s3', { kind: 'special', rank: 9, startup: 17, active: 12, recovery: 30, whiff: 13, dmg: 65, hitstun: 28, blockstun: 17, kb: 13, kbBlock: 7, hb: [10, 300, 20, 190], hitstop: 9, shake: 12, power: 1.9, poses: ['shout_s', 'shout_a'], label: 'GRITO ALTO' }),
 ]));

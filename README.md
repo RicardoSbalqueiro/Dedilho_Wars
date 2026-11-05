@@ -1,5 +1,7 @@
 # DEDILHO WARS
 
+By Rickzera
+
 Jogo de luta 2D com 13 lutadores, 17 cenários, finishers, progressão e rádio integrada.
 
 ## Jogar
@@ -28,9 +30,9 @@ O buffer de comandos é de **9 frames a 60 Hz** (cerca de 150 ms, incluindo o fr
 
 Cancelamentos têm **seis frames de confirmação após o contato**, congelados durante o hitstop. Normais progridem estritamente de fraco para médio e forte; num acerto limpo podem passar para um especial e, com 100 de barra, ULT. Um bloqueio permite apenas a progressão dos normais. Erros não permitem cancelar; a exceção Dedilho → Chute da Conspiração de Caetano exige acerto e termina no chute. A moto de Jane e os ataques aéreos mantêm suas restrições. O limite de quatro impactos no juggle permanece.
 
-Normais fracos de chão iniciam um frame mais cedo, com mínimo de três; startup, recuperação e dano dos fortes e especiais são preservados. A defesa e os ataques em buffer respondem também no término do hitstun, blockstun e atraso de aterrissagem. Dashes avançam no frame da ativação e aceitam defesa/ataque após quatro frames de compromisso; precisam de dois novos toques. Caminhada acelera e desacelera em poucos frames, e a direção no ar continua limitada à velocidade de salto, inclusive durante ataques aéreos.
+Normais fracos de chão iniciam um frame mais cedo, com mínimo de três; os fortes mantêm seu compromisso. Os ajustes individuais dos agarrões estão na auditoria de balanceamento abaixo. A defesa e os ataques em buffer respondem também no término do hitstun, blockstun e atraso de aterrissagem. Dashes avançam no frame da ativação e aceitam defesa/ataque após quatro frames de compromisso; precisam de dois novos toques. Caminhada acelera e desacelera em poucos frames, e a direção no ar continua limitada à velocidade de salto, inclusive durante ataques aéreos.
 
-Animação e hitbox usam o mesmo frame de ataque. A pose retorna gradualmente ao neutro durante toda a recuperação, com interpolação das articulações pelo caminho angular mais curto. Acertos leves têm som e partículas curtos; impactos fortes recebem graves, partículas maiores e um flash breve. Bloqueios usam som de defesa e efeitos azuis. O painel de treino mostra **ACERTO**, **BLOQUEADO** ou **ERRO**, incluindo projéteis tardios. O convidado online recebe orientação manual, pose, defesa e tipo/peso do impacto pelo protocolo `dw-online-6`; ambos devem usar a versão atual do jogo.
+Animação e hitbox usam o mesmo frame de ataque. A pose retorna gradualmente ao neutro durante toda a recuperação, com interpolação das articulações pelo caminho angular mais curto. Acertos leves têm som e partículas curtos; impactos fortes recebem graves, partículas maiores e um flash breve. Bloqueios usam som de defesa e efeitos azuis. O painel de treino mostra **ACERTO**, **BLOQUEADO** ou **ERRO**, incluindo projéteis tardios. O convidado online recebe orientação manual, pose, defesa, escala da sequência e tipo/peso do impacto pelo protocolo `dw-online-7`; ambos devem usar a versão atual do jogo.
 
 **Virada manual:** P1 usa **Q**, P2 usa **N**, e o celular tem **VIRAR** acima do direcional. Um aperto inverte a orientação atual imediatamente no chão, em neutro, inclusive agachado ou em guarda. A escolha não tem timeout: caminhada, saltos, ataques normais e cruzamentos mantêm a orientação. Outro aperto inverte novamente. Sofrer um acerto, entrar num agarrão, Clash ou ULT encerra a orientação manual; bloqueios comuns não encerram. Jane preserva a virada automática de seu chute após deslizar; os giros de Caetano e Cristyan mantêm sua coreografia. As hitboxes e os novos projéteis usam a direção escolhida; projéteis já lançados conservam sua trajetória, incluindo retornos/quiques próprios.
 
@@ -69,7 +71,7 @@ Nos modos locais, dez toques de vantagem após pelo menos 50 frames podem encerr
 - **Renngotti — alcance:** microfones que passam pelo rival se tornam armadilhas baixas por tempo limitado. Grito ressoa nessas zonas, ampliando sua área de efeito. A armadilha pode ser saltada ou defendida.
 - **Aneninha — improviso:** baixo + ESP 1 usa Rasteira de Osasco. Frente + ESP 2 posiciona o muro atrás de um adversário próximo; fora desse alcance mantém o posicionamento normal. As variantes são controladas pelo jogador.
 
-Todos têm um agarrão curto com **G / Num7** ou o botão **AGARRAR**. Pressionar agarrão no mesmo momento permite escapar de um agarrão comum; os agarrões especiais exigem esquiva ou salto. Ataques em recuperação podem ser punidos, mas o rival não pode ser agarrado durante hitstun, blockstun, salto ou proteção de recuperação. Armadura recebe dano reduzido e absorve a interrupção; não é invulnerabilidade. Os oito lutadores anteriores mantêm seus golpes e atributos.
+Todos têm um agarrão curto com **G / Num7** ou o botão **AGARRAR**. Pressionar agarrão no mesmo momento permite escapar de um agarrão comum; os agarrões especiais exigem esquiva ou salto. Ataques em recuperação podem ser punidos, mas o rival não pode ser agarrado durante hitstun, blockstun, salto ou proteção de recuperação. Armadura recebe dano reduzido e absorve a interrupção; não é invulnerabilidade.
 
 ## Viewers e equilíbrio
 
@@ -81,7 +83,7 @@ Ambos têm os modos locais, IA, treino, online, controles de toque, falas, perfi
 
 ## Jane, Cristyan e Doutor Enéas
 
-**Jane (Viewer)** é uma mulher adulta de baixa estatura: cabelo loiro em bob com franja reta, jaqueta branca, corpo pequeno de cerca de 60% da altura de Caetano. Tem 860 HP, normais de alcance curto e dano em ×0,78. Seus comandos Java saem do laptop em uma dupla de 18+18; a dupla conta como um uso à distância.
+**Jane (Viewer)** é uma mulher adulta de baixa estatura: cabelo loiro em bob com franja reta, jaqueta branca, corpo pequeno de cerca de 60% da altura de Caetano. Tem 860 HP, normais de alcance curto e dano em ×0,78. Seus comandos Java saem do laptop em uma dupla de 18+18 brutos (34,2 quando os dois contatos formam combo); a dupla conta como um uso à distância.
 
 Para **Dando Grau de Moto**, segure **I / Num5 / ESP 2**. Jane fica parada girando a moto por até cinco segundos. O giro acelera, mas só permite **seis contatos**, com intervalo mínimo de meio segundo e dano de 11 a 15 por contato, inclusive contando contatos defendidos. Não há armadura ou invulnerabilidade; ataques e agarrões podem interromper. Soltar antes do limite evita a queda e inicia a recuperação. **Segurar além de cinco segundos derruba a moto e deixa Jane tonta e vulnerável por exatamente um segundo.** O HUD mostra o tempo, os contatos e a tontura. Soltar, cair ou ser interrompida inicia a **recarga de três segundos**. A pausa congela esses tempos; um novo round os reinicia.
 
@@ -158,6 +160,14 @@ Selecionar um desafio reinicia as posições; o desafio de defesa ativa a IA. Co
 
 ## Balanceamento e limite de distância
 
+O [relatório completo](docs/balance-changes.md) contém o diagnóstico dos 13 lutadores, as fichas por golpe, a tabela **ANTES / DEPOIS**, razões de cada ajuste e limites dos resultados. A busca determinística percorre **19.110 rotas por versão**; seu maior dano observado caiu de **527,43 para 396,90**, sem mudar os totais das ULTs isoladas. Isso não é uma prova do máximo absoluto nem aprovação por jogadores humanos; não usamos winrate de IA para declarar equilíbrio.
+
+A escala de combo agora é **100%, 90%, 80%, 70%, 60%, 50%, 40%, 30%, piso 20%**. Sequências cinematográficas herdam a escala na entrada e conservam o dano da abertura no contador. Captura de ULT exatamente no frame de recuperação também conserva a escala; após um frame inteiramente livre, uma nova abertura volta a 100%.
+
+ULTs têm **12f de preparação vulnerável depois do anúncio**, captura até altura 100 e armadura somente no avanço ativo. Um oponente livre pode saltar ao terminar o anúncio ou interromper a preparação; o erro mantém **34f de recuperação vulnerável**. Custo e animações continuam próprios. Engole agora tem **18f / alcance 96 / dano 125**; Puxão do Orango **16f / 105 / 140**; Mordida prepara em 18f e avança menos; Lua de Renngotti tem **16f / 100 / 90**. Renngotti mantém no máximo **dois microfones** por dono; o terceiro substitui o mais antigo. A IA reconhece as armadilhas estacionárias.
+
+No treinamento, **FRAME DATA** abre comparação entre quaisquer dois lutadores, com golpes independentes, atributos reais, startup/ativos/recovery/whiff, stun, alcance, chip e notas de contrajogo. A vantagem teórica aparece apenas quando a fórmula se aplica; outros casos mostram “Variável”. Há observação de estado/contato/escala, **AVANÇAR 1 FRAME**, preparação de golpe do P1, hitboxes e monitor durante a luta. Essas ferramentas só executam ações no treino offline pausado. `npm run balance:audit` regenera as medições e as fichas atuais.
+
 Após três usos de golpes à distância, o lutador passa cinco segundos sem poder iniciar outro golpe à distância. O contador é compartilhado entre seus especiais: uma rajada inteira conta como um uso, independentemente de acertar. Corpo a corpo, defesa, movimento e ULT continuam disponíveis. O HUD mostra usos e tempo restante. A pausa local congela o relógio; um novo round reinicia o limite. A regra vale para humanos, IA, treinamento e online.
 
 Entram no limite os projéteis, as pichações, os gritos, o Dedilho Supremo do Orangotango, o Soco Elástico, os comandos Java de Jane e os três especiais de JaoDoPikles e Enéas. Caetano e Tubarão mantêm seus especiais de contato. Os ganhos de ULT continuam em ×0,5.
@@ -210,7 +220,7 @@ npm run preview
 
 O build produz `dist/server/index.js` (API), `dist/server/wrangler.json` (configuração local), `dist/.openai/hosting.json` e `dist/client/` (jogo e MP3s). Pare o servidor de preview antes de recompilar. `npm run dev:client` abre apenas o cliente Vite; as contas e salas precisam do servidor completo.
 
-`npm test` inclui 196 casos de responsividade em `tests/responsiveness.test.ts`, 261 de virada/defesa em `tests/turn-defense.test.ts` e 225 casos de batalha de ULT em `tests/ultimate-clash.test.ts`. A batalha cobre os 169 confrontos entre os 13 lutadores, os dois vencedores, dano normal das Ultimates, empates, custo, comandos de teclado/toque/online, cinematográficas simultâneas, snapshots, IA, erros e finisher. As outras suítes verificam buffer, dois jogadores/lados/cruzamentos, controles antigos, giros próprios, projéteis, hitboxes, defesa perfeita, chip individual, recuperação, os 15 desafios, Ultimates, finishers, moto de Jane e API. A suíte de API abre um servidor apenas em loopback para o banco de testes; o ambiente de execução deve permitir essa conexão local.
+`npm test` inclui **322 casos de balanceamento** em `tests/balance.test.ts`, além de 196 casos de responsividade em `tests/responsiveness.test.ts`, 261 de virada/defesa em `tests/turn-defense.test.ts` e 225 casos de batalha de ULT em `tests/ultimate-clash.test.ts`. A batalha cobre os 169 confrontos entre os 13 lutadores, os dois vencedores, dano normal das Ultimates, empates, custo, comandos de teclado/toque/online, cinematográficas simultâneas, snapshots, IA, erros e finisher. As outras suítes verificam buffer, dois jogadores/lados/cruzamentos, controles antigos, giros próprios, projéteis, hitboxes, defesa perfeita, chip individual, recuperação, os 15 desafios, Ultimates, finishers, moto de Jane e API. A suíte de API abre um servidor apenas em loopback para o banco de testes; o ambiente de execução deve permitir essa conexão local.
 
 O esquema está em `db/schema.ts`. Após alterações, rode `npm run db:generate` e revise os novos SQLs em `drizzle/`. Migrações já aplicadas são preservadas. `npm run db:local` aplica apenas as pendentes no preview; o Sites aplica as hospedadas durante a publicação. O manifesto mantém a identidade do site e declara o binding lógico DB.
 

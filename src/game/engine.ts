@@ -14,6 +14,7 @@ import { FLOOR_Y } from './stage';
 import type { StageId } from './stage';
 import { aiAct, aiMashRate, newAI } from './ai';
 import type { AIState } from './ai';
+import { comboDamageScale, MICROPHONE_LIMIT, SUPER_STARTUP_FRAMES, SUPER_CAPTURE_HEIGHT } from './balance';
 
 export type Difficulty = 'easy' | 'normal' | 'hard';
 export type Mode = 'ai' | 'versus' | 'training';
@@ -145,6 +146,7 @@ interface Seq {
   t: number;
   dur: number;
   x0: number;
+  damageScale: number;
 }
 const SUPER_SEQUENCE={caetano:'superC',orango:'superO',tubarao:'superT',rickzera:'superR',bieu:'superB',nomad:'superN',renngotti:'superG',aneninha:'superA',santox:'superS',jao:'superJ',jane:'superJane',cristyan:'superCristyan',eneas:'superEneas'} as const satisfies Record<CharId,Seq['kind']>;
 
@@ -261,6 +263,9 @@ function makeFighter(idx: 0 | 1, ch: CharId, cpu: boolean): Fighter {
 }
 
 export class Game {
+  // Only used within one synchronous step; snapshots cannot occur mid-step.
+  // A super capture on the exact recovery frame must not reset combo scaling.
+  private recoveredCombos=new Map<Fighter,{hits:number;damage:number}>();
   cfg: GameConfig;
   f: [Fighter, Fighter];
   tick = 0;
@@ -459,6 +464,23 @@ export class Game {
     this.onEvent({ type: 'pause', paused: this.paused });
   }
 
+  // Inspection helpers are offline-training only, with the match remaining paused.
+  stepTrainingFrame() {
+    if(!this.training||this.cfg.online||!this.paused)return false;
+    this.paused=false;
+    try {this.step();} finally {this.paused=true;}
+    return true;
+  }
+
+  previewTrainingMove(id:string) {
+    const f=this.f[0];
+    if(!this.training||this.cfg.online||!this.paused||this.phase!=='fight'||this.cine||this.seq||this.clash||f.state!=='ground'||f.y!==0||f.landLag>0)return false;
+    if(id==='super'){this.startSuper(f);return true;}
+    const move=f.def.moves[id];
+    if(!move||move.air)return false;
+    return this.startMove(f,move);
+  }
+
   announce(text: string, sub = '', dur = 70, color = '#ffffff') {
     this.ann = { text, sub, t: 0, dur, color };
   }
@@ -499,6 +521,7 @@ export class Game {
 
   step() {
     if (this.paused) return;
+    this.recoveredCombos.clear();
     this.tick++;
     for (const f of this.f) {
       if(f.fourthCooldown>0)f.fourthCooldown--;
@@ -980,6 +1003,7 @@ export class Game {
 
   private resetComboOf(f: Fighter) {
     if (f.comboHits > 0) {
+      this.recoveredCombos.set(f,{hits:f.comboHits,damage:f.comboDmg});
       const att = 1 - f.idx;
       if (f.comboHits >= 2) this.comboShow[att] = { hits: f.comboHits, dmg: f.comboDmg, t: 90 };
       if (this.training) {
@@ -1198,6 +1222,9 @@ export class Game {
     }
     const a0 = m.startup;
     const a1 = m.startup + m.active;
+    // Full-meter commitment has interruptible preparation and punishable recovery.
+    // Armor belongs only to the advancing capture window, never its missed recovery.
+    if(m.kind==='super')f.armor=t>=a0&&t<a1;
     const rangedKind = this.projectileKind(f, m);
     const ranged = rangedKind !== null;
     if(t>=a1&&f.contact==='pending'&&!ranged&&(m.dmg>0||m.grab))f.contact='whiff';
@@ -1273,6 +1300,11 @@ export class Game {
   private spawnProjectile(f: Fighter, m: Move) {
     let kind = this.projectileKind(f, m);
     if (!kind) return;
+    if(kind==='microphone'){
+      const owned=this.projectiles.filter(p=>p.owner===f.idx&&p.kind==='microphone'&&p.life>0);
+      const replaced=new Set(owned.slice(0,Math.max(0,owned.length-MICROPHONE_LIMIT+1)));
+      this.projectiles=this.projectiles.filter(p=>!replaced.has(p));
+    }
     if(kind==='chess'){
       this.projectiles=this.projectiles.filter(p=>p.kind!=='chess'||p.owner!==f.idx);
       this.projectiles.push({owner:f.idx,launchFacing:f.facing,kind,x:clamp(f.x+f.facing*230,115,1485),y:0,vx:0,life:180,serial:f.serial,move:m,age:0,radius:110});
@@ -1553,9 +1585,9 @@ export class Game {
     if (a.idx === 0) { if(m.level==='low')this.challengeEvent('low'); if(m.air)this.challengeEvent('air'); if(m.kind==='special'&&/^s[123]$/.test(m.id))this.challengeEvent('special',1,m.id); }
     const air = d.y < 0 || d.state === 'launched';
     if (d.state === 'hit' || d.state === 'launched') d.comboHits++;
-    else d.comboHits = 1;
+    else {d.comboHits = 1;d.comboDmg=0;}
     if (a.idx === 0) this.challengeEvent('combo',d.comboHits);
-    const scale = [1, 1, 0.9, 0.8, 0.7, 0.6, 0.5, 0.45][Math.min(d.comboHits - 1, 7)];
+    const scale = comboDamageScale(d.comboHits-1);
     const dmg = Math.max(1, m.dmg * scale * (a.ch==='orango'?1+a.momentum*.03:1));
     if(a.ch==='orango'){a.momentum=Math.min(3,a.momentum+1);a.momentumT=180;}
     if(d.ch==='orango')d.momentum=d.momentumT=0;
@@ -1826,23 +1858,23 @@ export class Game {
         id: 'super',
         kind: 'super',
         rank: 9,
-        startup: 0,
+        startup: SUPER_STARTUP_FRAMES,
         active: ['santox','jao','jane','cristyan','eneas'].includes(f.ch)?24:34,
         recovery: 34,
         whiff: 0,
         dmg: 0,
-        hb: [0, 100, -10, 120],
+        hb: [0, 100, -10, SUPER_CAPTURE_HEIGHT],
         grab: 'super',
         unblockable: true,
         poses: ['rush', 'rush'],
-        advance: [0, ['santox','jao','jane','cristyan','eneas'].includes(f.ch)?24:34, ['santox','jao','jane','cristyan','eneas'].includes(f.ch)?12:sp],
+        advance: [SUPER_STARTUP_FRAMES, SUPER_STARTUP_FRAMES+(['santox','jao','jane','cristyan','eneas'].includes(f.ch)?24:34), ['santox','jao','jane','cristyan','eneas'].includes(f.ch)?12:sp],
         trail: 'fa',
         label: undefined,
         turn: undefined,
         charge: false,
       };
       this.startMove(f, m);
-      f.armor = true;
+      f.armor = false;
       f.glow = 1;
       f.aura = 1;
       audio.whoosh(2);
@@ -1852,7 +1884,11 @@ export class Game {
 
   private startSeq(kind: Seq['kind'], a: Fighter, d: Fighter) {
     const dur = { puxao: 86, mordida: 78, engole: 100, superC: 215, superO: 215, superT: 150, superR: 170, superB: 160, superN: 150, superG: 155, superA: 206,superS:180,superJ:195,superJane:180,superCristyan:185,superEneas:195, moon: 74, throw:60 }[kind];
-    this.seq = { kind, a, d, t: 0, dur, x0: d.x };
+    const recovered=kind.startsWith('super')?this.recoveredCombos.get(d):undefined;
+    if(recovered){d.comboHits=recovered.hits;d.comboDmg=recovered.damage;}
+    const continuing=d.state==='hit'||d.state==='launched'||!!recovered;
+    if(!continuing){d.comboHits=0;d.comboDmg=0;}
+    this.seq = { kind, a, d, t: 0, dur, x0: d.x, damageScale:comboDamageScale(d.comboHits) };
     a.state = 'seq';
     d.state = 'seq';
     for(const f of [a,d]){f.manualFacing=false;f.guardResultT=f.guardReadyT=0;f.landLag=0;}
@@ -1866,8 +1902,6 @@ export class Game {
     a.crouch = d.crouch = false;
     a.turn = d.turn = 1;
     d.facing = (-a.facing) as 1 | -1;
-    d.comboHits = ['superR','superG','superA','superS','superJ','superJane','superCristyan','superEneas','moon','throw'].includes(kind)?0:1;
-    d.comboDmg = 0;
     if (kind.startsWith('super')) {
       a.y = 0;
       d.y = 0;
@@ -1884,7 +1918,7 @@ export class Game {
   }
 
   private seqHit(a: Fighter, d: Fighter, dmg: number, power: number, color: string) {
-    this.dealDamage(a, d, dmg);
+    this.dealDamage(a, d, dmg*(this.seq?.damageScale??1));
     d.comboHits++;
     if(a.idx===0)this.challengeEvent('combo',d.comboHits);
     const px = d.x + rand(-14, 14);

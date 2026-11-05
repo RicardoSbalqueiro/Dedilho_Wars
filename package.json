@@ -11,7 +11,8 @@
     "dev:client": "vite",
     "db:generate": "drizzle-kit generate",
     "db:local": "node scripts/migrate-local.mjs",
-    "test": "node scripts/test.mjs"
+    "test": "node scripts/test.mjs",
+    "balance:audit": "node scripts/balance-report.mjs docs/balance-measurements-after.json docs/balance-after.json"
   },
   "dependencies": {
     "clsx": "2.1.1",

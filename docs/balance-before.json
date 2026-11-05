@@ -1,0 +1,5872 @@
+{
+  "commit": "8c424527e5237ad5738f6b185c907be5a08bdb14",
+  "characters": {
+    "caetano": {
+      "id": "caetano",
+      "name": "KARATÊ CAETANO",
+      "short": "CAETANO",
+      "title": "O MAIOR ARTISTA MARCIAL DO MUNDO (segundo ele)",
+      "hp": 1000,
+      "walk": 4.4,
+      "walkBack": 3.6,
+      "jumpVy": 16.5,
+      "jumpVx": 5.4,
+      "dashVx": 11.5,
+      "dashDur": 15,
+      "pushW": 26,
+      "hurtH": 172,
+      "crouchH": 110,
+      "moves": {
+        "pL": {
+          "id": "pL",
+          "kind": "normal",
+          "rank": 1,
+          "startup": 3,
+          "active": 3,
+          "recovery": 8,
+          "whiff": 0,
+          "dmg": 22,
+          "hitstun": 13,
+          "blockstun": 8,
+          "kb": 2.5,
+          "kbBlock": 2,
+          "hb": [
+            20,
+            95,
+            105,
+            140
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 5,
+          "shake": 2,
+          "power": 0.6,
+          "poses": [
+            "pL_s",
+            "pL_a"
+          ],
+          "trail": "fw"
+        },
+        "pM": {
+          "id": "pM",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 6,
+          "active": 4,
+          "recovery": 13,
+          "whiff": 0,
+          "dmg": 40,
+          "hitstun": 17,
+          "blockstun": 11,
+          "kb": 4,
+          "kbBlock": 2,
+          "hb": [
+            20,
+            115,
+            100,
+            142
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 7,
+          "shake": 2,
+          "power": 0.9,
+          "poses": [
+            "pM_s",
+            "pM_a"
+          ],
+          "trail": "bw"
+        },
+        "pH": {
+          "id": "pH",
+          "kind": "normal",
+          "rank": 3,
+          "startup": 9,
+          "active": 4,
+          "recovery": 19,
+          "whiff": 0,
+          "dmg": 65,
+          "hitstun": 22,
+          "blockstun": 14,
+          "kb": 7,
+          "kbBlock": 4,
+          "hb": [
+            20,
+            130,
+            95,
+            145
+          ],
+          "level": "mid",
+          "launch": 6,
+          "launchVx": 5,
+          "hitstop": 9,
+          "shake": 5,
+          "power": 1.2,
+          "poses": [
+            "pH_s",
+            "pH_a"
+          ],
+          "trail": "bw"
+        },
+        "kL": {
+          "id": "kL",
+          "kind": "normal",
+          "rank": 1,
+          "startup": 4,
+          "active": 3,
+          "recovery": 10,
+          "whiff": 0,
+          "dmg": 24,
+          "hitstun": 13,
+          "blockstun": 8,
+          "kb": 2.5,
+          "kbBlock": 2,
+          "hb": [
+            15,
+            100,
+            50,
+            100
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 5,
+          "shake": 2,
+          "power": 0.6,
+          "poses": [
+            "kL_s",
+            "kL_a"
+          ],
+          "trail": "fa"
+        },
+        "kM": {
+          "id": "kM",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 7,
+          "active": 4,
+          "recovery": 14,
+          "whiff": 0,
+          "dmg": 45,
+          "hitstun": 18,
+          "blockstun": 12,
+          "kb": 5,
+          "kbBlock": 2,
+          "hb": [
+            20,
+            118,
+            80,
+            140
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 7,
+          "shake": 2,
+          "power": 0.9,
+          "poses": [
+            "kM_s",
+            "kM_a"
+          ],
+          "trail": "fa"
+        },
+        "kH": {
+          "id": "kH",
+          "kind": "normal",
+          "rank": 3,
+          "startup": 10,
+          "active": 5,
+          "recovery": 21,
+          "whiff": 0,
+          "dmg": 70,
+          "hitstun": 23,
+          "blockstun": 15,
+          "kb": 8,
+          "kbBlock": 5,
+          "hb": [
+            20,
+            125,
+            70,
+            165
+          ],
+          "level": "mid",
+          "launch": 6,
+          "launchVx": 6,
+          "hitstop": 9,
+          "shake": 5,
+          "power": 1.2,
+          "poses": [
+            "kH_s",
+            "kH_a"
+          ],
+          "trail": "fa"
+        },
+        "cP": {
+          "id": "cP",
+          "kind": "normal",
+          "rank": 1,
+          "startup": 4,
+          "active": 3,
+          "recovery": 9,
+          "whiff": 0,
+          "dmg": 25,
+          "hitstun": 13,
+          "blockstun": 8,
+          "kb": 2,
+          "kbBlock": 2,
+          "hb": [
+            20,
+            100,
+            50,
+            95
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 5,
+          "shake": 2,
+          "power": 0.6,
+          "poses": [
+            "cP_s",
+            "cP_a"
+          ],
+          "trail": "fw"
+        },
+        "cK": {
+          "id": "cK",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 8,
+          "active": 4,
+          "recovery": 22,
+          "whiff": 0,
+          "dmg": 50,
+          "hitstun": 22,
+          "blockstun": 12,
+          "kb": 6,
+          "kbBlock": 2,
+          "hb": [
+            10,
+            135,
+            0,
+            35
+          ],
+          "level": "low",
+          "launch": 5,
+          "launchVx": 4,
+          "hitstop": 8,
+          "shake": 2,
+          "power": 1,
+          "poses": [
+            "cK_s",
+            "cK_a"
+          ],
+          "trail": "fa"
+        },
+        "jP": {
+          "id": "jP",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 5,
+          "active": 10,
+          "recovery": 0,
+          "whiff": 0,
+          "dmg": 50,
+          "hitstun": 18,
+          "blockstun": 12,
+          "kb": 4,
+          "kbBlock": 2,
+          "hb": [
+            10,
+            95,
+            20,
+            125
+          ],
+          "level": "high",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 7,
+          "shake": 2,
+          "power": 0.9,
+          "poses": [
+            "jP_s",
+            "jP_a"
+          ],
+          "air": true,
+          "trail": "fw"
+        },
+        "jK": {
+          "id": "jK",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 6,
+          "active": 10,
+          "recovery": 0,
+          "whiff": 0,
+          "dmg": 55,
+          "hitstun": 19,
+          "blockstun": 12,
+          "kb": 5,
+          "kbBlock": 2,
+          "hb": [
+            5,
+            100,
+            -10,
+            85
+          ],
+          "level": "high",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 7,
+          "shake": 2,
+          "power": 1,
+          "poses": [
+            "jK_s",
+            "jK_a"
+          ],
+          "air": true,
+          "trail": "fa"
+        },
+        "s1": {
+          "id": "s1",
+          "kind": "special",
+          "rank": 9,
+          "startup": 12,
+          "active": 8,
+          "recovery": 22,
+          "whiff": 8,
+          "dmg": 90,
+          "hitstun": 26,
+          "blockstun": 16,
+          "kb": 9,
+          "kbBlock": 6,
+          "hb": [
+            10,
+            155,
+            25,
+            155
+          ],
+          "level": "mid",
+          "launch": 8,
+          "launchVx": 7,
+          "hitstop": 10,
+          "shake": 9,
+          "power": 2,
+          "poses": [
+            "chute_s",
+            "chute_a"
+          ],
+          "trail": "fa",
+          "advance": [
+            10,
+            20,
+            4
+          ],
+          "label": "CHUTE DA CONSPIRAÇÃO",
+          "turn": [
+            3,
+            14
+          ],
+          "sound": "purple",
+          "chip": 0.04
+        },
+        "s2": {
+          "id": "s2",
+          "kind": "special",
+          "rank": 9,
+          "startup": 8,
+          "active": 5,
+          "recovery": 16,
+          "whiff": 6,
+          "dmg": 55,
+          "hitstun": 14,
+          "blockstun": 10,
+          "kb": 3,
+          "kbBlock": 1,
+          "hb": [
+            30,
+            140,
+            100,
+            140
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 11,
+          "shake": 4,
+          "power": 1.5,
+          "poses": [
+            "dedo_s",
+            "dedo_a"
+          ],
+          "trail": "fw",
+          "advance": [
+            6,
+            15,
+            13
+          ],
+          "dedilho": true,
+          "pierce": 0.55,
+          "label": "DEDILHO PERFURANTE",
+          "sound": "purple",
+          "chip": 0.08
+        },
+        "s3": {
+          "id": "s3",
+          "kind": "special",
+          "rank": 9,
+          "startup": 30,
+          "active": 6,
+          "recovery": 26,
+          "whiff": 34,
+          "dmg": 140,
+          "hitstun": 30,
+          "blockstun": 20,
+          "kb": 12,
+          "kbBlock": 8,
+          "hb": [
+            20,
+            130,
+            60,
+            155
+          ],
+          "level": "mid",
+          "launch": 11,
+          "launchVx": 9,
+          "hitstop": 15,
+          "shake": 22,
+          "power": 3,
+          "poses": [
+            "soco_s",
+            "soco_a"
+          ],
+          "advance": [
+            28,
+            36,
+            5
+          ],
+          "label": "SOCO PEGO!",
+          "charge": true,
+          "sound": "purple",
+          "chip": 0.06
+        }
+      },
+      "specials": [
+        {
+          "key": "U",
+          "name": "CHUTE DA CONSPIRAÇÃO",
+          "desc": "Chute giratório com rastro roxo. Empurra e derruba."
+        },
+        {
+          "key": "I",
+          "name": "DEDILHO PERFURANTE",
+          "desc": "Estocada ultrarrápida que fura a defesa."
+        },
+        {
+          "key": "O",
+          "name": "SOCO PEGO",
+          "desc": "Soco exagerado, dano enorme. Se errar, paga caro."
+        }
+      ],
+      "superName": "CONSPIRAÇÃO ABSOLUTA"
+    },
+    "orango": {
+      "id": "orango",
+      "name": "ORANGO TANGO BITENCOURT",
+      "short": "ORANGO",
+      "title": "O REI DA SELVA",
+      "hp": 1150,
+      "walk": 3,
+      "walkBack": 2.4,
+      "jumpVy": 15,
+      "jumpVx": 3.6,
+      "dashVx": 7.5,
+      "dashDur": 16,
+      "pushW": 44,
+      "hurtH": 150,
+      "crouchH": 95,
+      "moves": {
+        "pL": {
+          "id": "pL",
+          "kind": "normal",
+          "rank": 1,
+          "startup": 5,
+          "active": 3,
+          "recovery": 11,
+          "whiff": 0,
+          "dmg": 30,
+          "hitstun": 14,
+          "blockstun": 9,
+          "kb": 3.5,
+          "kbBlock": 2,
+          "hb": [
+            25,
+            140,
+            85,
+            130
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 6,
+          "shake": 2,
+          "power": 0.6,
+          "poses": [
+            "pL_s",
+            "pL_a"
+          ],
+          "trail": "fw"
+        },
+        "pM": {
+          "id": "pM",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 9,
+          "active": 4,
+          "recovery": 17,
+          "whiff": 0,
+          "dmg": 55,
+          "hitstun": 18,
+          "blockstun": 12,
+          "kb": 5,
+          "kbBlock": 2,
+          "hb": [
+            25,
+            150,
+            60,
+            125
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 8,
+          "shake": 3,
+          "power": 1,
+          "poses": [
+            "pM_s",
+            "pM_a"
+          ],
+          "trail": "fw"
+        },
+        "pH": {
+          "id": "pH",
+          "kind": "normal",
+          "rank": 3,
+          "startup": 14,
+          "active": 5,
+          "recovery": 25,
+          "whiff": 0,
+          "dmg": 90,
+          "hitstun": 24,
+          "blockstun": 16,
+          "kb": 9,
+          "kbBlock": 5,
+          "hb": [
+            20,
+            160,
+            20,
+            125
+          ],
+          "level": "mid",
+          "launch": 7,
+          "launchVx": 6,
+          "hitstop": 11,
+          "shake": 8,
+          "power": 1.6,
+          "poses": [
+            "pH_s",
+            "pH_a"
+          ],
+          "trail": "fw"
+        },
+        "kL": {
+          "id": "kL",
+          "kind": "normal",
+          "rank": 1,
+          "startup": 6,
+          "active": 3,
+          "recovery": 12,
+          "whiff": 0,
+          "dmg": 32,
+          "hitstun": 14,
+          "blockstun": 9,
+          "kb": 3.5,
+          "kbBlock": 2,
+          "hb": [
+            20,
+            108,
+            20,
+            65
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 6,
+          "shake": 2,
+          "power": 0.6,
+          "poses": [
+            "kL_s",
+            "kL_a"
+          ],
+          "trail": "fa"
+        },
+        "kM": {
+          "id": "kM",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 10,
+          "active": 4,
+          "recovery": 18,
+          "whiff": 0,
+          "dmg": 60,
+          "hitstun": 19,
+          "blockstun": 12,
+          "kb": 5.5,
+          "kbBlock": 2,
+          "hb": [
+            20,
+            120,
+            25,
+            90
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 8,
+          "shake": 3,
+          "power": 1,
+          "poses": [
+            "kM_s",
+            "kM_a"
+          ],
+          "trail": "fa"
+        },
+        "kH": {
+          "id": "kH",
+          "kind": "normal",
+          "rank": 3,
+          "startup": 14,
+          "active": 5,
+          "recovery": 27,
+          "whiff": 0,
+          "dmg": 95,
+          "hitstun": 25,
+          "blockstun": 16,
+          "kb": 10,
+          "kbBlock": 6,
+          "hb": [
+            20,
+            150,
+            30,
+            140
+          ],
+          "level": "mid",
+          "launch": 7,
+          "launchVx": 7,
+          "hitstop": 11,
+          "shake": 8,
+          "power": 1.6,
+          "poses": [
+            "kH_s",
+            "kH_a"
+          ],
+          "trail": "fa"
+        },
+        "cP": {
+          "id": "cP",
+          "kind": "normal",
+          "rank": 1,
+          "startup": 6,
+          "active": 3,
+          "recovery": 12,
+          "whiff": 0,
+          "dmg": 34,
+          "hitstun": 14,
+          "blockstun": 9,
+          "kb": 3,
+          "kbBlock": 2,
+          "hb": [
+            25,
+            135,
+            30,
+            80
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 6,
+          "shake": 2,
+          "power": 0.6,
+          "poses": [
+            "cP_s",
+            "cP_a"
+          ],
+          "trail": "fw"
+        },
+        "cK": {
+          "id": "cK",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 11,
+          "active": 4,
+          "recovery": 26,
+          "whiff": 0,
+          "dmg": 65,
+          "hitstun": 22,
+          "blockstun": 13,
+          "kb": 7,
+          "kbBlock": 2,
+          "hb": [
+            10,
+            130,
+            0,
+            35
+          ],
+          "level": "low",
+          "launch": 5,
+          "launchVx": 5,
+          "hitstop": 9,
+          "shake": 4,
+          "power": 1.2,
+          "poses": [
+            "cK_s",
+            "cK_a"
+          ],
+          "trail": "fa"
+        },
+        "jP": {
+          "id": "jP",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 7,
+          "active": 10,
+          "recovery": 0,
+          "whiff": 0,
+          "dmg": 65,
+          "hitstun": 19,
+          "blockstun": 13,
+          "kb": 5,
+          "kbBlock": 2,
+          "hb": [
+            10,
+            120,
+            0,
+            110
+          ],
+          "level": "high",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 8,
+          "shake": 2,
+          "power": 1.1,
+          "poses": [
+            "jP_s",
+            "jP_a"
+          ],
+          "air": true,
+          "trail": "fw"
+        },
+        "jK": {
+          "id": "jK",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 8,
+          "active": 10,
+          "recovery": 0,
+          "whiff": 0,
+          "dmg": 70,
+          "hitstun": 20,
+          "blockstun": 13,
+          "kb": 6,
+          "kbBlock": 2,
+          "hb": [
+            5,
+            105,
+            -15,
+            80
+          ],
+          "level": "high",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 8,
+          "shake": 2,
+          "power": 1.2,
+          "poses": [
+            "jK_s",
+            "jK_a"
+          ],
+          "air": true,
+          "trail": "fa"
+        },
+        "s1": {
+          "id": "s1",
+          "kind": "special",
+          "rank": 9,
+          "startup": 24,
+          "active": 7,
+          "recovery": 28,
+          "whiff": 10,
+          "dmg": 140,
+          "hitstun": 28,
+          "blockstun": 18,
+          "kb": 11,
+          "kbBlock": 7,
+          "hb": [
+            60,
+            280,
+            95,
+            135
+          ],
+          "level": "mid",
+          "launch": 7,
+          "launchVx": 8,
+          "hitstop": 13,
+          "shake": 16,
+          "power": 2.5,
+          "poses": [
+            "dedo_s",
+            "dedo_a"
+          ],
+          "advance": [
+            20,
+            27,
+            5
+          ],
+          "dedilho": true,
+          "label": "DEDILHO SUPREMO",
+          "charge": true,
+          "sound": "red",
+          "chip": 0.06
+        },
+        "s2": {
+          "id": "s2",
+          "kind": "special",
+          "rank": 9,
+          "startup": 8,
+          "active": 3,
+          "recovery": 20,
+          "whiff": 18,
+          "dmg": 160,
+          "hitstun": 0,
+          "blockstun": 0,
+          "kb": 0,
+          "kbBlock": 0,
+          "hb": [
+            0,
+            125,
+            15,
+            150
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 0,
+          "shake": 0,
+          "power": 2,
+          "poses": [
+            "puxao_s",
+            "puxao_a"
+          ],
+          "grab": "puxao",
+          "unblockable": true,
+          "label": "PUXÃO DE CAMISA",
+          "sound": "red",
+          "chip": 0
+        },
+        "s3": {
+          "id": "s3",
+          "kind": "special",
+          "rank": 9,
+          "startup": 10,
+          "active": 16,
+          "recovery": 24,
+          "whiff": 24,
+          "dmg": 125,
+          "hitstun": 0,
+          "blockstun": 0,
+          "kb": 0,
+          "kbBlock": 0,
+          "hb": [
+            0,
+            100,
+            0,
+            70
+          ],
+          "level": "low",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 4,
+          "shake": 0,
+          "power": 2,
+          "poses": [
+            "mord_s",
+            "mord_a"
+          ],
+          "advance": [
+            10,
+            26,
+            11
+          ],
+          "grab": "mordida",
+          "label": "MORDIDA NA PERNA",
+          "sound": "red",
+          "chip": 0
+        }
+      },
+      "specials": [
+        {
+          "key": "U",
+          "name": "DEDILHO SUPREMO",
+          "desc": "Estocada colossal com onda de choque vermelha."
+        },
+        {
+          "key": "I",
+          "name": "PUXÃO DE CAMISA",
+          "desc": "Agarrão impossível de bloquear. Só de perto."
+        },
+        {
+          "key": "O",
+          "name": "MORDIDA NA PERNA",
+          "desc": "Avança, agarra a perna e morde. Derruba."
+        }
+      ],
+      "superName": "INSTINTO PRIMORDIAL"
+    },
+    "tubarao": {
+      "id": "tubarao",
+      "name": "TUBARÃO FISCAL",
+      "short": "TUBARÃO",
+      "title": "O FISCAL DOS SETE MARES",
+      "hp": 1230,
+      "walk": 3.25,
+      "walkBack": 2.6,
+      "jumpVy": 15.5,
+      "jumpVx": 4,
+      "dashVx": 8.5,
+      "dashDur": 17,
+      "pushW": 39,
+      "hurtH": 196,
+      "crouchH": 122,
+      "moves": {
+        "pL": {
+          "id": "pL",
+          "kind": "normal",
+          "rank": 1,
+          "startup": 5,
+          "active": 3,
+          "recovery": 11,
+          "whiff": 0,
+          "dmg": 29,
+          "hitstun": 13,
+          "blockstun": 8,
+          "kb": 2.5,
+          "kbBlock": 2,
+          "hb": [
+            20,
+            119,
+            105,
+            148
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 5,
+          "shake": 2,
+          "power": 0.69,
+          "poses": [
+            "pL_s",
+            "pL_a"
+          ],
+          "trail": "fw"
+        },
+        "pM": {
+          "id": "pM",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 8,
+          "active": 4,
+          "recovery": 16,
+          "whiff": 0,
+          "dmg": 52,
+          "hitstun": 17,
+          "blockstun": 11,
+          "kb": 4,
+          "kbBlock": 2,
+          "hb": [
+            20,
+            139,
+            100,
+            150
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 7,
+          "shake": 2,
+          "power": 1.035,
+          "poses": [
+            "pM_s",
+            "pM_a"
+          ],
+          "trail": "bw"
+        },
+        "pH": {
+          "id": "pH",
+          "kind": "normal",
+          "rank": 3,
+          "startup": 11,
+          "active": 4,
+          "recovery": 22,
+          "whiff": 0,
+          "dmg": 85,
+          "hitstun": 22,
+          "blockstun": 14,
+          "kb": 7,
+          "kbBlock": 4,
+          "hb": [
+            20,
+            154,
+            95,
+            153
+          ],
+          "level": "mid",
+          "launch": 6,
+          "launchVx": 5,
+          "hitstop": 9,
+          "shake": 5,
+          "power": 1.38,
+          "poses": [
+            "pH_s",
+            "pH_a"
+          ],
+          "trail": "bw"
+        },
+        "kL": {
+          "id": "kL",
+          "kind": "normal",
+          "rank": 1,
+          "startup": 6,
+          "active": 3,
+          "recovery": 13,
+          "whiff": 0,
+          "dmg": 31,
+          "hitstun": 13,
+          "blockstun": 8,
+          "kb": 2.5,
+          "kbBlock": 2,
+          "hb": [
+            15,
+            124,
+            50,
+            108
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 5,
+          "shake": 2,
+          "power": 0.69,
+          "poses": [
+            "kL_s",
+            "kL_a"
+          ],
+          "trail": "fa"
+        },
+        "kM": {
+          "id": "kM",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 9,
+          "active": 4,
+          "recovery": 17,
+          "whiff": 0,
+          "dmg": 59,
+          "hitstun": 18,
+          "blockstun": 12,
+          "kb": 5,
+          "kbBlock": 2,
+          "hb": [
+            20,
+            142,
+            80,
+            148
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 7,
+          "shake": 2,
+          "power": 1.035,
+          "poses": [
+            "kM_s",
+            "kM_a"
+          ],
+          "trail": "fa"
+        },
+        "kH": {
+          "id": "kH",
+          "kind": "normal",
+          "rank": 3,
+          "startup": 12,
+          "active": 5,
+          "recovery": 24,
+          "whiff": 0,
+          "dmg": 91,
+          "hitstun": 23,
+          "blockstun": 15,
+          "kb": 8,
+          "kbBlock": 5,
+          "hb": [
+            20,
+            149,
+            70,
+            173
+          ],
+          "level": "mid",
+          "launch": 6,
+          "launchVx": 6,
+          "hitstop": 9,
+          "shake": 5,
+          "power": 1.38,
+          "poses": [
+            "kH_s",
+            "kH_a"
+          ],
+          "trail": "fa"
+        },
+        "cP": {
+          "id": "cP",
+          "kind": "normal",
+          "rank": 1,
+          "startup": 6,
+          "active": 3,
+          "recovery": 12,
+          "whiff": 0,
+          "dmg": 33,
+          "hitstun": 13,
+          "blockstun": 8,
+          "kb": 2,
+          "kbBlock": 2,
+          "hb": [
+            20,
+            124,
+            50,
+            103
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 5,
+          "shake": 2,
+          "power": 0.69,
+          "poses": [
+            "cP_s",
+            "cP_a"
+          ],
+          "trail": "fw"
+        },
+        "cK": {
+          "id": "cK",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 10,
+          "active": 4,
+          "recovery": 25,
+          "whiff": 0,
+          "dmg": 65,
+          "hitstun": 22,
+          "blockstun": 12,
+          "kb": 6,
+          "kbBlock": 2,
+          "hb": [
+            10,
+            159,
+            0,
+            43
+          ],
+          "level": "low",
+          "launch": 5,
+          "launchVx": 4,
+          "hitstop": 8,
+          "shake": 2,
+          "power": 1.15,
+          "poses": [
+            "cK_s",
+            "cK_a"
+          ],
+          "trail": "fa"
+        },
+        "jP": {
+          "id": "jP",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 7,
+          "active": 10,
+          "recovery": 3,
+          "whiff": 0,
+          "dmg": 65,
+          "hitstun": 18,
+          "blockstun": 12,
+          "kb": 4,
+          "kbBlock": 2,
+          "hb": [
+            10,
+            119,
+            20,
+            133
+          ],
+          "level": "high",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 7,
+          "shake": 2,
+          "power": 1.035,
+          "poses": [
+            "jP_s",
+            "jP_a"
+          ],
+          "air": true,
+          "trail": "fw"
+        },
+        "jK": {
+          "id": "jK",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 8,
+          "active": 10,
+          "recovery": 3,
+          "whiff": 0,
+          "dmg": 72,
+          "hitstun": 19,
+          "blockstun": 12,
+          "kb": 5,
+          "kbBlock": 2,
+          "hb": [
+            5,
+            124,
+            -10,
+            93
+          ],
+          "level": "high",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 7,
+          "shake": 2,
+          "power": 1.15,
+          "poses": [
+            "jK_s",
+            "jK_a"
+          ],
+          "air": true,
+          "trail": "fa"
+        },
+        "s1": {
+          "id": "s1",
+          "kind": "special",
+          "rank": 9,
+          "startup": 13,
+          "active": 8,
+          "recovery": 25,
+          "whiff": 12,
+          "dmg": 100,
+          "hitstun": 27,
+          "blockstun": 16,
+          "kb": 8,
+          "kbBlock": 5,
+          "hb": [
+            18,
+            160,
+            65,
+            180
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 10,
+          "shake": 10,
+          "power": 2,
+          "poses": [
+            "bite_s",
+            "bite_a"
+          ],
+          "advance": [
+            8,
+            22,
+            6
+          ],
+          "label": "MORDIDA",
+          "chip": 0.05
+        },
+        "s2": {
+          "id": "s2",
+          "kind": "special",
+          "rank": 9,
+          "startup": 11,
+          "active": 4,
+          "recovery": 28,
+          "whiff": 20,
+          "dmg": 145,
+          "hitstun": 0,
+          "blockstun": 0,
+          "kb": 0,
+          "kbBlock": 2,
+          "hb": [
+            0,
+            118,
+            5,
+            180
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 0,
+          "shake": 2,
+          "power": 2,
+          "poses": [
+            "swallow_s",
+            "swallow_a"
+          ],
+          "grab": "engole",
+          "unblockable": true,
+          "label": "ENGOLE",
+          "chip": 0
+        },
+        "s3": {
+          "id": "s3",
+          "kind": "special",
+          "rank": 9,
+          "startup": 12,
+          "active": 10,
+          "recovery": 28,
+          "whiff": 16,
+          "dmg": 95,
+          "hitstun": 28,
+          "blockstun": 17,
+          "kb": 10,
+          "kbBlock": 6,
+          "hb": [
+            10,
+            170,
+            35,
+            185
+          ],
+          "level": "mid",
+          "launch": 11,
+          "launchVx": 7,
+          "hitstop": 12,
+          "shake": 14,
+          "power": 2.4,
+          "poses": [
+            "fin_s",
+            "fin_a"
+          ],
+          "advance": [
+            9,
+            23,
+            8
+          ],
+          "label": "CABEÇADA DE BARBATANA",
+          "chip": 0.05
+        }
+      },
+      "specials": [
+        {
+          "key": "U",
+          "name": "MORDIDA",
+          "desc": "Avança com uma mordida poderosa. Pode ser defendida."
+        },
+        {
+          "key": "I",
+          "name": "ENGOLE",
+          "desc": "Agarrão de perto: engole e cospe o rival. Ignora defesa."
+        },
+        {
+          "key": "O",
+          "name": "CABEÇADA DE BARBATANA",
+          "desc": "Arrancada com armadura que lança o rival para o alto."
+        }
+      ],
+      "superName": "BEIJO DO FISCALIZADOR"
+    },
+    "rickzera": {
+      "id": "rickzera",
+      "name": "RICKZERA",
+      "short": "RICKZERA",
+      "title": "O REI DAS TRANSFERÊNCIAS",
+      "hp": 940,
+      "walk": 4.8,
+      "walkBack": 3.9,
+      "jumpVy": 16,
+      "jumpVx": 5.6,
+      "dashVx": 12,
+      "dashDur": 14,
+      "pushW": 26,
+      "hurtH": 172,
+      "crouchH": 108,
+      "moves": {
+        "pL": {
+          "id": "pL",
+          "kind": "normal",
+          "rank": 1,
+          "startup": 3,
+          "active": 3,
+          "recovery": 7,
+          "whiff": 0,
+          "dmg": 20,
+          "hitstun": 13,
+          "blockstun": 8,
+          "kb": 2.125,
+          "kbBlock": 2,
+          "hb": [
+            20,
+            95,
+            105,
+            140
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 5,
+          "shake": 2,
+          "power": 0.6,
+          "poses": [
+            "pL_s",
+            "pL_a"
+          ],
+          "trail": "fw"
+        },
+        "pM": {
+          "id": "pM",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 5,
+          "active": 4,
+          "recovery": 12,
+          "whiff": 0,
+          "dmg": 36,
+          "hitstun": 17,
+          "blockstun": 11,
+          "kb": 3.4,
+          "kbBlock": 2,
+          "hb": [
+            20,
+            115,
+            100,
+            142
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 7,
+          "shake": 2,
+          "power": 0.9,
+          "poses": [
+            "pM_s",
+            "pM_a"
+          ],
+          "trail": "bw"
+        },
+        "pH": {
+          "id": "pH",
+          "kind": "normal",
+          "rank": 3,
+          "startup": 8,
+          "active": 4,
+          "recovery": 18,
+          "whiff": 0,
+          "dmg": 59,
+          "hitstun": 22,
+          "blockstun": 14,
+          "kb": 5.95,
+          "kbBlock": 4,
+          "hb": [
+            20,
+            130,
+            95,
+            145
+          ],
+          "level": "mid",
+          "launch": 6,
+          "launchVx": 5,
+          "hitstop": 9,
+          "shake": 5,
+          "power": 1.2,
+          "poses": [
+            "pH_s",
+            "pH_a"
+          ],
+          "trail": "bw"
+        },
+        "kL": {
+          "id": "kL",
+          "kind": "normal",
+          "rank": 1,
+          "startup": 3,
+          "active": 3,
+          "recovery": 9,
+          "whiff": 0,
+          "dmg": 22,
+          "hitstun": 13,
+          "blockstun": 8,
+          "kb": 2.125,
+          "kbBlock": 2,
+          "hb": [
+            15,
+            100,
+            50,
+            100
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 5,
+          "shake": 2,
+          "power": 0.6,
+          "poses": [
+            "kL_s",
+            "kL_a"
+          ],
+          "trail": "fa"
+        },
+        "kM": {
+          "id": "kM",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 6,
+          "active": 4,
+          "recovery": 13,
+          "whiff": 0,
+          "dmg": 41,
+          "hitstun": 18,
+          "blockstun": 12,
+          "kb": 4.25,
+          "kbBlock": 2,
+          "hb": [
+            20,
+            118,
+            80,
+            140
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 7,
+          "shake": 2,
+          "power": 0.9,
+          "poses": [
+            "kM_s",
+            "kM_a"
+          ],
+          "trail": "fa"
+        },
+        "kH": {
+          "id": "kH",
+          "kind": "normal",
+          "rank": 3,
+          "startup": 9,
+          "active": 5,
+          "recovery": 20,
+          "whiff": 0,
+          "dmg": 63,
+          "hitstun": 23,
+          "blockstun": 15,
+          "kb": 6.8,
+          "kbBlock": 5,
+          "hb": [
+            20,
+            125,
+            70,
+            165
+          ],
+          "level": "mid",
+          "launch": 6,
+          "launchVx": 6,
+          "hitstop": 9,
+          "shake": 5,
+          "power": 1.2,
+          "poses": [
+            "kH_s",
+            "kH_a"
+          ],
+          "trail": "fa"
+        },
+        "cP": {
+          "id": "cP",
+          "kind": "normal",
+          "rank": 1,
+          "startup": 3,
+          "active": 3,
+          "recovery": 8,
+          "whiff": 0,
+          "dmg": 23,
+          "hitstun": 13,
+          "blockstun": 8,
+          "kb": 1.7,
+          "kbBlock": 2,
+          "hb": [
+            20,
+            100,
+            50,
+            95
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 5,
+          "shake": 2,
+          "power": 0.6,
+          "poses": [
+            "cP_s",
+            "cP_a"
+          ],
+          "trail": "fw"
+        },
+        "cK": {
+          "id": "cK",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 7,
+          "active": 4,
+          "recovery": 21,
+          "whiff": 0,
+          "dmg": 45,
+          "hitstun": 22,
+          "blockstun": 12,
+          "kb": 5.1,
+          "kbBlock": 2,
+          "hb": [
+            10,
+            135,
+            0,
+            35
+          ],
+          "level": "low",
+          "launch": 5,
+          "launchVx": 4,
+          "hitstop": 8,
+          "shake": 2,
+          "power": 1,
+          "poses": [
+            "cK_s",
+            "cK_a"
+          ],
+          "trail": "fa"
+        },
+        "jP": {
+          "id": "jP",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 4,
+          "active": 10,
+          "recovery": 0,
+          "whiff": 0,
+          "dmg": 45,
+          "hitstun": 18,
+          "blockstun": 12,
+          "kb": 3.4,
+          "kbBlock": 2,
+          "hb": [
+            10,
+            95,
+            20,
+            125
+          ],
+          "level": "high",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 7,
+          "shake": 2,
+          "power": 0.9,
+          "poses": [
+            "jP_s",
+            "jP_a"
+          ],
+          "air": true,
+          "trail": "fw"
+        },
+        "jK": {
+          "id": "jK",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 5,
+          "active": 10,
+          "recovery": 0,
+          "whiff": 0,
+          "dmg": 50,
+          "hitstun": 19,
+          "blockstun": 12,
+          "kb": 4.25,
+          "kbBlock": 2,
+          "hb": [
+            5,
+            100,
+            -10,
+            85
+          ],
+          "level": "high",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 7,
+          "shake": 2,
+          "power": 1,
+          "poses": [
+            "jK_s",
+            "jK_a"
+          ],
+          "air": true,
+          "trail": "fa"
+        },
+        "s1": {
+          "id": "s1",
+          "kind": "special",
+          "rank": 9,
+          "startup": 12,
+          "active": 3,
+          "recovery": 19,
+          "whiff": 5,
+          "dmg": 52,
+          "hitstun": 20,
+          "blockstun": 12,
+          "kb": 5,
+          "kbBlock": 3,
+          "hb": [
+            20,
+            105,
+            80,
+            145
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 7,
+          "shake": 5,
+          "power": 1.3,
+          "poses": [
+            "franco_s",
+            "franco_a"
+          ],
+          "label": "ARREMESSO DO FRANCO SUÍÇO",
+          "chip": 0.025
+        },
+        "s2": {
+          "id": "s2",
+          "kind": "special",
+          "rank": 9,
+          "startup": 18,
+          "active": 7,
+          "recovery": 23,
+          "whiff": 9,
+          "dmg": 24,
+          "hitstun": 17,
+          "blockstun": 10,
+          "kb": 2.5,
+          "kbBlock": 2,
+          "hb": [
+            20,
+            125,
+            60,
+            145
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 4,
+          "shake": 3,
+          "power": 1.1,
+          "poses": [
+            "pix_s",
+            "pix_a"
+          ],
+          "label": "LINHAS DO PIX",
+          "chip": 0.015
+        },
+        "s3": {
+          "id": "s3",
+          "kind": "special",
+          "rank": 9,
+          "startup": 3,
+          "active": 12,
+          "recovery": 12,
+          "whiff": 5,
+          "dmg": 34,
+          "hitstun": 18,
+          "blockstun": 12,
+          "kb": 4,
+          "kbBlock": 2,
+          "hb": [
+            5,
+            110,
+            -15,
+            130
+          ],
+          "level": "mid",
+          "launch": 5,
+          "launchVx": 3,
+          "hitstop": 6,
+          "shake": 5,
+          "power": 1.3,
+          "poses": [
+            "double_s",
+            "double_a"
+          ],
+          "trail": "fa",
+          "label": "DOUBLE JUMP",
+          "chip": 0.025
+        }
+      },
+      "specials": [
+        {
+          "key": "U",
+          "name": "ARREMESSO DO FRANCO SUÍÇO",
+          "desc": "Lança uma nota à distância. O projétil pode ser defendido."
+        },
+        {
+          "key": "I",
+          "name": "LINHAS DO PIX",
+          "desc": "Dispara três linhas verdes em sequência para pressionar."
+        },
+        {
+          "key": "O",
+          "name": "DOUBLE JUMP",
+          "desc": "Salto com chute; no ar, ganha um segundo impulso. A tecla de pulo também dá o segundo salto."
+        }
+      ],
+      "superName": "WISE 6X"
+    },
+    "bieu": {
+      "id": "bieu",
+      "name": "BIEUBATMAN",
+      "short": "BIEU",
+      "title": "O PRESTÍGIO DA RUA",
+      "hp": 1080,
+      "walk": 3.9,
+      "walkBack": 3.1,
+      "jumpVy": 16,
+      "jumpVx": 4.8,
+      "dashVx": 10,
+      "dashDur": 16,
+      "pushW": 30,
+      "hurtH": 178,
+      "crouchH": 110,
+      "moves": {
+        "pL": {
+          "id": "pL",
+          "kind": "normal",
+          "rank": 1,
+          "startup": 4,
+          "active": 3,
+          "recovery": 8,
+          "whiff": 0,
+          "dmg": 23,
+          "hitstun": 13,
+          "blockstun": 8,
+          "kb": 2.5,
+          "kbBlock": 2,
+          "hb": [
+            20,
+            103,
+            105,
+            140
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 5,
+          "shake": 2,
+          "power": 0.6,
+          "poses": [
+            "pL_s",
+            "pL_a"
+          ],
+          "trail": "fw"
+        },
+        "pM": {
+          "id": "pM",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 7,
+          "active": 4,
+          "recovery": 13,
+          "whiff": 0,
+          "dmg": 42,
+          "hitstun": 17,
+          "blockstun": 11,
+          "kb": 4,
+          "kbBlock": 2,
+          "hb": [
+            20,
+            123,
+            100,
+            142
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 7,
+          "shake": 2,
+          "power": 0.9,
+          "poses": [
+            "pM_s",
+            "pM_a"
+          ],
+          "trail": "bw"
+        },
+        "pH": {
+          "id": "pH",
+          "kind": "normal",
+          "rank": 3,
+          "startup": 10,
+          "active": 4,
+          "recovery": 19,
+          "whiff": 0,
+          "dmg": 68,
+          "hitstun": 22,
+          "blockstun": 14,
+          "kb": 7,
+          "kbBlock": 4,
+          "hb": [
+            20,
+            138,
+            95,
+            145
+          ],
+          "level": "mid",
+          "launch": 6,
+          "launchVx": 5,
+          "hitstop": 9,
+          "shake": 5,
+          "power": 1.2,
+          "poses": [
+            "pH_s",
+            "pH_a"
+          ],
+          "trail": "bw"
+        },
+        "kL": {
+          "id": "kL",
+          "kind": "normal",
+          "rank": 1,
+          "startup": 5,
+          "active": 3,
+          "recovery": 10,
+          "whiff": 0,
+          "dmg": 25,
+          "hitstun": 13,
+          "blockstun": 8,
+          "kb": 2.5,
+          "kbBlock": 2,
+          "hb": [
+            15,
+            108,
+            50,
+            100
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 5,
+          "shake": 2,
+          "power": 0.6,
+          "poses": [
+            "kL_s",
+            "kL_a"
+          ],
+          "trail": "fa"
+        },
+        "kM": {
+          "id": "kM",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 8,
+          "active": 4,
+          "recovery": 14,
+          "whiff": 0,
+          "dmg": 47,
+          "hitstun": 18,
+          "blockstun": 12,
+          "kb": 5,
+          "kbBlock": 2,
+          "hb": [
+            20,
+            126,
+            80,
+            140
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 7,
+          "shake": 2,
+          "power": 0.9,
+          "poses": [
+            "kM_s",
+            "kM_a"
+          ],
+          "trail": "fa"
+        },
+        "kH": {
+          "id": "kH",
+          "kind": "normal",
+          "rank": 3,
+          "startup": 11,
+          "active": 5,
+          "recovery": 21,
+          "whiff": 0,
+          "dmg": 74,
+          "hitstun": 23,
+          "blockstun": 15,
+          "kb": 8,
+          "kbBlock": 5,
+          "hb": [
+            20,
+            133,
+            70,
+            165
+          ],
+          "level": "mid",
+          "launch": 6,
+          "launchVx": 6,
+          "hitstop": 9,
+          "shake": 5,
+          "power": 1.2,
+          "poses": [
+            "kH_s",
+            "kH_a"
+          ],
+          "trail": "fa"
+        },
+        "cP": {
+          "id": "cP",
+          "kind": "normal",
+          "rank": 1,
+          "startup": 5,
+          "active": 3,
+          "recovery": 9,
+          "whiff": 0,
+          "dmg": 26,
+          "hitstun": 13,
+          "blockstun": 8,
+          "kb": 2,
+          "kbBlock": 2,
+          "hb": [
+            20,
+            108,
+            50,
+            95
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 5,
+          "shake": 2,
+          "power": 0.6,
+          "poses": [
+            "cP_s",
+            "cP_a"
+          ],
+          "trail": "fw"
+        },
+        "cK": {
+          "id": "cK",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 9,
+          "active": 4,
+          "recovery": 22,
+          "whiff": 0,
+          "dmg": 53,
+          "hitstun": 22,
+          "blockstun": 12,
+          "kb": 6,
+          "kbBlock": 2,
+          "hb": [
+            10,
+            143,
+            0,
+            35
+          ],
+          "level": "low",
+          "launch": 5,
+          "launchVx": 4,
+          "hitstop": 8,
+          "shake": 2,
+          "power": 1,
+          "poses": [
+            "cK_s",
+            "cK_a"
+          ],
+          "trail": "fa"
+        },
+        "jP": {
+          "id": "jP",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 6,
+          "active": 10,
+          "recovery": 0,
+          "whiff": 0,
+          "dmg": 53,
+          "hitstun": 18,
+          "blockstun": 12,
+          "kb": 4,
+          "kbBlock": 2,
+          "hb": [
+            10,
+            103,
+            20,
+            125
+          ],
+          "level": "high",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 7,
+          "shake": 2,
+          "power": 0.9,
+          "poses": [
+            "jP_s",
+            "jP_a"
+          ],
+          "air": true,
+          "trail": "fw"
+        },
+        "jK": {
+          "id": "jK",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 7,
+          "active": 10,
+          "recovery": 0,
+          "whiff": 0,
+          "dmg": 58,
+          "hitstun": 19,
+          "blockstun": 12,
+          "kb": 5,
+          "kbBlock": 2,
+          "hb": [
+            5,
+            108,
+            -10,
+            85
+          ],
+          "level": "high",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 7,
+          "shake": 2,
+          "power": 1,
+          "poses": [
+            "jK_s",
+            "jK_a"
+          ],
+          "air": true,
+          "trail": "fa"
+        },
+        "s1": {
+          "id": "s1",
+          "kind": "special",
+          "rank": 9,
+          "startup": 13,
+          "active": 6,
+          "recovery": 26,
+          "whiff": 11,
+          "dmg": 80,
+          "hitstun": 25,
+          "blockstun": 15,
+          "kb": 7,
+          "kbBlock": 4,
+          "hb": [
+            20,
+            150,
+            70,
+            146
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 9,
+          "shake": 9,
+          "power": 1.8,
+          "poses": [
+            "driver_s",
+            "driver_a"
+          ],
+          "pierce": 0.35,
+          "advance": [
+            7,
+            15,
+            3.5
+          ],
+          "label": "CHAVE DE FENDA",
+          "trail": "fw",
+          "chip": 0.06
+        },
+        "s2": {
+          "id": "s2",
+          "kind": "special",
+          "rank": 9,
+          "startup": 16,
+          "active": 3,
+          "recovery": 25,
+          "whiff": 6,
+          "dmg": 42,
+          "hitstun": 21,
+          "blockstun": 13,
+          "kb": 4,
+          "kbBlock": 2,
+          "hb": [
+            20,
+            100,
+            0,
+            35
+          ],
+          "level": "low",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 6,
+          "shake": 4,
+          "power": 1.2,
+          "poses": [
+            "rat_s",
+            "rat_a"
+          ],
+          "label": "JOGAR RATO",
+          "chip": 0.03
+        },
+        "s3": {
+          "id": "s3",
+          "kind": "special",
+          "rank": 9,
+          "startup": 19,
+          "active": 7,
+          "recovery": 25,
+          "whiff": 8,
+          "dmg": 16,
+          "hitstun": 15,
+          "blockstun": 9,
+          "kb": 1,
+          "kbBlock": 1,
+          "hb": [
+            20,
+            155,
+            10,
+            130
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 3,
+          "shake": 3,
+          "power": 0.8,
+          "poses": [
+            "spray_s",
+            "spray_a"
+          ],
+          "label": "PICHAÇÃO",
+          "chip": 0.015
+        }
+      },
+      "specials": [
+        {
+          "key": "U",
+          "name": "CHAVE DE FENDA",
+          "desc": "Estocada de perto que atravessa parte da defesa."
+        },
+        {
+          "key": "I",
+          "name": "JOGAR RATO",
+          "desc": "Rato pelo chão: pule ou use defesa agachada."
+        },
+        {
+          "key": "O",
+          "name": "PICHAÇÃO",
+          "desc": "Nuvem de tinta que permanece e pressiona com até quatro acertos."
+        }
+      ],
+      "superName": "PRESTÍGIO"
+    },
+    "nomad": {
+      "id": "nomad",
+      "name": "NOMAD LOBBY",
+      "short": "NOMAD",
+      "title": "O DONO DA ARENA",
+      "hp": 1100,
+      "walk": 3.6,
+      "walkBack": 2.9,
+      "jumpVy": 15.8,
+      "jumpVx": 4.5,
+      "dashVx": 9.4,
+      "dashDur": 16,
+      "pushW": 33,
+      "hurtH": 171,
+      "crouchH": 104,
+      "moves": {
+        "pL": {
+          "id": "pL",
+          "kind": "normal",
+          "rank": 1,
+          "startup": 4,
+          "active": 3,
+          "recovery": 8,
+          "whiff": 0,
+          "dmg": 22,
+          "hitstun": 13,
+          "blockstun": 8,
+          "kb": 2.5,
+          "kbBlock": 2,
+          "hb": [
+            20,
+            100,
+            105,
+            140
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 5,
+          "shake": 2,
+          "power": 0.6,
+          "poses": [
+            "pL_s",
+            "pL_a"
+          ],
+          "trail": "fw"
+        },
+        "pM": {
+          "id": "pM",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 7,
+          "active": 4,
+          "recovery": 13,
+          "whiff": 0,
+          "dmg": 40,
+          "hitstun": 17,
+          "blockstun": 11,
+          "kb": 4,
+          "kbBlock": 2,
+          "hb": [
+            20,
+            120,
+            100,
+            142
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 7,
+          "shake": 2,
+          "power": 0.9,
+          "poses": [
+            "pM_s",
+            "pM_a"
+          ],
+          "trail": "bw"
+        },
+        "pH": {
+          "id": "pH",
+          "kind": "normal",
+          "rank": 3,
+          "startup": 10,
+          "active": 4,
+          "recovery": 19,
+          "whiff": 0,
+          "dmg": 65,
+          "hitstun": 22,
+          "blockstun": 14,
+          "kb": 7,
+          "kbBlock": 4,
+          "hb": [
+            20,
+            135,
+            95,
+            145
+          ],
+          "level": "mid",
+          "launch": 6,
+          "launchVx": 5,
+          "hitstop": 9,
+          "shake": 5,
+          "power": 1.2,
+          "poses": [
+            "pH_s",
+            "pH_a"
+          ],
+          "trail": "bw"
+        },
+        "kL": {
+          "id": "kL",
+          "kind": "normal",
+          "rank": 1,
+          "startup": 5,
+          "active": 3,
+          "recovery": 10,
+          "whiff": 0,
+          "dmg": 24,
+          "hitstun": 13,
+          "blockstun": 8,
+          "kb": 2.5,
+          "kbBlock": 2,
+          "hb": [
+            15,
+            105,
+            50,
+            100
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 5,
+          "shake": 2,
+          "power": 0.6,
+          "poses": [
+            "kL_s",
+            "kL_a"
+          ],
+          "trail": "fa"
+        },
+        "kM": {
+          "id": "kM",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 8,
+          "active": 4,
+          "recovery": 14,
+          "whiff": 0,
+          "dmg": 45,
+          "hitstun": 18,
+          "blockstun": 12,
+          "kb": 5,
+          "kbBlock": 2,
+          "hb": [
+            20,
+            123,
+            80,
+            140
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 7,
+          "shake": 2,
+          "power": 0.9,
+          "poses": [
+            "kM_s",
+            "kM_a"
+          ],
+          "trail": "fa"
+        },
+        "kH": {
+          "id": "kH",
+          "kind": "normal",
+          "rank": 3,
+          "startup": 11,
+          "active": 5,
+          "recovery": 21,
+          "whiff": 0,
+          "dmg": 70,
+          "hitstun": 23,
+          "blockstun": 15,
+          "kb": 8,
+          "kbBlock": 5,
+          "hb": [
+            20,
+            130,
+            70,
+            165
+          ],
+          "level": "mid",
+          "launch": 6,
+          "launchVx": 6,
+          "hitstop": 9,
+          "shake": 5,
+          "power": 1.2,
+          "poses": [
+            "kH_s",
+            "kH_a"
+          ],
+          "trail": "fa"
+        },
+        "cP": {
+          "id": "cP",
+          "kind": "normal",
+          "rank": 1,
+          "startup": 5,
+          "active": 3,
+          "recovery": 9,
+          "whiff": 0,
+          "dmg": 25,
+          "hitstun": 13,
+          "blockstun": 8,
+          "kb": 2,
+          "kbBlock": 2,
+          "hb": [
+            20,
+            105,
+            50,
+            95
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 5,
+          "shake": 2,
+          "power": 0.6,
+          "poses": [
+            "cP_s",
+            "cP_a"
+          ],
+          "trail": "fw"
+        },
+        "cK": {
+          "id": "cK",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 9,
+          "active": 4,
+          "recovery": 22,
+          "whiff": 0,
+          "dmg": 50,
+          "hitstun": 22,
+          "blockstun": 12,
+          "kb": 6,
+          "kbBlock": 2,
+          "hb": [
+            10,
+            140,
+            0,
+            35
+          ],
+          "level": "low",
+          "launch": 5,
+          "launchVx": 4,
+          "hitstop": 8,
+          "shake": 2,
+          "power": 1,
+          "poses": [
+            "cK_s",
+            "cK_a"
+          ],
+          "trail": "fa"
+        },
+        "jP": {
+          "id": "jP",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 6,
+          "active": 10,
+          "recovery": 0,
+          "whiff": 0,
+          "dmg": 50,
+          "hitstun": 18,
+          "blockstun": 12,
+          "kb": 4,
+          "kbBlock": 2,
+          "hb": [
+            10,
+            100,
+            20,
+            125
+          ],
+          "level": "high",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 7,
+          "shake": 2,
+          "power": 0.9,
+          "poses": [
+            "jP_s",
+            "jP_a"
+          ],
+          "air": true,
+          "trail": "fw"
+        },
+        "jK": {
+          "id": "jK",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 7,
+          "active": 10,
+          "recovery": 0,
+          "whiff": 0,
+          "dmg": 55,
+          "hitstun": 19,
+          "blockstun": 12,
+          "kb": 5,
+          "kbBlock": 2,
+          "hb": [
+            5,
+            105,
+            -10,
+            85
+          ],
+          "level": "high",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 7,
+          "shake": 2,
+          "power": 1,
+          "poses": [
+            "jK_s",
+            "jK_a"
+          ],
+          "air": true,
+          "trail": "fa"
+        },
+        "s1": {
+          "id": "s1",
+          "kind": "special",
+          "rank": 9,
+          "startup": 15,
+          "active": 3,
+          "recovery": 26,
+          "whiff": 8,
+          "dmg": 52,
+          "hitstun": 23,
+          "blockstun": 14,
+          "kb": 6,
+          "kbBlock": 3,
+          "hb": [
+            20,
+            120,
+            65,
+            145
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 8,
+          "shake": 6,
+          "power": 1.4,
+          "poses": [
+            "burger_s",
+            "burger_a"
+          ],
+          "label": "MARIO BURGER",
+          "chip": 0.03
+        },
+        "s2": {
+          "id": "s2",
+          "kind": "special",
+          "rank": 9,
+          "startup": 15,
+          "active": 5,
+          "recovery": 29,
+          "whiff": 7,
+          "dmg": 20,
+          "hitstun": 16,
+          "blockstun": 9,
+          "kb": 2,
+          "kbBlock": 1.5,
+          "hb": [
+            20,
+            120,
+            135,
+            155
+          ],
+          "level": "high",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 3,
+          "shake": 3,
+          "power": 0.9,
+          "poses": [
+            "glock_s",
+            "glock_a"
+          ],
+          "label": "RAJADA DE GLOCK",
+          "chip": 0.01
+        },
+        "s3": {
+          "id": "s3",
+          "kind": "special",
+          "rank": 9,
+          "startup": 17,
+          "active": 4,
+          "recovery": 29,
+          "whiff": 9,
+          "dmg": 38,
+          "hitstun": 22,
+          "blockstun": 12,
+          "kb": 3,
+          "kbBlock": 2,
+          "hb": [
+            20,
+            120,
+            70,
+            140
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 6,
+          "shake": 5,
+          "power": 1.3,
+          "poses": [
+            "boomerang_s",
+            "boomerang_a"
+          ],
+          "label": "BOOMERANG",
+          "chip": 0.02
+        }
+      },
+      "specials": [
+        {
+          "key": "U",
+          "name": "MARIO BURGER",
+          "desc": "Arremessa um hambúrguer que empurra o adversário."
+        },
+        {
+          "key": "I",
+          "name": "RAJADA DE GLOCK",
+          "desc": "Três disparos altos: agache para evitar ou defenda em pé."
+        },
+        {
+          "key": "O",
+          "name": "BOOMERANG",
+          "desc": "Vai e volta, podendo acertar uma vez em cada trajeto."
+        }
+      ],
+      "superName": "ARENA"
+    },
+    "renngotti": {
+      "id": "renngotti",
+      "name": "RENNGOTTI",
+      "short": "RENNGOTTI",
+      "title": "A VOZ DO CAOS",
+      "hp": 1020,
+      "walk": 4.1,
+      "walkBack": 3.3,
+      "jumpVy": 16.2,
+      "jumpVx": 5,
+      "dashVx": 10.5,
+      "dashDur": 15,
+      "pushW": 29,
+      "hurtH": 180,
+      "crouchH": 110,
+      "moves": {
+        "pL": {
+          "id": "pL",
+          "kind": "normal",
+          "rank": 1,
+          "startup": 3,
+          "active": 3,
+          "recovery": 8,
+          "whiff": 0,
+          "dmg": 22,
+          "hitstun": 13,
+          "blockstun": 8,
+          "kb": 2.5,
+          "kbBlock": 2,
+          "hb": [
+            20,
+            102,
+            105,
+            140
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 5,
+          "shake": 2,
+          "power": 0.6,
+          "poses": [
+            "pL_s",
+            "pL_a"
+          ],
+          "trail": "fw"
+        },
+        "pM": {
+          "id": "pM",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 6,
+          "active": 4,
+          "recovery": 13,
+          "whiff": 0,
+          "dmg": 40,
+          "hitstun": 17,
+          "blockstun": 11,
+          "kb": 4,
+          "kbBlock": 2,
+          "hb": [
+            20,
+            122,
+            100,
+            142
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 7,
+          "shake": 2,
+          "power": 0.9,
+          "poses": [
+            "pM_s",
+            "pM_a"
+          ],
+          "trail": "bw"
+        },
+        "pH": {
+          "id": "pH",
+          "kind": "normal",
+          "rank": 3,
+          "startup": 9,
+          "active": 4,
+          "recovery": 19,
+          "whiff": 0,
+          "dmg": 65,
+          "hitstun": 22,
+          "blockstun": 14,
+          "kb": 7,
+          "kbBlock": 4,
+          "hb": [
+            20,
+            137,
+            95,
+            145
+          ],
+          "level": "mid",
+          "launch": 6,
+          "launchVx": 5,
+          "hitstop": 9,
+          "shake": 5,
+          "power": 1.2,
+          "poses": [
+            "pH_s",
+            "pH_a"
+          ],
+          "trail": "bw"
+        },
+        "kL": {
+          "id": "kL",
+          "kind": "normal",
+          "rank": 1,
+          "startup": 4,
+          "active": 3,
+          "recovery": 10,
+          "whiff": 0,
+          "dmg": 24,
+          "hitstun": 13,
+          "blockstun": 8,
+          "kb": 2.5,
+          "kbBlock": 2,
+          "hb": [
+            15,
+            107,
+            50,
+            100
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 5,
+          "shake": 2,
+          "power": 0.6,
+          "poses": [
+            "kL_s",
+            "kL_a"
+          ],
+          "trail": "fa"
+        },
+        "kM": {
+          "id": "kM",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 7,
+          "active": 4,
+          "recovery": 14,
+          "whiff": 0,
+          "dmg": 45,
+          "hitstun": 18,
+          "blockstun": 12,
+          "kb": 5,
+          "kbBlock": 2,
+          "hb": [
+            20,
+            125,
+            80,
+            140
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 7,
+          "shake": 2,
+          "power": 0.9,
+          "poses": [
+            "kM_s",
+            "kM_a"
+          ],
+          "trail": "fa"
+        },
+        "kH": {
+          "id": "kH",
+          "kind": "normal",
+          "rank": 3,
+          "startup": 10,
+          "active": 5,
+          "recovery": 21,
+          "whiff": 0,
+          "dmg": 70,
+          "hitstun": 23,
+          "blockstun": 15,
+          "kb": 8,
+          "kbBlock": 5,
+          "hb": [
+            20,
+            132,
+            70,
+            165
+          ],
+          "level": "mid",
+          "launch": 6,
+          "launchVx": 6,
+          "hitstop": 9,
+          "shake": 5,
+          "power": 1.2,
+          "poses": [
+            "kH_s",
+            "kH_a"
+          ],
+          "trail": "fa"
+        },
+        "cP": {
+          "id": "cP",
+          "kind": "normal",
+          "rank": 1,
+          "startup": 4,
+          "active": 3,
+          "recovery": 9,
+          "whiff": 0,
+          "dmg": 25,
+          "hitstun": 13,
+          "blockstun": 8,
+          "kb": 2,
+          "kbBlock": 2,
+          "hb": [
+            20,
+            107,
+            50,
+            95
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 5,
+          "shake": 2,
+          "power": 0.6,
+          "poses": [
+            "cP_s",
+            "cP_a"
+          ],
+          "trail": "fw"
+        },
+        "cK": {
+          "id": "cK",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 8,
+          "active": 4,
+          "recovery": 22,
+          "whiff": 0,
+          "dmg": 50,
+          "hitstun": 22,
+          "blockstun": 12,
+          "kb": 6,
+          "kbBlock": 2,
+          "hb": [
+            10,
+            142,
+            0,
+            35
+          ],
+          "level": "low",
+          "launch": 5,
+          "launchVx": 4,
+          "hitstop": 8,
+          "shake": 2,
+          "power": 1,
+          "poses": [
+            "cK_s",
+            "cK_a"
+          ],
+          "trail": "fa"
+        },
+        "jP": {
+          "id": "jP",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 5,
+          "active": 10,
+          "recovery": 0,
+          "whiff": 0,
+          "dmg": 50,
+          "hitstun": 18,
+          "blockstun": 12,
+          "kb": 4,
+          "kbBlock": 2,
+          "hb": [
+            10,
+            102,
+            20,
+            125
+          ],
+          "level": "high",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 7,
+          "shake": 2,
+          "power": 0.9,
+          "poses": [
+            "jP_s",
+            "jP_a"
+          ],
+          "air": true,
+          "trail": "fw"
+        },
+        "jK": {
+          "id": "jK",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 6,
+          "active": 10,
+          "recovery": 0,
+          "whiff": 0,
+          "dmg": 55,
+          "hitstun": 19,
+          "blockstun": 12,
+          "kb": 5,
+          "kbBlock": 2,
+          "hb": [
+            5,
+            107,
+            -10,
+            85
+          ],
+          "level": "high",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 7,
+          "shake": 2,
+          "power": 1,
+          "poses": [
+            "jK_s",
+            "jK_a"
+          ],
+          "air": true,
+          "trail": "fa"
+        },
+        "s1": {
+          "id": "s1",
+          "kind": "special",
+          "rank": 9,
+          "startup": 10,
+          "active": 4,
+          "recovery": 26,
+          "whiff": 18,
+          "dmg": 90,
+          "hitstun": 0,
+          "blockstun": 0,
+          "kb": 0,
+          "kbBlock": 2,
+          "hb": [
+            0,
+            120,
+            0,
+            176
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 0,
+          "shake": 6,
+          "power": 1.8,
+          "poses": [
+            "moon_s",
+            "moon_a"
+          ],
+          "grab": "moon",
+          "unblockable": true,
+          "label": "JOGA PRA LUA",
+          "chip": 0
+        },
+        "s2": {
+          "id": "s2",
+          "kind": "special",
+          "rank": 9,
+          "startup": 14,
+          "active": 3,
+          "recovery": 23,
+          "whiff": 8,
+          "dmg": 60,
+          "hitstun": 23,
+          "blockstun": 14,
+          "kb": 6,
+          "kbBlock": 3,
+          "hb": [
+            20,
+            110,
+            65,
+            150
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 8,
+          "shake": 6,
+          "power": 1.4,
+          "poses": [
+            "mic_s",
+            "mic_a"
+          ],
+          "label": "JOGAR MICROFONE",
+          "chip": 0.04
+        },
+        "s3": {
+          "id": "s3",
+          "kind": "special",
+          "rank": 9,
+          "startup": 17,
+          "active": 12,
+          "recovery": 30,
+          "whiff": 13,
+          "dmg": 65,
+          "hitstun": 28,
+          "blockstun": 17,
+          "kb": 13,
+          "kbBlock": 7,
+          "hb": [
+            10,
+            300,
+            20,
+            190
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 9,
+          "shake": 12,
+          "power": 1.9,
+          "poses": [
+            "shout_s",
+            "shout_a"
+          ],
+          "label": "GRITO ALTO",
+          "chip": 0.04
+        }
+      },
+      "specials": [
+        {
+          "key": "U",
+          "name": "JOGA PRA LUA",
+          "desc": "Agarrão de perto que lança alto e abre espaço para um combo aéreo."
+        },
+        {
+          "key": "I",
+          "name": "JOGAR MICROFONE",
+          "desc": "Arremessa o microfone em arco para pressionar à distância."
+        },
+        {
+          "key": "O",
+          "name": "GRITO ALTO",
+          "desc": "Onda sonora à frente: interrompe golpes e empurra. Pode ser defendida."
+        }
+      ],
+      "superName": "TILT"
+    },
+    "aneninha": {
+      "id": "aneninha",
+      "name": "ANENINHA",
+      "short": "ANENINHA",
+      "title": "OSASCO NO CORAÇÃO, BOLÍVIA NO RITMO",
+      "hp": 1000,
+      "walk": 4.3,
+      "walkBack": 3.5,
+      "jumpVy": 16.3,
+      "jumpVx": 5.1,
+      "dashVx": 10.8,
+      "dashDur": 15,
+      "pushW": 27,
+      "hurtH": 169,
+      "crouchH": 105,
+      "moves": {
+        "pL": {
+          "id": "pL",
+          "kind": "normal",
+          "rank": 1,
+          "startup": 3,
+          "active": 3,
+          "recovery": 8,
+          "whiff": 0,
+          "dmg": 22,
+          "hitstun": 13,
+          "blockstun": 8,
+          "kb": 2.5,
+          "kbBlock": 2,
+          "hb": [
+            20,
+            95,
+            105,
+            140
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 5,
+          "shake": 2,
+          "power": 0.6,
+          "poses": [
+            "pL_s",
+            "pL_a"
+          ],
+          "trail": "fw"
+        },
+        "pM": {
+          "id": "pM",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 6,
+          "active": 4,
+          "recovery": 13,
+          "whiff": 0,
+          "dmg": 39,
+          "hitstun": 17,
+          "blockstun": 11,
+          "kb": 4,
+          "kbBlock": 2,
+          "hb": [
+            20,
+            115,
+            100,
+            142
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 7,
+          "shake": 2,
+          "power": 0.9,
+          "poses": [
+            "pM_s",
+            "pM_a"
+          ],
+          "trail": "bw"
+        },
+        "pH": {
+          "id": "pH",
+          "kind": "normal",
+          "rank": 3,
+          "startup": 9,
+          "active": 4,
+          "recovery": 19,
+          "whiff": 0,
+          "dmg": 64,
+          "hitstun": 22,
+          "blockstun": 14,
+          "kb": 7,
+          "kbBlock": 4,
+          "hb": [
+            20,
+            130,
+            95,
+            145
+          ],
+          "level": "mid",
+          "launch": 6,
+          "launchVx": 5,
+          "hitstop": 9,
+          "shake": 5,
+          "power": 1.2,
+          "poses": [
+            "pH_s",
+            "pH_a"
+          ],
+          "trail": "bw"
+        },
+        "kL": {
+          "id": "kL",
+          "kind": "normal",
+          "rank": 1,
+          "startup": 4,
+          "active": 3,
+          "recovery": 10,
+          "whiff": 0,
+          "dmg": 24,
+          "hitstun": 13,
+          "blockstun": 8,
+          "kb": 2.5,
+          "kbBlock": 2,
+          "hb": [
+            15,
+            100,
+            50,
+            100
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 5,
+          "shake": 2,
+          "power": 0.6,
+          "poses": [
+            "kL_s",
+            "kL_a"
+          ],
+          "trail": "fa"
+        },
+        "kM": {
+          "id": "kM",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 7,
+          "active": 4,
+          "recovery": 14,
+          "whiff": 0,
+          "dmg": 44,
+          "hitstun": 18,
+          "blockstun": 12,
+          "kb": 5,
+          "kbBlock": 2,
+          "hb": [
+            20,
+            118,
+            80,
+            140
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 7,
+          "shake": 2,
+          "power": 0.9,
+          "poses": [
+            "kM_s",
+            "kM_a"
+          ],
+          "trail": "fa"
+        },
+        "kH": {
+          "id": "kH",
+          "kind": "normal",
+          "rank": 3,
+          "startup": 10,
+          "active": 5,
+          "recovery": 21,
+          "whiff": 0,
+          "dmg": 69,
+          "hitstun": 23,
+          "blockstun": 15,
+          "kb": 8,
+          "kbBlock": 5,
+          "hb": [
+            20,
+            125,
+            70,
+            165
+          ],
+          "level": "mid",
+          "launch": 6,
+          "launchVx": 6,
+          "hitstop": 9,
+          "shake": 5,
+          "power": 1.2,
+          "poses": [
+            "kH_s",
+            "kH_a"
+          ],
+          "trail": "fa"
+        },
+        "cP": {
+          "id": "cP",
+          "kind": "normal",
+          "rank": 1,
+          "startup": 4,
+          "active": 3,
+          "recovery": 9,
+          "whiff": 0,
+          "dmg": 25,
+          "hitstun": 13,
+          "blockstun": 8,
+          "kb": 2,
+          "kbBlock": 2,
+          "hb": [
+            20,
+            100,
+            50,
+            95
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 5,
+          "shake": 2,
+          "power": 0.6,
+          "poses": [
+            "cP_s",
+            "cP_a"
+          ],
+          "trail": "fw"
+        },
+        "cK": {
+          "id": "cK",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 8,
+          "active": 4,
+          "recovery": 22,
+          "whiff": 0,
+          "dmg": 49,
+          "hitstun": 22,
+          "blockstun": 12,
+          "kb": 6,
+          "kbBlock": 2,
+          "hb": [
+            10,
+            135,
+            0,
+            35
+          ],
+          "level": "low",
+          "launch": 5,
+          "launchVx": 4,
+          "hitstop": 8,
+          "shake": 2,
+          "power": 1,
+          "poses": [
+            "cK_s",
+            "cK_a"
+          ],
+          "trail": "fa"
+        },
+        "jP": {
+          "id": "jP",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 5,
+          "active": 10,
+          "recovery": 0,
+          "whiff": 0,
+          "dmg": 49,
+          "hitstun": 18,
+          "blockstun": 12,
+          "kb": 4,
+          "kbBlock": 2,
+          "hb": [
+            10,
+            95,
+            20,
+            125
+          ],
+          "level": "high",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 7,
+          "shake": 2,
+          "power": 0.9,
+          "poses": [
+            "jP_s",
+            "jP_a"
+          ],
+          "air": true,
+          "trail": "fw"
+        },
+        "jK": {
+          "id": "jK",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 6,
+          "active": 10,
+          "recovery": 0,
+          "whiff": 0,
+          "dmg": 54,
+          "hitstun": 19,
+          "blockstun": 12,
+          "kb": 5,
+          "kbBlock": 2,
+          "hb": [
+            5,
+            100,
+            -10,
+            85
+          ],
+          "level": "high",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 7,
+          "shake": 2,
+          "power": 1,
+          "poses": [
+            "jK_s",
+            "jK_a"
+          ],
+          "air": true,
+          "trail": "fa"
+        },
+        "s1": {
+          "id": "s1",
+          "kind": "special",
+          "rank": 9,
+          "startup": 14,
+          "active": 6,
+          "recovery": 22,
+          "whiff": 12,
+          "dmg": 95,
+          "hitstun": 28,
+          "blockstun": 16,
+          "kb": 9,
+          "kbBlock": 5,
+          "hb": [
+            15,
+            150,
+            65,
+            160
+          ],
+          "level": "mid",
+          "launch": 6,
+          "launchVx": 5,
+          "hitstop": 12,
+          "shake": 13,
+          "power": 2.2,
+          "poses": [
+            "osasco_s",
+            "osasco_a"
+          ],
+          "advance": [
+            10,
+            21,
+            5
+          ],
+          "trail": "fw",
+          "label": "SOCO DE OSASCO",
+          "chip": 0.04
+        },
+        "s2": {
+          "id": "s2",
+          "kind": "special",
+          "rank": 9,
+          "startup": 17,
+          "active": 5,
+          "recovery": 25,
+          "whiff": 8,
+          "dmg": 20,
+          "hitstun": 16,
+          "blockstun": 9,
+          "kb": 3,
+          "kbBlock": 2,
+          "hb": [
+            20,
+            145,
+            5,
+            145
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 5,
+          "shake": 3,
+          "power": 1,
+          "poses": [
+            "paint_s",
+            "paint_a"
+          ],
+          "label": "PICHAR MURO — OSASCO",
+          "chip": 0.015
+        },
+        "s3": {
+          "id": "s3",
+          "kind": "special",
+          "rank": 9,
+          "startup": 18,
+          "active": 8,
+          "recovery": 25,
+          "whiff": 10,
+          "dmg": 65,
+          "hitstun": 27,
+          "blockstun": 15,
+          "kb": 12,
+          "kbBlock": 7,
+          "hb": [
+            10,
+            275,
+            15,
+            185
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 8,
+          "shake": 11,
+          "power": 1.8,
+          "poses": [
+            "shout_s",
+            "shout_a"
+          ],
+          "label": "GRITO ALTO",
+          "chip": 0.035
+        }
+      },
+      "specials": [
+        {
+          "key": "U",
+          "name": "SOCO DE OSASCO",
+          "desc": "Soco com avanço que lança e abre combos."
+        },
+        {
+          "key": "I",
+          "name": "PICHAR MURO PARA REPRESENTAR OSASCO",
+          "desc": "Pinta um muro que pressiona com até três acertos. Pode ser defendido ou saltado."
+        },
+        {
+          "key": "O",
+          "name": "GRITO ALTO",
+          "desc": "Onda de voz frontal que interrompe e empurra. Pode ser defendida."
+        }
+      ],
+      "superName": "YO SOY DE BOLIVIA"
+    },
+    "santox": {
+      "id": "santox",
+      "name": "1SANT0X",
+      "short": "1SANT0X",
+      "title": "O COELHO FORA DO ROTEIRO",
+      "hp": 950,
+      "walk": 4.15,
+      "walkBack": 3.3,
+      "jumpVy": 16.4,
+      "jumpVx": 5,
+      "dashVx": 10,
+      "dashDur": 15,
+      "pushW": 26,
+      "hurtH": 186,
+      "crouchH": 111,
+      "moves": {
+        "pL": {
+          "id": "pL",
+          "kind": "normal",
+          "rank": 1,
+          "startup": 4,
+          "active": 3,
+          "recovery": 8,
+          "whiff": 0,
+          "dmg": 20,
+          "hitstun": 13,
+          "blockstun": 8,
+          "kb": 2.5,
+          "kbBlock": 2,
+          "hb": [
+            20,
+            99,
+            105,
+            140
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 5,
+          "shake": 2,
+          "power": 0.6,
+          "poses": [
+            "pL_s",
+            "pL_a"
+          ],
+          "trail": "fw"
+        },
+        "pM": {
+          "id": "pM",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 7,
+          "active": 4,
+          "recovery": 13,
+          "whiff": 0,
+          "dmg": 36,
+          "hitstun": 17,
+          "blockstun": 11,
+          "kb": 4,
+          "kbBlock": 2,
+          "hb": [
+            20,
+            119,
+            100,
+            142
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 7,
+          "shake": 2,
+          "power": 0.9,
+          "poses": [
+            "pM_s",
+            "pM_a"
+          ],
+          "trail": "bw"
+        },
+        "pH": {
+          "id": "pH",
+          "kind": "normal",
+          "rank": 3,
+          "startup": 10,
+          "active": 4,
+          "recovery": 19,
+          "whiff": 0,
+          "dmg": 59,
+          "hitstun": 22,
+          "blockstun": 14,
+          "kb": 7,
+          "kbBlock": 4,
+          "hb": [
+            20,
+            134,
+            95,
+            145
+          ],
+          "level": "mid",
+          "launch": 6,
+          "launchVx": 5,
+          "hitstop": 9,
+          "shake": 5,
+          "power": 1.2,
+          "poses": [
+            "pH_s",
+            "pH_a"
+          ],
+          "trail": "bw"
+        },
+        "kL": {
+          "id": "kL",
+          "kind": "normal",
+          "rank": 1,
+          "startup": 5,
+          "active": 3,
+          "recovery": 10,
+          "whiff": 0,
+          "dmg": 22,
+          "hitstun": 13,
+          "blockstun": 8,
+          "kb": 2.5,
+          "kbBlock": 2,
+          "hb": [
+            15,
+            104,
+            50,
+            100
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 5,
+          "shake": 2,
+          "power": 0.6,
+          "poses": [
+            "kL_s",
+            "kL_a"
+          ],
+          "trail": "fa"
+        },
+        "kM": {
+          "id": "kM",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 8,
+          "active": 4,
+          "recovery": 14,
+          "whiff": 0,
+          "dmg": 41,
+          "hitstun": 18,
+          "blockstun": 12,
+          "kb": 5,
+          "kbBlock": 2,
+          "hb": [
+            20,
+            122,
+            80,
+            140
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 7,
+          "shake": 2,
+          "power": 0.9,
+          "poses": [
+            "kM_s",
+            "kM_a"
+          ],
+          "trail": "fa"
+        },
+        "kH": {
+          "id": "kH",
+          "kind": "normal",
+          "rank": 3,
+          "startup": 11,
+          "active": 5,
+          "recovery": 21,
+          "whiff": 0,
+          "dmg": 63,
+          "hitstun": 23,
+          "blockstun": 15,
+          "kb": 8,
+          "kbBlock": 5,
+          "hb": [
+            20,
+            129,
+            70,
+            165
+          ],
+          "level": "mid",
+          "launch": 6,
+          "launchVx": 6,
+          "hitstop": 9,
+          "shake": 5,
+          "power": 1.2,
+          "poses": [
+            "kH_s",
+            "kH_a"
+          ],
+          "trail": "fa"
+        },
+        "cP": {
+          "id": "cP",
+          "kind": "normal",
+          "rank": 1,
+          "startup": 5,
+          "active": 3,
+          "recovery": 9,
+          "whiff": 0,
+          "dmg": 23,
+          "hitstun": 13,
+          "blockstun": 8,
+          "kb": 2,
+          "kbBlock": 2,
+          "hb": [
+            20,
+            104,
+            50,
+            95
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 5,
+          "shake": 2,
+          "power": 0.6,
+          "poses": [
+            "cP_s",
+            "cP_a"
+          ],
+          "trail": "fw"
+        },
+        "cK": {
+          "id": "cK",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 9,
+          "active": 4,
+          "recovery": 22,
+          "whiff": 0,
+          "dmg": 45,
+          "hitstun": 22,
+          "blockstun": 12,
+          "kb": 6,
+          "kbBlock": 2,
+          "hb": [
+            10,
+            139,
+            0,
+            35
+          ],
+          "level": "low",
+          "launch": 5,
+          "launchVx": 4,
+          "hitstop": 8,
+          "shake": 2,
+          "power": 1,
+          "poses": [
+            "cK_s",
+            "cK_a"
+          ],
+          "trail": "fa"
+        },
+        "jP": {
+          "id": "jP",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 6,
+          "active": 10,
+          "recovery": 0,
+          "whiff": 0,
+          "dmg": 45,
+          "hitstun": 18,
+          "blockstun": 12,
+          "kb": 4,
+          "kbBlock": 2,
+          "hb": [
+            10,
+            99,
+            20,
+            125
+          ],
+          "level": "high",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 7,
+          "shake": 2,
+          "power": 0.9,
+          "poses": [
+            "jP_s",
+            "jP_a"
+          ],
+          "air": true,
+          "trail": "fw"
+        },
+        "jK": {
+          "id": "jK",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 7,
+          "active": 10,
+          "recovery": 0,
+          "whiff": 0,
+          "dmg": 50,
+          "hitstun": 19,
+          "blockstun": 12,
+          "kb": 5,
+          "kbBlock": 2,
+          "hb": [
+            5,
+            104,
+            -10,
+            85
+          ],
+          "level": "high",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 7,
+          "shake": 2,
+          "power": 1,
+          "poses": [
+            "jK_s",
+            "jK_a"
+          ],
+          "air": true,
+          "trail": "fa"
+        },
+        "s1": {
+          "id": "s1",
+          "kind": "special",
+          "rank": 9,
+          "startup": 20,
+          "active": 4,
+          "recovery": 30,
+          "whiff": 12,
+          "dmg": 52,
+          "hitstun": 21,
+          "blockstun": 12,
+          "kb": 6,
+          "kbBlock": 3,
+          "hb": [
+            45,
+            370,
+            80,
+            145
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 9,
+          "shake": 7,
+          "power": 1.5,
+          "poses": [
+            "elastic_s",
+            "elastic_a"
+          ],
+          "label": "SOCO ELÁSTICO A LONGA DISTÂNCIA",
+          "chip": 0.035
+        },
+        "s2": {
+          "id": "s2",
+          "kind": "special",
+          "rank": 9,
+          "startup": 13,
+          "active": 6,
+          "recovery": 24,
+          "whiff": 10,
+          "dmg": 68,
+          "hitstun": 22,
+          "blockstun": 13,
+          "kb": 6,
+          "kbBlock": 4,
+          "hb": [
+            15,
+            155,
+            20,
+            130
+          ],
+          "level": "high",
+          "launch": 5,
+          "launchVx": 4,
+          "hitstop": 9,
+          "shake": 8,
+          "power": 1.7,
+          "poses": [
+            "rabbit_s",
+            "rabbit_a"
+          ],
+          "air": true,
+          "trail": "fa",
+          "label": "CHUTE DO COELHO",
+          "chip": 0.04
+        },
+        "s3": {
+          "id": "s3",
+          "kind": "special",
+          "rank": 9,
+          "startup": 8,
+          "active": 18,
+          "recovery": 28,
+          "whiff": 0,
+          "dmg": 0,
+          "hitstun": 0,
+          "blockstun": 0,
+          "kb": 0,
+          "kbBlock": 2,
+          "hb": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 0,
+          "shake": 0,
+          "power": 0,
+          "poses": [
+            "fourth_s",
+            "fourth_a"
+          ],
+          "label": "QUEBRAR A QUARTA PAREDE",
+          "chip": 0
+        }
+      },
+      "specials": [
+        {
+          "key": "U",
+          "name": "SOCO ELÁSTICO A LONGA DISTÂNCIA",
+          "desc": "Alcance de 370, dano moderado e recuperação longa. Pode ser bloqueado; conta no limite de longa distância."
+        },
+        {
+          "key": "I",
+          "name": "CHUTE DO COELHO",
+          "desc": "Pequeno salto com chute alto que lança. Defenda em pé e puna a aterrissagem."
+        },
+        {
+          "key": "O",
+          "name": "QUEBRAR A QUARTA PAREDE",
+          "desc": "Olha para a câmera e sorri: evita golpes por 0,3 s após a preparação. Recarga de 8 s e recuperação vulnerável."
+        }
+      ],
+      "superName": "ABSTRAÇÃO"
+    },
+    "jao": {
+      "id": "jao",
+      "name": "JaoDoPikles",
+      "short": "JAODOPIKLES",
+      "title": "CADA ROUND É UMA EQUAÇÃO",
+      "hp": 990,
+      "walk": 3.8,
+      "walkBack": 3.1,
+      "jumpVy": 15.6,
+      "jumpVx": 4.5,
+      "dashVx": 9.1,
+      "dashDur": 16,
+      "pushW": 28,
+      "hurtH": 177,
+      "crouchH": 108,
+      "moves": {
+        "pL": {
+          "id": "pL",
+          "kind": "normal",
+          "rank": 1,
+          "startup": 4,
+          "active": 3,
+          "recovery": 8,
+          "whiff": 0,
+          "dmg": 21,
+          "hitstun": 13,
+          "blockstun": 8,
+          "kb": 2.5,
+          "kbBlock": 2,
+          "hb": [
+            20,
+            95,
+            105,
+            140
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 5,
+          "shake": 2,
+          "power": 0.6,
+          "poses": [
+            "pL_s",
+            "pL_a"
+          ],
+          "trail": "fw"
+        },
+        "pM": {
+          "id": "pM",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 7,
+          "active": 4,
+          "recovery": 13,
+          "whiff": 0,
+          "dmg": 38,
+          "hitstun": 17,
+          "blockstun": 11,
+          "kb": 4,
+          "kbBlock": 2,
+          "hb": [
+            20,
+            115,
+            100,
+            142
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 7,
+          "shake": 2,
+          "power": 0.9,
+          "poses": [
+            "pM_s",
+            "pM_a"
+          ],
+          "trail": "bw"
+        },
+        "pH": {
+          "id": "pH",
+          "kind": "normal",
+          "rank": 3,
+          "startup": 10,
+          "active": 4,
+          "recovery": 19,
+          "whiff": 0,
+          "dmg": 62,
+          "hitstun": 22,
+          "blockstun": 14,
+          "kb": 7,
+          "kbBlock": 4,
+          "hb": [
+            20,
+            130,
+            95,
+            145
+          ],
+          "level": "mid",
+          "launch": 6,
+          "launchVx": 5,
+          "hitstop": 9,
+          "shake": 5,
+          "power": 1.2,
+          "poses": [
+            "pH_s",
+            "pH_a"
+          ],
+          "trail": "bw"
+        },
+        "kL": {
+          "id": "kL",
+          "kind": "normal",
+          "rank": 1,
+          "startup": 5,
+          "active": 3,
+          "recovery": 10,
+          "whiff": 0,
+          "dmg": 23,
+          "hitstun": 13,
+          "blockstun": 8,
+          "kb": 2.5,
+          "kbBlock": 2,
+          "hb": [
+            15,
+            100,
+            50,
+            100
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 5,
+          "shake": 2,
+          "power": 0.6,
+          "poses": [
+            "kL_s",
+            "kL_a"
+          ],
+          "trail": "fa"
+        },
+        "kM": {
+          "id": "kM",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 8,
+          "active": 4,
+          "recovery": 14,
+          "whiff": 0,
+          "dmg": 43,
+          "hitstun": 18,
+          "blockstun": 12,
+          "kb": 5,
+          "kbBlock": 2,
+          "hb": [
+            20,
+            118,
+            80,
+            140
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 7,
+          "shake": 2,
+          "power": 0.9,
+          "poses": [
+            "kM_s",
+            "kM_a"
+          ],
+          "trail": "fa"
+        },
+        "kH": {
+          "id": "kH",
+          "kind": "normal",
+          "rank": 3,
+          "startup": 11,
+          "active": 5,
+          "recovery": 21,
+          "whiff": 0,
+          "dmg": 67,
+          "hitstun": 23,
+          "blockstun": 15,
+          "kb": 8,
+          "kbBlock": 5,
+          "hb": [
+            20,
+            125,
+            70,
+            165
+          ],
+          "level": "mid",
+          "launch": 6,
+          "launchVx": 6,
+          "hitstop": 9,
+          "shake": 5,
+          "power": 1.2,
+          "poses": [
+            "kH_s",
+            "kH_a"
+          ],
+          "trail": "fa"
+        },
+        "cP": {
+          "id": "cP",
+          "kind": "normal",
+          "rank": 1,
+          "startup": 5,
+          "active": 3,
+          "recovery": 9,
+          "whiff": 0,
+          "dmg": 24,
+          "hitstun": 13,
+          "blockstun": 8,
+          "kb": 2,
+          "kbBlock": 2,
+          "hb": [
+            20,
+            100,
+            50,
+            95
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 5,
+          "shake": 2,
+          "power": 0.6,
+          "poses": [
+            "cP_s",
+            "cP_a"
+          ],
+          "trail": "fw"
+        },
+        "cK": {
+          "id": "cK",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 9,
+          "active": 4,
+          "recovery": 22,
+          "whiff": 0,
+          "dmg": 48,
+          "hitstun": 22,
+          "blockstun": 12,
+          "kb": 6,
+          "kbBlock": 2,
+          "hb": [
+            10,
+            135,
+            0,
+            35
+          ],
+          "level": "low",
+          "launch": 5,
+          "launchVx": 4,
+          "hitstop": 8,
+          "shake": 2,
+          "power": 1,
+          "poses": [
+            "cK_s",
+            "cK_a"
+          ],
+          "trail": "fa"
+        },
+        "jP": {
+          "id": "jP",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 6,
+          "active": 10,
+          "recovery": 0,
+          "whiff": 0,
+          "dmg": 48,
+          "hitstun": 18,
+          "blockstun": 12,
+          "kb": 4,
+          "kbBlock": 2,
+          "hb": [
+            10,
+            95,
+            20,
+            125
+          ],
+          "level": "high",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 7,
+          "shake": 2,
+          "power": 0.9,
+          "poses": [
+            "jP_s",
+            "jP_a"
+          ],
+          "air": true,
+          "trail": "fw"
+        },
+        "jK": {
+          "id": "jK",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 7,
+          "active": 10,
+          "recovery": 0,
+          "whiff": 0,
+          "dmg": 52,
+          "hitstun": 19,
+          "blockstun": 12,
+          "kb": 5,
+          "kbBlock": 2,
+          "hb": [
+            5,
+            100,
+            -10,
+            85
+          ],
+          "level": "high",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 7,
+          "shake": 2,
+          "power": 1,
+          "poses": [
+            "jK_s",
+            "jK_a"
+          ],
+          "air": true,
+          "trail": "fa"
+        },
+        "s1": {
+          "id": "s1",
+          "kind": "special",
+          "rank": 9,
+          "startup": 24,
+          "active": 1,
+          "recovery": 30,
+          "whiff": 0,
+          "dmg": 0,
+          "hitstun": 0,
+          "blockstun": 0,
+          "kb": 0,
+          "kbBlock": 2,
+          "hb": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 0,
+          "shake": 2,
+          "power": 0.7,
+          "poses": [
+            "chess_s",
+            "chess_a"
+          ],
+          "label": "TABULEIRO DE XADREZ",
+          "chip": 0
+        },
+        "s2": {
+          "id": "s2",
+          "kind": "special",
+          "rank": 9,
+          "startup": 18,
+          "active": 3,
+          "recovery": 26,
+          "whiff": 8,
+          "dmg": 44,
+          "hitstun": 21,
+          "blockstun": 12,
+          "kb": 5,
+          "kbBlock": 3,
+          "hb": [
+            20,
+            110,
+            70,
+            140
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 7,
+          "shake": 5,
+          "power": 1.3,
+          "poses": [
+            "math_s",
+            "math_a"
+          ],
+          "label": "SÍMBOLOS DA MATEMÁTICA",
+          "chip": 0.025
+        },
+        "s3": {
+          "id": "s3",
+          "kind": "special",
+          "rank": 9,
+          "startup": 22,
+          "active": 3,
+          "recovery": 32,
+          "whiff": 10,
+          "dmg": 62,
+          "hitstun": 25,
+          "blockstun": 14,
+          "kb": 10,
+          "kbBlock": 5,
+          "hb": [
+            20,
+            110,
+            65,
+            140
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 10,
+          "shake": 8,
+          "power": 1.8,
+          "poses": [
+            "ball_s",
+            "ball_a"
+          ],
+          "label": "ARREMESSO ABSOLUTO",
+          "chip": 0.035
+        }
+      },
+      "specials": [
+        {
+          "key": "U",
+          "name": "TABULEIRO DE XADREZ",
+          "desc": "Uma zona por vez, por até 3 s: reduz em 35% o avanço no chão. Pule para escapar; acertar Jao desfaz o tabuleiro."
+        },
+        {
+          "key": "I",
+          "name": "SÍMBOLOS DA MATEMÁTICA",
+          "desc": "Dispara uma fórmula em linha reta. Um acerto, dano moderado, sem perseguição."
+        },
+        {
+          "key": "O",
+          "name": "ARREMESSO ABSOLUTO",
+          "desc": "Bola em arco com um quique: atordoa e empurra. Pode ser defendida ou saltada."
+        }
+      ],
+      "superName": "CHESS IS LIFE"
+    },
+    "jane": {
+      "id": "jane",
+      "name": "JANE",
+      "short": "JANE",
+      "title": "PEQUENA NO TAMANHO, GIGANTE NO DEPLOY",
+      "hp": 860,
+      "walk": 4.6,
+      "walkBack": 3.7,
+      "jumpVy": 15.8,
+      "jumpVx": 5.4,
+      "dashVx": 11,
+      "dashDur": 14,
+      "pushW": 20,
+      "hurtH": 115,
+      "crouchH": 72,
+      "moves": {
+        "pL": {
+          "id": "pL",
+          "kind": "normal",
+          "rank": 1,
+          "startup": 3,
+          "active": 3,
+          "recovery": 8,
+          "whiff": 0,
+          "dmg": 17,
+          "hitstun": 13,
+          "blockstun": 8,
+          "kb": 2.5,
+          "kbBlock": 2,
+          "hb": [
+            15,
+            71,
+            60.9,
+            91
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 5,
+          "shake": 2,
+          "power": 0.6,
+          "poses": [
+            "pL_s",
+            "pL_a"
+          ],
+          "trail": "fw"
+        },
+        "pM": {
+          "id": "pM",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 6,
+          "active": 4,
+          "recovery": 13,
+          "whiff": 0,
+          "dmg": 31,
+          "hitstun": 17,
+          "blockstun": 11,
+          "kb": 4,
+          "kbBlock": 2,
+          "hb": [
+            15,
+            91,
+            57.99999999999999,
+            92.3
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 7,
+          "shake": 2,
+          "power": 0.9,
+          "poses": [
+            "pM_s",
+            "pM_a"
+          ],
+          "trail": "bw"
+        },
+        "pH": {
+          "id": "pH",
+          "kind": "normal",
+          "rank": 3,
+          "startup": 9,
+          "active": 4,
+          "recovery": 19,
+          "whiff": 0,
+          "dmg": 51,
+          "hitstun": 22,
+          "blockstun": 14,
+          "kb": 7,
+          "kbBlock": 4,
+          "hb": [
+            15,
+            106,
+            55.099999999999994,
+            94.25
+          ],
+          "level": "mid",
+          "launch": 6,
+          "launchVx": 5,
+          "hitstop": 9,
+          "shake": 5,
+          "power": 1.2,
+          "poses": [
+            "pH_s",
+            "pH_a"
+          ],
+          "trail": "bw"
+        },
+        "kL": {
+          "id": "kL",
+          "kind": "normal",
+          "rank": 1,
+          "startup": 4,
+          "active": 3,
+          "recovery": 10,
+          "whiff": 0,
+          "dmg": 19,
+          "hitstun": 13,
+          "blockstun": 8,
+          "kb": 2.5,
+          "kbBlock": 2,
+          "hb": [
+            11.25,
+            76,
+            28.999999999999996,
+            65
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 5,
+          "shake": 2,
+          "power": 0.6,
+          "poses": [
+            "kL_s",
+            "kL_a"
+          ],
+          "trail": "fa"
+        },
+        "kM": {
+          "id": "kM",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 7,
+          "active": 4,
+          "recovery": 14,
+          "whiff": 0,
+          "dmg": 35,
+          "hitstun": 18,
+          "blockstun": 12,
+          "kb": 5,
+          "kbBlock": 2,
+          "hb": [
+            15,
+            94,
+            46.4,
+            91
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 7,
+          "shake": 2,
+          "power": 0.9,
+          "poses": [
+            "kM_s",
+            "kM_a"
+          ],
+          "trail": "fa"
+        },
+        "kH": {
+          "id": "kH",
+          "kind": "normal",
+          "rank": 3,
+          "startup": 10,
+          "active": 5,
+          "recovery": 21,
+          "whiff": 0,
+          "dmg": 55,
+          "hitstun": 23,
+          "blockstun": 15,
+          "kb": 8,
+          "kbBlock": 5,
+          "hb": [
+            15,
+            101,
+            40.599999999999994,
+            107.25
+          ],
+          "level": "mid",
+          "launch": 6,
+          "launchVx": 6,
+          "hitstop": 9,
+          "shake": 5,
+          "power": 1.2,
+          "poses": [
+            "kH_s",
+            "kH_a"
+          ],
+          "trail": "fa"
+        },
+        "cP": {
+          "id": "cP",
+          "kind": "normal",
+          "rank": 1,
+          "startup": 4,
+          "active": 3,
+          "recovery": 9,
+          "whiff": 0,
+          "dmg": 20,
+          "hitstun": 13,
+          "blockstun": 8,
+          "kb": 2,
+          "kbBlock": 2,
+          "hb": [
+            15,
+            76,
+            28.999999999999996,
+            61.75
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 5,
+          "shake": 2,
+          "power": 0.6,
+          "poses": [
+            "cP_s",
+            "cP_a"
+          ],
+          "trail": "fw"
+        },
+        "cK": {
+          "id": "cK",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 8,
+          "active": 4,
+          "recovery": 22,
+          "whiff": 0,
+          "dmg": 39,
+          "hitstun": 22,
+          "blockstun": 12,
+          "kb": 6,
+          "kbBlock": 2,
+          "hb": [
+            7.5,
+            111,
+            0,
+            22.75
+          ],
+          "level": "low",
+          "launch": 5,
+          "launchVx": 4,
+          "hitstop": 8,
+          "shake": 2,
+          "power": 1,
+          "poses": [
+            "cK_s",
+            "cK_a"
+          ],
+          "trail": "fa"
+        },
+        "jP": {
+          "id": "jP",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 5,
+          "active": 10,
+          "recovery": 0,
+          "whiff": 0,
+          "dmg": 39,
+          "hitstun": 18,
+          "blockstun": 12,
+          "kb": 4,
+          "kbBlock": 2,
+          "hb": [
+            7.5,
+            71,
+            11.6,
+            81.25
+          ],
+          "level": "high",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 7,
+          "shake": 2,
+          "power": 0.9,
+          "poses": [
+            "jP_s",
+            "jP_a"
+          ],
+          "air": true,
+          "trail": "fw"
+        },
+        "jK": {
+          "id": "jK",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 6,
+          "active": 10,
+          "recovery": 0,
+          "whiff": 0,
+          "dmg": 43,
+          "hitstun": 19,
+          "blockstun": 12,
+          "kb": 5,
+          "kbBlock": 2,
+          "hb": [
+            3.75,
+            76,
+            -5.8,
+            55.25
+          ],
+          "level": "high",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 7,
+          "shake": 2,
+          "power": 1,
+          "poses": [
+            "jK_s",
+            "jK_a"
+          ],
+          "air": true,
+          "trail": "fa"
+        },
+        "s1": {
+          "id": "s1",
+          "kind": "special",
+          "rank": 9,
+          "startup": 18,
+          "active": 12,
+          "recovery": 22,
+          "whiff": 0,
+          "dmg": 18,
+          "hitstun": 13,
+          "blockstun": 8,
+          "kb": 3,
+          "kbBlock": 2,
+          "hb": [
+            15,
+            85,
+            35,
+            100
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 4,
+          "shake": 3,
+          "power": 0.8,
+          "poses": [
+            "laptop_s",
+            "laptop_a"
+          ],
+          "label": "FINGINDO QUE TÁ TRABALHANDO",
+          "chip": 0.015
+        },
+        "s2": {
+          "id": "s2",
+          "kind": "special",
+          "rank": 9,
+          "startup": 12,
+          "active": 300,
+          "recovery": 24,
+          "whiff": 0,
+          "dmg": 11,
+          "hitstun": 13,
+          "blockstun": 8,
+          "kb": 3,
+          "kbBlock": 2,
+          "hb": [
+            -65,
+            110,
+            0,
+            115
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 4,
+          "shake": 4,
+          "power": 0.9,
+          "poses": [
+            "moto_s",
+            "moto_a"
+          ],
+          "label": "DANDO GRAU DE MOTO",
+          "chip": 0.015
+        },
+        "s3": {
+          "id": "s3",
+          "kind": "special",
+          "rank": 9,
+          "startup": 22,
+          "active": 5,
+          "recovery": 25,
+          "whiff": 10,
+          "dmg": 58,
+          "hitstun": 23,
+          "blockstun": 13,
+          "kb": 6,
+          "kbBlock": 4,
+          "hb": [
+            10,
+            100,
+            25,
+            112
+          ],
+          "level": "mid",
+          "launch": 4,
+          "launchVx": 3,
+          "hitstop": 8,
+          "shake": 7,
+          "power": 1.4,
+          "poses": [
+            "slide_s",
+            "kick_a"
+          ],
+          "advance": [
+            1,
+            17,
+            9
+          ],
+          "trail": "fa",
+          "label": "POR BAIXO, DEPOIS CHUTE",
+          "chip": 0.035
+        }
+      },
+      "specials": [
+        {
+          "key": "U",
+          "name": "FINGINDO QUE TÁ TRABALHANDO",
+          "desc": "Cochila com o laptop e lança dois comandos Java. Dano baixo; a dupla conta como um uso à distância."
+        },
+        {
+          "key": "I",
+          "name": "DANDO GRAU DE MOTO",
+          "desc": "Segure ESP 2: até 5 s e seis contatos. Passar de 5 s derruba a moto e deixa Jane tonta por 1 s. Recarga de 3 s."
+        },
+        {
+          "key": "O",
+          "name": "POR BAIXO, DEPOIS CHUTE",
+          "desc": "Desliza sob o rival próximo e vira para chutar. Ataques baixos interrompem a passagem."
+        }
+      ],
+      "superName": "AREIAZORD"
+    },
+    "cristyan": {
+      "id": "cristyan",
+      "name": "CRISTYAN",
+      "short": "CRISTYAN",
+      "title": "O PESO DO MUAY THAI BAIANO",
+      "hp": 1060,
+      "walk": 3.9,
+      "walkBack": 3.1,
+      "jumpVy": 15.7,
+      "jumpVx": 4.6,
+      "dashVx": 9.6,
+      "dashDur": 16,
+      "pushW": 30,
+      "hurtH": 179,
+      "crouchH": 109,
+      "moves": {
+        "pL": {
+          "id": "pL",
+          "kind": "normal",
+          "rank": 1,
+          "startup": 4,
+          "active": 3,
+          "recovery": 8,
+          "whiff": 0,
+          "dmg": 22,
+          "hitstun": 13,
+          "blockstun": 8,
+          "kb": 2.5,
+          "kbBlock": 2,
+          "hb": [
+            20,
+            99,
+            105,
+            140
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 5,
+          "shake": 2,
+          "power": 0.6,
+          "poses": [
+            "pL_s",
+            "pL_a"
+          ],
+          "trail": "fw"
+        },
+        "pM": {
+          "id": "pM",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 7,
+          "active": 4,
+          "recovery": 13,
+          "whiff": 0,
+          "dmg": 40,
+          "hitstun": 17,
+          "blockstun": 11,
+          "kb": 4,
+          "kbBlock": 2,
+          "hb": [
+            20,
+            119,
+            100,
+            142
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 7,
+          "shake": 2,
+          "power": 0.9,
+          "poses": [
+            "pM_s",
+            "pM_a"
+          ],
+          "trail": "bw"
+        },
+        "pH": {
+          "id": "pH",
+          "kind": "normal",
+          "rank": 3,
+          "startup": 10,
+          "active": 4,
+          "recovery": 19,
+          "whiff": 0,
+          "dmg": 64,
+          "hitstun": 22,
+          "blockstun": 14,
+          "kb": 7,
+          "kbBlock": 4,
+          "hb": [
+            20,
+            134,
+            95,
+            145
+          ],
+          "level": "mid",
+          "launch": 6,
+          "launchVx": 5,
+          "hitstop": 9,
+          "shake": 5,
+          "power": 1.2,
+          "poses": [
+            "pH_s",
+            "pH_a"
+          ],
+          "trail": "bw"
+        },
+        "kL": {
+          "id": "kL",
+          "kind": "normal",
+          "rank": 1,
+          "startup": 5,
+          "active": 3,
+          "recovery": 10,
+          "whiff": 0,
+          "dmg": 24,
+          "hitstun": 13,
+          "blockstun": 8,
+          "kb": 2.5,
+          "kbBlock": 2,
+          "hb": [
+            15,
+            104,
+            50,
+            100
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 5,
+          "shake": 2,
+          "power": 0.6,
+          "poses": [
+            "kL_s",
+            "kL_a"
+          ],
+          "trail": "fa"
+        },
+        "kM": {
+          "id": "kM",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 8,
+          "active": 4,
+          "recovery": 14,
+          "whiff": 0,
+          "dmg": 45,
+          "hitstun": 18,
+          "blockstun": 12,
+          "kb": 5,
+          "kbBlock": 2,
+          "hb": [
+            20,
+            122,
+            80,
+            140
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 7,
+          "shake": 2,
+          "power": 0.9,
+          "poses": [
+            "kM_s",
+            "kM_a"
+          ],
+          "trail": "fa"
+        },
+        "kH": {
+          "id": "kH",
+          "kind": "normal",
+          "rank": 3,
+          "startup": 11,
+          "active": 5,
+          "recovery": 21,
+          "whiff": 0,
+          "dmg": 69,
+          "hitstun": 23,
+          "blockstun": 15,
+          "kb": 8,
+          "kbBlock": 5,
+          "hb": [
+            20,
+            129,
+            70,
+            165
+          ],
+          "level": "mid",
+          "launch": 6,
+          "launchVx": 6,
+          "hitstop": 9,
+          "shake": 5,
+          "power": 1.2,
+          "poses": [
+            "kH_s",
+            "kH_a"
+          ],
+          "trail": "fa"
+        },
+        "cP": {
+          "id": "cP",
+          "kind": "normal",
+          "rank": 1,
+          "startup": 5,
+          "active": 3,
+          "recovery": 9,
+          "whiff": 0,
+          "dmg": 25,
+          "hitstun": 13,
+          "blockstun": 8,
+          "kb": 2,
+          "kbBlock": 2,
+          "hb": [
+            20,
+            104,
+            50,
+            95
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 5,
+          "shake": 2,
+          "power": 0.6,
+          "poses": [
+            "cP_s",
+            "cP_a"
+          ],
+          "trail": "fw"
+        },
+        "cK": {
+          "id": "cK",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 9,
+          "active": 4,
+          "recovery": 22,
+          "whiff": 0,
+          "dmg": 50,
+          "hitstun": 22,
+          "blockstun": 12,
+          "kb": 6,
+          "kbBlock": 2,
+          "hb": [
+            10,
+            139,
+            0,
+            35
+          ],
+          "level": "low",
+          "launch": 5,
+          "launchVx": 4,
+          "hitstop": 8,
+          "shake": 2,
+          "power": 1,
+          "poses": [
+            "cK_s",
+            "cK_a"
+          ],
+          "trail": "fa"
+        },
+        "jP": {
+          "id": "jP",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 6,
+          "active": 10,
+          "recovery": 0,
+          "whiff": 0,
+          "dmg": 50,
+          "hitstun": 18,
+          "blockstun": 12,
+          "kb": 4,
+          "kbBlock": 2,
+          "hb": [
+            10,
+            99,
+            20,
+            125
+          ],
+          "level": "high",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 7,
+          "shake": 2,
+          "power": 0.9,
+          "poses": [
+            "jP_s",
+            "jP_a"
+          ],
+          "air": true,
+          "trail": "fw"
+        },
+        "jK": {
+          "id": "jK",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 7,
+          "active": 10,
+          "recovery": 0,
+          "whiff": 0,
+          "dmg": 54,
+          "hitstun": 19,
+          "blockstun": 12,
+          "kb": 5,
+          "kbBlock": 2,
+          "hb": [
+            5,
+            104,
+            -10,
+            85
+          ],
+          "level": "high",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 7,
+          "shake": 2,
+          "power": 1,
+          "poses": [
+            "jK_s",
+            "jK_a"
+          ],
+          "air": true,
+          "trail": "fa"
+        },
+        "s1": {
+          "id": "s1",
+          "kind": "special",
+          "rank": 9,
+          "startup": 11,
+          "active": 4,
+          "recovery": 23,
+          "whiff": 10,
+          "dmg": 62,
+          "hitstun": 21,
+          "blockstun": 13,
+          "kb": 12,
+          "kbBlock": 5,
+          "hb": [
+            20,
+            158,
+            40,
+            132
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 8,
+          "shake": 7,
+          "power": 1.5,
+          "poses": [
+            "teep_s",
+            "teep_a"
+          ],
+          "trail": "fa",
+          "label": "CHUTE TEEP EMPURRANDO",
+          "chip": 0.035
+        },
+        "s2": {
+          "id": "s2",
+          "kind": "special",
+          "rank": 9,
+          "startup": 21,
+          "active": 4,
+          "recovery": 32,
+          "whiff": 16,
+          "dmg": 90,
+          "hitstun": 26,
+          "blockstun": 15,
+          "kb": 13,
+          "kbBlock": 6,
+          "hb": [
+            15,
+            135,
+            80,
+            145
+          ],
+          "level": "mid",
+          "launch": 7,
+          "launchVx": 10,
+          "hitstop": 12,
+          "shake": 13,
+          "power": 2.1,
+          "poses": [
+            "power_s",
+            "power_a"
+          ],
+          "trail": "bw",
+          "charge": true,
+          "label": "SOCO PODEROSO",
+          "chip": 0.05
+        },
+        "s3": {
+          "id": "s3",
+          "kind": "special",
+          "rank": 9,
+          "startup": 17,
+          "active": 7,
+          "recovery": 28,
+          "whiff": 12,
+          "dmg": 74,
+          "hitstun": 23,
+          "blockstun": 14,
+          "kb": 8,
+          "kbBlock": 5,
+          "hb": [
+            -45,
+            155,
+            40,
+            160
+          ],
+          "level": "mid",
+          "launch": 5,
+          "launchVx": 5,
+          "hitstop": 9,
+          "shake": 9,
+          "power": 1.8,
+          "poses": [
+            "spin_s",
+            "spin_a"
+          ],
+          "advance": [
+            10,
+            21,
+            2.4
+          ],
+          "trail": "fa",
+          "turn": [
+            5,
+            22
+          ],
+          "label": "PIRUETA COM CHUTE",
+          "chip": 0.04
+        }
+      },
+      "specials": [
+        {
+          "key": "U",
+          "name": "CHUTE TEEP EMPURRANDO",
+          "desc": "Chute frontal que afasta o rival. Pode ser defendido; use para controlar o espaço."
+        },
+        {
+          "key": "I",
+          "name": "SOCO PODEROSO",
+          "desc": "Prepara um soco que arremessa para longe. O erro deixa uma recuperação longa e vulnerável."
+        },
+        {
+          "key": "O",
+          "name": "PIRUETA COM CHUTE",
+          "desc": "Gira com um chute amplo de um acerto. Sem invulnerabilidade: antecipe ou defenda."
+        }
+      ],
+      "superName": "REDE BAIANA"
+    },
+    "eneas": {
+      "id": "eneas",
+      "name": "DOUTOR ENÉAS",
+      "short": "ENÉAS",
+      "title": "CIÊNCIA EM VOLUME MÁXIMO",
+      "hp": 1080,
+      "walk": 3.2,
+      "walkBack": 2.6,
+      "jumpVy": 15,
+      "jumpVx": 4,
+      "dashVx": 8.5,
+      "dashDur": 17,
+      "pushW": 31,
+      "hurtH": 184,
+      "crouchH": 114,
+      "moves": {
+        "pL": {
+          "id": "pL",
+          "kind": "normal",
+          "rank": 1,
+          "startup": 5,
+          "active": 3,
+          "recovery": 8,
+          "whiff": 0,
+          "dmg": 22,
+          "hitstun": 13,
+          "blockstun": 8,
+          "kb": 2.5,
+          "kbBlock": 2,
+          "hb": [
+            20,
+            105,
+            105,
+            140
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 5,
+          "shake": 2,
+          "power": 0.6,
+          "poses": [
+            "pL_s",
+            "pL_a"
+          ],
+          "trail": "fw"
+        },
+        "pM": {
+          "id": "pM",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 8,
+          "active": 4,
+          "recovery": 13,
+          "whiff": 0,
+          "dmg": 39,
+          "hitstun": 17,
+          "blockstun": 11,
+          "kb": 4,
+          "kbBlock": 2,
+          "hb": [
+            20,
+            125,
+            100,
+            142
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 7,
+          "shake": 2,
+          "power": 0.9,
+          "poses": [
+            "pM_s",
+            "pM_a"
+          ],
+          "trail": "bw"
+        },
+        "pH": {
+          "id": "pH",
+          "kind": "normal",
+          "rank": 3,
+          "startup": 11,
+          "active": 4,
+          "recovery": 19,
+          "whiff": 0,
+          "dmg": 64,
+          "hitstun": 22,
+          "blockstun": 14,
+          "kb": 7,
+          "kbBlock": 4,
+          "hb": [
+            20,
+            140,
+            95,
+            145
+          ],
+          "level": "mid",
+          "launch": 6,
+          "launchVx": 5,
+          "hitstop": 9,
+          "shake": 5,
+          "power": 1.2,
+          "poses": [
+            "pH_s",
+            "pH_a"
+          ],
+          "trail": "bw"
+        },
+        "kL": {
+          "id": "kL",
+          "kind": "normal",
+          "rank": 1,
+          "startup": 6,
+          "active": 3,
+          "recovery": 10,
+          "whiff": 0,
+          "dmg": 24,
+          "hitstun": 13,
+          "blockstun": 8,
+          "kb": 2.5,
+          "kbBlock": 2,
+          "hb": [
+            15,
+            110,
+            50,
+            100
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 5,
+          "shake": 2,
+          "power": 0.6,
+          "poses": [
+            "kL_s",
+            "kL_a"
+          ],
+          "trail": "fa"
+        },
+        "kM": {
+          "id": "kM",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 9,
+          "active": 4,
+          "recovery": 14,
+          "whiff": 0,
+          "dmg": 44,
+          "hitstun": 18,
+          "blockstun": 12,
+          "kb": 5,
+          "kbBlock": 2,
+          "hb": [
+            20,
+            128,
+            80,
+            140
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 7,
+          "shake": 2,
+          "power": 0.9,
+          "poses": [
+            "kM_s",
+            "kM_a"
+          ],
+          "trail": "fa"
+        },
+        "kH": {
+          "id": "kH",
+          "kind": "normal",
+          "rank": 3,
+          "startup": 12,
+          "active": 5,
+          "recovery": 21,
+          "whiff": 0,
+          "dmg": 69,
+          "hitstun": 23,
+          "blockstun": 15,
+          "kb": 8,
+          "kbBlock": 5,
+          "hb": [
+            20,
+            135,
+            70,
+            165
+          ],
+          "level": "mid",
+          "launch": 6,
+          "launchVx": 6,
+          "hitstop": 9,
+          "shake": 5,
+          "power": 1.2,
+          "poses": [
+            "kH_s",
+            "kH_a"
+          ],
+          "trail": "fa"
+        },
+        "cP": {
+          "id": "cP",
+          "kind": "normal",
+          "rank": 1,
+          "startup": 6,
+          "active": 3,
+          "recovery": 9,
+          "whiff": 0,
+          "dmg": 25,
+          "hitstun": 13,
+          "blockstun": 8,
+          "kb": 2,
+          "kbBlock": 2,
+          "hb": [
+            20,
+            110,
+            50,
+            95
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 5,
+          "shake": 2,
+          "power": 0.6,
+          "poses": [
+            "cP_s",
+            "cP_a"
+          ],
+          "trail": "fw"
+        },
+        "cK": {
+          "id": "cK",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 10,
+          "active": 4,
+          "recovery": 22,
+          "whiff": 0,
+          "dmg": 49,
+          "hitstun": 22,
+          "blockstun": 12,
+          "kb": 6,
+          "kbBlock": 2,
+          "hb": [
+            10,
+            145,
+            0,
+            35
+          ],
+          "level": "low",
+          "launch": 5,
+          "launchVx": 4,
+          "hitstop": 8,
+          "shake": 2,
+          "power": 1,
+          "poses": [
+            "cK_s",
+            "cK_a"
+          ],
+          "trail": "fa"
+        },
+        "jP": {
+          "id": "jP",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 7,
+          "active": 10,
+          "recovery": 0,
+          "whiff": 0,
+          "dmg": 49,
+          "hitstun": 18,
+          "blockstun": 12,
+          "kb": 4,
+          "kbBlock": 2,
+          "hb": [
+            10,
+            105,
+            20,
+            125
+          ],
+          "level": "high",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 7,
+          "shake": 2,
+          "power": 0.9,
+          "poses": [
+            "jP_s",
+            "jP_a"
+          ],
+          "air": true,
+          "trail": "fw"
+        },
+        "jK": {
+          "id": "jK",
+          "kind": "normal",
+          "rank": 2,
+          "startup": 8,
+          "active": 10,
+          "recovery": 0,
+          "whiff": 0,
+          "dmg": 54,
+          "hitstun": 19,
+          "blockstun": 12,
+          "kb": 5,
+          "kbBlock": 2,
+          "hb": [
+            5,
+            110,
+            -10,
+            85
+          ],
+          "level": "high",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 7,
+          "shake": 2,
+          "power": 1,
+          "poses": [
+            "jK_s",
+            "jK_a"
+          ],
+          "air": true,
+          "trail": "fa"
+        },
+        "s1": {
+          "id": "s1",
+          "kind": "special",
+          "rank": 9,
+          "startup": 18,
+          "active": 8,
+          "recovery": 28,
+          "whiff": 12,
+          "dmg": 60,
+          "hitstun": 25,
+          "blockstun": 14,
+          "kb": 11,
+          "kbBlock": 6,
+          "hb": [
+            15,
+            275,
+            20,
+            180
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 8,
+          "shake": 10,
+          "power": 1.7,
+          "poses": [
+            "shout_s",
+            "shout_a"
+          ],
+          "label": "MEU NOME É ENÉAS!",
+          "chip": 0.04
+        },
+        "s2": {
+          "id": "s2",
+          "kind": "special",
+          "rank": 9,
+          "startup": 20,
+          "active": 3,
+          "recovery": 29,
+          "whiff": 8,
+          "dmg": 46,
+          "hitstun": 22,
+          "blockstun": 13,
+          "kb": 6,
+          "kbBlock": 3,
+          "hb": [
+            20,
+            110,
+            65,
+            140
+          ],
+          "level": "mid",
+          "launch": 0,
+          "launchVx": 0,
+          "hitstop": 7,
+          "shake": 6,
+          "power": 1.3,
+          "poses": [
+            "ecg_s",
+            "ecg_a"
+          ],
+          "label": "DIAGNÓSTICO FATAL",
+          "chip": 0.035
+        },
+        "s3": {
+          "id": "s3",
+          "kind": "special",
+          "rank": 9,
+          "startup": 22,
+          "active": 14,
+          "recovery": 30,
+          "whiff": 8,
+          "dmg": 28,
+          "hitstun": 21,
+          "blockstun": 11,
+          "kb": 3,
+          "kbBlock": 2,
+          "hb": [
+            20,
+            110,
+            55,
+            145
+          ],
+          "level": "mid",
+          "launch": 8,
+          "launchVx": 2,
+          "hitstop": 5,
+          "shake": 6,
+          "power": 1.2,
+          "poses": [
+            "five_s",
+            "five_a"
+          ],
+          "recoveryPose": "six_a",
+          "label": "56 NA TESTA!",
+          "chip": 0.025
+        }
+      },
+      "specials": [
+        {
+          "key": "U",
+          "name": "MEU NOME É ENÉAS!",
+          "desc": "Onda sonora de médio alcance que atordoa brevemente e empurra. Pode ser defendida."
+        },
+        {
+          "key": "I",
+          "name": "DIAGNÓSTICO FATAL",
+          "desc": "Dispara um eletrocardiograma elétrico pelo estetoscópio. No acerto: CASO GRAVE!"
+        },
+        {
+          "key": "O",
+          "name": "56 NA TESTA!",
+          "desc": "O 5 lança e o 6 derruba. Dois projéteis bloqueáveis; a sequência conta como um uso à distância."
+        }
+      ],
+      "superName": "BOMBA ATÔMICA BRASILEIRA"
+    }
+  }
+}
