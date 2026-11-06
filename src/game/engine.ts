@@ -9,6 +9,7 @@ import { touchInput } from './touch';
 import type { Bindings } from './input';
 import { audio } from './audio';
 import { computeRig, lerpPose } from './rig';
+import { attackAnimation, motionAnimation } from './animation';
 import type { Rig, P2 } from './rig';
 import { FLOOR_Y } from './stage';
 import type { StageId } from './stage';
@@ -29,7 +30,7 @@ export const DASH_COMMIT_FRAMES = 4;
 export const PERFECT_GUARD_FRAMES = 3;
 export const PRECISION_GUARD_FRAMES = 5;
 export const GUARD_READY_FEEDBACK_FRAMES = 36; // UI only; never changes actionable frames.
-export const settings = { shake: 1, hitboxes: false };
+export { settings } from './visual-settings';
 
 export interface GameConfig {
   mode: Mode;
@@ -1337,7 +1338,7 @@ export class Game {
       } else f.turn = 1;
     }
     if (t === m.startup) {
-      audio.whoosh(impactStrength(m));
+      audio.swing(f.ch,m);
       if (m.sound === 'purple') audio.purple();
       if (m.sound === 'red') audio.red();
       if (m.kind === 'special') this.speed = Math.max(this.speed, 0.5);
@@ -2761,35 +2762,12 @@ export class Game {
     }
     const base = def.poses[name] || def.poses.idle;
     f.poseName=name;
-    const t:Pose=recoveryProgress!==null&&m?lerpPose(def.poses[m.recoveryPose||m.poses[1]]||base,base,recoveryProgress*recoveryProgress*(3-2*recoveryProgress)):{...base};
-    const s = Math.sin(f.animT * (f.ch === 'orango' ? 0.2 : 0.27));
-    if (f.state === 'ground' && !f.guard && !f.crouch && !f.poseOverride) {
-      if (f.walking !== 0) {
-        const stride=s*Math.min(1,Math.abs(f.vx)/def.walk);
-        t.fl1 += stride * 22;
-        t.bl1 -= stride * 22;
-        t.fl2 += stride * 12;
-        t.bl2 -= stride * 12;
-        if (f.ch === 'orango') {
-          t.fa1 += s * 10;
-          t.ba1 -= s * 10;
-        }
-      } else {
-        t.lean += Math.sin(f.animT * 0.09) * 1.6;
-        t.fa1 += Math.sin(f.animT * 0.09) * 3;
-      }
-    }
+    const choreographed=f.state==='attack'&&m&&!f.poseOverride;
+    const t:Pose=choreographed?attackAnimation(f.ch,m,Math.max(0,f.moveT-1),f.connected,def.poses[m.air?'jump':f.crouch?'crouch':'idle']):
+      f.poseOverride?{...base}:motionAnimation(f.ch,base,f);
+    // At contact, the hand/foot reaches its authored pose without a smoothing lag.
+    if(choreographed)k=recoveryProgress===null&&f.moveT-1>=m.startup?1:.72;
     if (f.state === 'launched') t.rot = -0.5 - Math.min(f.stateT * 0.09, 1.9);
-    if (f.state === 'win') {
-      if (f.ch === 'orango') {
-        const w = Math.sin(f.animT * 0.55);
-        t.fa2 = -150 + 30 * w;
-        t.ba2 = -150 - 30 * w;
-        t.lean += Math.sin(f.animT * 0.27) * 3;
-      } else {
-        t.lean += Math.sin(f.animT * 0.07) * 1.5;
-      }
-    }
     f.pose = lerpPose(f.pose, t, k);
     f.rig = computeRig(f.ch, f.pose);
     // expressão

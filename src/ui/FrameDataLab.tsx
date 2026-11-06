@@ -13,6 +13,7 @@ import { ComboTrainer,comboCommand } from './ComboTrainer';
 import { comboRoute } from '../game/combos';
 import { keyLabel } from '../game/input';
 import type { Action } from '../game/input';
+import { AnimationGallery } from './AnimationGallery';
 
 const signed=(v:number|null)=>v===null?'Variável':`${v>0?'+':''}${v}f`;
 const number=(v:number)=>Number(v.toFixed(2)).toLocaleString('pt-BR');
@@ -34,7 +35,7 @@ function ComparisonCard({side,ch,move,onChar,onMove}:{side:string;ch:CharId;move
 
 export function FrameDataLab({gameRef,onOpenChange}:{gameRef:RefObject<Game|null>;onOpenChange?:(open:boolean)=>void}){
  const mobile=useMobile(),[open,setOpen]=useState(false),[monitor,setMonitor]=useState(false),[live,setLive]=useState(()=>readGame(gameRef.current));
- const [tab,setTab]=useState<'frame'|'combos'>('frame'),[showInputs,setShowInputs]=useState(true);
+ const [tab,setTab]=useState<'frame'|'combos'|'animation'>('frame'),[showInputs,setShowInputs]=useState(true);
  const [left,setLeft]=useState<CharId>('caetano'),[right,setRight]=useState<CharId>('orango'),[moves,setMoves]=useState<[string,string]>(['pL','pL']);
  const [boxes,setBoxes]=useState(settings.hitboxes),[notice,setNotice]=useState('');
  const dialog=useRef<HTMLDivElement>(null),previousPause=useRef(false);
@@ -69,9 +70,9 @@ export function FrameDataLab({gameRef,onOpenChange}:{gameRef:RefObject<Game|null
  const widget=<div className={`frame-widget${mobile?' frame-widget-mobile':''}`}><button type="button" onClick={()=>{setTab('frame');show()}}>FRAME DATA</button><button type="button" onClick={()=>{setTab('combos');show()}}>COMBOS</button>{monitor&&!open&&live&&<div className="frame-live-monitor" aria-label="Monitor de combate"><strong>{live.fighters[0].move} · {live.fighters[0].phase}</strong><span>P2: {live.fighters[1].free?'LIVRE PARA AGIR':live.fighters[1].state} · H {live.fighters[1].hitstun} / B {live.fighters[1].blockstun}</span><span>{live.fighters[1].hits} acertos · {number(live.fighters[1].damage)} dano</span>{live.fighters[1].freeAt!==null&&live.fighters[1].freeAt!==undefined&&<span>Recuperou no tick {live.fighters[1].freeAt}</span>}{showInputs&&<span className="combo-input-history">{inputText||'Inputs: aguardando comandos'}</span>}{live.coach&&<div className="combo-live-coach" data-coach-status={live.coach.status}><strong>{live.coach.status==='success'?'COMBO CORRETO!':live.coach.status==='failed'?'TENTE NOVAMENTE':next?`PRÓXIMO: ${comboCommand(next,gameRef.current!.cfg.bindings[0],mobile)}`:'PRONTO'}</strong><span>{live.coach.progress}/{lesson?.steps.length} · {live.coach.notice}</span></div>}</div>}</div>;
  return <>{mobile?createPortal(widget,document.body):widget}{open&&createPortal(<div className="frame-lab-backdrop"><div className="frame-lab-dialog" role="dialog" aria-modal="true" aria-label="Laboratório de frame data" tabIndex={-1} ref={dialog}>
   <header><div><p>TREINAMENTO · 60 FRAMES POR SEGUNDO</p><h2>LABORATÓRIO DE COMBATE</h2></div><button type="button" onClick={close}>VOLTAR AO TREINO</button></header>
-  <nav className="combo-lab-tabs"><button type="button" aria-pressed={tab==='frame'} onClick={()=>setTab('frame')}>FRAME DATA</button><button type="button" aria-pressed={tab==='combos'} onClick={()=>setTab('combos')}>TREINADOR DE COMBOS</button></nav>
+  <nav className="combo-lab-tabs"><button type="button" aria-pressed={tab==='frame'} onClick={()=>setTab('frame')}>FRAME DATA</button><button type="button" aria-pressed={tab==='combos'} onClick={()=>setTab('combos')}>TREINADOR DE COMBOS</button><button type="button" aria-pressed={tab==='animation'} onClick={()=>setTab('animation')}>ANIMAÇÕES</button></nav>
   <div className="combo-display-options"><label><input type="checkbox" checked={monitor} onChange={e=>setMonitor(e.target.checked)}/> Exibir inputs, dano, acertos e recuperação na luta</label><label><input type="checkbox" checked={showInputs} onChange={e=>setShowInputs(e.target.checked)}/> Histórico de inputs</label></div>
-  {tab==='combos'?<ComboTrainer gameRef={gameRef} mobile={mobile} onPractice={()=>{setMonitor(true);refresh();close()}}/>:<>
+  {tab==='animation'?<AnimationGallery initial={gameRef.current?.f[0].ch||'caetano'}/>:tab==='combos'?<ComboTrainer gameRef={gameRef} mobile={mobile} onPractice={()=>{setMonitor(true);refresh();close()}}/>:<>
   <p className="frame-lab-help">Compare os 13 lutadores e observe a luta quadro a quadro. Os valores vêm da ficha atual dos golpes. A vantagem teórica considera contato no primeiro frame ativo, sem cancelamento. Distância, avanço e pushback também importam.</p>
   <div className="frame-comparison"><ComparisonCard side="A" ch={left} move={moves[0]} onChar={setLeft} onMove={id=>setMoves([id,moves[1]])}/><ComparisonCard side="B" ch={right} move={moves[1]} onChar={setRight} onMove={id=>setMoves([moves[0],id])}/></div>
   <p className="frame-lab-help">“Variável” exige observar o contato: projéteis têm trajeto e duração próprios; lançamentos, agarrões, ULTs e aéreos usam outras regras. Chip indicado é o bloqueio comum de um contato; Precisão de Caetano zera chip. Alcance X não soma avanço nem largura do adversário.</p>

@@ -1,6 +1,7 @@
 // Esqueletos articulados e desenho vetorial de todos os lutadores.
 import type { CharId, Pose } from './data';
 import { CHARS } from './data';
+import { menuAnimation } from './animation';
 
 export interface P2 {
   x: number;
@@ -35,6 +36,8 @@ const G = {
   nomad: { T: 55, th: 37, sh: 35, ua: 34, fo: 31, headR: 20, foot: 17, hOff: 1.0, hFwd: 3 },
   renngotti: { T: 58, th: 40, sh: 38, ua: 35, fo: 32, headR: 19, foot: 17, hOff: 1.05, hFwd: 3 },
 };
+
+const blink=(o:DrawOpts)=>o.expr!=='shout'&&o.time%187>181;
 
 const rad = (d: number) => (d * Math.PI) / 180;
 const pol = (o: P2, ang: number, len: number): P2 => ({ x: o.x + Math.cos(rad(ang)) * len, y: o.y + Math.sin(rad(ang)) * len });
@@ -91,19 +94,39 @@ export function computeRig(ch: CharId, pose: Pose): Rig {
 // ------------------------------------------------------------ helpers de desenho
 const OUT = '#1a1024';
 
+const palette = new Map<string, [string, string]>();
+function tones(color: string): [string, string] {
+  const old=palette.get(color);if(old)return old;
+  if(!/^#[\da-f]{6}$/i.test(color))return [color,color];
+  const rgb=[1,3,5].map(i=>parseInt(color.slice(i,i+2),16));
+  const hex=(k:number,add:number)=>'#'+rgb.map(n=>Math.round(Math.max(0,Math.min(255,n*k+add))).toString(16).padStart(2,'0')).join('');
+  const result:[string,string]=[hex(.71,0),hex(.87,39)];palette.set(color,result);return result;
+}
+
+// Organic, tapered contours replace cylindrical joints. Two painted shadow planes
+// and an ink edge keep limbs readable at phone size without external sprite sheets.
 function cap(ctx: CanvasRenderingContext2D, a: P2, b: P2, w1: number, w2: number, fill: string, stroke = OUT, lw = 2.2) {
-  const th = Math.atan2(b.y - a.y, b.x - a.x);
-  ctx.beginPath();
-  ctx.arc(a.x, a.y, w1 / 2, th + Math.PI / 2, th + (3 * Math.PI) / 2);
-  ctx.arc(b.x, b.y, w2 / 2, th - Math.PI / 2, th + Math.PI / 2);
-  ctx.closePath();
-  ctx.fillStyle = fill;
-  ctx.fill();
-  if (lw > 0) {
-    ctx.lineWidth = lw;
-    ctx.strokeStyle = stroke;
-    ctx.stroke();
+  const u=unit(a,b),n={x:-u.y,y:u.x},L=Math.hypot(b.x-a.x,b.y-a.y),r1=w1*.5,r2=w2*.5;
+  const point=(t:number,s:number)=>({x:a.x+(b.x-a.x)*t+n.x*s,y:a.y+(b.y-a.y)*t+n.y*s});
+  const path=()=>{
+    ctx.beginPath();ctx.moveTo(a.x+n.x*r1,a.y+n.y*r1);
+    ctx.bezierCurveTo(a.x-u.x*r1,a.y-u.y*r1,a.x-n.x*r1-u.x*r1*.6,a.y-n.y*r1-u.y*r1*.6,a.x-n.x*r1,a.y-n.y*r1);
+    const c=point(.42,-Math.max(r1,r2)*1.08),d=point(.76,-r2*.85);
+    ctx.bezierCurveTo(c.x,c.y,d.x,d.y,b.x-n.x*r2,b.y-n.y*r2);
+    ctx.bezierCurveTo(b.x+u.x*r2,b.y+u.y*r2,b.x+n.x*r2+u.x*r2*.6,b.y+n.y*r2+u.y*r2*.6,b.x+n.x*r2,b.y+n.y*r2);
+    const e=point(.62,Math.max(r1,r2)*1.06),f=point(.25,r1*.95);
+    ctx.bezierCurveTo(e.x,e.y,f.x,f.y,a.x+n.x*r1,a.y+n.y*r1);ctx.closePath();
+  };
+  path();ctx.fillStyle=fill;ctx.fill();
+  if(lw>0&&L>9&&w1>7){
+    const [dark,light]=tones(fill);ctx.save();ctx.clip();
+    const sign=n.y+n.x*.35>=0?1:-1;
+    poly(ctx,[point(-.2,sign*r1*1.5),point(.34,sign*r1*.12),point(.65,sign*r2*.38),point(1.2,sign*r2*.14),point(1.2,sign*r2*2)],dark,undefined,0);
+    const a1=point(.12,-sign*r1*.56),b1=point(.7,-sign*r2*.66);
+    ctx.beginPath();ctx.moveTo(a1.x,a1.y);const c=point(.39,-sign*r1*.72);ctx.quadraticCurveTo(c.x,c.y,b1.x,b1.y);
+    ctx.strokeStyle=light;ctx.lineWidth=Math.max(.8,w1*.095);ctx.lineCap='round';ctx.stroke();ctx.restore();
   }
+  if(lw>0){path();ctx.lineWidth=lw*.8;ctx.strokeStyle=stroke;ctx.stroke();}
 }
 
 function poly(ctx: CanvasRenderingContext2D, pts: P2[], fill: string, stroke = OUT, lw = 2.2) {
@@ -114,6 +137,14 @@ function poly(ctx: CanvasRenderingContext2D, pts: P2[], fill: string, stroke = O
   ctx.fillStyle = fill;
   ctx.fill();
   if (lw > 0) {
+    if(lw>=2&&/^#[\da-f]{6}$/i.test(fill)){
+      const xs=pts.map(p=>p.x),ys=pts.map(p=>p.y),left=Math.min(...xs),right=Math.max(...xs),top=Math.min(...ys),bottom=Math.max(...ys);
+      if(right-left>18&&bottom-top>20){
+        ctx.save();ctx.clip();const g=ctx.createLinearGradient(left,top,right,bottom);
+        g.addColorStop(0,'#fff5dd20');g.addColorStop(.48,'#ffffff00');g.addColorStop(.49,'#1010270b');g.addColorStop(1,'#10102730');
+        ctx.fillStyle=g;ctx.fillRect(left,top,right-left,bottom-top);ctx.restore();
+      }
+    }
     ctx.lineWidth = lw;
     ctx.strokeStyle = stroke;
     ctx.lineJoin = 'round';
@@ -202,8 +233,8 @@ function eyeGlow(ctx: CanvasRenderingContext2D, x: number, y: number, r: number,
 }
 
 function headCaetano(ctx: CanvasRenderingContext2D, r: number, o: DrawOpts) {
-  const HAIR = '#140c1c';
-  const HAIR2 = '#43305e';
+  const HAIR = '#231418';
+  const HAIR2 = '#704230';
   const SKIN = '#c98d5c';
   const SKIN2 = '#a06a42';
   const expr = o.expr || 'n';
@@ -256,7 +287,7 @@ function headCaetano(ctx: CanvasRenderingContext2D, r: number, o: DrawOpts) {
   ctx.stroke();
   // olhos
   const eye = (x: number, s: number) => {
-    if (expr === 'hit') {
+    if (expr === 'hit' || blink(o)) {
       ctx.strokeStyle = OUT;
       ctx.lineWidth = r * 0.07;
       ctx.beginPath();
@@ -332,17 +363,13 @@ function headOrango(ctx: CanvasRenderingContext2D, r: number, o: DrawOpts) {
   const expr = o.expr || 'n';
   const mouthOpen = expr === 'shout' ? 1 : expr === 'hit' ? 0.5 : 0;
   // pelagem (cúpula espetada + barba)
-  const N = 30;
+  const N = 24;
   ctx.beginPath();
   for (let i = 0; i <= N * 2; i++) {
-    const a = (i / (N * 2)) * Math.PI * 2;
-    const down = Math.max(0, Math.sin(a));
-    let rr = r * (1.0 + 0.12 * down + (i % 2 ? 0.17 : 0));
-    if (down > 0.3) rr += r * 0.25 * down * (i % 2 ? 1 : 0.4);
-    const x = -r * 0.05 + Math.cos(a) * rr;
-    const y = -r * 0.1 + Math.sin(a) * rr * (a > 0 && a < Math.PI ? 0.95 : 1);
-    if (i === 0) ctx.moveTo(x, y);
-    else ctx.lineTo(x, y);
+    const a=(i/(N*2))*Math.PI*2,down=Math.max(0,Math.sin(a));
+    const rr=r*(1.04+.18*down+(i%2?.09:0));
+    const x=-r*.08+Math.cos(a)*rr,y=-r*.12+Math.sin(a)*rr*(down>.3?1.16:.92);
+    if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
   }
   ctx.closePath();
   const gr = ctx.createRadialGradient(-r * 0.3, -r * 0.5, r * 0.1, 0, 0, r * 1.4);
@@ -361,7 +388,7 @@ function headOrango(ctx: CanvasRenderingContext2D, r: number, o: DrawOpts) {
     const a = rad(190 + i * 18);
     ctx.beginPath();
     ctx.moveTo(Math.cos(a) * r * 0.55, Math.sin(a) * r * 0.55 - r * 0.1);
-    ctx.lineTo(Math.cos(a) * r * 0.95, Math.sin(a) * r * 0.95 - r * 0.1);
+    ctx.quadraticCurveTo(Math.cos(a)*r*.85-2,Math.sin(a)*r*.85,Math.cos(a)*r*1.03-3,Math.sin(a)*r*.97+3);
     ctx.stroke();
   }
   // máscara facial
@@ -378,7 +405,7 @@ function headOrango(ctx: CanvasRenderingContext2D, r: number, o: DrawOpts) {
   ctx.stroke();
   // olhos
   const eye = (x: number, y: number, s: number) => {
-    if (expr === 'hit') {
+    if (expr === 'hit' || blink(o)) {
       ctx.strokeStyle = '#150806';
       ctx.lineWidth = r * 0.06;
       ctx.beginPath();
@@ -439,6 +466,9 @@ function headOrango(ctx: CanvasRenderingContext2D, r: number, o: DrawOpts) {
 
 // ------------------------------------------------------------ CORPOS
 export function drawRig(ctx: CanvasRenderingContext2D, ch: CharId, rig: Rig, pose: Pose, o: DrawOpts) {
+  // Keep secondary animation on the simulation clock (including hitstop/online).
+  const accent=Math.sin(o.time*.12+pose.lean*.04);
+  rig={p:{...rig.p,head:{x:rig.p.head.x+accent*.35,y:rig.p.head.y}}};
   if(ch==='jane')drawJane(ctx,rig,pose,o);
   else if(ch==='cristyan')drawCristyan(ctx,rig,pose,o);
   else if(ch==='eneas')drawEneas(ctx,rig,pose,o);
@@ -510,17 +540,7 @@ function drawCaetano(ctx: CanvasRenderingContext2D, r: Rig, pose: Pose, o: DrawO
   }
   arm(p.eB, p.wB, false); leg(p.kB, p.aB, p.tB, true);
   cap(ctx, p.sh, p.head, 13, 12, SKIN2, OUT, 2);
-  // Peito exposto e ombros definidos: não há mais kimono nem mangas.
-  poly(ctx, [at(0, -16), at(0, 16), at(0.42, 20), at(0.88, 24), at(1.08, 19), at(1.12, 1), at(1.08, -19), at(0.85, -23), at(0.38, -18)], SKIN, OUT, 2.4);
-  poly(ctx, [at(0, -16), at(0.8, -22), at(1.06, -18), at(1.0, -9), at(0.54, -7), at(0.08, -9)], SKIN2, undefined, 0);
-  // Clavícula, peitorais e abdômen seguem o eixo do corpo nas animações.
-  strokePath(ctx, [at(1.02, -13), at(0.94, -3), at(1.04, 6), at(0.96, 18)], '#995a3e', 1.5);
-  strokePath(ctx, [at(0.96, 3), at(0.7, 3), at(0.63, 10), at(0.68, 21)], '#9f6042', 1.5);
-  strokePath(ctx, [at(0.77, -15), at(0.64, -6), at(0.69, 2)], '#9f6042', 1.4);
-  strokePath(ctx, [at(0.55, 4), at(0.23, 4)], '#b2734c', 1.2);
-  for (let i = 0; i < 2; i++) strokePath(ctx, [at(0.3 + i * 0.12, 5), at(0.29 + i * 0.12, 13)], '#b2734c', 1.1);
-  const pec = at(0.77, 15); circ(ctx, pec.x, pec.y, 1.3, '#9f6349', undefined, 0);
-  strokePath(ctx, [at(0.89, -17), at(0.7, -15)], LIGHT, 1.7);
+  paintedTorso(ctx,p,'caetano');
   leg(p.kF, p.aF, p.tF, false);
   // Cós laranja e faixa roxa na cintura, por cima das calças.
   poly(ctx, [at(-0.06, -17), at(-0.06, 18), at(0.15, 18), at(0.15, -17)], ORANGE, OUT, 1.8);
@@ -540,9 +560,9 @@ function drawOrango(ctx: CanvasRenderingContext2D, r: Rig, pose: Pose, o: DrawOp
   const OUTF = '#4a1406';
 
   const arm = (s: P2, e: P2, w: P2, front: boolean) => {
-    cap(ctx, e, w, 24, 21, FUR, OUTF, 2.6);
+    cap(ctx, e, w, 27, 22, FUR, OUTF, 2.6);
     tufts(ctx, e, w, 22, 5, FUR_D, 9);
-    cap(ctx, s, e, 29, 25, FUR, OUTF, 2.6);
+    cap(ctx, s, e, 35, 27, FUR, OUTF, 2.6);
     tufts(ctx, s, e, 26, 5, FUR_D, 11);
     // luz no pelo
     ctx.strokeStyle = FUR_L;
@@ -604,12 +624,14 @@ function drawOrango(ctx: CanvasRenderingContext2D, r: Rig, pose: Pose, o: DrawOp
   poly(ctx, pts, FUR, OUTF, 2.8);
   // sombra nas costas
   poly(ctx, [along(0, -26), along(0.25, -30), along(0.7, -36), along(1.05, -30), along(1.0, -12), along(0.5, -10), along(0, -8)], FUR_D, OUTF, 0);
-  // peito/barriga de pele
-  ell(ctx, along(0.7, 16).x, along(0.7, 16).y, 17, 20, '#a9624c', undefined, 0, Math.atan2(dir.y, dir.x) + Math.PI / 2);
-  ell(ctx, along(0.38, 16).x, along(0.38, 16).y, 14, 15, '#9c5642', undefined, 0, Math.atan2(dir.y, dir.x) + Math.PI / 2);
+  for(let row=0;row<7;row++)for(let col=0;col<6;col++){
+    const q=along(.17+row*.125,-20+col*8),w=Math.sin(o.time*.08+row*.6+col)*1.8;
+    ctx.beginPath();ctx.moveTo(q.x,q.y);ctx.quadraticCurveTo(q.x+4+w,q.y+5,q.x+w+1,q.y+10);
+    ctx.strokeStyle=(row+col)%3===0?FUR_L:'#a9411d';ctx.lineWidth=1.15;ctx.stroke();
+  }
   // pelos espetados no dorso
-  tufts(ctx, along(0, -26), along(1.05, -30), 60, 7, FUR_D, 6, -1);
-  tufts(ctx, along(0.1, 28), along(1.0, 34), 60, 5, FUR_D, 5, 1);
+  tufts(ctx, along(0, -26), along(1.05, -30), 0, 7, FUR_D, 6, -1);
+  tufts(ctx, along(0.1, 28), along(1.0, 34), 0, 5, FUR_D, 5, 1);
   // linhas de músculo
   ctx.strokeStyle = 'rgba(80,20,5,0.5)';
   ctx.lineWidth = 2;
@@ -640,6 +662,45 @@ function bodyAxes(p: Record<string, P2>) {
   };
 }
 
+// The same anatomical planes follow the articulated torso in every pose.
+// Deltoids, pectorals, obliques and abdominal plates have distinct shapes, rather
+// than a single flat polygon with a few lines. No gameplay dimensions change.
+function paintedTorso(ctx: CanvasRenderingContext2D, p: Record<string,P2>, ch: 'caetano'|'cristyan'|'tubarao') {
+  const {at}=bodyAxes(p), shark=ch==='tubarao',strong=ch!=='caetano';
+  const skin=shark?'#7f95a4':ch==='cristyan'?'#bd8054':'#d49460';
+  const shadow=shark?'#4b6076':ch==='cristyan'?'#80503e':'#995b3d';
+  const light=shark?'#c7d5d9':ch==='cristyan'?'#e5ae77':'#f1b87a';
+  const mid=shark?'#a5b7c0':ch==='cristyan'?'#d59560':'#e3a16a';
+  const w=shark?32:strong?26:24,edge=shark?'#192c3b':'#3a2429';
+  const outline=[at(-.08,-16),at(-.08,17),at(.25,20),at(.55,w-3),at(.83,w),at(1.05,w-3),at(1.13,13),at(1.12,-14),at(1.01,-w+1),at(.78,-w),at(.4,-20)];
+  poly(ctx,outline,skin,edge,2.1);
+  poly(ctx,[at(-.04,-16),at(.42,-20),at(.8,-w),at(1.03,-w+1),at(.92,-12),at(.59,-8),at(.3,-9),at(.02,-6)],shadow,undefined,0);
+  poly(ctx,[at(.98,-16),at(1.08,-8),at(1.05,2),at(.98,6),at(.94,18),at(.84,24),at(.68,20),at(.65,8),at(.72,1),at(.82,-7)],mid,undefined,0);
+  // Far and near pectorals have curved lower borders and different light planes.
+  for(const [l,r,far] of [[-18,1,1],[3,w-2,0]]){
+    const a=at(.96,l),b=at(1.03,(l+r)/2),c=at(.96,r),d=at(.65,r-2),e=at(.68,l+2);
+    ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.quadraticCurveTo(b.x,b.y,c.x,c.y);ctx.quadraticCurveTo(d.x+3,d.y+4,e.x,e.y);ctx.closePath();
+    ctx.fillStyle=far?skin:mid;ctx.fill();ctx.strokeStyle=shadow;ctx.lineWidth=1.15;ctx.stroke();
+    strokePath(ctx,[at(.94,l+3),at(.96,(l+r)/2),at(.9,r-3)],far?mid:light,1.3);
+  }
+  strokePath(ctx,[at(1.06,-13),at(.99,-3),at(1.06,4),at(1.02,15)],shadow,1.1);
+  // Three paired abdominal volumes. Each plane narrows towards the belt.
+  for(let i=0;i<3;i++)for(const side of [-1,1]){
+    const t=.52-i*.13,c=side<0?-1:10-i*.5;
+    const q=[at(t+.055,c-3),at(t+.06,c+4),at(t-.035,c+4),at(t-.05,c-2)];
+    poly(ctx,q,side<0?skin:mid,undefined,0);
+    strokePath(ctx,[at(t-.045,c-2),at(t-.05,c+4)],shadow,.9);
+    strokePath(ctx,[at(t+.04,c-2),at(t+.045,c+2)],light,.85);
+  }
+  strokePath(ctx,[at(.62,4),at(.2,4)],shadow,1);
+  for(const side of [-1,1]){
+    strokePath(ctx,[at(.55,side*17),at(.33,side*13),at(.13,side*9)],shadow,1.4);
+    for(let i=0;i<3;i++)strokePath(ctx,[at(.45-i*.09,side*17),at(.4-i*.09,side*12)],shadow,.65);
+  }
+  strokePath(ctx,[at(.9,-w+3),at(.78,-w+4)],light,1.7);
+  strokePath(ctx,[at(.55,w-4),at(.35,17)],light,1.2);
+}
+
 function strokePath(ctx: CanvasRenderingContext2D, points: P2[], color: string, width: number) {
   ctx.beginPath();
   ctx.moveTo(points[0].x, points[0].y);
@@ -653,83 +714,35 @@ function strokePath(ctx: CanvasRenderingContext2D, points: P2[], color: string, 
 }
 
 function headTubarao(ctx: CanvasRenderingContext2D, r: number, o: DrawOpts) {
-  const edge = '#142832';
-  const skin = ctx.createLinearGradient(-r, -r, r, r);
-  skin.addColorStop(0, '#a4bbc6');
-  skin.addColorStop(0.5, '#6f8c9c');
-  skin.addColorStop(1, '#415d70');
-  ctx.beginPath();
-  ctx.moveTo(-r * 0.75, -r * 0.35);
-  ctx.bezierCurveTo(-r * 0.82, -r * 1.12, r * 0.05, -r * 1.22, r * 0.58, -r * 0.78);
-  ctx.quadraticCurveTo(r * 0.85, -r * 0.63, r * 1.36, -r * 0.38);
-  ctx.quadraticCurveTo(r * 1.58, -r * 0.22, r * 1.25, -r * 0.02);
-  ctx.lineTo(r * 1.15, r * 0.28);
-  ctx.quadraticCurveTo(r * 1.3, r * 0.79, r * 0.44, r * 0.86);
-  ctx.quadraticCurveTo(-r * 0.62, r * 0.97, -r * 0.75, -r * 0.35);
-  ctx.fillStyle = skin;
-  ctx.fill();
-  ctx.lineWidth = Math.max(1.8, r * 0.065);
-  ctx.strokeStyle = edge;
-  ctx.stroke();
-  // Máscara ventral clara e focinho achatado.
-  ctx.beginPath();
-  ctx.moveTo(r * 1.23, -r * 0.02);
-  ctx.quadraticCurveTo(r * 0.56, r * 0.16, -r * 0.3, r * 0.2);
-  ctx.quadraticCurveTo(-r * 0.22, r * 0.83, r * 0.45, r * 0.8);
-  ctx.quadraticCurveTo(r * 1.25, r * 0.7, r * 1.15, r * 0.28);
-  ctx.closePath();
-  ctx.fillStyle = '#bccbd0';
-  ctx.fill();
-  // A sobrancelha continua a linha do nariz, com olhar de fiscal.
-  strokePath(ctx, [{ x: r * 0.03, y: -r * 0.4 }, { x: r * 0.43, y: -r * 0.48 }, { x: r * 0.8, y: -r * 0.32 }], '#233e4d', r * 0.11);
-  if (o.expr === 'hit') {
-    strokePath(ctx, [{ x: r * 0.17, y: -r * 0.26 }, { x: r * 0.47, y: -r * 0.15 }, { x: r * 0.2, y: -r * 0.04 }], edge, r * 0.065);
-  } else {
-    ell(ctx, r * 0.4, -r * 0.24, r * 0.17, r * 0.085, '#0c1b24', edge, r * 0.03, 0.12);
-    circ(ctx, r * 0.48, -r * 0.25, r * 0.035, '#d1faff', undefined, 0);
+  const edge='#152536',skin='#8298a9',shade='#536a80',light='#bccbd4';
+  // Broad human jaw and sculpted brow from the poster, with shark skin/gills.
+  poly(ctx,[{x:-r*.78,y:-r*.48},{x:-r*.95,y:-r*1.65},{x:-r*.15,y:-r*.88},{x:r*.06,y:-r*.52}],shade,edge,r*.055);
+  ctx.beginPath();ctx.moveTo(-r*.82,-r*.37);
+  ctx.bezierCurveTo(-r*.91,-r*.97,-r*.09,-r*1.2,r*.57,-r*.87);
+  ctx.quadraticCurveTo(r*.84,-r*.62,r*.83,-r*.22);
+  ctx.lineTo(r*.98,r*.15);ctx.lineTo(r*.86,r*.3);ctx.lineTo(r*.88,r*.61);
+  ctx.quadraticCurveTo(r*.76,r*1.04,r*.22,r*1.01);
+  ctx.lineTo(-r*.42,r*.78);ctx.quadraticCurveTo(-r*.82,r*.41,-r*.82,-r*.37);ctx.closePath();
+  ctx.fillStyle=skin;ctx.fill();ctx.strokeStyle=edge;ctx.lineWidth=r*.065;ctx.stroke();
+  poly(ctx,[{x:-r*.77,y:-r*.23},{x:-r*.37,y:-r*.39},{x:-r*.15,y:r*.26},{x:r*.11,y:r*.52},{x:r*.71,y:r*.72},{x:r*.28,y:r*.93},{x:-r*.4,y:r*.72},{x:-r*.74,y:r*.31}],shade,undefined,0);
+  poly(ctx,[{x:-r*.34,y:-r*.66},{x:r*.21,y:-r*.92},{x:r*.61,y:-r*.66},{x:r*.64,y:-r*.43},{x:r*.12,y:-r*.52}],light,undefined,0);
+  strokePath(ctx,[{x:-r*.18,y:-r*.26},{x:r*.14,y:-r*.39},{x:r*.48,y:-r*.25}],edge,r*.12);
+  strokePath(ctx,[{x:r*.56,y:-r*.3},{x:r*.77,y:-r*.35},{x:r*.88,y:-r*.25}],edge,r*.085);
+  if(o.expr==='hit'||blink(o))strokePath(ctx,[{x:r*.02,y:-r*.1},{x:r*.34,y:-r*.04}],edge,r*.065);
+  else{ell(ctx,r*.2,-r*.12,r*.18,r*.065,'#172634',edge,r*.025,-.12);circ(ctx,r*.29,-r*.13,r*.027,'#d1faff',undefined,0);ell(ctx,r*.72,-r*.15,r*.09,r*.045,edge);}
+  poly(ctx,[{x:r*.48,y:-r*.15},{x:r*.72,y:r*.25},{x:r*.53,y:r*.29},{x:r*.39,y:r*.21}],light,undefined,0);
+  strokePath(ctx,[{x:r*.48,y:r*.28},{x:r*.72,y:r*.29}],shade,r*.05);
+  for(let i=0;i<3;i++){ctx.beginPath();ctx.moveTo((-r*.61+i*r*.13),-r*.03);ctx.quadraticCurveTo(-r*.66+i*r*.13,r*.2,-r*.4+i*r*.13,r*.38);ctx.strokeStyle='#344e65';ctx.lineWidth=r*.035;ctx.stroke();}
+  if(o.kiss){ell(ctx,r*.91,r*.52,r*.24,r*.13,'#df7a9d',edge,r*.04);strokePath(ctx,[{x:r*.82,y:r*.52},{x:r*1.14,y:r*.5}],'#8e335b',r*.04);}
+  else if(o.expr==='shout'){
+    ell(ctx,r*.45,r*.59,r*.4,r*.33,'#172633',edge,r*.045);
+    for(let i=0;i<6;i++){const x=(.1+i*.12)*r;poly(ctx,[{x,y:r*.35},{x:x+r*.11,y:r*.35},{x:x+r*.05,y:r*.56}],'#f7f6e7',edge,r*.018);poly(ctx,[{x,y:r*.82},{x:x+r*.1,y:r*.82},{x:x+r*.05,y:r*.65}],'#f7f6e7',edge,r*.018);}
+  }else{
+    strokePath(ctx,[{x:r*.08,y:r*.56},{x:r*.45,y:r*.51},{x:r*.78,y:r*.51}],edge,r*.055);
+    strokePath(ctx,[{x:r*.25,y:r*.63},{x:r*.53,y:r*.65},{x:r*.73,y:r*.59}],light,r*.055);
   }
-  ell(ctx, r * 1.02, -r * 0.2, r * 0.06, r * 0.035, '#203542');
-  // Três guelras na lateral, inclusive nos retratos pequenos.
-  for (let i = 0; i < 3; i++) {
-    ctx.beginPath();
-    ctx.moveTo(-r * (0.48 - i * 0.15), -r * 0.05);
-    ctx.quadraticCurveTo(-r * (0.57 - i * 0.15), r * 0.15, -r * (0.36 - i * 0.15), r * 0.34);
-    ctx.lineWidth = Math.max(1, r * 0.04);
-    ctx.strokeStyle = '#3c596a';
-    ctx.stroke();
-  }
-  if (o.kiss) {
-    // A boca em biquinho é usada apenas no Beijo do Fiscalizador.
-    ell(ctx, r * 1.18, r * 0.38, r * 0.2, r * 0.13, '#dd6b91', edge, r * 0.04);
-    strokePath(ctx, [{ x: r * 1.08, y: r * 0.38 }, { x: r * 1.37, y: r * 0.38 }], '#842c58', r * 0.04);
-  } else {
-    const open = o.expr === 'shout' ? 0.42 : o.expr === 'hit' ? 0.24 : 0.11;
-    ctx.beginPath();
-    ctx.moveTo(r * 0.13, r * 0.33);
-    ctx.quadraticCurveTo(r * 0.75, r * (0.39 - open * 0.65), r * 1.15, r * 0.17);
-    ctx.quadraticCurveTo(r * 0.98, r * (0.47 + open), r * 0.48, r * (0.46 + open));
-    ctx.quadraticCurveTo(r * 0.24, r * (0.46 + open * 0.6), r * 0.13, r * 0.33);
-    ctx.closePath();
-    ctx.fillStyle = '#102634';
-    ctx.fill();
-    ctx.lineWidth = r * 0.04;
-    ctx.strokeStyle = edge;
-    ctx.stroke();
-    for (let i = 0; i < 7; i++) {
-      const x = r * (0.23 + i * 0.125);
-      const y = r * (0.34 - i * 0.018);
-      const h = r * (0.12 + open * 0.28);
-      poly(ctx, [{ x, y }, { x: x + r * 0.09, y: y - r * 0.005 }, { x: x + r * 0.05, y: y + h }], '#f3f5e9', edge, r * 0.018);
-    }
-    if (open > 0.2) for (let i = 0; i < 5; i++) {
-      const x = r * (0.43 + i * 0.12);
-      const y = r * (0.45 + open - i * 0.027);
-      poly(ctx, [{ x, y }, { x: x + r * 0.08, y: y - r * 0.01 }, { x: x + r * 0.035, y: y - r * 0.13 }], '#f3f5e9', undefined, 0);
-    }
-  }
-  // Marcas e reflexo azulado da pele, sem texturas externas.
-  strokePath(ctx, [{ x: -r * 0.48, y: -r * 0.69 }, { x: -r * 0.18, y: -r * 0.88 }, { x: r * 0.2, y: -r * 0.83 }], '#c3d5db', r * 0.045);
-  if ((o.glow || 0) > 0) eyeGlow(ctx, r * 0.42, -r * 0.24, r * 1.5, o.glowColor || '#67e8f9', o.glow!);
+  strokePath(ctx,[{x:r*.16,y:r*.85},{x:r*.42,y:r*.86},{x:r*.68,y:r*.75}],light,r*.055);
+  if((o.glow||0)>0)eyeGlow(ctx,r*.26,-r*.13,r*1.5,o.glowColor||'#67e8f9',o.glow!);
 }
 
 function headRickzera(ctx: CanvasRenderingContext2D, r: number, o: DrawOpts) {
@@ -756,7 +769,7 @@ function headRickzera(ctx: CanvasRenderingContext2D, r: number, o: DrawOpts) {
   ctx.stroke();
   poly(ctx, [{ x: -r * 0.42, y: -r * 0.4 }, { x: -r * 0.2, y: -r * 0.38 }, { x: -r * 0.1, y: r * 0.58 }, { x: r * 0.22, y: r * 0.92 }, { x: -r * 0.24, y: r * 0.65 }], '#d19872', undefined, 0);
   // Olhar de canto e sobrancelha levantada.
-  if (o.expr === 'hit') {
+  if (o.expr === 'hit' || blink(o)) {
     strokePath(ctx, [{ x: r * 0.18, y: -r * 0.08 }, { x: r * 0.41, y: r * 0.02 }, { x: r * 0.18, y: r * 0.11 }], edge, r * 0.055);
   } else {
     ell(ctx, r * 0.36, -r * 0.015, r * 0.18, r * 0.095, '#fdf5e9', edge, r * 0.04);
@@ -846,15 +859,7 @@ function drawTubarao(ctx: CanvasRenderingContext2D, r: Rig, pose: Pose, o: DrawO
   arm(p.eB, p.wB, false);
   leg(p.kB, p.aB, p.tB, true);
   cap(ctx, p.sh, p.head, 22, 22, shade, edge, 2.2);
-  poly(ctx, [at(-0.06, -16), at(-0.06, 17), at(0.4, 29), at(0.88, 36), at(1.07, 23), at(1.1, -22), at(0.86, -31), at(0.35, -25)], skin, edge, 2.6);
-  poly(ctx, [at(0, -16), at(0.7, -29), at(1.05, -22), at(0.97, -11), at(0.2, -8)], shade, undefined, 0);
-  // Plaque claire du ventre et pectoraux, plus six lignes d'abdominaux.
-  poly(ctx, [at(0.08, 3), at(0.24, 17), at(0.7, 27), at(1.01, 19), at(1.0, 1), at(0.7, -1), at(0.3, -1)], '#b2c5cc', undefined, 0);
-  strokePath(ctx, [at(0.94, 1), at(0.7, 1), at(0.62, 7), at(0.65, 27)], '#4c6b7b', 1.8);
-  strokePath(ctx, [at(0.7, -16), at(0.62, -4), at(0.65, 1)], '#4c6b7b', 1.7);
-  strokePath(ctx, [at(0.6, 4), at(0.18, 4)], '#688592', 1.4);
-  for (let i = 0; i < 3; i++) strokePath(ctx, [at(0.23 + i * 0.12, 5), at(0.22 + i * 0.12, 16 - i)], '#76919d', 1.3);
-  for (let i = 0; i < 3; i++) strokePath(ctx, [at(0.73 + i * 0.075, 29), at(0.68 + i * 0.075, 33)], '#3a596e', 1.4);
+  paintedTorso(ctx,p,'tubarao');
   leg(p.kF, p.aF, p.tF, false);
   ctx.save();
   ctx.translate(p.head.x, p.head.y);
@@ -948,7 +953,7 @@ function headBieu(ctx: CanvasRenderingContext2D, r: number, o: DrawOpts) {
   ctx.quadraticCurveTo(-r * 0.34, r * 0.82, -r * 0.46, r * 0.28);
   ctx.closePath(); ctx.fillStyle = skin; ctx.fill(); ctx.strokeStyle = edge; ctx.lineWidth = r * 0.065; ctx.stroke();
   poly(ctx, [{ x: -r * 0.4, y: -r * 0.2 }, { x: -r * 0.11, y: -r * 0.3 }, { x: -r * 0.04, y: r * 0.54 }, { x: r * 0.26, y: r * 0.88 }, { x: -r * 0.27, y: r * 0.6 }], '#b37b56', undefined, 0);
-  if (o.expr === 'hit') {
+  if (o.expr === 'hit' || blink(o)) {
     strokePath(ctx, [{ x: r * 0.13, y: -r * 0.05 }, { x: r * 0.42, y: r * 0.04 }, { x: r * 0.14, y: r * 0.13 }], edge, r * 0.06);
   } else {
     ell(ctx, r * 0.34, r * 0.02, r * 0.17, r * 0.1, '#fff3dd', edge, r * 0.04);
@@ -1063,7 +1068,7 @@ function drawBieu(ctx: CanvasRenderingContext2D, r: Rig, pose: Pose, o: DrawOpts
 
 function drawNomad(ctx: CanvasRenderingContext2D, r: Rig, pose: Pose, o: DrawOpts) {
   const p = r.p; const { at } = bodyAxes(p);
-  const edge = '#2c2130'; const blue = '#3576bb'; const shade = '#21518d'; const red = '#df4147';
+  const edge = '#2c2130'; const blue = '#3b54a1'; const shade = '#252f68'; const red = '#d82c37';
   const arm = (e: P2, w: P2, front: boolean) => {
     cap(ctx, p.sh, e, 23, 20, front ? red : '#aa293d', edge, 2.2);
     cap(ctx, e, w, 20, 13, front ? red : '#aa293d', edge, 2.2);
@@ -1415,7 +1420,7 @@ function headSantox(ctx: CanvasRenderingContext2D, r: number, o: DrawOpts) {
   ell(ctx,offset,-r*.02,r*1.13,r*.9,g,edge,r*.08);
   ctx.beginPath();ctx.ellipse(offset,-r*.09,r*.96,r*.72,-.05,Math.PI*1.04,Math.PI*1.84);ctx.strokeStyle='#d09df5';ctx.lineWidth=r*.035;ctx.stroke();
   const eye=(x:number,tilt:number)=>{
-    if(o.expr==='hit'){
+    if(o.expr==='hit'||blink(o)){
       strokePath(ctx,[{x:x-r*.17,y:-r*.25},{x:x+r*.1,y:-r*.1},{x:x-r*.14,y:r*.03}],edge,r*.08);return;
     }
     ctx.save();ctx.translate(x,-r*.2);ctx.rotate(tilt);
@@ -1449,7 +1454,7 @@ function headJao(ctx: CanvasRenderingContext2D, r: number, o: DrawOpts) {
   ctx.fillStyle=skin;ctx.fill();ctx.strokeStyle=edge;ctx.lineWidth=r*.06;ctx.stroke();
   poly(ctx,[{x:-r*.53,y:-r*.26},{x:-r*.22,y:-r*.3},{x:-r*.05,y:r*.51},{x:r*.27,y:r*.88},{x:-r*.24,y:r*.68}],shade,undefined,0);
   const eye=(x:number,y:number,scale:number)=>{
-    if(o.expr==='hit'){strokePath(ctx,[{x:x-r*.14,y:y-r*.07},{x:x+r*.11,y},{x:x-r*.12,y:y+r*.08}],edge,r*.055);return;}
+    if(o.expr==='hit'||blink(o)){strokePath(ctx,[{x:x-r*.14,y:y-r*.07},{x:x+r*.11,y},{x:x-r*.12,y:y+r*.08}],edge,r*.055);return;}
     ell(ctx,x,y,r*.17*scale,r*.1*scale,'#fff7ea',edge,r*.035,-.1);
     circ(ctx,x+r*.04,y-r*.005,r*.07*scale,'#4f3327',edge,r*.02);circ(ctx,x+r*.06,y-r*.005,r*.034*scale,'#151119',undefined,0);
     circ(ctx,x+r*.02,y-r*.035,r*.023*scale,'#fff',undefined,0);
@@ -1582,7 +1587,7 @@ function headJane(ctx:CanvasRenderingContext2D,r:number,o:DrawOpts){
   const sleeping=o.poseName?.startsWith('laptop'),hit=o.expr==='hit',dizzy=o.poseName==='dizzy';
   const eye=(x:number,y:number,sc:number)=>{
     if(dizzy){strokePath(ctx,[{x:x-r*.17*sc,y:y-r*.015},{x:x-r*.04*sc,y:y+r*.03},{x:x+r*.16*sc,y:y-r*.005}],edge,r*.05);ell(ctx,x+r*.03*sc,y+r*.075,r*.045*sc,r*.065*sc,'#4785b8',undefined,0);return;}
-    if(sleeping||hit){strokePath(ctx,[{x:x-r*.16*sc,y:y-r*.02},{x,y:y+r*.035},{x:x+r*.16*sc,y:y-r*.035}],edge,r*.045);return;}
+    if(sleeping||hit||blink(o)){strokePath(ctx,[{x:x-r*.16*sc,y:y-r*.02},{x,y:y+r*.035},{x:x+r*.16*sc,y:y-r*.035}],edge,r*.045);return;}
     ctx.beginPath();ctx.moveTo(x-r*.18*sc,y);ctx.quadraticCurveTo(x,y-r*.15*sc,x+r*.19*sc,y-r*.01);ctx.quadraticCurveTo(x,y+r*.1*sc,x-r*.18*sc,y);ctx.fillStyle='#fff9ef';ctx.fill();ctx.strokeStyle=edge;ctx.lineWidth=r*.035;ctx.stroke();
     ell(ctx,x+r*.04*sc,y-r*.008,r*.075*sc,r*.095*sc,'#4785b8',edge,r*.02);ell(ctx,x+r*.05*sc,y,r*.035*sc,r*.067*sc,'#172e49');circ(ctx,x+r*.01,y-r*.04,r*.026*sc,'#fff',undefined,0);
     strokePath(ctx,[{x:x-r*.19*sc,y:y-r*.01},{x:x-r*.24*sc,y:y-r*.08}],edge,r*.035);
@@ -1599,6 +1604,10 @@ function headJane(ctx:CanvasRenderingContext2D,r:number,o:DrawOpts){
   poly(ctx,[{x:-r*.82,y:-r*.52},{x:-r*.59,y:-r*.92},{x:-r*.12,y:-r*1.06},{x:r*.4,y:-r*.98},{x:r*.75,y:-r*.65},{x:r*.78,y:-r*.28},{x:r*.56,y:-r*.28},{x:r*.47,y:-r*.64},{x:r*.45,y:-r*.27},{x:r*.2,y:-r*.24},{x:r*.1,y:-r*.61},{x:r*.08,y:-r*.25},{x:-r*.18,y:-r*.25},{x:-r*.28,y:-r*.63},{x:-r*.28,y:-r*.25},{x:-r*.57,y:-r*.3},{x:-r*.55,y:r*.42},{x:-r*.8,y:r*.54}],hair,edge,r*.05);
   strokePath(ctx,[{x:-r*.65,y:-r*.51},{x:-r*.49,y:-r*.79},{x:-r*.13,y:-r*.9},{x:r*.26,y:-r*.86}],light,r*.07);
   strokePath(ctx,[{x:-r*.74,y:r*.12},{x:-r*.73,y:r*.7},{x:-r*.52,y:r*.86}],light,r*.05);
+  // Headphones sit around her neck; the straight fringe remains unobstructed.
+  ctx.beginPath();ctx.arc(-r*.16,r*.83,r*.62,.06,Math.PI*.91);ctx.strokeStyle='#2a2632';ctx.lineWidth=r*.13;ctx.stroke();
+  ell(ctx,-r*.66,r*.81,r*.2,r*.26,'#2c2832',edge,r*.04,.15);ell(ctx,-r*.65,r*.81,r*.12,r*.16,'#e8bd34',edge,r*.025);
+  ell(ctx,r*.3,r*1.03,r*.17,r*.2,'#242631',edge,r*.035,-.2);
   circ(ctx,-r*.43,r*.47,r*.09,'#edc647',edge,r*.025);
   if((o.glow||0)>0)eyeGlow(ctx,r*.17,r*.04,r*1.5,o.glowColor||'#facc15',o.glow!);
 }
@@ -1667,7 +1676,11 @@ function drawJane(ctx:CanvasRenderingContext2D,r:Rig,pose:Pose,o:DrawOpts){
     if(front&&pose.finger>.5)cap(ctx,w,{x:w.x+u.x*13,y:w.y+u.y*13},3.7,2.7,skin,edge,1);
   };
   const leg=(k:P2,a:P2,t:P2,back:boolean)=>{
-    cap(ctx,p.hip,k,16,12,back?'#29252f':'#403746',edge,1.7);cap(ctx,k,a,11,8,back?'#25222b':'#37313e',edge,1.5);
+    cap(ctx,p.hip,k,16,12,back?'#c48f75':skin,edge,1.7);cap(ctx,k,a,11,8,back?'#c48f75':skin,edge,1.5);
+    const hem={x:p.hip.x+(k.x-p.hip.x)*.55,y:p.hip.y+(k.y-p.hip.y)*.55};
+    cap(ctx,p.hip,hem,18,17,'#292430',edge,1.3);
+    const strap={x:k.x*.8+p.hip.x*.2,y:k.y*.8+p.hip.y*.2};
+    cap(ctx,strap,k,13,12,'#27242d',edge,1);strokePath(ctx,[{x:strap.x-4,y:strap.y},{x:strap.x+3,y:strap.y+2}],yellow,1.7);
     const u=unit(k,a),top={x:a.x-u.x*10,y:a.y-u.y*10};cap(ctx,top,a,12,11,white,edge,1.5);cap(ctx,a,t,12,12,white,edge,1.5);
     strokePath(ctx,[{x:a.x,y:a.y+4},{x:t.x,y:t.y+4}],yellow,3);strokePath(ctx,[{x:k.x+2,y:k.y},{x:a.x+2,y:a.y-11}],back?'#66583d':'#d5aa2f',1.1);
   };
@@ -1691,7 +1704,7 @@ function drawJane(ctx:CanvasRenderingContext2D,r:Rig,pose:Pose,o:DrawOpts){
 }
 
 function drawCristyan(ctx:CanvasRenderingContext2D,r:Rig,pose:Pose,o:DrawOpts){
-  const p=r.p,{at}=bodyAxes(p),edge='#2b2027',skin='#bb7f55',shade='#925b40',light='#dba16e',gold='#e9a72d';
+  const p=r.p,{at}=bodyAxes(p),edge='#2b2027',skin='#bb7f55',shade='#925b40',gold='#e9a72d';
   const arm=(e:P2,w:P2,front:boolean)=>{
     cap(ctx,p.sh,e,23,19,front?skin:shade,edge,2.1);cap(ctx,e,w,18,11,front?skin:shade,edge,1.8);
     const u=unit(e,w),n={x:-u.y,y:u.x},start={x:e.x+(w.x-e.x)*.46,y:e.y+(w.y-e.y)*.46};
@@ -1711,11 +1724,7 @@ function drawCristyan(ctx:CanvasRenderingContext2D,r:Rig,pose:Pose,o:DrawOpts){
     cap(ctx,a,t,11,10,back?shade:skin,edge,1.8);const n=unit(a,t);for(let i=-1;i<2;i++)strokePath(ctx,[{x:t.x-n.y*i*3,y:t.y+n.x*i*3},{x:t.x-n.x*3-n.y*i*3,y:t.y-n.y*3+n.x*i*3}],shade,.8);
   };
   arm(p.eB,p.wB,false);leg(p.kB,p.aB,p.tB,true);cap(ctx,p.sh,p.head,14,13,shade,edge,1.8);
-  poly(ctx,[at(0,-17),at(0,18),at(.4,21),at(.88,26),at(1.12,21),at(1.15,1),at(1.08,-21),at(.77,-25),at(.35,-20)],skin,edge,2.3);
-  poly(ctx,[at(0,-17),at(.86,-24),at(1.08,-20),at(.92,-10),at(.52,-8),at(.03,-10)],shade,undefined,0);
-  strokePath(ctx,[at(1.02,-13),at(.92,-3),at(1.02,7),at(.94,19)],'#864e38',1.5);strokePath(ctx,[at(.98,3),at(.7,3),at(.63,12),at(.69,22)],'#8d5239',1.4);strokePath(ctx,[at(.77,-16),at(.65,-6),at(.7,2)],'#8d5239',1.4);
-  strokePath(ctx,[at(.55,4),at(.22,4)],'#a76a48',1.1);for(let i=0;i<2;i++)strokePath(ctx,[at(.31+i*.13,5),at(.3+i*.13,14)],'#a46a4b',1.1);
-  strokePath(ctx,[at(.89,-17),at(.7,-15)],light,1.6);const q=at(.78,15);circ(ctx,q.x,q.y,1.4,'#8e533b',undefined,0);
+  paintedTorso(ctx,p,'cristyan');
   leg(p.kF,p.aF,p.tF,false);poly(ctx,[at(-.03,-18),at(-.03,19),at(.16,19),at(.16,-18)],'#26212a',edge,1.8);strokePath(ctx,[at(.11,-17),at(.11,18)],gold,3);
   const knot=at(.12,4);strokePath(ctx,[{x:knot.x-2,y:knot.y},{x:knot.x+4,y:knot.y+10},{x:knot.x-2,y:knot.y+15}], '#ebddc0',1.4);
   ctx.save();ctx.translate(p.head.x,p.head.y);ctx.rotate(rad(pose.lean+pose.head)*.5+pose.rot);headCristyan(ctx,18,{...o,expr:o.expr|| (pose.mouth>.5?'shout':'n')});ctx.restore();arm(p.eF,p.wF,true);
@@ -1760,10 +1769,8 @@ export function drawPortrait(ctx: CanvasRenderingContext2D, ch: CharId, x: numbe
   ctx.restore();
 }
 
-export function drawFullBody(ctx: CanvasRenderingContext2D, ch: CharId, x: number, y: number, scale: number, time: number, poseName = 'idle', flip = false) {
-  const def = CHARS[ch];
-  const pose = { ...(def.poses[poseName] || def.poses.idle) };
-  pose.lean += Math.sin(time * 0.06) * 1.2;
+export function drawFullBody(ctx: CanvasRenderingContext2D, ch: CharId, x: number, y: number, scale: number, time: number, poseName = 'idle', flip = false, animatedPose?: Pose) {
+  const pose = animatedPose || menuAnimation(ch,poseName,time);
   const rig = computeRig(ch, pose);
   ctx.save();
   ctx.translate(x, y);

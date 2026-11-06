@@ -60,7 +60,7 @@ export function OnlineGame({room,user,onLobby,onLeave}:{room:Room;user:User;onLo
    if(host){game.onlinePressed[0]|=pressed;game.onlineInputs=[mask,link.inputStale()?0:otherInput];game.paused=link.stale();game.advance(now)}
    if(now-lastSend>=50||mask!==lastMask||pressed){if(host){const s=captureState(game);s.inputAck=lastEvent;link.sendState(s)}else link.sendInput({mask,events:pending});lastSend=now}lastMask=mask;
    if((game.phase==='finisher'||!!game.seq?.kind.startsWith('super'))!==lastCinematic){lastCinematic=game.phase==='finisher'||!!game.seq?.kind.startsWith('super');setCinematic(lastCinematic);}
-   render(ctx,game,stage,game.tick);
+   render(ctx,game,stage,game.tick,host?undefined:now);
    if(game.phase==='matchEnd'&&!done){
     done=true;setResult(game.winner);setFinishName(game.finishedBy!==null?FINISHER_NAMES[game.f[game.finishedBy].ch]:'');
     const report={winner:game.winner,hostScore:game.f[0].wins,guestScore:game.f[1].wins,finisher:game.finishedBy??-1};

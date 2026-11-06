@@ -4,6 +4,8 @@ import type { CharId } from './data';
 import { drawBolivianDancer, drawFullBody, drawPortrait } from './rig';
 import { drawViewerFinisher } from './viewer-art';
 import { drawTrioFinisher } from './trio-art';
+import { settings } from './visual-settings';
+import { cinematicAnimation } from './animation';
 
 export const FINISHER_NAMES: Record<CharId, string> = {
   caetano: 'MIL DEDILHOS DO DESTINO',
@@ -61,8 +63,8 @@ function ring(ctx: CanvasRenderingContext2D, x: number, y: number, radius: numbe
   ctx.beginPath(); ctx.ellipse(x, y, Math.max(.1, radius), Math.max(.1, radius * oval), 0, 0, Math.PI * 2); ctx.strokeStyle = color; ctx.lineWidth = width; ctx.stroke();
 }
 function glow(ctx: CanvasRenderingContext2D, x: number, y: number, radius: number, color: string, alpha = 1) {
-  ctx.save(); ctx.globalAlpha *= alpha;
-  const g = ctx.createRadialGradient(x, y, 1, x, y, Math.max(2, radius)); g.addColorStop(0, '#fff'); g.addColorStop(.18, color); g.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.save(); ctx.globalAlpha *= alpha*(settings.reducedFlash?.35:1);
+  const g = ctx.createRadialGradient(x, y, 1, x, y, Math.max(2, radius)); g.addColorStop(0, settings.reducedFlash?color:'#fff'); g.addColorStop(.18, color); g.addColorStop(1, 'rgba(0,0,0,0)');
   ctx.fillStyle = g; ctx.fillRect(x - radius, y - radius, radius * 2, radius * 2); ctx.restore();
 }
 function burst(ctx: CanvasRenderingContext2D, x: number, y: number, radius: number, color: string, spin = 0) {
@@ -75,7 +77,7 @@ function text(ctx: CanvasRenderingContext2D, value: string, x: number, y: number
   ctx.lineWidth = Math.max(3, size * .1); ctx.strokeStyle = '#10101c'; ctx.strokeText(value, x, y, maxWidth); ctx.fillStyle = color; ctx.fillText(value, x, y, maxWidth); ctx.restore();
 }
 function actor(ctx: CanvasRenderingContext2D, ch: CharId, x: number, y: number, time: number, pose = 'idle', scale = 1.55, flip = false, alpha = 1) {
-  ctx.save(); ctx.globalAlpha *= alpha; drawFullBody(ctx, ch, x, y, scale, time, pose, flip); ctx.restore();
+  ctx.save(); ctx.globalAlpha *= alpha; drawFullBody(ctx, ch, x, y, scale, time, pose, flip,cinematicAnimation(ctx,ch,pose,time,flip)); ctx.restore();
 }
 function stars(ctx: CanvasRenderingContext2D, x: number, y: number, time: number, color: string) {
   for (let i = 0; i < 4; i++) { const a = time * .07 + i * Math.PI / 2; burst(ctx, x + Math.cos(a) * 42, y + Math.sin(a) * 12, 7, color, a); }
@@ -264,7 +266,7 @@ export function drawFinisherArt(ctx: CanvasRenderingContext2D, winner: CharId, l
   ctx.beginPath(); ctx.rect(0, 0, W, H); ctx.clip();
   background(ctx, winner, time);
   ctx.save();
-  if (phase === 1) { const shake = Math.max(0, 1 - Math.abs(time - 113) / 24); ctx.translate(Math.sin(time * 2.7) * shake * 4, Math.cos(time * 2.3) * shake * 3); }
+  if (phase === 1) { const shake = Math.max(0, 1 - Math.abs(time - 113) / 24)*settings.shake; ctx.translate(Math.sin(time * 2.7) * shake * 4, Math.cos(time * 2.3) * shake * 3); }
   if (phase < 2) SCENES[winner](ctx, loser, time);
   else {
     const p = smooth((time - 157) / 32);

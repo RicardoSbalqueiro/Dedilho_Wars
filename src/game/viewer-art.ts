@@ -1,6 +1,8 @@
 // Cenas e efeitos dos Viewers. Somente desenho; não alteram o combate.
 import type { CharId } from './data';
 import { drawFullBody, drawPortrait } from './rig';
+import { settings } from './visual-settings';
+import { cinematicAnimation } from './animation';
 
 type ViewerId = 'santox' | 'jao';
 type P = { x: number; y: number };
@@ -35,8 +37,8 @@ function text(ctx: CanvasRenderingContext2D, value: string, x: number, y: number
   ctx.strokeStyle = '#100d1c'; ctx.lineWidth = Math.max(3, size * .12); ctx.strokeText(value, x, y, maxWidth); ctx.fillStyle = color; ctx.fillText(value, x, y, maxWidth); ctx.restore();
 }
 function glow(ctx: CanvasRenderingContext2D, x: number, y: number, r: number, color: string, alpha = 1) {
-  ctx.save(); ctx.globalAlpha *= clamp(alpha);
-  const g = ctx.createRadialGradient(x, y, 1, x, y, Math.max(2, r)); g.addColorStop(0, '#fff'); g.addColorStop(.18, color); g.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.save(); ctx.globalAlpha *= clamp(alpha)*(settings.reducedFlash?.35:1);
+  const g = ctx.createRadialGradient(x, y, 1, x, y, Math.max(2, r)); g.addColorStop(0, settings.reducedFlash?color:'#fff'); g.addColorStop(.18, color); g.addColorStop(1, 'rgba(0,0,0,0)');
   ctx.fillStyle = g; ctx.fillRect(x - r, y - r, r * 2, r * 2); ctx.restore();
 }
 function burst(ctx: CanvasRenderingContext2D, x: number, y: number, r: number, color: string, angle = 0) {
@@ -45,7 +47,7 @@ function burst(ctx: CanvasRenderingContext2D, x: number, y: number, r: number, c
   poly(ctx, pts, color, '#fff5d8', 2);
 }
 function actor(ctx: CanvasRenderingContext2D, ch: CharId, x: number, y: number, t: number, pose = 'idle', scale = 1.5, flip = false, alpha = 1) {
-  ctx.save(); ctx.globalAlpha *= clamp(alpha); drawFullBody(ctx, ch, x, y, scale, t, pose, flip); ctx.restore();
+  ctx.save(); ctx.globalAlpha *= clamp(alpha); drawFullBody(ctx, ch, x, y, scale, t, pose, flip,cinematicAnimation(ctx,ch,pose,t,flip)); ctx.restore();
 }
 function header(ctx: CanvasRenderingContext2D, title: string, subtitle: string, color: string) {
   ctx.fillStyle = '#080811e8'; ctx.fillRect(0, 0, W, 81); ctx.fillRect(0, 477, W, 63);

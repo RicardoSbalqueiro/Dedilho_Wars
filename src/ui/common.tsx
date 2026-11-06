@@ -2,6 +2,8 @@ import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import type { ReactNode } from 'react';
 import { Stage, STAGE_IDS, W, H, FLOOR_Y } from '../game/stage';
 import { drawFullBody, drawPortrait } from '../game/rig';
+import { attackAnimation } from '../game/animation';
+import type { Move } from '../game/data';
 import { CHARS, CHAR_IDS } from '../game/data';
 import type { CharId } from '../game/data';
 import type { StageId } from '../game/stage';
@@ -76,22 +78,6 @@ interface Leaf {
   s: number;
 }
 
-const POSES: Record<CharId, string[]> = {
-  caetano: ['idle', 'idle', 'pM_a', 'idle', 'dedo_a', 'idle', 'kH_a', 'idle', 'soco_a', 'win'],
-  orango: ['idle', 'idle', 'pH_a', 'idle', 'dedo_a', 'idle', 'roar', 'idle', 'kH_a', 'win'],
-  tubarao: ['idle', 'idle', 'bite_a', 'idle', 'fin_a', 'idle', 'roar', 'idle', 'kiss', 'win'],
-  rickzera: ['idle', 'idle', 'franco_a', 'idle', 'pix_a', 'idle', 'double_a', 'idle', 'taunt', 'win'],
-  bieu: ['idle', 'idle', 'driver_a', 'idle', 'rat_a', 'idle', 'spray_a', 'idle', 'taunt', 'win'],
-  nomad: ['idle', 'idle', 'burger_a', 'idle', 'glock_a', 'idle', 'boomerang_a', 'idle', 'taunt', 'win'],
-  renngotti: ['idle', 'idle', 'pM_a', 'idle', 'kH_a', 'idle', 'taunt', 'idle', 'pH_a', 'win'],
-  aneninha: ['idle','dance1','osasco_a','idle','paint_a','dance2','shout_a','idle','win','dance1'],
-  santox:['idle','fourth_a','elastic_a','idle','rabbit_a','idle','abstract_a','idle','taunt','win'],
-  jao:['idle','chess_a','idle','math_a','idle','ball_a','idle','calculation_a','taunt','win'],
-  jane:['idle','laptop_a','idle','moto_a','idle','kick_a','idle','zord_a','taunt','win'],
-  cristyan:['idle','teep_a','idle','power_a','idle','spin_a','idle','hammock_a','slam_a','win'],
-  eneas:['idle','shout_a','idle','ecg_a','idle','five_a','idle','atom_a','taunt','win'],
-};
-
 export function ArtCanvas({ variant, selected }: { variant: ArtVariant; selected?: CharId }) {
   const ref = useRef<HTMLCanvasElement>(null);
   const propsRef = useRef({ variant, selected });
@@ -114,7 +100,20 @@ export function ArtCanvas({ variant, selected }: { variant: ArtVariant; selected
       } else if (sel) {
         const ch = sel;
         glowBehind(ctx, 488, CHARS[ch].color, t, .95);
-        drawFullBody(ctx, ch, 488, 422, 1.48, t, POSES[ch][Math.floor(t / 130) % 10]);
+        // Preview full movements, not a held active frame for two seconds.
+        const cycle=t%140,ids=['pM','kH','s1','s2','s3','cK'];
+        const move=CHARS[ch].moves[ids[Math.floor(t/140)%ids.length]];
+        const attacking=cycle>=32&&cycle<116;
+        const frame=attacking?(cycle-32)/84*(move.startup+move.active+move.recovery):0;
+        const name=attacking?move.poses[frame<move.startup?0:1]:'idle';
+        const pose=attacking?attackAnimation(ch,move,frame,true):undefined;
+        ctx.save();ctx.translate(488,422);ctx.scale(1.48,1.48);
+        if(attacking&&move.turn&&frame>=move.turn[0]&&frame<=move.turn[1]){
+          const turn=Math.cos((frame-move.turn[0])/(move.turn[1]-move.turn[0])*Math.PI*2);
+          ctx.scale(Math.sign(turn)*Math.max(.18,Math.abs(turn)),1);
+        }
+        const hop=ch==='jane'&&move.id==='s3'&&frame>18&&frame<38?-Math.sin((frame-18)/20*Math.PI)*35:0;
+        drawFullBody(ctx,ch,0,hop,1,t,name,false,pose);ctx.restore();
       }
       // folhas
       for (const l of leaves) {
@@ -179,8 +178,14 @@ function drawDemoPair(ctx: CanvasRenderingContext2D, left: CharId, right: CharId
   ctx.fillStyle = '#000';
   ctx.beginPath(); ctx.ellipse(lx, y + 2, 34 * scale, 8 * scale, 0, 0, Math.PI * 2); ctx.ellipse(rx, y + 2, 34 * scale, 8 * scale, 0, 0, Math.PI * 2); ctx.fill();
   ctx.restore();
-  drawFullBody(ctx, left, lx, y - (leftAttack && leftMove.id.startsWith('k') ? leftLunge * .35 : 0), scale, t, leftPose);
-  drawFullBody(ctx, right, rx, y - (rightAttack && rightMove.id.startsWith('k') ? rightLunge * .35 : 0), scale, t + 20, rightPose, true);
+  const choreograph=(ch:CharId,m:Move,p:number)=>{
+    const u=p/43;
+    const frame=u<.46?u/.46*m.startup:u<.6?m.startup+(u-.46)/.14*m.active:
+      m.startup+m.active+(u-.6)/.4*m.recovery;
+    return attackAnimation(ch,m,frame,true);
+  };
+  drawFullBody(ctx, left, lx, y - (leftAttack && leftMove.id.startsWith('k') ? leftLunge * .35 : 0), scale, t, leftPose,false,leftAttack?choreograph(left,leftMove,phase-24):undefined);
+  drawFullBody(ctx, right, rx, y - (rightAttack && rightMove.id.startsWith('k') ? rightLunge * .35 : 0), scale, t + 20, rightPose, true,rightAttack?choreograph(right,rightMove,phase-118):undefined);
   const strike = (ch: CharId, from: number, to: number, p: number, special: boolean, dir: number) => {
     const level = y - 102 * scale;
     if (p >= 34 && p < 44) {

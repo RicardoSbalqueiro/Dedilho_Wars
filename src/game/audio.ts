@@ -1,6 +1,7 @@
 // Música original sintetizada + rádio com os raps locais enviados pelo usuário.
 import { RADIO_TRACKS, isRadioStation } from './radio';
 import type { RadioSnapshot, RadioStation } from './radio';
+import type { CharId, Move } from './data';
 
 type MusicMode = 'menu' | 'fight' | 'victory' | null;
 const RADIO_STORE = 'dedilho-wars-radio-v1';
@@ -236,9 +237,26 @@ class AudioEngine {
 
   // ---------- efeitos ----------
   hit(power = 1) {
-    this.noise(0.07 + 0.05 * power, 0.4 + 0.2 * power, 2500 - power * 700, 'lowpass');
-    this.tone(180 - power * 30, 0.12 + 0.05 * power, 'sine', 0.5 + 0.2 * power, 45);
-    if (power >= 1.5) this.tone(70, 0.35, 'sine', 0.6, 30);
+    const p=Math.max(.25,Math.min(3,power));
+    // Light hits are short and crisp; heavy hits have a separate low body and tail.
+    this.noise(.035+p*.027,.23+p*.09,3400-p*620,'bandpass');
+    this.tone(210-p*35,.065+p*.036,'sine',.25+p*.1,52);
+    if(p>=1.5){this.tone(68,.21,'sine',.3,33,.018);this.noise(.13,.12,680,'lowpass',.018,170);}
+    else this.tone(1100,.025,'triangle',.045,440);
+  }
+  swing(ch:CharId,m:Move) {
+    const p=Math.max(.4,Math.min(2.6,m.power));
+    const kick=/^(k|cK|jK)/.test(m.id)||m.trail==='fa'||m.trail==='ba';
+    this.noise(kick?.09:.05,.07+p*.025,kick?720:1200,'bandpass',0,kick?2400:3600);
+    // Identifiable material accents. Nothing plays twice for a held input.
+    if(m.kind==='special') {
+      if(ch==='tubarao')this.noise(.16,.12,3200,'highpass',0,650);
+      else if(ch==='santox')this.tone(180,.13,'triangle',.08,740);
+      else if(ch==='jane')this.tone(m.id==='s1'?780:130,.11,'triangle',.07,m.id==='s1'?1300:70);
+      else if(ch==='renngotti'||ch==='eneas')this.tone(125,.14,'sine',.1,65);
+      else if(ch==='orango')this.noise(.11,.1,420,'lowpass');
+      else this.tone(350,.08,'triangle',.04,800);
+    }
   }
   block() {
     this.noise(0.05, 0.3, 3000, 'highpass');

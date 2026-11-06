@@ -1,6 +1,8 @@
 // Jane, Cristyan e Doutor Enéas: somente desenho. Dano e duração pertencem ao motor.
 import type { CharId } from './data';
 import { drawFullBody, drawPortrait } from './rig';
+import { settings } from './visual-settings';
+import { cinematicAnimation } from './animation';
 
 export type TrioId = 'jane' | 'cristyan' | 'eneas';
 type P = { x: number; y: number };
@@ -27,12 +29,12 @@ function text(ctx:CanvasRenderingContext2D,value:string,x:number,y:number,size:n
  ctx.save();ctx.font=`italic 900 ${size}px ${FONT}`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.lineJoin='round';ctx.strokeStyle='#130d1c';ctx.lineWidth=Math.max(3,size*.11);ctx.strokeText(value,x,y,maxWidth);ctx.fillStyle=color;ctx.fillText(value,x,y,maxWidth);ctx.restore();
 }
 function glow(ctx:CanvasRenderingContext2D,x:number,y:number,r:number,color:string,alpha=1){
- ctx.save();ctx.globalAlpha*=clamp(alpha);const g=ctx.createRadialGradient(x,y,1,x,y,Math.max(2,r));g.addColorStop(0,'#fff');g.addColorStop(.17,color);g.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=g;ctx.fillRect(x-r,y-r,r*2,r*2);ctx.restore();
+ ctx.save();ctx.globalAlpha*=clamp(alpha)*(settings.reducedFlash?.35:1);const g=ctx.createRadialGradient(x,y,1,x,y,Math.max(2,r));g.addColorStop(0,settings.reducedFlash?color:'#fff');g.addColorStop(.17,color);g.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=g;ctx.fillRect(x-r,y-r,r*2,r*2);ctx.restore();
 }
 function burst(ctx:CanvasRenderingContext2D,x:number,y:number,r:number,color:string,rot=0){
  const pts:P[]=[];for(let i=0;i<24;i++){const a=i*Math.PI/12+rot,d=r*(i%2?.38:1);pts.push({x:x+Math.cos(a)*d,y:y+Math.sin(a)*d})}poly(ctx,pts,color,'#fff9d2',2);
 }
-function actor(ctx:CanvasRenderingContext2D,ch:CharId,x:number,y:number,t:number,pose='idle',scale=1.5,flip=false,alpha=1){ctx.save();ctx.globalAlpha*=clamp(alpha);drawFullBody(ctx,ch,x,y,scale,t,pose,flip);ctx.restore()}
+function actor(ctx:CanvasRenderingContext2D,ch:CharId,x:number,y:number,t:number,pose='idle',scale=1.5,flip=false,alpha=1){ctx.save();ctx.globalAlpha*=clamp(alpha);drawFullBody(ctx,ch,x,y,scale,t,pose,flip,cinematicAnimation(ctx,ch,pose,t,flip));ctx.restore()}
 function background(ctx:CanvasRenderingContext2D,ch:TrioId,t:number){
  const color=ch==='jane'?'#5d4c1c':ch==='cristyan'?'#6a351f':'#234a2e';
  const g=ctx.createLinearGradient(0,0,W,H);g.addColorStop(0,'#0c1022');g.addColorStop(.55,color);g.addColorStop(1,'#0c0d18');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);

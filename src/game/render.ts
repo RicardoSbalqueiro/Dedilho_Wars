@@ -4,10 +4,13 @@ import { drawTrioSuper, drawTrioProjectile, drawTrioMoveFx, drawJaneBike, drawJa
 import { RANGED_MOVES, movePhase } from './data';
 // Renderização: mundo, personagens, efeitos, HUD e cinemáticas dos supers.
 import type { Game, Fighter, Particle } from './engine';
-import { settings } from './engine';
+import { settings } from './visual-settings';
 import { Stage, W, H, FLOOR_Y } from './stage';
 import { drawRig, drawPortrait, drawHead, drawBolivianDancer } from './rig';
 import { keyLabel } from './input';
+import { drawMotionInk, drawGuardInk } from './combat-art';
+import { combatHint } from './combat-feel';
+import { remotePresentation } from './render-motion';
 
 const FONT = "'Russo One','Impact','Arial Black','Segoe UI',sans-serif";
 
@@ -342,7 +345,11 @@ function drawFighter(ctx: CanvasRenderingContext2D, g: Game, f: Fighter, time: n
   }
   const stretch=f.ch==='santox'&&m?.id==='s1'?370*Math.min(1,m.startup?frame/m.startup:1,Math.max(0,1-(frame-m.startup-m.active)/m.recovery)):undefined;
   if(f.ch==='santox'&&f.invuln>0&&m?.id==='s3')ctx.globalAlpha*=.6;
-  drawRig(ctx, f.ch, f.rig, f.pose, { time, expr: f.expr, glow: f.glow, glowColor: f.def.glow, stretch, poseName: f.poseOverride || f.poseName });
+  const phase=m?movePhase(m,frame,f.connected):null;
+  const accessoryPose=f.poseOverride||(m&&phase?.phase==='recovery'&&phase.progress<.35?m.recoveryPose||m.poses[1]:f.poseName);
+  if(!reflect)drawMotionInk(ctx,f,settings.reducedFlash);
+  drawRig(ctx, f.ch, f.rig, f.pose, { time:f.animT, expr: f.expr, glow: f.glow, glowColor: f.def.glow, stretch, poseName: accessoryPose });
+  if(!reflect)drawGuardInk(ctx,f,g.tick,settings.reducedFlash);
   if (!reflect) drawFx(ctx, g, f, time);
   if(!reflect&&m&&(f.ch==='jane'||f.ch==='cristyan'||f.ch==='eneas')&&/^s[123]$/.test(m.id)&&frame>=m.startup-3&&frame<m.startup+Math.min(m.active,30)+8)drawTrioMoveFx(ctx,f.ch,m.id,frame-m.startup);
   ctx.restore();
@@ -803,6 +810,10 @@ function drawHUD(ctx: CanvasRenderingContext2D, g: Game) {
   label(ctx, g.training ? '∞' : String(Math.max(0, g.timeLeft)).padStart(2, '0'), 480, 38, low ? 44 + Math.sin(g.tick * 0.4) * 3 : 42, low ? '#ff5a4a' : '#fff', '#000', 'center', 0, 6);
   drawMeter(ctx, g, a, 0);
   drawMeter(ctx, g, b, 1);
+  if(settings.combatHints&&!g.cfg.online&&!g.cine&&!g.seq&&g.phase==='fight'){
+    const touch=typeof matchMedia==='function'&&matchMedia('(pointer: coarse)').matches;
+    label(ctx,combatHint(a,g.cfg.bindings[0],touch),W/2,H-33,10,'#e1e4f5','#0a0714','center',0,3);
+  }
 
   // combos
   for (let att = 0; att < 2; att++) {
@@ -1022,7 +1033,7 @@ function drawCine(ctx: CanvasRenderingContext2D, g: Game) {
 }
 
 // ------------------------------------------------------------------ render principal
-export function render(ctx: CanvasRenderingContext2D, g: Game, stage: Stage, time: number) {
+export function render(ctx: CanvasRenderingContext2D, g: Game, stage: Stage, time: number, remoteNow?:number) {
   ctx.save();
   if(g.finisher){drawFinisherArt(ctx,g.f[g.finisher.winner].ch,g.f[1-g.finisher.winner].ch,g.finisher.t,g.finisher.dur);ctx.restore();return;}
   if(g.seq&&(g.seq.a.ch==='jane'||g.seq.a.ch==='cristyan'||g.seq.a.ch==='eneas')&&g.seq.kind.startsWith('super')){drawTrioSuper(ctx,g.seq.a.ch,g.seq.d.ch,g.seq.t,g.seq.dur);ctx.restore();return;}
@@ -1048,7 +1059,7 @@ export function render(ctx: CanvasRenderingContext2D, g: Game, stage: Stage, tim
   for(const p of g.projectiles)if(p.kind==='chess'&&p.life>0){ctx.save();ctx.translate(p.x,FLOOR_Y);ctx.globalAlpha=Math.min(1,(p.age??0)/8,p.life/20);drawChessFloor(ctx,(p.radius??110)*2,time);ctx.restore();}
   let tint: string | null = null;
   let tintAmt = 0;
-  if (g.expl) {
+  if (g.expl&&!settings.reducedFlash) {
     tint = g.expl.color;
     tintAmt = 1 - g.expl.t / g.expl.dur;
   } else if (g.cine) {
@@ -1061,7 +1072,8 @@ export function render(ctx: CanvasRenderingContext2D, g: Game, stage: Stage, tim
   stage.drawLights(ctx, g.cam.x, tint, tintAmt);
 
   // reflexos
-  for (const f of g.f) {
+  const presentation=g.f.map(f=>remoteNow===undefined?f:remotePresentation(f,remoteNow,g.hitstop>0||g.paused||!!g.seq||!!g.cine||!!g.clash));
+  for (const f of presentation) {
     ctx.save();
     ctx.translate(0, 2 * FLOOR_Y);
     ctx.scale(1, -1);
@@ -1081,7 +1093,7 @@ export function render(ctx: CanvasRenderingContext2D, g: Game, stage: Stage, tim
   drawDanceHorde(ctx,g,false);
   for (const f of g.f) if (!f.hidden) drawTrail(ctx, f);
   const front = (f: Fighter) => (f.state === 'attack' || f.state === 'seq' || f.state === 'cine' || f.state === 'win' ? 1 : 0);
-  const order = front(g.f[0]) > front(g.f[1]) ? [g.f[1], g.f[0]] : [g.f[0], g.f[1]];
+  const order = front(presentation[0]) > front(presentation[1]) ? [presentation[1], presentation[0]] : presentation;
   for (const f of order) drawFighter(ctx, g, f, time);
 
   if (settings.hitboxes) {
@@ -1135,7 +1147,7 @@ export function render(ctx: CanvasRenderingContext2D, g: Game, stage: Stage, tim
     ctx.fillRect(0, 0, W, bh);
     ctx.fillRect(0, H - bh, W, bh);
   }
-  if (g.expl) {
+  if (g.expl&&!settings.reducedFlash) {
     const u = g.expl.t / g.expl.dur;
     const gr = ctx.createRadialGradient(W / 2, H * 0.62, 10, W / 2, H * 0.62, 200 + u * 800);
     gr.addColorStop(0, `rgba(255,255,255,${1 - u})`);
@@ -1148,12 +1160,12 @@ export function render(ctx: CanvasRenderingContext2D, g: Game, stage: Stage, tim
       ctx.fillRect(0, 0, W, H);
     }
   }
-  if (g.speed > 0.05 && !g.cine) {
+  if (g.speed > 0.05 && !g.cine&&!settings.reducedFlash) {
     const col = g.seq ? g.seq.a.def.glow : g.f.find((f) => f.state === 'attack')?.def.glow || '#fff';
     speedLines(ctx, g.speed * 0.6, col, g.tick);
   }
   if (g.flash.a > 0) {
-    ctx.globalAlpha = g.flash.a;
+    ctx.globalAlpha = settings.reducedFlash?Math.min(.07,g.flash.a*.15):g.flash.a;
     ctx.fillStyle = g.flash.c;
     ctx.fillRect(0, 0, W, H);
     ctx.globalAlpha = 1;

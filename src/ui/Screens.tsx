@@ -555,7 +555,7 @@ export function Settings({ onBack }: { onBack: () => void }) {
     </div>
   );
   const toggle = (v: boolean, f: (v: boolean) => void) => (
-    <button onClick={() => f(!v)} className="title-main px-5 py-1 border-2" style={{ background: v ? '#16a34a' : '#7f1d1d', borderColor: '#fff' }}>
+    <button aria-pressed={v} onClick={() => f(!v)} className="title-main px-5 py-1 border-2" style={{ background: v ? '#16a34a' : '#7f1d1d', borderColor: '#fff' }}>
       {v ? 'LIGADO' : 'DESLIGADO'}
     </button>
   );
@@ -567,10 +567,12 @@ export function Settings({ onBack }: { onBack: () => void }) {
         <div className="title-main text-5xl mb-3" style={{ textShadow: '0 0 20px #ef4444, 4px 4px 0 #000' }}>
           CONFIGURAÇÕES
         </div>
-        {row('MÚSICA', <input type="range" min={0} max={1} step={0.05} value={p.music} onChange={(e) => upd({ music: +e.target.value })} className="w-60" />)}
-        {row('EFEITOS SONOROS', <input type="range" min={0} max={1} step={0.05} value={p.sfx} onChange={(e) => upd({ sfx: +e.target.value })} className="w-60" />)}
+        {row('MÚSICA', <input aria-label="Volume da música" type="range" min={0} max={1} step={0.05} value={p.music} onChange={(e) => upd({ music: +e.target.value })} className="w-60" />)}
+        {row('EFEITOS SONOROS', <input aria-label="Volume dos efeitos" type="range" min={0} max={1} step={0.05} value={p.sfx} onChange={(e) => upd({ sfx: +e.target.value })} className="w-60" />)}
         {row('VOZES (NARRADOR)', toggle(p.voice, (v) => upd({ voice: v })))}
         {row('TREMOR DE TELA', toggle(p.shake, (v) => upd({ shake: v })))}
+        {row('REDUZIR FLASHES', toggle(p.reducedFlash, (v) => upd({ reducedFlash: v })))}
+        {row('DICAS DE COMBATE', toggle(p.combatHints, (v) => upd({ combatHints: v })))}
         {row('MOSTRAR HITBOXES', toggle(p.hitboxes, (v) => upd({ hitboxes: v })))}
         {row(
           'DIFICULDADE PADRÃO',
