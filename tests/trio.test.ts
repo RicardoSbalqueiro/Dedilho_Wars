@@ -20,7 +20,7 @@ assert(CHARS.jane.hurtH<CHARS.caetano.hurtH*.7);assert(CHARS.jane.hp<900,'small 
  keyboard.down.clear();keyboard.down.add('KeyJ');const serial=g.f[0].serial;step(g,59);assert.equal(g.f[0].state,'dizzy');assert.equal(g.f[0].serial,serial,'cannot attack while dizzy');g.step();assert.equal(g.f[0].state,'ground');assert.equal(g.f[0].bikeDizzy,0);assert.equal(g.f[0].bikeCooldown,120);assert.equal(g.startMove(g.f[0],CHARS.jane.moves.s2),false);keyboard.down.clear();step(g,120);assert(g.startMove(g.f[0],CHARS.jane.moves.s2));g.resetPositions();assert.equal(g.f[0].bikeCooldown,0);assert.equal(g.f[0].bikeTicks,0);g.destroy();
 }
 {
- const g=make();g.f[1].x=1500;activeBike(g);step(g,40);keyboard.down.clear();step(g,28);assert.equal(g.f[0].state,'ground');assert.equal(g.f[0].bikeDizzy,0,'release avoids fall');assert(g.f[0].bikeCooldown>0);g.destroy();
+ const g=make();g.f[1].x=1500;activeBike(g);step(g,40);keyboard.down.clear();g.step();assert.equal(g.f[0].move?.id,'bikeRush','early release commits to the uncontrolled ride');step(g,28);assert.equal(g.f[0].state,'attack','ride keeps its vulnerable recovery');step(g,30);assert.equal(g.f[0].state,'ground');assert.equal(g.f[0].bikeDizzy,0,'release avoids fall');assert(g.f[0].bikeCooldown>0);g.destroy();
 }
 for(const block of [false,true]){
  const g=make('jane','caetano','versus');if(block)keyboard.down.add('Numpad3');activeBike(g);

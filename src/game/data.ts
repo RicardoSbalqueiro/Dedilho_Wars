@@ -498,7 +498,7 @@ for(const m of Object.values(janeMoves))m.hb=[m.hb[0]*.75,Math.max(65,m.hb[1]),m
 Object.assign(janeMoves,Object.fromEntries([
  mv('s1',{kind:'special',rank:9,startup:18,active:12,recovery:22,whiff:0,dmg:18,hitstun:13,blockstun:8,kb:3,kbBlock:2,hb:[15,85,35,100],hitstop:4,shake:3,power:.8,poses:['laptop_s','laptop_a'],label:'FINGINDO QUE TÁ TRABALHANDO'}),
  mv('s2',{kind:'special',rank:9,startup:12,active:300,recovery:24,whiff:0,dmg:11,hitstun:13,blockstun:8,kb:3,kbBlock:2,hb:[-65,110,0,115],hitstop:4,shake:4,power:.9,poses:['moto_s','moto_a'],label:'DANDO GRAU DE MOTO'}),
- mv('s3',{kind:'special',rank:9,startup:22,active:5,recovery:25,whiff:10,dmg:58,hitstun:23,blockstun:13,kb:6,kbBlock:4,hb:[10,100,25,112],launch:4,launchVx:3,hitstop:8,shake:7,power:1.4,poses:['slide_s','kick_a'],advance:[1,17,9],trail:'fa',label:'POR BAIXO, DEPOIS CHUTE'}),
+ mv('s3',{kind:'special',rank:9,startup:30,active:6,recovery:25,whiff:10,dmg:58,hitstun:23,blockstun:13,kb:6,kbBlock:4,hb:[-35,115,-10,100],level:'high',launch:4,launchVx:3,hitstop:8,shake:7,power:1.4,poses:['slide_s','kick_a'],advance:[1,17,9],turn:[24,36],trail:'fa',label:'POR BAIXO, SALTO E GIRO'}),
 ]));
 const cristyanPoses:Record<string,Pose>={
  ...Object.fromEntries(Object.entries(caetanoPoses).map(([k,p])=>[k,{...p}])),
@@ -731,8 +731,8 @@ export const CHARS: Record<CharId, CharDef> = {
     attrs:[{label:'VELOCIDADE',v:5},{label:'FORÇA',v:2},{label:'ALCANCE',v:3},{label:'RESISTÊNCIA',v:2},{label:'MOBILIDADE',v:5}],
     specials:[
       {key:'U',name:'FINGINDO QUE TÁ TRABALHANDO',desc:'Cochila com o laptop e lança dois comandos Java. Dano baixo; a dupla conta como um uso à distância.'},
-      {key:'I',name:'DANDO GRAU DE MOTO',desc:'Segure ESP 2: até 5 s e seis contatos. Passar de 5 s derruba a moto e deixa Jane tonta por 1 s. Recarga de 3 s.'},
-      {key:'O',name:'POR BAIXO, DEPOIS CHUTE',desc:'Desliza sob o rival próximo e vira para chutar. Ataques baixos interrompem a passagem.'},
+      {key:'I',name:'DANDO GRAU DE MOTO',desc:'Segure até 5 s. Soltar a tempo dispara uma arrancada sem controle; ambos compartilham seis contatos. Exceder o limite causa queda e tontura de 1 s. Recarga de 3 s.'},
+      {key:'O',name:'POR BAIXO, SALTO E GIRO',desc:'Desliza, vira, salta e anuncia um chute giratório aéreo. Defenda em pé ou puna a recuperação; baixos interrompem a passagem.'},
     ],
     superName:'AREIAZORD',quote:'FUNCIONA NA MINHA MÁQUINA. E NO MEU ROBÔ.',
     bio:'Adulta de baixa estatura, loira com franja e jaqueta branca. Mobilidade e comandos Java compensam vida e alcance curtos.',

@@ -179,6 +179,7 @@ export const keyboard = new Keyboard();
 
 /** Estado de controle de um lutador (humano ou IA). */
 export class Pad {
+  history:{action:Action;tick:number;directions:Action[]}[]=[];
   held = {} as Record<Action, boolean>;
   pressedAt = {} as Record<Action, number>;
   prevAt = {} as Record<Action, number>;
@@ -187,6 +188,7 @@ export class Pad {
     this.reset();
   }
   reset() {
+    this.history=[];
     for (const a of ACTIONS) {
       this.held[a] = false;
       this.pressedAt[a] = -999;
@@ -228,6 +230,8 @@ export class Pad {
     this.pressedAt[a] = -999;
   }
   tap(a: Action, tick: number) {
+    this.history.push({action:a,tick,directions:(['left','right','up','down'] as Action[]).filter(d=>this.held[d])});
+    if(this.history.length>24)this.history.shift();
     this.prevAt[a] = this.edgeAt[a];
     this.edgeAt[a] = tick;
     this.pressedAt[a] = tick;

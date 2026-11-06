@@ -335,7 +335,9 @@ function drawFighter(ctx: CanvasRenderingContext2D, g: Game, f: Fighter, time: n
   const m=f.move;
   const frame=Math.max(0,f.moveT-1);
   if(f.ch==='jane'){
-    if(m?.id==='s2')drawJaneBike(ctx,time,Math.min(1,f.bikeTicks/300));
+    if(m?.id==='s2'||m?.id==='bikeRush'){
+      ctx.save();if(m.id==='bikeRush'){ctx.translate(0,-25);ctx.rotate(Math.sin(f.moveT*1.6)*.075);ctx.translate(0,25);}drawJaneBike(ctx,time,Math.min(1,f.bikeTicks/300));ctx.restore();
+    }
     if(f.bikeDizzy>0){drawJaneBikeFall(ctx,60-f.bikeDizzy,60);if(!reflect)drawJaneDizzy(ctx,time);}
   }
   const stretch=f.ch==='santox'&&m?.id==='s1'?370*Math.min(1,m.startup?frame/m.startup:1,Math.max(0,1-(frame-m.startup-m.active)/m.recovery)):undefined;
@@ -772,7 +774,7 @@ function drawHUD(ctx: CanvasRenderingContext2D, g: Game) {
     if(f.ch==='caetano'&&f.precision>0)label(ctx,'PRECISÃO PRONTA',x,102,11,'#fef08a','#150a1e',align,0,3);
     if(f.ch==='orango'&&f.momentum>0)label(ctx,`ÍMPETO ${f.momentum}/3`,x,102,11,'#fb923c','#150a1e',align,0,3);
     if(f.ch==='santox')label(ctx,f.fourthCooldown>0?`QUARTA PAREDE: ${(f.fourthCooldown/60).toFixed(1)}s`:'QUARTA PAREDE PRONTA',x,102,11,f.fourthCooldown?'#f0abfc':'#fde68a','#150a1e',align,0,3);
-    if(f.ch==='jane')label(ctx,f.bikeDizzy>0?`TONTA: ${(f.bikeDizzy/60).toFixed(1)}s`:f.bikeCooldown>0?`MOTO: ${(f.bikeCooldown/60).toFixed(1)}s`:f.move?.id==='s2'?`MOTO: ${(f.bikeTicks/60).toFixed(1)}/5s · ${f.bikeHits}/6`:'MOTO PRONTA · SOLTE ANTES DE 5s',x,102,10,f.bikeDizzy?'#fb7185':'#fef08a','#150a1e',align,0,3);
+    if(f.ch==='jane')label(ctx,f.move?.id==='bikeRush'?'MOTO SEM CONTROLE!':f.bikeDizzy>0?`TONTA: ${(f.bikeDizzy/60).toFixed(1)}s`:f.bikeCooldown>0?`MOTO: ${(f.bikeCooldown/60).toFixed(1)}s`:f.move?.id==='s2'?`MOTO: ${(f.bikeTicks/60).toFixed(1)}/5s · ${f.bikeHits}/6`:'MOTO PRONTA · SOLTE ANTES DE 5s',x,102,10,f.bikeDizzy?'#fb7185':'#fef08a','#150a1e',align,0,3);
     const ready=f.state==='ground'&&f.landLag===0&&!f.ko;
     const defending=f.guard&&(ready||f.state==='block');
     if(defending||ready&&f.guardResultT>0){
@@ -820,11 +822,12 @@ function drawHUD(ctx: CanvasRenderingContext2D, g: Game) {
     if (alpha > 0 && hits >= 2) {
       const x = att === 0 ? 40 : W - 40;
       const al: CanvasTextAlign = att === 0 ? 'left' : 'right';
-      const col = g.f[att].def.glow;
+      const kind=vic.comboHits>=2?vic.comboKind:g.comboShow[att].kind||'basic';
+      const comboColor=kind==='punish'?'#fb923c':kind==='advanced'?'#d8b4fe':'#67e8f9';
       ctx.save();
       ctx.globalAlpha = alpha;
       label(ctx, String(hits), x, 170, 70, '#fff', g.f[att].def.color, al, att === 0 ? -0.2 : 0.2, 10);
-      label(ctx, hits > 1 ? 'HITS' : 'HIT', x, 222, 28, col, '#150a1e', al, att === 0 ? -0.2 : 0.2, 6);
+      label(ctx, kind==='punish'?'PUNIÇÃO':kind==='advanced'?'AVANÇADO':'COMBO', x, 222, 23, comboColor, '#150a1e', al, att === 0 ? -0.2 : 0.2, 6);
       label(ctx, `DANO ${Math.round(dmg)}`, x, 252, 16, '#fde68a', '#150a1e', al, att === 0 ? -0.2 : 0.2, 4);
       ctx.restore();
     }

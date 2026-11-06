@@ -14,7 +14,9 @@ import { FLOOR_Y } from './stage';
 import type { StageId } from './stage';
 import { aiAct, aiMashRate, newAI } from './ai';
 import type { AIState } from './ai';
-import { comboDamageScale, MICROPHONE_LIMIT, SUPER_STARTUP_FRAMES, SUPER_CAPTURE_HEIGHT } from './balance';
+import { comboDamageScale, MICROPHONE_LIMIT, SUPER_STARTUP_FRAMES, SUPER_CAPTURE_HEIGHT, CONFIRMED_SPECIAL_LINKS, LINK_STARTUP_CREDIT } from './balance';
+import { advanceComboCoach, comboRoute, newComboCoach } from './combos';
+import type { CoachEvent, ComboCoach, ComboKind, ComboResult } from './combos';
 
 export type Difficulty = 'easy' | 'normal' | 'hard';
 export type Mode = 'ai' | 'versus' | 'training';
@@ -136,6 +138,10 @@ export interface Fighter {
   trail: P2[];
   comboHits: number;
   comboDmg: number;
+  comboMoves:string[];
+  comboKind:ComboKind;
+  comboLastSerial:number;
+  comboResult:ComboResult|null;
   wins: number;
 }
 
@@ -258,6 +264,7 @@ function makeFighter(idx: 0 | 1, ch: CharId, cpu: boolean): Fighter {
     trail: [],
     comboHits: 0,
     comboDmg: 0,
+    comboMoves:[],comboKind:'basic',comboLastSerial:-1,comboResult:null,
     wins: 0,
   };
 }
@@ -265,7 +272,9 @@ function makeFighter(idx: 0 | 1, ch: CharId, cpu: boolean): Fighter {
 export class Game {
   // Only used within one synchronous step; snapshots cannot occur mid-step.
   // A super capture on the exact recovery frame must not reset combo scaling.
-  private recoveredCombos=new Map<Fighter,{hits:number;damage:number}>();
+  private recoveredCombos=new Map<Fighter,{hits:number;damage:number;moves:string[];kind:ComboKind;serial:number}>();
+  coach:ComboCoach|null=null;
+  trainingLog:CoachEvent[]=[];
   cfg: GameConfig;
   f: [Fighter, Fighter];
   tick = 0;
@@ -291,7 +300,7 @@ export class Game {
   cine: Cine | null = null;
   clash: Clash | null = null;
   expl: { t: number; color: string; dur: number } | null = null;
-  comboShow: [{ hits: number; dmg: number; t: number }, { hits: number; dmg: number; t: number }] = [
+  comboShow: [{ hits: number; dmg: number; t: number; kind?:ComboKind }, { hits: number; dmg: number; t: number; kind?:ComboKind }] = [
     { hits: 0, dmg: 0, t: 0 },
     { hits: 0, dmg: 0, t: 0 },
   ];
@@ -384,6 +393,7 @@ export class Game {
       f.turn = 1;
       f.glow = f.aura = 0;
       f.comboHits = f.comboDmg = 0;
+      f.comboMoves=[];f.comboKind='basic';f.comboLastSerial=-1;f.comboResult=null;
       f.juggle = 0;
       f.airJumps = 0;
       f.throwTechUntil=0;
@@ -401,6 +411,7 @@ export class Game {
     }
     this.seq = this.cine = this.clash = this.expl = null;
     this.projectiles = [];
+    this.comboShow=[{hits:0,dmg:0,t:0},{hits:0,dmg:0,t:0}];
     this.hitstop = 0;
     this.slowmo = 0;
     this.timeLeft = 99;
@@ -409,11 +420,14 @@ export class Game {
     this.parts = this.parts.filter((p) => p.type === 'leaf');
     this.phaseT = 0;
     this.phase = this.training ? 'fight' : 'intro';
+    this.trainingLog=[];
+    if(this.coach)this.coach=newComboCoach(this.coach.routeId);
     this.camOv = null;
     if (this.training) this.announce('TREINAMENTO', '', 60, '#fbbf24');
   }
 
   startChallenge(id: ChallengeId | null) {
+    this.coach=null;
     if (!this.training || id && !challengeAvailable(id,this.f[0].ch)) return;
     this.challenge = id ? {id,current:0,done:false,seen:[]} : null;
     this.challengeSuperSerial = -1;
@@ -435,9 +449,29 @@ export class Game {
     if (c.current >= def.target) { c.done=true; saveChallengeBadge(c.id); audio.confirm(); }
   }
 
+  startComboLesson(id:string|null){
+    if(!this.training||this.cfg.online)return false;
+    const route=id?comboRoute(id):null;
+    if(id&&(!route||route.ch!==this.f[0].ch))return false;
+    this.coach=null;this.challenge=null;this.train.dummy=0;
+    keyboard.down.clear();keyboard.pressed.clear();touchInput.clear();this.resetPositions();
+    this.f[0].x=600;this.f[1].x=600+this.f[0].def.pushW+this.f[1].def.pushW+5;
+    if(id)this.coach=newComboCoach(id);
+    this.ann=null;this.moveBanner=null;this.train.lastDmg=this.train.combo=this.train.total=0;
+    return true;
+  }
+
+  private trainingEvent(type:CoachEvent['type'],f:Fighter,move='',target=this.opp(f),serial=f.serial){
+    if(!this.training)return;
+    const e:CoachEvent={type,actor:f.idx,move,serial,tick:this.tick,hits:type==='free'?f.comboHits:target.comboHits,damage:type==='free'?f.comboDmg:target.comboDmg};
+    this.trainingLog.push(e);if(this.trainingLog.length>96)this.trainingLog.shift();
+    if(this.coach)advanceComboCoach(this.coach,e);
+  }
+
   resetPositions() {
     this.resetRound();
     for (const f of this.f) f.meter = 100;
+    if(this.coach){this.f[0].x=600;this.f[1].x=600+this.f[0].def.pushW+this.f[1].def.pushW+5;this.ann=null;this.moveBanner=null;}
   }
 
   private onKey(code: string, e: KeyboardEvent) {
@@ -531,7 +565,7 @@ export class Game {
     this.pollInputs();
     for(const f of this.f)if(f.ch==='jane'&&f.move?.id==='s2'&&f.bikeCooldown===0&&f.moveT>=f.move.startup&&f.moveT<=f.move.startup+f.move.active){
       f.bikeTicks++;
-      if(f.bikeTicks>300)this.stopBike(f,!!f.pad.held.s2);
+      if(f.bikeTicks>300)this.stopBike(f,true);
       else if(f.bikeTicks>=12&&!f.pad.held.s2)this.stopBike(f);
     }
     if(this.phase==='fight')this.elapsedTicks++;
@@ -613,7 +647,7 @@ export class Game {
           b.pad.set('block', true, this.tick);
           const incomingLow = this.projectiles.some((p) => p.owner !== b.idx && p.move.level === 'low' && Math.abs(p.x - b.x) < 280 && (p.vx===0 || (b.x-p.x)*p.vx>0));
           b.pad.set('down', (!!a.move && a.move.level === 'low') || incomingLow, this.tick);
-        } else if (d === 0) b.pad.reset();
+        } else if (d === 0) {b.pad.reset();if(this.coach&&this.coach.progress>0)b.pad.set('block',true,this.tick);}
         a.meter = b.meter = 100;
       }
     }
@@ -849,7 +883,7 @@ export class Game {
     if(!f.crouch&&pad.buffered('up',tk)){
       pad.consume('up');f.vy=-def.jumpVy;f.vx=((pad.held.right?1:0)-(pad.held.left?1:0))*def.jumpVx;
       if(f.idx===0)this.challengeEvent('jump');
-      f.state='jump';f.stateT=0;f.airAttacked=false;f.airJumps=1;f.guard=false;audio.jump();this.dust(f.x,FLOOR_Y,4);return true;
+      f.state='jump';f.stateT=0;f.airAttacked=false;f.airJumps=1;f.guard=false;audio.jump();this.dust(f.x,FLOOR_Y,4);this.trainingEvent('jump',f,'jump');return true;
     }
     const fwd=f.facing>0?'right':'left',back=f.facing>0?'left':'right';
     const dashDir=pad.doubleTapped(fwd,tk)?1:pad.doubleTapped(back,tk)?-1:0;
@@ -930,6 +964,7 @@ export class Game {
     if (m.id === 's3' && f.ch === 'caetano') audio.say('Soco pego!', 1.2, 1.1);
     if (m.id === 's1' && f.ch === 'caetano') audio.say('Chute da conspiração!', 1.2, 1.1);
     if (m.id === 's2' && f.ch === 'caetano') audio.say('Dedilho!', 1.3, 1.2);
+    this.trainingEvent('start',f,m.id);
     return true;
   }
 
@@ -937,8 +972,21 @@ export class Game {
     const m = f.move!;
     const pad = f.pad;
     const tk = this.tick;
-    if (!f.connected || f.contactFrame<0 || f.moveT-f.contactFrame>CANCEL_CONFIRM_FRAMES || this.phase !== 'fight' || m.air || (f.ch==='jane'&&m.id==='s2')) return false;
+    if (!f.connected || f.contactFrame<0 || f.moveT-f.contactFrame>CANCEL_CONFIRM_FRAMES || this.phase !== 'fight' || (f.ch==='jane'&&['s2','bikeRush','s3'].includes(m.id))) return false;
     const clean=f.contact==='hit';
+    const opponent=this.opp(f);
+    // One ascending aerial link. No reverse chain, special or ULT cancels in the air.
+    if(m.air){
+      if(clean&&m.kind==='normal'&&m.id==='jP'&&f.y<0&&opponent.state==='launched'&&opponent.juggle<4&&pad.buffered('k',tk)&&this.startMove(f,f.def.moves.jK)){pad.consume('k');return true;}
+      return false;
+    }
+    const launcher=m.launch>0&&(m.kind==='normal'||['caetano','orango','tubarao','aneninha','cristyan'].includes(f.ch));
+    if(clean&&launcher&&opponent.state==='launched'&&opponent.juggle<4&&f.y===0&&pad.buffered('up',tk)){
+      pad.consume('up');f.move=null;f.hbActive=false;f.state='jump';f.stateT=0;f.y=-1;
+      f.vy=-Math.min(f.def.jumpVy,Math.max(8,-opponent.vy+2));
+      f.vx=clamp((opponent.x-f.x)*.1,-f.def.jumpVx,f.def.jumpVx);f.airAttacked=false;f.airJumps=1;f.guard=f.crouch=f.armor=false;f.turn=1;
+      audio.jump();this.dust(f.x,FLOOR_Y,5);if(f.idx===0)this.challengeEvent('jump');this.trainingEvent('jump',f,'jump');return true;
+    }
     if(clean&&f.ch==='caetano'&&m.id==='s2'&&pad.buffered('s1',tk)&&this.startMove(f,f.def.moves.s1)){pad.consume('s1');return true;}
     if (clean && m.kind !== 'super' && pad.buffered('super', tk) && this.canSuper(f)) {
       pad.consume('super');
@@ -947,8 +995,13 @@ export class Game {
     }
     if (m.kind === 'normal') {
       for (const s of ['s1', 's2', 's3'] as const) {
-        if (clean && pad.buffered(s, tk) && this.startMove(f, f.def.moves[s])) {
-          pad.consume(s);return true;
+        if (clean && pad.buffered(s, tk)) {
+          let special=f.def.moves[s];
+          if(['pM','kM'].includes(m.id)&&opponent.state==='hit'&&opponent.comboHits>=2&&(CONFIRMED_SPECIAL_LINKS as Partial<Record<CharId,string>>)[f.ch]===s){
+            const credit=Math.min(LINK_STARTUP_CREDIT,special.startup-8);
+            special={...special,startup:special.startup-credit,advance:special.advance?[Math.max(0,special.advance[0]-credit),Math.max(1,special.advance[1]-credit),special.advance[2]]:undefined};
+          }
+          if(this.startMove(f,special)){pad.consume(s);return true;}
         }
       }
       if (!m.air && m.rank < 3) {
@@ -957,6 +1010,9 @@ export class Game {
             let cand = this.pickNormal(f, b);
             let cm = f.def.moves[cand];
             if (cm.rank <= m.rank) {
+              // Held crouch keeps the requested crouching attack. It must not
+              // silently promote another sweep into a standing heavy kick.
+              if(pad.held.down)continue;
               cand = NORMAL_BY_RANK[b][m.rank];
               cm = f.def.moves[cand];
             }
@@ -972,6 +1028,7 @@ export class Game {
 
   private endAttack(f: Fighter) {
     const m = f.move;
+    if(m&&!f.connected&&m.dmg>0&&!this.projectileKind(f,m))this.trainingEvent('whiff',f,m.id);
     if(f.ch==='jane'&&m?.id==='s2'&&f.bikeCooldown===0)f.bikeCooldown=180;
     if (m && m.kind === 'super') {
       f.armor = false;
@@ -993,7 +1050,12 @@ export class Game {
     if(crash){
       f.move=null;f.state='dizzy';f.stateT=0;f.bikeDizzy=60;f.poseOverride='dizzy';f.guard=f.crouch=false;f.invuln=0;
       this.text(f.x,FLOOR_Y-145,'PASSOU DO PONTO!', '#fde047',25);this.dust(f.x,FLOOR_Y,8);audio.land();
-    }else f.moveT=m.startup+m.active;
+    }else {
+      // A timely release commits to one uncontrolled ride in the captured direction.
+      // It shares the six-contact budget and never grants armor or invulnerability.
+      this.startMove(f,{...f.def.moves.s2,id:'bikeRush',startup:3,active:16,recovery:24,whiff:8,dmg:18,hb:[-20,105,0,105],advance:[0,19,15],label:'MOTO SEM CONTROLE'});
+      f.invuln=0;f.armor=false;audio.whoosh(1.4);
+    }
   }
 
   private interruptBike(f:Fighter){
@@ -1003,9 +1065,12 @@ export class Game {
 
   private resetComboOf(f: Fighter) {
     if (f.comboHits > 0) {
-      this.recoveredCombos.set(f,{hits:f.comboHits,damage:f.comboDmg});
+      this.recoveredCombos.set(f,{hits:f.comboHits,damage:f.comboDmg,moves:[...f.comboMoves],kind:f.comboKind,serial:f.comboLastSerial});
+      const actionable=f.state==='ground'&&f.landLag===0||f.state==='jump'||f.state==='dash';
+      f.comboResult={hits:f.comboHits,damage:f.comboDmg,moves:[...f.comboMoves],kind:f.comboKind,freeAt:actionable?this.tick:null};
+      if(actionable)this.trainingEvent('free',f);
       const att = 1 - f.idx;
-      if (f.comboHits >= 2) this.comboShow[att] = { hits: f.comboHits, dmg: f.comboDmg, t: 90 };
+      if (f.comboHits >= 2) this.comboShow[att] = { hits: f.comboHits, dmg: f.comboDmg, t: 90,kind:f.comboKind };
       if (this.training) {
         this.train.combo = f.comboHits;
         this.train.total = f.comboDmg;
@@ -1015,6 +1080,10 @@ export class Game {
       f.comboDmg = 0;
     }
     f.juggle = 0;
+  }
+
+  private markActionable(f:Fighter){
+    if(f.state==='ground'&&f.landLag===0&&f.comboResult&&f.comboResult.freeAt===null){f.comboResult.freeAt=this.tick;this.trainingEvent('free',f);}
   }
 
   private updateFighter(f: Fighter, o: Fighter) {
@@ -1057,6 +1126,7 @@ export class Game {
           if(f.landLag>0){f.guard=false;f.vx*=.7;f.x+=f.vx;break;}
         }
         // Landing commands, including turn/guard, become legal on this frame.
+        this.markActionable(f);
         if(f.pad.buffered('turn',tk))this.orient(f,o);
         this.sampleGuard(f);
         if (this.tryGroundActions(f)) return;
@@ -1171,6 +1241,7 @@ export class Game {
     }
     if(f.state==='ground'&&enteredState!=='ground'&&this.phase==='fight'&&!f.ko){
       this.resetComboOf(f);this.orient(f,o);this.sampleGuard(f);
+      this.markActionable(f);
       if(!(enteredState==='dash'&&f.guard)&&f.landLag===0&&!this.tryGroundActions(f))this.tryGroundMobility(f);
     }
     if(f.y===0&&(f.state==='ground'||f.state==='dash')&&this.projectiles.some(p=>p.kind==='chess'&&p.owner!==f.idx&&p.life>0&&Math.abs(p.x-f.x)<(p.radius??110))){
@@ -1212,7 +1283,8 @@ export class Game {
     } else {
       if(f.ch==='jane'&&m.id==='s3'){
         f.crouch=t<18;
-        if(t===18)f.facing=o.x>=f.x?1:-1;
+        if(t===18){f.facing=o.x>=f.x?1:-1;f.y=-1;f.vy=-8.5;f.crouch=false;f.airAttacked=true;audio.jump();this.dust(f.x,FLOOR_Y,5);}
+        if(t>=18&&f.y<0){f.vy+=GRAV;f.y+=f.vy;if(f.y>=0){f.y=0;f.vy=0;audio.land();}}
         if(t>=17)f.vx=0;
       }
       if(f.ch==='jane'&&m.id==='s2')f.vx=0;
@@ -1233,6 +1305,8 @@ export class Game {
       f.hbActive=f.bikeHits<6&&f.bikeTicks>=f.bikeNextHit;
       if(f.hbActive){f.hitDone=false;f.move={...m,dmg:Math.min(15,11+Math.floor(f.bikeTicks/60))};}
     }
+    if(f.ch==='jane'&&m.id==='bikeRush'&&f.bikeHits>=6)f.hbActive=false;
+    if(f.ch==='jane'&&m.id==='bikeRush'&&t<a1&&t%2===0){this.dust(f.x-f.facing*45,FLOOR_Y,2);this.spark(f.x-f.facing*40,FLOOR_Y-20,'#fde047',2,3,2,10);}
     if(f.ch==='santox'&&m.id==='s3'&&t>=a0&&t<a1){f.invuln=1;this.camOv={x:f.x,zoom:1.75};this.camOvT=2;}
     if (f.ch === 'tubarao' && m.id === 's3') f.armor = t >= 4 && t < a1;
     if (ranged && (t === a0 || ((rangedKind==='java'||rangedKind==='five')&&t===a0+10) || ((rangedKind === 'pix' || rangedKind === 'bullet') && (t === a0 + 8 || t === a0 + 16)))) this.spawnProjectile(f, m);
@@ -1401,7 +1475,7 @@ export class Game {
     if (def.invuln > 0) return false;
     const dead = ['down', 'getup', 'seq', 'cine', 'win'];
     if (m.grab === 'super') return !dead.includes(def.state);
-    if(m.grab)return def.throwShield===0&&def.y===0&&(def.state==='ground'||def.state==='dash'||def.state==='dizzy'||(def.state==='block'&&def.blockstun<=0)||(def.state==='attack'&&!!def.move&&(def.armor||(def.ch==='jane'&&def.move.id==='s2')||def.moveT>=def.move.startup+def.move.active))||(m.grab==='throw'&&def.move?.id==='throw'));
+    if(m.grab)return def.throwShield===0&&def.y===0&&(def.state==='ground'||def.state==='dash'||def.state==='dizzy'||(def.state==='block'&&def.blockstun<=0)||(def.state==='attack'&&!!def.move&&(def.armor||(def.ch==='jane'&&['s2','bikeRush'].includes(def.move.id))||def.moveT>=def.move.startup+def.move.active))||(m.grab==='throw'&&def.move?.id==='throw'));
     if (dead.includes(def.state)) return false;
     if (def.state === 'launched' && def.juggle >= 4) return false;
     return true;
@@ -1480,6 +1554,17 @@ export class Game {
     f.meter = Math.min(100, f.meter + amount * METER_GAIN_SCALE);
   }
 
+  private trackComboMove(a:Fighter,d:Fighter,id:string,serial:number,advanced:boolean){
+    // moveT already points at the next frame after updateAttack; the last active
+    // frame is still a trade/counter hit, not a recovery punishment.
+    const punish=d.state==='dizzy'||d.state==='attack'&&!!d.move&&d.moveT>d.move.startup+d.move.active;
+    if(d.comboHits===0){d.comboMoves=[];d.comboLastSerial=-1;d.comboKind=punish?'punish':'basic';d.comboResult=null;}
+    if(d.comboKind!=='punish'&&advanced)d.comboKind='advanced';
+    if(d.comboLastSerial!==serial){d.comboMoves.push(id);d.comboLastSerial=serial;}
+    if(punish&&d.comboHits===0)this.text(d.x,FLOOR_Y+d.y-135,'PUNIÇÃO!', '#fb923c',24);
+    void a;
+  }
+
   private dealDamage(a: Fighter, d: Fighter, dmg: number) {
     if(d.ch==='orango')d.momentum=d.momentumT=0;
     if(a.idx===0) {
@@ -1506,7 +1591,7 @@ export class Game {
     if (tracked) {
       a.hitDone = true;
       a.hbActive = false;
-      if(a.ch==='jane'&&m.id==='s2'){a.bikeHits++;a.bikeNextHit=a.bikeTicks+30;}
+      if(a.ch==='jane'&&['s2','bikeRush'].includes(m.id)){a.bikeHits++;a.bikeNextHit=a.bikeTicks+30;}
     }
     const ba = impact ? this.hurtBox(d) : this.boxOf(a);
     const bd = this.hurtBox(d);
@@ -1569,6 +1654,7 @@ export class Game {
       if (this.training) this.train.lastDmg = 0;
       if (a.x === d.x) a.x -= dir;
       if (d.hp <= 0 && prev > 0) this.triggerKO(a, d);
+      this.trainingEvent('block',a,m.id,d,impact?.serial??a.serial);
       return;
     }
 
@@ -1582,16 +1668,18 @@ export class Game {
     }
 
     // --- acerto ---
-    if (a.idx === 0) { if(m.level==='low')this.challengeEvent('low'); if(m.air)this.challengeEvent('air'); if(m.kind==='special'&&/^s[123]$/.test(m.id))this.challengeEvent('special',1,m.id); }
+    if (a.idx === 0) { if(m.level==='low')this.challengeEvent('low'); if(m.air||a.ch==='jane'&&m.id==='s3'&&a.y<0)this.challengeEvent('air'); if(m.kind==='special'&&/^s[123]$/.test(m.id))this.challengeEvent('special',1,m.id); }
     const air = d.y < 0 || d.state === 'launched';
-    if (d.state === 'hit' || d.state === 'launched') d.comboHits++;
-    else {d.comboHits = 1;d.comboDmg=0;}
+    if (d.state !== 'hit' && d.state !== 'launched') {d.comboHits=0;d.comboDmg=0;}
+    this.trackComboMove(a,d,m.id,impact?.serial??a.serial,m.kind!=='normal'||!!m.air);
+    d.comboHits++;
     if (a.idx === 0) this.challengeEvent('combo',d.comboHits);
     const scale = comboDamageScale(d.comboHits-1);
     const dmg = Math.max(1, m.dmg * scale * (a.ch==='orango'?1+a.momentum*.03:1));
     if(a.ch==='orango'){a.momentum=Math.min(3,a.momentum+1);a.momentumT=180;}
     if(d.ch==='orango')d.momentum=d.momentumT=0;
     this.dealDamage(a, d, dmg);
+    this.trainingEvent('hit',a,m.id,d,impact?.serial??a.serial);
     this.interruptBike(d);
     if(d.ch==='jao')for(const p of this.projectiles)if(p.kind==='chess'&&p.owner===d.idx)p.life=0;
     d.move = null;
@@ -1634,6 +1722,11 @@ export class Game {
     const col = a.def.color;
     const glow = a.def.glow;
     const strength=impactStrength(m);
+    if(d.comboHits>=2){
+      const col=d.comboKind==='punish'?'#fb923c':d.comboKind==='advanced'?'#d8b4fe':'#67e8f9';
+      this.ring(px,py,col,d.comboKind==='basic'?45:75,16,d.comboKind==='punish'?6:3);
+      if(d.comboHits===2)this.text(px,py-65,d.comboKind==='punish'?'PUNIÇÃO':d.comboKind==='advanced'?'COMBO AVANÇADO':'COMBO!',col,21);
+    }
     this.recordImpact(d,'hit',strength);audio.hit(strength);
     this.spark(px, py, glow, 6 + Math.round(strength * 6), 4 + strength * 3, 3 + strength, 16 + strength * 4);
     this.spark(px, py, '#ffffff', m.rank===1?3:5, 6, 2, 10);
@@ -1885,9 +1978,10 @@ export class Game {
   private startSeq(kind: Seq['kind'], a: Fighter, d: Fighter) {
     const dur = { puxao: 86, mordida: 78, engole: 100, superC: 215, superO: 215, superT: 150, superR: 170, superB: 160, superN: 150, superG: 155, superA: 206,superS:180,superJ:195,superJane:180,superCristyan:185,superEneas:195, moon: 74, throw:60 }[kind];
     const recovered=kind.startsWith('super')?this.recoveredCombos.get(d):undefined;
-    if(recovered){d.comboHits=recovered.hits;d.comboDmg=recovered.damage;}
+    if(recovered){d.comboHits=recovered.hits;d.comboDmg=recovered.damage;d.comboMoves=[...recovered.moves];d.comboKind=recovered.kind;d.comboLastSerial=recovered.serial;}
     const continuing=d.state==='hit'||d.state==='launched'||!!recovered;
     if(!continuing){d.comboHits=0;d.comboDmg=0;}
+    this.trackComboMove(a,d,a.move?.id??(kind.startsWith('super')?'super':kind),a.serial,true);
     this.seq = { kind, a, d, t: 0, dur, x0: d.x, damageScale:comboDamageScale(d.comboHits) };
     a.state = 'seq';
     d.state = 'seq';
@@ -1920,6 +2014,7 @@ export class Game {
   private seqHit(a: Fighter, d: Fighter, dmg: number, power: number, color: string) {
     this.dealDamage(a, d, dmg*(this.seq?.damageScale??1));
     d.comboHits++;
+    this.trainingEvent('hit',a,d.comboMoves[d.comboMoves.length-1]||'super',d);
     if(a.idx===0)this.challengeEvent('combo',d.comboHits);
     const px = d.x + rand(-14, 14);
     const py = FLOOR_Y + d.y - rand(60, 120);
@@ -2627,6 +2722,7 @@ export class Game {
           const phase=movePhase(m,Math.max(0,f.moveT-1),f.connected);
           if (phase.phase==='startup') {
             name = m.poses[0];
+            if(f.ch==='jane'&&m.id==='s3'&&f.moveT>18)name='jump';
             k = 0.4;
           } else if (phase.phase==='active') {
             name = m.poses[1];

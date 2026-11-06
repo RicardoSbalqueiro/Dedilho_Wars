@@ -1,0 +1,789 @@
+{
+  "method": {
+    "fps": 60,
+    "target": "cristyan",
+    "spacing": "sum of push widths + 5",
+    "routes": 52,
+    "guard": "held after first hit",
+    "limitations": "Validated reference routes, not a global damage maximum or human balance evaluation. Timing/spacing can vary with the opponent silhouette."
+  },
+  "results": [
+    {
+      "id": "caetano-two",
+      "character": "caetano",
+      "name": "Um, dois!",
+      "level": "Básico",
+      "commands": "J → K",
+      "moves": [
+        "pL",
+        "kM"
+      ],
+      "hits": 2,
+      "damage": 62.5,
+      "recoveredAt": 44
+    },
+    {
+      "id": "caetano-three",
+      "character": "caetano",
+      "name": "Três tempos",
+      "level": "Básico",
+      "commands": "J → K → J",
+      "moves": [
+        "pL",
+        "kM",
+        "pH"
+      ],
+      "hits": 3,
+      "damage": 114.5,
+      "recoveredAt": 121
+    },
+    {
+      "id": "caetano-special",
+      "character": "caetano",
+      "name": "Dedilho técnico",
+      "level": "Intermediário",
+      "commands": "J → K → I",
+      "moves": [
+        "pL",
+        "kM",
+        "s2"
+      ],
+      "hits": 3,
+      "damage": 106.5,
+      "recoveredAt": 63
+    },
+    {
+      "id": "caetano-air",
+      "character": "caetano",
+      "name": "Rasteira e perseguição",
+      "level": "Aéreo",
+      "commands": "↓+K → ↑ → J → K",
+      "moves": [
+        "cK",
+        "jump",
+        "jP",
+        "jK"
+      ],
+      "hits": 3,
+      "damage": 139,
+      "recoveredAt": 129
+    },
+    {
+      "id": "orango-two",
+      "character": "orango",
+      "name": "Um, dois!",
+      "level": "Básico",
+      "commands": "J → K",
+      "moves": [
+        "pL",
+        "kM"
+      ],
+      "hits": 2,
+      "damage": 85.62,
+      "recoveredAt": 52
+    },
+    {
+      "id": "orango-three",
+      "character": "orango",
+      "name": "Três tempos",
+      "level": "Básico",
+      "commands": "J → K → J",
+      "moves": [
+        "pL",
+        "kM",
+        "pH"
+      ],
+      "hits": 3,
+      "damage": 161.94,
+      "recoveredAt": 138
+    },
+    {
+      "id": "orango-special",
+      "character": "orango",
+      "name": "Dedilho Supremo",
+      "level": "Intermediário",
+      "commands": "J → K → U",
+      "moves": [
+        "pL",
+        "kM",
+        "s1"
+      ],
+      "hits": 3,
+      "damage": 204.34,
+      "recoveredAt": 142
+    },
+    {
+      "id": "orango-air",
+      "character": "orango",
+      "name": "Rasteira e perseguição",
+      "level": "Aéreo",
+      "commands": "↓+K → ↑ → K",
+      "moves": [
+        "cK",
+        "jump",
+        "jK"
+      ],
+      "hits": 2,
+      "damage": 129.89,
+      "recoveredAt": 118
+    },
+    {
+      "id": "tubarao-two",
+      "character": "tubarao",
+      "name": "Um, dois!",
+      "level": "Básico",
+      "commands": "J → K",
+      "moves": [
+        "pL",
+        "kM"
+      ],
+      "hits": 2,
+      "damage": 82.1,
+      "recoveredAt": 48
+    },
+    {
+      "id": "tubarao-three",
+      "character": "tubarao",
+      "name": "Três tempos",
+      "level": "Básico",
+      "commands": "J → K → J",
+      "moves": [
+        "pL",
+        "kM",
+        "pH"
+      ],
+      "hits": 3,
+      "damage": 150.1,
+      "recoveredAt": 127
+    },
+    {
+      "id": "tubarao-special",
+      "character": "tubarao",
+      "name": "Mordida do Fiscal",
+      "level": "Intermediário",
+      "commands": "J → K → U",
+      "moves": [
+        "pL",
+        "kM",
+        "s1"
+      ],
+      "hits": 3,
+      "damage": 162.1,
+      "recoveredAt": 82
+    },
+    {
+      "id": "tubarao-air",
+      "character": "tubarao",
+      "name": "Rasteira e perseguição",
+      "level": "Aéreo",
+      "commands": "↓+K → ↑ → K",
+      "moves": [
+        "cK",
+        "jump",
+        "jK"
+      ],
+      "hits": 2,
+      "damage": 129.8,
+      "recoveredAt": 115
+    },
+    {
+      "id": "rickzera-two",
+      "character": "rickzera",
+      "name": "Um, dois!",
+      "level": "Básico",
+      "commands": "J → K",
+      "moves": [
+        "pL",
+        "kM"
+      ],
+      "hits": 2,
+      "damage": 56.9,
+      "recoveredAt": 43
+    },
+    {
+      "id": "rickzera-three",
+      "character": "rickzera",
+      "name": "Três tempos",
+      "level": "Básico",
+      "commands": "J → K → J",
+      "moves": [
+        "pL",
+        "kM",
+        "pH"
+      ],
+      "hits": 3,
+      "damage": 104.1,
+      "recoveredAt": 119
+    },
+    {
+      "id": "rickzera-special",
+      "character": "rickzera",
+      "name": "Franco confirmado",
+      "level": "Intermediário",
+      "commands": "J → K → U",
+      "moves": [
+        "pL",
+        "kM",
+        "s1"
+      ],
+      "hits": 3,
+      "damage": 98.5,
+      "recoveredAt": 66
+    },
+    {
+      "id": "rickzera-air",
+      "character": "rickzera",
+      "name": "Rasteira e perseguição",
+      "level": "Aéreo",
+      "commands": "↓+K → ↑ → J → K",
+      "moves": [
+        "cK",
+        "jump",
+        "jP",
+        "jK"
+      ],
+      "hits": 3,
+      "damage": 125.5,
+      "recoveredAt": 126
+    },
+    {
+      "id": "bieu-two",
+      "character": "bieu",
+      "name": "Um, dois!",
+      "level": "Básico",
+      "commands": "J → K",
+      "moves": [
+        "pL",
+        "kM"
+      ],
+      "hits": 2,
+      "damage": 65.3,
+      "recoveredAt": 46
+    },
+    {
+      "id": "bieu-three",
+      "character": "bieu",
+      "name": "Três tempos",
+      "level": "Básico",
+      "commands": "J → K → J",
+      "moves": [
+        "pL",
+        "kM",
+        "pH"
+      ],
+      "hits": 3,
+      "damage": 119.7,
+      "recoveredAt": 124
+    },
+    {
+      "id": "bieu-special",
+      "character": "bieu",
+      "name": "Chave confirmada",
+      "level": "Intermediário",
+      "commands": "J → K → U",
+      "moves": [
+        "pL",
+        "kM",
+        "s1"
+      ],
+      "hits": 3,
+      "damage": 129.3,
+      "recoveredAt": 77
+    },
+    {
+      "id": "bieu-air",
+      "character": "bieu",
+      "name": "Rasteira e perseguição",
+      "level": "Aéreo",
+      "commands": "↓+K → ↑ → J → K",
+      "moves": [
+        "cK",
+        "jump",
+        "jP",
+        "jK"
+      ],
+      "hits": 3,
+      "damage": 147.1,
+      "recoveredAt": 132
+    },
+    {
+      "id": "nomad-two",
+      "character": "nomad",
+      "name": "Um, dois!",
+      "level": "Básico",
+      "commands": "J → K",
+      "moves": [
+        "pL",
+        "kM"
+      ],
+      "hits": 2,
+      "damage": 62.5,
+      "recoveredAt": 46
+    },
+    {
+      "id": "nomad-three",
+      "character": "nomad",
+      "name": "Três tempos",
+      "level": "Básico",
+      "commands": "J → K → J",
+      "moves": [
+        "pL",
+        "kM",
+        "pH"
+      ],
+      "hits": 3,
+      "damage": 114.5,
+      "recoveredAt": 124
+    },
+    {
+      "id": "nomad-special",
+      "character": "nomad",
+      "name": "Lanche na sequência",
+      "level": "Intermediário",
+      "commands": "J → K → U",
+      "moves": [
+        "pL",
+        "kM",
+        "s1"
+      ],
+      "hits": 3,
+      "damage": 104.1,
+      "recoveredAt": 76
+    },
+    {
+      "id": "nomad-air",
+      "character": "nomad",
+      "name": "Rasteira e perseguição",
+      "level": "Aéreo",
+      "commands": "↓+K → ↑ → J → K",
+      "moves": [
+        "cK",
+        "jump",
+        "jP",
+        "jK"
+      ],
+      "hits": 3,
+      "damage": 139,
+      "recoveredAt": 132
+    },
+    {
+      "id": "renngotti-two",
+      "character": "renngotti",
+      "name": "Um, dois!",
+      "level": "Básico",
+      "commands": "J → K",
+      "moves": [
+        "pL",
+        "kM"
+      ],
+      "hits": 2,
+      "damage": 62.5,
+      "recoveredAt": 44
+    },
+    {
+      "id": "renngotti-three",
+      "character": "renngotti",
+      "name": "Três tempos",
+      "level": "Básico",
+      "commands": "J → K → J",
+      "moves": [
+        "pL",
+        "kM",
+        "pH"
+      ],
+      "hits": 3,
+      "damage": 114.5,
+      "recoveredAt": 121
+    },
+    {
+      "id": "renngotti-special",
+      "character": "renngotti",
+      "name": "Microfone no combo",
+      "level": "Intermediário",
+      "commands": "J → K → I",
+      "moves": [
+        "pL",
+        "kM",
+        "s2"
+      ],
+      "hits": 3,
+      "damage": 110.5,
+      "recoveredAt": 73
+    },
+    {
+      "id": "renngotti-air",
+      "character": "renngotti",
+      "name": "Rasteira e perseguição",
+      "level": "Aéreo",
+      "commands": "↓+K → ↑ → J → K",
+      "moves": [
+        "cK",
+        "jump",
+        "jP",
+        "jK"
+      ],
+      "hits": 3,
+      "damage": 139,
+      "recoveredAt": 129
+    },
+    {
+      "id": "aneninha-two",
+      "character": "aneninha",
+      "name": "Um, dois!",
+      "level": "Básico",
+      "commands": "J → K",
+      "moves": [
+        "pL",
+        "kM"
+      ],
+      "hits": 2,
+      "damage": 61.6,
+      "recoveredAt": 44
+    },
+    {
+      "id": "aneninha-three",
+      "character": "aneninha",
+      "name": "Três tempos",
+      "level": "Básico",
+      "commands": "J → K → J",
+      "moves": [
+        "pL",
+        "kM",
+        "pH"
+      ],
+      "hits": 3,
+      "damage": 112.8,
+      "recoveredAt": 121
+    },
+    {
+      "id": "aneninha-special",
+      "character": "aneninha",
+      "name": "Osasco confirmado",
+      "level": "Intermediário",
+      "commands": "J → K → U",
+      "moves": [
+        "pL",
+        "kM",
+        "s1"
+      ],
+      "hits": 3,
+      "damage": 137.6,
+      "recoveredAt": 129
+    },
+    {
+      "id": "aneninha-air",
+      "character": "aneninha",
+      "name": "Rasteira e perseguição",
+      "level": "Aéreo",
+      "commands": "↓+K → ↑ → J → K",
+      "moves": [
+        "cK",
+        "jump",
+        "jP",
+        "jK"
+      ],
+      "hits": 3,
+      "damage": 136.3,
+      "recoveredAt": 129
+    },
+    {
+      "id": "santox-two",
+      "character": "santox",
+      "name": "Um, dois!",
+      "level": "Básico",
+      "commands": "J → K",
+      "moves": [
+        "pL",
+        "kM"
+      ],
+      "hits": 2,
+      "damage": 56.9,
+      "recoveredAt": 46
+    },
+    {
+      "id": "santox-three",
+      "character": "santox",
+      "name": "Três tempos",
+      "level": "Básico",
+      "commands": "J → K → J",
+      "moves": [
+        "pL",
+        "kM",
+        "pH"
+      ],
+      "hits": 3,
+      "damage": 104.1,
+      "recoveredAt": 124
+    },
+    {
+      "id": "santox-special",
+      "character": "santox",
+      "name": "Chute do Coelho",
+      "level": "Intermediário",
+      "commands": "J → K → I",
+      "moves": [
+        "pL",
+        "kM",
+        "s2"
+      ],
+      "hits": 3,
+      "damage": 111.3,
+      "recoveredAt": 125
+    },
+    {
+      "id": "santox-air",
+      "character": "santox",
+      "name": "Rasteira e perseguição",
+      "level": "Aéreo",
+      "commands": "↓+K → ↑ → J → K",
+      "moves": [
+        "cK",
+        "jump",
+        "jP",
+        "jK"
+      ],
+      "hits": 3,
+      "damage": 125.5,
+      "recoveredAt": 132
+    },
+    {
+      "id": "jao-two",
+      "character": "jao",
+      "name": "Um, dois!",
+      "level": "Básico",
+      "commands": "J → K",
+      "moves": [
+        "pL",
+        "kM"
+      ],
+      "hits": 2,
+      "damage": 59.7,
+      "recoveredAt": 46
+    },
+    {
+      "id": "jao-three",
+      "character": "jao",
+      "name": "Três tempos",
+      "level": "Básico",
+      "commands": "J → K → J",
+      "moves": [
+        "pL",
+        "kM",
+        "pH"
+      ],
+      "hits": 3,
+      "damage": 109.3,
+      "recoveredAt": 124
+    },
+    {
+      "id": "jao-special",
+      "character": "jao",
+      "name": "Equação confirmada",
+      "level": "Intermediário",
+      "commands": "J → K → I",
+      "moves": [
+        "pL",
+        "kM",
+        "s2"
+      ],
+      "hits": 3,
+      "damage": 94.9,
+      "recoveredAt": 68
+    },
+    {
+      "id": "jao-air",
+      "character": "jao",
+      "name": "Rasteira e perseguição",
+      "level": "Aéreo",
+      "commands": "↓+K → ↑ → J → K",
+      "moves": [
+        "cK",
+        "jump",
+        "jP",
+        "jK"
+      ],
+      "hits": 3,
+      "damage": 132.8,
+      "recoveredAt": 132
+    },
+    {
+      "id": "jane-two",
+      "character": "jane",
+      "name": "Um, dois!",
+      "level": "Básico",
+      "commands": "J → K",
+      "moves": [
+        "pL",
+        "kM"
+      ],
+      "hits": 2,
+      "damage": 48.5,
+      "recoveredAt": 44
+    },
+    {
+      "id": "jane-three",
+      "character": "jane",
+      "name": "Três tempos",
+      "level": "Básico",
+      "commands": "J → K → J",
+      "moves": [
+        "pL",
+        "kM",
+        "pH"
+      ],
+      "hits": 3,
+      "damage": 89.3,
+      "recoveredAt": 121
+    },
+    {
+      "id": "jane-special",
+      "character": "jane",
+      "name": "Grau na sequência",
+      "level": "Intermediário",
+      "commands": "J → K → I",
+      "moves": [
+        "pL",
+        "kM",
+        "s2"
+      ],
+      "hits": 4,
+      "damage": 69.9,
+      "recoveredAt": 71
+    },
+    {
+      "id": "jane-air",
+      "character": "jane",
+      "name": "Rasteira e perseguição",
+      "level": "Aéreo",
+      "commands": "↓+K → ↑ → J → K",
+      "moves": [
+        "cK",
+        "jump",
+        "jP",
+        "jK"
+      ],
+      "hits": 3,
+      "damage": 108.5,
+      "recoveredAt": 129
+    },
+    {
+      "id": "cristyan-two",
+      "character": "cristyan",
+      "name": "Um, dois!",
+      "level": "Básico",
+      "commands": "J → K",
+      "moves": [
+        "pL",
+        "kM"
+      ],
+      "hits": 2,
+      "damage": 62.5,
+      "recoveredAt": 46
+    },
+    {
+      "id": "cristyan-three",
+      "character": "cristyan",
+      "name": "Três tempos",
+      "level": "Básico",
+      "commands": "J → K → J",
+      "moves": [
+        "pL",
+        "kM",
+        "pH"
+      ],
+      "hits": 3,
+      "damage": 113.7,
+      "recoveredAt": 124
+    },
+    {
+      "id": "cristyan-special",
+      "character": "cristyan",
+      "name": "Teep baiano",
+      "level": "Intermediário",
+      "commands": "J → K → U",
+      "moves": [
+        "pL",
+        "kM",
+        "s1"
+      ],
+      "hits": 3,
+      "damage": 112.1,
+      "recoveredAt": 70
+    },
+    {
+      "id": "cristyan-air",
+      "character": "cristyan",
+      "name": "Rasteira e perseguição",
+      "level": "Aéreo",
+      "commands": "↓+K → ↑ → J → K",
+      "moves": [
+        "cK",
+        "jump",
+        "jP",
+        "jK"
+      ],
+      "hits": 3,
+      "damage": 138.2,
+      "recoveredAt": 132
+    },
+    {
+      "id": "eneas-two",
+      "character": "eneas",
+      "name": "Um, dois!",
+      "level": "Básico",
+      "commands": "J → K",
+      "moves": [
+        "pL",
+        "kM"
+      ],
+      "hits": 2,
+      "damage": 61.6,
+      "recoveredAt": 48
+    },
+    {
+      "id": "eneas-three",
+      "character": "eneas",
+      "name": "Três tempos",
+      "level": "Básico",
+      "commands": "J → K → J",
+      "moves": [
+        "pL",
+        "kM",
+        "pH"
+      ],
+      "hits": 3,
+      "damage": 112.8,
+      "recoveredAt": 127
+    },
+    {
+      "id": "eneas-special",
+      "character": "eneas",
+      "name": "Diagnóstico confirmado",
+      "level": "Intermediário",
+      "commands": "J → K → I",
+      "moves": [
+        "pL",
+        "kM",
+        "s2"
+      ],
+      "hits": 3,
+      "damage": 98.4,
+      "recoveredAt": 73
+    },
+    {
+      "id": "eneas-air",
+      "character": "eneas",
+      "name": "Rasteira e perseguição",
+      "level": "Aéreo",
+      "commands": "↓+K → ↑ → K",
+      "moves": [
+        "cK",
+        "jump",
+        "jK"
+      ],
+      "hits": 2,
+      "damage": 97.6,
+      "recoveredAt": 115
+    }
+  ]
+}

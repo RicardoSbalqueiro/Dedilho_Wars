@@ -2,6 +2,10 @@
 export const SUPER_STARTUP_FRAMES = 12;
 export const SUPER_CAPTURE_HEIGHT = 100;
 export const MICROPHONE_LIMIT = 2;
+// These three slow ranged attacks need a dedicated, confirmed medium link.
+// The standalone move, blocked hits, throws, utility and ULTs get no discount.
+export const CONFIRMED_SPECIAL_LINKS = {orango:'s1',jao:'s2',eneas:'s2'} as const;
+export const LINK_STARTUP_CREDIT = 8;
 
 // priorHits counts actual contacts in the same uninterrupted combo.
 // Cinematic attacks sample once on entry: their visual hit count must not penalize
