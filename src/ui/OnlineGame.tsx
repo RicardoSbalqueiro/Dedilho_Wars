@@ -51,7 +51,9 @@ export function OnlineGame({room,user,onLobby,onLeave}:{room:Room;user:User;onLo
   });
   link.start();
   const keydown=(e:KeyboardEvent)=>{if(!e.repeat&&!blocked.current)ACTIONS.forEach((a,i)=>{if(bindings[0][a].includes(e.code))physicalPressed|=1<<i})};
-  const blur=()=>{keyboard.down.clear();physicalPressed=0};window.addEventListener('blur',blur);window.addEventListener('keydown',keydown);
+  const blur=()=>{keyboard.down.clear();physicalPressed=0};
+  const visibility=()=>{game.resetClock();if(document.hidden){blur();touchInput.clear();}};
+  document.addEventListener('visibilitychange',visibility);window.addEventListener('blur',blur);window.addEventListener('keydown',keydown);
   const stage=getStage(room.stage);
   const loop=(now:number)=>{
    const mask=blocked.current?0:ACTIONS.reduce((m,a,i)=>m|((bindings[0][a].some(k=>k&&keyboard.down.has(k))||touchInput.held.has(a))?1<<i:0),0);
@@ -71,7 +73,7 @@ export function OnlineGame({room,user,onLobby,onLeave}:{room:Room;user:User;onLo
    raf=requestAnimationFrame(loop);
   };
   raf=requestAnimationFrame(loop);
-  return ()=>{stopped=true;cancelAnimationFrame(raf);window.removeEventListener('blur',blur);window.removeEventListener('keydown',keydown);link.close();game.destroy();const w=window as unknown as {__game?:Game};if(w.__game===game)delete w.__game};
+  return ()=>{stopped=true;cancelAnimationFrame(raf);document.removeEventListener('visibilitychange',visibility);window.removeEventListener('blur',blur);window.removeEventListener('keydown',keydown);link.close();game.destroy();const w=window as unknown as {__game?:Game};if(w.__game===game)delete w.__game};
  },[room,user,host]);
  const winner=result===0?room.host:room.guest;
  return <div className="absolute inset-0">

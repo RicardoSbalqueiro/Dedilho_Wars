@@ -132,16 +132,18 @@ function proceduralMotion(ch: CharId, base: Pose, f: MotionState): Pose {
 
 /** Explicit, inspectable frame library. These frames drive the live fighter;
  * the catalogue is not an unused export or a counter of repeated idle images. */
+export const ANIMATION_SUBFRAMES=3;
+export const ANIMATION_FPS=60*ANIMATION_SUBFRAMES;
 export const ANIMATION_CLIPS = {
-  idle: { label:'Prontidão e respiração', frames:120, pose:'idle', loop:true },
-  walk: { label:'Caminhada', frames:32, pose:'idle', loop:true },
-  dash: { label:'Dash e corrida', frames:24, pose:'rush', loop:true },
-  jump: { label:'Salto: subida e queda', frames:24, pose:'jump', loop:false },
-  guard: { label:'Defesa alta', frames:36, pose:'block', loop:true },
-  crouch: { label:'Agachar e apoio baixo', frames:36, pose:'crouch', loop:true },
-  hit: { label:'Reação ao impacto', frames:16, pose:'hit', loop:false },
-  getup: { label:'Levantar', frames:18, pose:'getup', loop:false },
-  win: { label:'Comemoração', frames:60, pose:'win', loop:true },
+  idle: { label:'Prontidão e respiração', ticks:120, frames:360, pose:'idle', loop:true },
+  walk: { label:'Caminhada', ticks:32, frames:96, pose:'idle', loop:true },
+  dash: { label:'Dash e corrida', ticks:24, frames:72, pose:'rush', loop:true },
+  jump: { label:'Salto: subida e queda', ticks:24, frames:72, pose:'jump', loop:false },
+  guard: { label:'Defesa alta', ticks:36, frames:108, pose:'block', loop:true },
+  crouch: { label:'Agachar e apoio baixo', ticks:36, frames:108, pose:'crouch', loop:true },
+  hit: { label:'Reação ao impacto', ticks:16, frames:48, pose:'hit', loop:false },
+  getup: { label:'Levantar', ticks:18, frames:54, pose:'getup', loop:false },
+  win: { label:'Comemoração', ticks:60, frames:180, pose:'win', loop:true },
 } as const;
 export type AnimationClip = keyof typeof ANIMATION_CLIPS;
 export const ANIMATION_CLIP_IDS=Object.keys(ANIMATION_CLIPS) as AnimationClip[];
@@ -154,7 +156,7 @@ export function animationFrames(ch:CharId,id:AnimationClip):readonly Readonly<Po
     const phase=i/clip.frames*Math.PI*2;
     const animT=id==='walk'?phase/.24:id==='dash'?phase/.7:phase/ANIMATION_STYLE[ch].tempo;
     const f:MotionState={state:id==='idle'||id==='walk'||id==='guard'||id==='crouch'?'ground':id,
-      stateT:i,animT,vx:id==='walk'?def.walk:0,vy:-10+i/(clip.frames-1)*20,
+      stateT:i/ANIMATION_SUBFRAMES,animT,vx:id==='walk'?def.walk:0,vy:-10+i/(clip.frames-1)*20,
       walking:id==='walk'?1:0,facing:1,crouch:id==='crouch',guard:id==='guard',landLag:0};
     return Object.freeze(proceduralMotion(ch,base,f));
   });
@@ -168,9 +170,9 @@ export function animationFrame(ch:CharId,id:AnimationClip,frame:number):Pose {
   const a=Math.floor(t),b=loop?(a+1)%n:Math.min(n-1,a+1);
   return mixAnimation(frames[a],frames[b],t-a);
 }
-function relativeFrame(ch:CharId,id:AnimationClip,frame:number,base:Pose):Pose {
+function relativeFrame(ch:CharId,id:AnimationClip,tick:number,base:Pose):Pose {
   const canonical=CHARS[ch].poses[ANIMATION_CLIPS[id].pose]||CHARS[ch].poses.idle;
-  const p=animationFrame(ch,id,frame);
+  const p=animationFrame(ch,id,tick*ANIMATION_SUBFRAMES);
   for(const k of Object.keys(p) as (keyof Pose)[])p[k]+=base[k]-canonical[k];
   return p;
 }
@@ -189,7 +191,7 @@ export function motionAnimation(ch:CharId,base:Pose,f:MotionState):Pose {
     return p;
   }
   if(f.state==='jump'){
-    const p=relativeFrame(ch,'jump',clamp((f.vy+10)/20)*23,base);p.lean+=f.vx*f.facing*1.2;return p;
+    const p=relativeFrame(ch,'jump',clamp((f.vy+10)/20)*(ANIMATION_CLIPS.jump.frames-1)/ANIMATION_SUBFRAMES,base);p.lean+=f.vx*f.facing*1.2;return p;
   }
   if(f.state==='dash')return relativeFrame(ch,'dash',f.animT,base);
   if(f.state==='hit')return relativeFrame(ch,'hit',f.stateT,base);

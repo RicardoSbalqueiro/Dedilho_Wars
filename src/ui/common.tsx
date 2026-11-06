@@ -4,6 +4,7 @@ import { Stage, STAGE_IDS, W, H, FLOOR_Y } from '../game/stage';
 import { drawFullBody, drawPortrait } from '../game/rig';
 import { attackAnimation } from '../game/animation';
 import type { Move } from '../game/data';
+import { FrameTimer } from '../game/timing';
 import { CHARS, CHAR_IDS } from '../game/data';
 import type { CharId } from '../game/data';
 import type { StageId } from '../game/stage';
@@ -35,10 +36,10 @@ export function StagePreview({ stageId, animated = false, className = '' }: { st
     if (!ctx) return;
     const stage = getStage(stageId);
     let raf = 0;
-    let t = 0;
-    const draw = () => { drawStageScene(ctx, stage, t++); if (animated) raf = requestAnimationFrame(draw); };
-    draw();
-    return () => cancelAnimationFrame(raf);
+    const clock=new FrameTimer(),rebase=()=>clock.rebase();
+    const draw = (now:number) => { clock.sample(now,!document.hidden);drawStageScene(ctx, stage, clock.frames);if (animated) raf = requestAnimationFrame(draw); };
+    document.addEventListener('visibilitychange',rebase);draw(performance.now());
+    return () => {cancelAnimationFrame(raf);document.removeEventListener('visibilitychange',rebase)};
   }, [stageId, animated]);
   return <canvas ref={ref} width={W} height={H} className={className} aria-hidden="true" />;
 }
@@ -87,10 +88,11 @@ export function ArtCanvas({ variant, selected }: { variant: ArtVariant; selected
     const ctx = canvas.getContext('2d')!;
     const stage = getStage(STAGE_IDS[Math.floor(Math.random() * STAGE_IDS.length)]);
     let raf = 0;
-    let t = 0;
+    const clock=new FrameTimer(),rebase=()=>clock.rebase();
     const leaves: Leaf[] = Array.from({ length: 24 }, () => ({ x: Math.random() * W, y: Math.random() * H, vx: -1 - Math.random() * 1.5, vy: 0.5 + Math.random(), r: Math.random() * 6, s: 3 + Math.random() * 5 }));
-    const loop = () => {
-      t++;
+    const loop = (now:number) => {
+      clock.sample(now,!document.hidden);const t=clock.frames,dt=clock.deltaFrames;
+      canvas.dataset.animationFrame=t.toFixed(4);
       const { variant: v, selected: sel } = propsRef.current;
       const camX = 800 + Math.sin(t * 0.006) * 40;
       stage.hype = 0.15;
@@ -117,9 +119,9 @@ export function ArtCanvas({ variant, selected }: { variant: ArtVariant; selected
       }
       // folhas
       for (const l of leaves) {
-        l.x += l.vx;
-        l.y += l.vy;
-        l.r += 0.05;
+        l.x += l.vx*dt;
+        l.y += l.vy*dt;
+        l.r += 0.05*dt;
         if (l.x < -10 || l.y > H + 10) {
           l.x = W + Math.random() * 100;
           l.y = -10 - Math.random() * 200;
@@ -140,8 +142,8 @@ export function ArtCanvas({ variant, selected }: { variant: ArtVariant; selected
       ctx.fillRect(0, 0, W, H);
       raf = requestAnimationFrame(loop);
     };
-    raf = requestAnimationFrame(loop);
-    return () => cancelAnimationFrame(raf);
+    document.addEventListener('visibilitychange',rebase);raf = requestAnimationFrame(loop);
+    return () => {cancelAnimationFrame(raf);document.removeEventListener('visibilitychange',rebase)};
   }, []);
   return <canvas ref={ref} width={W} height={H} className="absolute inset-0" />;
 }

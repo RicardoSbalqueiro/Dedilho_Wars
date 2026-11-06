@@ -354,6 +354,7 @@ export class Stage {
   floor: HTMLCanvasElement;
   crowd: Spectator[] = [];
   hype = 0;
+  private lastBackgroundTime:number|null=null;
 
   constructor(public readonly id: StageId = 'dojo') {
     if (id === 'dojo') {
@@ -488,7 +489,9 @@ export class Stage {
     ctx.fillStyle = 'rgba(0,0,0,0.45)';
     ctx.fillRect(0, BASE + 9, STAGE_W, 8);
     ctx.restore();
-    this.hype = Math.max(0, this.hype - 0.004);
+    const elapsed=this.lastBackgroundTime===null?0:Math.max(0,Math.min(15,time-this.lastBackgroundTime));
+    this.lastBackgroundTime=time;
+    this.hype = Math.max(0, this.hype - 0.004*elapsed);
   }
 
   /** Desenhado já dentro da transformação do mundo (câmera). */

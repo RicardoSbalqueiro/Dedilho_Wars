@@ -26,9 +26,9 @@ for(const ch of CHAR_IDS){
   }assert.equal(unique.size,frames.length,'not repeated static poses');
   assert.deepEqual(animationFrame(ch,id,frames.length),ANIMATION_CLIPS[id].loop?frames[0]:frames[frames.length-1]);
  });
- test(`${ch}: more than 100 unique animation frames used by the live fighter`,()=>{
+ test(`${ch}: more than 1000 unique animation frames used by the live fighter`,()=>{
   const all=ANIMATION_CLIP_IDS.flatMap(id=>animationFrames(ch,id)),unique=new Set(all.map(p=>JSON.stringify(Object.values(p).map(v=>+v.toFixed(6)))));
-  assert.equal(all.length,366);assert.equal(ANIMATION_FRAMES_PER_FIGHTER,366);assert.equal(unique.size,366);
+  assert.equal(all.length,1098);assert.equal(ANIMATION_FRAMES_PER_FIGHTER,1098);assert.equal(unique.size,1098);
   const g=make(ch);try{for(let i=0;i<130;i++){g.step();const f=g.f[0],target=motionAnimation(ch,f.def.poses.idle,f);finite(target,ch);assert.notDeepEqual(target,CHARS[ch].poses.idle);}}finally{g.destroy()}
  });
 
@@ -102,4 +102,4 @@ test('light/heavy/special audio layers are distinct, finite and retain the chose
   assert.equal(audio.settings.sfx,.4);
  }finally{audio.tone=tone;audio.noise=noise}
 });
-console.log(`Animation/presentation: ${count} cases passed (366 catalogue frames per fighter, 4,758 total, all 13 multibeat rigs/moves, exact contact poses, simulation invariance, frozen hitstop, snapshots, guest interpolation, cinematic transitions, audio layers, migrated preferences and touch/keyboard hints).`);
+console.log(`Animation/presentation: ${count} cases passed (1,098 catalogue frames per fighter, 14,274 total, all 13 multibeat rigs/moves, exact contact poses, simulation invariance, frozen hitstop, snapshots, guest interpolation, cinematic transitions, audio layers, migrated preferences and touch/keyboard hints).`);

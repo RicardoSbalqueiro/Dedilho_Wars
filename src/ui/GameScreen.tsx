@@ -40,6 +40,8 @@ export function GameScreen({ cfg, onExit, onSelect, onMap, onRadio, inputSuspend
       }
     });
     gameRef.current = game;
+    const visibility=()=>{game.resetClock();if(document.hidden&&!game.paused)game.togglePause(true)};
+    document.addEventListener('visibilitychange',visibility);
     (window as unknown as { __game?: Game }).__game = game;
     let raf = 0,lastCinematic=false;
     const loop = (now: number) => {
@@ -51,6 +53,7 @@ export function GameScreen({ cfg, onExit, onSelect, onMap, onRadio, inputSuspend
     raf = requestAnimationFrame(loop);
     return () => {
       cancelAnimationFrame(raf);
+      document.removeEventListener('visibilitychange',visibility);
       window.clearTimeout(resultTimerRef.current);
       const debugWindow = window as unknown as { __game?: Game };
       if (debugWindow.__game === game) delete debugWindow.__game;

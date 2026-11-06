@@ -1,6 +1,42 @@
 import type { Fighter } from './engine';
-import { mixAnimation } from './animation';
+import { mixAnimation,motionAnimation } from './animation';
 import { computeRig } from './rig';
+import type { Pose } from './data';
+
+export interface MotionFrame {
+  x:number;y:number;pose:Pose;state:string;serial:number;facing:number;guard:boolean;crouch:boolean;
+  turn:number;rotAdd:number;impact:number|undefined;
+  animT:number;stateT:number;vx:number;vy:number;walking:number;poseName:string;landLag:number;
+}
+export function captureMotion(f:Fighter):MotionFrame {
+  return {x:f.x,y:f.y,pose:{...f.pose},state:f.state,serial:f.serial,facing:f.facing,guard:f.guard,crouch:f.crouch,
+    turn:f.turn,rotAdd:f.rotAdd,impact:f.impact?.serial,animT:f.animT,stateT:f.stateT,vx:f.vx,vy:f.vy,
+    walking:f.walking,poseName:f.poseName,landLag:f.landLag};
+}
+/** Smooth only the rendered body between fixed simulation ticks. New commands,
+ * defensive posture, active hitboxes and authored spins stay immediate. */
+export function localPresentation(f:Fighter,previous:MotionFrame|undefined,fraction:number,locked:boolean):Fighter {
+  const p=previous;
+  if(!p||locked||f.hbActive||f.move?.turn||f.poseOverride||f.state!==p.state||f.serial!==p.serial||f.facing!==p.facing||
+    f.guard!==p.guard||f.crouch!==p.crouch||f.turn!==p.turn||f.rotAdd!==p.rotAdd||f.impact?.serial!==p.impact)return f;
+  const k=Math.max(0,Math.min(1,fraction)),pose=mixAnimation(p.pose,f.pose,k);
+  const animT=p.animT+(f.animT-p.animT)*k;
+  if(f.state!=='attack'&&f.poseName===p.poseName&&f.walking===p.walking){
+    const base=f.def.poses[f.poseName]||f.def.poses.idle;
+    const previousTarget=motionAnimation(f.ch,base,p),currentTarget=motionAnimation(f.ch,base,f);
+    const linear=mixAnimation(previousTarget,currentTarget,k);
+    // Evaluate the denser authored clip at the actual render instant. Preserve
+    // the existing transition/smoothing offset rather than replacing the pose.
+    const curve=motionAnimation(f.ch,base,{...f,animT,stateT:p.stateT+(f.stateT-p.stateT)*k,
+      vx:p.vx+(f.vx-p.vx)*k,vy:p.vy+(f.vy-p.vy)*k});
+    for(const key of Object.keys(pose) as (keyof Pose)[]){
+      let delta=curve[key]-linear[key];
+      if(/^(fa|ba|fl|bl)[12]$/.test(key))delta=((delta+180)%360+360)%360-180;
+      pose[key]+=delta;
+    }
+  }
+  return {...f,x:p.x+(f.x-p.x)*k,y:p.y+(f.y-p.y)*k,animT,pose,rig:computeRig(f.ch,pose)};
+}
 
 interface Frame { tick:number; at:number; duration:number; from:Fighter; shown:Fighter; facing:number }
 const remoteFrames=new WeakMap<Fighter,Frame>();

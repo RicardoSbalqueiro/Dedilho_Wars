@@ -10,6 +10,9 @@ import type { Bindings } from './input';
 import { audio } from './audio';
 import { computeRig, lerpPose } from './rig';
 import { attackAnimation, motionAnimation } from './animation';
+import { FrameTimer } from './timing';
+import { captureMotion } from './render-motion';
+import type { MotionFrame } from './render-motion';
 import type { Rig, P2 } from './rig';
 import { FLOOR_Y } from './stage';
 import type { StageId } from './stage';
@@ -318,8 +321,9 @@ export class Game {
   onEvent: (e: GameEvent) => void;
   onlineInputs: [number, number] = [0, 0];
   onlinePressed: [number, number] = [0, 0];
-  private acc = 0;
-  private last = 0;
+  private clock = new FrameTimer();
+  previousVisual:[MotionFrame,MotionFrame]|null=null;
+  get renderFraction(){return this.clock.fraction;}
   private keyHandler: (code: string, e: KeyboardEvent) => void;
 
   constructor(cfg: GameConfig, onEvent: (e: GameEvent) => void) {
@@ -363,6 +367,7 @@ export class Game {
   }
 
   restart() {
+    this.resetClock();
     this.paused = false;
     this.resetMatch();
   }
@@ -495,6 +500,7 @@ export class Game {
   togglePause(v?: boolean) {
     if (this.phase === 'matchEnd') return;
     this.paused = v === undefined ? !this.paused : v;
+    this.resetClock();
     keyboard.pressed.clear();touchInput.pressed.clear();
     this.onEvent({ type: 'pause', paused: this.paused });
   }
@@ -521,14 +527,11 @@ export class Game {
   }
 
   // ------------------------------------------------------------ loop
+  resetClock(){this.clock.rebase();this.previousVisual=null;}
   advance(nowMs: number) {
-    if (!this.last) this.last = nowMs;
-    let dt = nowMs - this.last;
-    this.last = nowMs;
-    if (dt > 100) dt = 100;
-    this.acc += dt;
-    while (this.acc >= 1000 / 60) {
-      this.acc -= 1000 / 60;
+    const ticks=this.clock.sample(nowMs,!this.paused);
+    for(let i=0;i<ticks&&!this.paused;i++){
+      this.previousVisual=[captureMotion(this.f[0]),captureMotion(this.f[1])];
       this.step();
     }
   }

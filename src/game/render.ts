@@ -10,7 +10,7 @@ import { drawRig, drawPortrait, drawHead, drawBolivianDancer } from './rig';
 import { keyLabel } from './input';
 import { drawMotionInk, drawGuardInk } from './combat-art';
 import { combatHint } from './combat-feel';
-import { remotePresentation } from './render-motion';
+import { remotePresentation,localPresentation } from './render-motion';
 
 const FONT = "'Russo One','Impact','Arial Black','Segoe UI',sans-serif";
 
@@ -1072,7 +1072,8 @@ export function render(ctx: CanvasRenderingContext2D, g: Game, stage: Stage, tim
   stage.drawLights(ctx, g.cam.x, tint, tintAmt);
 
   // reflexos
-  const presentation=g.f.map(f=>remoteNow===undefined?f:remotePresentation(f,remoteNow,g.hitstop>0||g.paused||!!g.seq||!!g.cine||!!g.clash));
+  const locked=g.hitstop>0||g.paused||!!g.seq||!!g.cine||!!g.clash;
+  const presentation=g.f.map(f=>remoteNow===undefined?localPresentation(f,g.previousVisual?.[f.idx],g.renderFraction,locked):remotePresentation(f,remoteNow,locked));
   for (const f of presentation) {
     ctx.save();
     ctx.translate(0, 2 * FLOOR_Y);

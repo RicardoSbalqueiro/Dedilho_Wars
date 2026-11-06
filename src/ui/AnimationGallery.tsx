@@ -1,24 +1,28 @@
 import {useEffect,useRef,useState} from 'react';
 import {CHAR_IDS,CHARS} from '../game/data';
 import type {CharId} from '../game/data';
-import {ANIMATION_CLIPS,ANIMATION_CLIP_IDS,ANIMATION_FRAMES_PER_FIGHTER,animationFrame} from '../game/animation';
+import {ANIMATION_CLIPS,ANIMATION_CLIP_IDS,ANIMATION_FRAMES_PER_FIGHTER,ANIMATION_SUBFRAMES,animationFrame} from '../game/animation';
 import type {AnimationClip} from '../game/animation';
 import {computeRig,drawRig} from '../game/rig';
+import {FrameTimer} from '../game/timing';
 
 export function AnimationGallery({initial}:{initial:CharId}){
   const [ch,setCh]=useState(initial),[clip,setClip]=useState<AnimationClip>('idle'),[playing,setPlaying]=useState(true),[frame,setFrame]=useState(0);
   const canvas=useRef<HTMLCanvasElement>(null),position=useRef(0),frames=ANIMATION_CLIPS[clip].frames;
   const seek=(n:number)=>{setPlaying(false);position.current=Math.max(0,Math.min(frames-1,n));setFrame(Math.floor(position.current))};
   useEffect(()=>{
-    const ctx=canvas.current!.getContext('2d')!;let raf=0,last=0,notice=0;
+    const ctx=canvas.current!.getContext('2d')!,clock=new FrameTimer();let raf=0,notice=0;
+    const rebase=()=>clock.rebase();document.addEventListener('visibilitychange',rebase);
     const draw=(now:number)=>{
-      if(playing&&last){position.current+=Math.min(50,now-last)*.06;if(position.current>=frames)position.current=ANIMATION_CLIPS[clip].loop?position.current%frames:frames-1;}
-      last=now;const i=Math.floor(position.current),pose=animationFrame(ch,clip,position.current);
+      clock.sample(now,playing&&!document.hidden);
+      position.current+=clock.deltaFrames*ANIMATION_SUBFRAMES;
+      if(position.current>=frames)position.current=ANIMATION_CLIPS[clip].loop?position.current%frames:frames-1;
+      const i=Math.floor(position.current),pose=animationFrame(ch,clip,position.current);
       ctx.clearRect(0,0,680,380);const bg=ctx.createRadialGradient(340,220,5,340,220,355);bg.addColorStop(0,CHARS[ch].color2);bg.addColorStop(1,'#0c0a16');ctx.fillStyle=bg;ctx.fillRect(0,0,680,380);
       ctx.strokeStyle=CHARS[ch].glow+'55';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(45,345);ctx.lineTo(635,345);ctx.stroke();
-      ctx.save();ctx.translate(330,341);ctx.scale(1.34,1.34);drawRig(ctx,ch,computeRig(ch,pose),pose,{time:position.current,poseName:ANIMATION_CLIPS[clip].pose});ctx.restore();
+      ctx.save();ctx.translate(330,341);ctx.scale(1.34,1.34);drawRig(ctx,ch,computeRig(ch,pose),pose,{time:position.current/ANIMATION_SUBFRAMES,poseName:ANIMATION_CLIPS[clip].pose});ctx.restore();
       if(now-notice>50){setFrame(i);notice=now;}raf=requestAnimationFrame(draw);
-    };raf=requestAnimationFrame(draw);return()=>cancelAnimationFrame(raf);
+    };raf=requestAnimationFrame(draw);return()=>{cancelAnimationFrame(raf);document.removeEventListener('visibilitychange',rebase)};
   },[ch,clip,playing,frames]);
   const reset=()=>{position.current=0;setFrame(0)};
   return <section className="animation-gallery" data-animation-character={ch} data-animation-frame={frame}>
