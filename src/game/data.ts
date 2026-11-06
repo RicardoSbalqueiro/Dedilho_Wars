@@ -1,3 +1,4 @@
+import {SHARK_KISS_DAMAGE} from './shark-choreography';
 // Dados dos personagens: atributos, golpes (frame data) e poses do esqueleto.
 
 export const CHAR_IDS = ['caetano', 'orango', 'tubarao', 'rickzera', 'bieu', 'nomad', 'renngotti', 'aneninha', 'santox', 'jao', 'jane', 'cristyan', 'eneas'] as const;
@@ -292,6 +293,8 @@ const tubaraoPoses: Record<string, Pose> = {
   bite_a: cp({ lean: 42, head: 18, mouth: 1, fa1: 20, fa2: 10, ba1: 125, ba2: 100, fl1: 45, fl2: 90, bl1: 140, bl2: 100 }),
   swallow_s: cp({ lean: 5, fa1: 5, fa2: -10, ba1: 0, ba2: -5, mouth: 1 }),
   swallow_a: cp({ lean: 30, head: -8, fa1: -8, fa2: -15, ba1: -20, ba2: -10, mouth: 1 }),
+  kiss_s: cp({lean:-10,head:10,fa1:65,fa2:-90,ba1:100,ba2:-85}),
+  kiss_a: cp({lean:36,head:8,fa1:10,fa2:-65,ba1:15,ba2:-80,mouth:2}),
   fin_s: cp({ lean: -22, head: 8, fa1: 120, fa2: -100, ba1: 150, ba2: -85 }),
   fin_a: cp({ lean: 60, head: -22, fa1: 135, fa2: 135, ba1: 150, ba2: 140, fl1: 30, fl2: 80, bl1: 145, bl2: 100, mouth: 1 }),
   kiss: cp({ lean: 22, head: 10, fa1: -12, fa2: -80, ba1: -20, ba2: -90, mouth: 2 }),
@@ -333,7 +336,7 @@ const tubaraoMoves: Record<string, Move> = Object.fromEntries(
 Object.assign(tubaraoMoves, Object.fromEntries([
   mv('s1', { kind: 'special', rank: 9, startup: 13, active: 8, recovery: 25, whiff: 12, dmg: 100, hitstun: 27, blockstun: 16, kb: 8, kbBlock: 5, hb: [18, 160, 65, 180], hitstop: 10, shake: 10, power: 2, poses: ['bite_s', 'bite_a'], advance: [8, 22, 6], label: 'MORDIDA' }),
   mv('s2', { kind: 'special', rank: 9, startup: 18, active: 4, recovery: 28, whiff: 20, dmg: 125, hitstun: 0, blockstun: 0, kb: 0, hb: [0, 96, 5, 180], hitstop: 0, power: 2, poses: ['swallow_s', 'swallow_a'], grab: 'engole', unblockable: true, label: 'ENGOLE' }),
-  mv('s3', { kind: 'special', rank: 9, startup: 12, active: 10, recovery: 28, whiff: 16, dmg: 95, hitstun: 28, blockstun: 17, kb: 10, kbBlock: 6, hb: [10, 170, 35, 185], launch: 11, launchVx: 7, hitstop: 12, shake: 14, power: 2.4, poses: ['fin_s', 'fin_a'], advance: [9, 23, 8], label: 'CABEÇADA DE BARBATANA' }),
+  mv('s3', {kind:'special',rank:9,startup:18,active:4,recovery:24,whiff:16,dmg:SHARK_KISS_DAMAGE,hitstun:28,blockstun:14,kb:3,kbBlock:4,hb:[10,110,40,172],hitstop:8,shake:6,power:1.3,poses:['kiss_s','kiss_a'],advance:[14,18,2],label:'BEIJO DO FISCALIZADOR'}),
 ]));
 const rickzeraMoves: Record<string, Move> = Object.fromEntries(
   Object.entries(caetanoMoves).filter(([, m]) => m.kind === 'normal').map(([id, m]) => [id, {
@@ -623,10 +626,10 @@ export const CHARS: Record<CharId, CharDef> = {
     specials: [
       { key: 'U', name: 'MORDIDA', desc: 'Avança com uma mordida poderosa. Pode ser defendida.' },
       { key: 'I', name: 'ENGOLE', desc: 'Agarrão de perto: engole e cospe o rival. Ignora defesa.' },
-      { key: 'O', name: 'CABEÇADA DE BARBATANA', desc: 'Arrancada com armadura que lança o rival para o alto.' },
+      { key:'O',name:'BEIJO DO FISCALIZADOR',desc:'Beijo de perto com corações e 64 de dano. Bloqueável, sem armadura; errar deixa uma abertura.' },
     ],
-    superName: 'BEIJO DO FISCALIZADOR', quote: 'SUA DECLARAÇÃO CAIU NA MALHA FINA.',
-    bio: 'Um tubarão musculoso de pele cinza e sangue frio. Domina o corpo a corpo com mordidas e agarrões.',
+    superName:'QUANDO TERÁ LIVE?', quote: 'SUA DECLARAÇÃO CAIU NA MALHA FINA.',
+    bio:'Mordidas, Engole e um Beijo de perto. Na ULT, vira um tubarão com rosto humanoide, lambe o rival e o lança para longe com uma rabada.',
   },
   rickzera: {
     id: 'rickzera', name: 'RICKZERA', short: 'RICKZERA', title: 'O REI DAS TRANSFERÊNCIAS',
@@ -769,7 +772,7 @@ export const CHARS: Record<CharId, CharDef> = {
 
 // Multi-hit projectiles/zones cost less chip per contact than committed single hits.
 export const SPECIAL_CHIP:Record<CharId,readonly [number,number,number]>={
-  caetano:[.04,.08,.06],orango:[.06,0,0],tubarao:[.05,0,.05],
+  caetano:[.04,.08,.06],orango:[.06,0,0],tubarao:[.05,0,.025],
   rickzera:[.025,.015,.025],bieu:[.06,.03,.015],nomad:[.03,.01,.02],
   renngotti:[0,.04,.04],aneninha:[.04,.015,.035],santox:[.035,.04,0],
   jao:[0,.025,.035],jane:[.015,.015,.035],cristyan:[.035,.05,.04],eneas:[.04,.035,.025],

@@ -30,6 +30,12 @@ A luta usa 60 ticks de simulação por segundo, e abertura, seleção, cenários
 
 Cada um dos 13 lutadores tem **1.098 quadros de animação distintos** em nove ciclos, totalizando **14.274 quadros**, além dos golpes e das cinematográficas. Inspecione-os em **TREINAMENTO → FRAME DATA → ANIMAÇÕES** ou gere o catálogo com `npm run animation:audit`. Os lutadores têm acabamento vetorial inspirado nos pôsteres, sombras de volume e movimentos contínuos. Golpes usam oito etapas visuais sem alterar o frame data; caminhada, salto, defesa, reações, Ultimates e finishers têm novas transições. Impactos leves, fortes e bloqueados recebem sons e efeitos distintos. O convidado online tem suavização visual entre snapshots. Em Configurações, **DICAS DE COMBATE** orienta iniciantes e **REDUZIR FLASHES** atenua os efeitos; as opções também estão no celular. Detalhes e validação em [docs/animation.md](docs/animation.md).
 
+## Tubarão Fiscal: Beijo e Quando terá Live?
+
+**O / Num 6 / ESP 3** agora executa **Beijo do Fiscalizador**, no lugar da Cabeçada de Barbatana. O Beijo causa 64 de dano, é bloqueável em pé e agachado, tem alcance curto e não concede armadura ou invulnerabilidade. A antiga versão como ULT causava 290. Há preparação, recuperação e abertura maior ao errar.
+
+A ULT **Quando terá Live?** transforma o lutador num tubarão de corpo aquático e rosto humanoide: três lambidas precedem uma rabada que arremessa o rival para longe. A animação tem transformação, giro de preparação, impacto, voo e retorno à forma humanoide. O dano total continua 290 (12 + 12 + 12 + 254), sujeito à escala de combos e ao custo/contrajogo das ULTs. O arremesso percorre até 700 unidades, respeitando as bordas da arena. Mordida, Engole, Cabeçada universal e o finisher Maré da Malha Fina continuam disponíveis. [Valores e testes](docs/tubarao.md).
+
 ## Rickzera: novo visual e Soco Inglês
 
 Rick usa camiseta preta de manga curta, braços expostos, calça cargo bege, tênis preto e **soco inglês dourado na mão esquerda**. **I / ESP 2** substitui Linhas do Pix por um soco descendente com **energia verde**, derrubada e cratera no contato com o chão. É um golpe de perto, bloqueável em pé, sem armadura ou invulnerabilidade e com recuperação maior ao errar. A cratera é visual e não causa dano adicional.
@@ -52,7 +58,7 @@ Cancelamentos têm **seis frames de confirmação após o contato**, congelados 
 
 Normais fracos de chão iniciam um frame mais cedo, com mínimo de três; os fortes mantêm seu compromisso. Os ajustes individuais dos agarrões estão na auditoria de balanceamento abaixo. A defesa e os ataques em buffer respondem também no término do hitstun, blockstun e atraso de aterrissagem. Dashes avançam no frame da ativação e aceitam defesa/ataque após quatro frames de compromisso; precisam de dois novos toques. Caminhada acelera e desacelera em poucos frames, e a direção no ar continua limitada à velocidade de salto, inclusive durante ataques aéreos.
 
-Animação e hitbox usam o mesmo frame de ataque. A pose retorna gradualmente ao neutro durante toda a recuperação, com interpolação das articulações pelo caminho angular mais curto. Acertos leves têm som e partículas curtos; impactos fortes recebem graves, partículas maiores e um flash breve. Bloqueios usam som de defesa e efeitos azuis. O painel de treino mostra **ACERTO**, **BLOQUEADO** ou **ERRO**, incluindo projéteis tardios. Combos básicos usam ciano, avançados lilás e punições laranja, sem bônus oculto de dano. O convidado online recebe orientação manual, pose, defesa, escala, classificação e resumo do combo pelo protocolo `dw-online-9`; ambos devem usar a versão atual do jogo.
+Animação e hitbox usam o mesmo frame de ataque. A pose retorna gradualmente ao neutro durante toda a recuperação, com interpolação das articulações pelo caminho angular mais curto. Acertos leves têm som e partículas curtos; impactos fortes recebem graves, partículas maiores e um flash breve. Bloqueios usam som de defesa e efeitos azuis. O painel de treino mostra **ACERTO**, **BLOQUEADO** ou **ERRO**, incluindo projéteis tardios. Combos básicos usam ciano, avançados lilás e punições laranja, sem bônus oculto de dano. O convidado online recebe orientação manual, pose, defesa, escala, classificação e resumo do combo pelo protocolo `dw-online-10`; ambos devem usar a versão atual do jogo.
 
 **Virada manual:** P1 usa **Q**, P2 usa **N**, e o celular tem **VIRAR** acima do direcional. Um aperto inverte a orientação atual imediatamente no chão, em neutro, inclusive agachado ou em guarda. A escolha não tem timeout: caminhada, saltos, ataques normais e cruzamentos mantêm a orientação. Outro aperto inverte novamente. Sofrer um acerto, entrar num agarrão, Clash ou ULT encerra a orientação manual; bloqueios comuns não encerram. Jane preserva a virada automática de seu chute após deslizar; os giros de Caetano e Cristyan mantêm sua coreografia. As hitboxes e os novos projéteis usam a direção escolhida; projéteis já lançados conservam sua trajetória, incluindo retornos/quiques próprios.
 
@@ -68,7 +74,7 @@ Normais causam **zero chip**. Especiais bloqueáveis usam porcentagens individua
 | --- | --- | --- | --- |
 | Caetano | 4% | 8% | 6% |
 | Orango | 6% | 0% | 0% |
-| Tubarão | 5% | 0% | 5% |
+| Tubarão | 5% | 0% | 2,5% |
 | Rickzera | 2,5% | 1,5% | 2,5% |
 | Bieu | 6% | 3% | 1,5% |
 | Nomad | 3% | 1% | 2% |
@@ -127,7 +133,7 @@ Os confrontos têm provocações específicas entre Caetano, Orango, Renngotti e
 | --- | --- | --- | --- | --- |
 | Karatê Caetano | Chute da Conspiração | Dedilho Perfurante | Soco Pego | Conspiração Absoluta |
 | Orango Tango Bitencourt | Dedilho Supremo | Puxão de Camisa | Mordida na Perna | Instinto Primordial |
-| Tubarão Fiscal | Mordida | Engole | Cabeçada de Barbatana | Beijo do Fiscalizador |
+| Tubarão Fiscal | Mordida | Engole | Beijo do Fiscalizador | Quando terá Live? |
 | Rickzera | Arremesso do Franco Suíço (3 notas) | Soco Inglês | Double Jump | Wise 6x |
 | Bieubatman | Chave de Fenda | Jogar Rato | Pichação | Prestígio |
 | Nomad Lobby | Mario Burger | Rajada de Glock | Boomerang | Arena |
@@ -186,7 +192,7 @@ Selecionar um desafio reinicia as posições; o desafio de defesa ativa a IA. Co
 
 ## Balanceamento e limite de distância
 
-O [relatório completo](docs/balance-changes.md) contém o diagnóstico dos 13 lutadores, as fichas por golpe, a tabela **ANTES / DEPOIS**, razões de cada ajuste e limites dos resultados. A busca determinística percorre **19.110 rotas por versão**; seu maior dano observado caiu de **527,43 para 396,90**, sem mudar os totais das ULTs isoladas. Isso não é uma prova do máximo absoluto nem aprovação por jogadores humanos; não usamos winrate de IA para declarar equilíbrio.
+O [relatório da auditoria original](docs/balance-changes.md) contém o diagnóstico dos 13 lutadores, as fichas por golpe, a tabela **ANTES / DEPOIS**, razões de cada ajuste e limites dos resultados. A busca determinística percorre **19.110 rotas por versão**; seu maior dano observado caiu de **527,43 para 396,90**, sem mudar os totais das ULTs isoladas. Isso não é uma prova do máximo absoluto nem aprovação por jogadores humanos; não usamos winrate de IA para declarar equilíbrio.
 
 A escala de combo agora é **100%, 90%, 80%, 70%, 60%, 50%, 40%, 30%, piso 20%**. Sequências cinematográficas herdam a escala na entrada e conservam o dano da abertura no contador. Captura de ULT exatamente no frame de recuperação também conserva a escala; após um frame inteiramente livre, uma nova abertura volta a 100%.
 

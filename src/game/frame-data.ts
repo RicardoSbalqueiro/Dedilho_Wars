@@ -1,14 +1,15 @@
+import {SHARK_ULT_DAMAGE} from './shark-choreography';
 import { CHARS } from './data';
 import type { CharId, Move } from './data';
 import { SUPER_CAPTURE_HEIGHT, SUPER_STARTUP_FRAMES } from './balance';
 
 const PROJECTILES:Partial<Record<CharId,readonly string[]>>={rickzera:['s1'],bieu:['s2','s3'],nomad:['s1','s2','s3'],renngotti:['s2'],aneninha:['s2'],jao:['s1','s2','s3'],jane:['s1'],eneas:['s2','s3']};
 export function isProjectileMove(ch:CharId,id:string){return !!PROJECTILES[ch]?.includes(id)}
-export const ULT_DAMAGE:Record<CharId,number>={caetano:320,orango:341,tubarao:290,rickzera:280,bieu:275,nomad:285,renngotti:315,aneninha:290,santox:240,jao:260,jane:250,cristyan:260,eneas:275};
+export const ULT_DAMAGE:Record<CharId,number>={caetano:320,orango:341,tubarao:SHARK_ULT_DAMAGE,rickzera:280,bieu:275,nomad:285,renngotti:315,aneninha:290,santox:240,jao:260,jane:250,cristyan:260,eneas:275};
 const NOTES:Partial<Record<CharId,Record<string,string>>>={
  caetano:{s2:'Avanço 13/f entre os frames 6–14. Precisão: 73 de dano, 20 de hitstun; permite confirmar em ESP 1.',s3:'Preparação de 30f; 60f de recuperação ao errar. Não tem armadura.'},
  orango:{s1:'Sujeito ao limite de distância. Após o segundo normal médio confirmado, prepara em 16f (24f isolado). Momentum pode ampliar dano direto em até 9%.',s2:'Sem tech. Salte, afaste ou interrompa a preparação. Não captura em hitstun/blockstun.',s3:'Captura baixa, sem tech; avança 90 durante os ativos, depois desacelera. Saltar evita; erro custa 48f.'},
- tubarao:{s2:'Engole: 125 de dano, 18f de preparação, captura curta. Salte/afaste/interrompa. Erro custa 48f.',s3:'Armadura apenas dos frames 4–21; recebe 75% do dano. Agarrões vencem a armadura.'},
+ tubarao:{super:'Quando terá Live?: transformação aquática, três lambidas de 12 e rabada de 254 (290 no total). Arremesso de até 700 unidades, respeitando bordas. Custo, preparação vulnerável e escala seguem as regras universais de ULT.',s2:'Engole: 125 de dano, 18f de preparação, captura curta. Salte/afaste/interrompa. Erro custa 48f.',s3:'Beijo do Fiscalizador: 64 de dano (antiga ULT: 290), 18f de preparação, 4 ativos, 24f de recuperação +16 no erro. Bloqueável, sem armadura, invulnerabilidade, agarrão ou lançamento; alcance curto.'},
  rickzera:{s1:'Três notas de 24, velocidade 12/f, offsets 0/6/12 após startup. Um uso de distância por rajada; escala por contato.',s2:'Soco inglês dourado na esquerda com energia verde: 84 de dano, 24f de preparação, 5 ativos e 29+14 de recuperação no erro. Defenda em pé. Um contato, derrubada descendente e cratera no pouso; sem armadura ou invulnerabilidade.',s3:'Pulo adicional limitado; duração e recuperação reais dependem do pouso.'},
  bieu:{s2:'Rato baixo: defender agachado ou saltar. Velocidade 8/f.',s3:'Zona dura 64 ticks; até 4 contatos com intervalo 14. Blockstun 9 deixa brechas.'},
  nomad:{s1:'Projétil linear, 9/f.',s2:'Rajada alta: 3 disparos de 20 nos offsets 0/8/16. Agachar evita.',s3:'Um acerto na ida e um na volta. Retorna ao dono, não persegue o inimigo. Vida máxima 110.'},

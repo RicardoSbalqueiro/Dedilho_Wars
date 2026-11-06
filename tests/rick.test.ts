@@ -92,7 +92,7 @@ test('floor impact survives particle-heavy online snapshots within the existing 
  assert.equal(snapshot.parts.at(-1)?.x,89);assert.equal(g.parts.filter(p=>p.type==='spark').length,106,'capturing is read-only');
 });
 test('new combat snapshots reject previous protocol',g=>{
- const state=captureState(g);assert.equal(state.v,'dw-online-9');assert.equal(applyState(g,{...state,v:'dw-online-8'}),false);
+ const state=captureState(g);assert.equal(state.v,'dw-online-10');assert.equal(applyState(g,{...state,v:'dw-online-8'}),false);
 });
 test('Rick AI approaches during ranged cooldown and never selects new melee special from long range',g=>{
  const a=g.f[0];a.rangedCooldown=200;g.f[1].x=a.x+340;

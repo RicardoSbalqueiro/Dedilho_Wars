@@ -1,3 +1,4 @@
+import {drawSharkSuper} from './shark-art';
 import { drawFinisherArt } from './finishers-art';
 import { drawViewerSuper, drawFourthWall, drawViewerProjectile, drawChessFloor } from './viewer-art';
 import { drawTrioSuper, drawTrioProjectile, drawTrioMoveFx, drawJaneBike, drawJaneBikeFall, drawJaneDizzy } from './trio-art';
@@ -152,9 +153,10 @@ function drawFx(ctx: CanvasRenderingContext2D, g: Game, f: Fighter, time: number
         }
         ctx.restore();
       }
-      if (m.id === 's3') {
-        spear(ctx, p.head.x - 55, p.head.y + 15, p.head.x + 60, 55, '#67e8f9');
-        orb(ctx, p.head.x, p.head.y + 15, 58, '#06b6d4', 0.4);
+      if(m.id==='s3'&&t>=m.startup-4&&t<m.startup+m.active+9){
+        const age=t-m.startup;
+        heart(ctx,p.head.x+35,p.head.y+12,11+Math.sin(t*.4)*2,'#f9a8d4');
+        for(let i=0;i<3;i++)heart(ctx,p.head.x+42+i*13,p.head.y-8-i*16-Math.max(0,age)*2,5+i*2,'#fbcfe8');
       }
     }
     if (f.ch === 'rickzera') {
@@ -217,14 +219,6 @@ function drawFx(ctx: CanvasRenderingContext2D, g: Game, f: Fighter, time: number
     }
     if (s.kind === 'engole' && t > 20 && t < 65) {
       orb(ctx, p.hip.x + 12, p.hip.y - 26, 65, '#67e8f9', 0.3);
-    }
-    if (s.kind === 'superT') {
-      const pulse = 1 + Math.sin(t * 0.13) * 0.15;
-      heart(ctx, p.head.x + 48, p.head.y - 12, 18 * pulse, '#f472b6');
-      if (t > 40) {
-        heart(ctx, p.head.x + 75, p.head.y - 55, 11, '#fbcfe8');
-        heart(ctx, p.head.x + 20, p.head.y - 75, 8, '#f9a8d4');
-      }
     }
     if (s.kind === 'superR') {
       orb(ctx, p.wF.x, p.wF.y, 38, '#86efac', 0.65);
@@ -1024,7 +1018,7 @@ function drawCine(ctx: CanvasRenderingContext2D, g: Game) {
     ctx.save();
     ctx.translate(W / 2, 128);
     ctx.scale(s, s);
-    label(ctx, f.ch === 'orango' ? 'GRAAAAAAWRRR!!!' : f.ch === 'tubarao' ? 'FISCALIZAÇÃO TOTAL!' : f.ch === 'bieu' ? 'PRESTÍGIO NAS RUAS!' : f.ch === 'nomad' ? 'BEM-VINDO À ARENA!' : f.ch === 'renngotti' ? 'O TILT É INEVITÁVEL!' : f.ch === 'aneninha' ? '¡YO SOY DE BOLIVIA!' : f.ch==='santox'?'FORA DO ROTEIRO!':f.ch==='jao'?'XEQUE-MATE!':f.ch==='jane'?'AREIAZORD ONLINE!':f.ch==='cristyan'?'A REDE VAI CAIR!':f.ch==='eneas'?'MEU NOME É ENÉAS!':'TRANSFERÊNCIA EM 6X!', 0, 0, 46, f.def.glow, f.def.color2, 'center', -0.18, 12);
+    label(ctx, f.ch === 'orango' ? 'GRAAAAAAWRRR!!!' : f.ch === 'tubarao' ? 'QUANDO TERÁ LIVE?!' : f.ch === 'bieu' ? 'PRESTÍGIO NAS RUAS!' : f.ch === 'nomad' ? 'BEM-VINDO À ARENA!' : f.ch === 'renngotti' ? 'O TILT É INEVITÁVEL!' : f.ch === 'aneninha' ? '¡YO SOY DE BOLIVIA!' : f.ch==='santox'?'FORA DO ROTEIRO!':f.ch==='jao'?'XEQUE-MATE!':f.ch==='jane'?'AREIAZORD ONLINE!':f.ch==='cristyan'?'A REDE VAI CAIR!':f.ch==='eneas'?'MEU NOME É ENÉAS!':'TRANSFERÊNCIA EM 6X!', 0, 0, 46, f.def.glow, f.def.color2, 'center', -0.18, 12);
     ctx.restore();
   }
   ctx.restore();
@@ -1034,6 +1028,7 @@ function drawCine(ctx: CanvasRenderingContext2D, g: Game) {
 export function render(ctx: CanvasRenderingContext2D, g: Game, stage: Stage, time: number, remoteNow?:number) {
   ctx.save();
   if(g.finisher){drawFinisherArt(ctx,g.f[g.finisher.winner].ch,g.f[1-g.finisher.winner].ch,g.finisher.t,g.finisher.dur);ctx.restore();return;}
+  if(g.seq?.kind==='superT'){drawSharkSuper(ctx,g.seq.d.ch,g.seq.t,g.seq.dur,g.seq.a.facing);ctx.restore();return;}
   if(g.seq&&(g.seq.a.ch==='jane'||g.seq.a.ch==='cristyan'||g.seq.a.ch==='eneas')&&g.seq.kind.startsWith('super')){drawTrioSuper(ctx,g.seq.a.ch,g.seq.d.ch,g.seq.t,g.seq.dur);ctx.restore();return;}
   if(g.seq&&(g.seq.a.ch==='santox'||g.seq.a.ch==='jao')&&g.seq.kind.startsWith('super')){drawViewerSuper(ctx,g.seq.a.ch,g.seq.d.ch,g.seq.t,g.seq.dur);ctx.restore();return;}
   ctx.fillStyle = '#000';

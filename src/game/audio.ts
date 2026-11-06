@@ -260,6 +260,9 @@ class AudioEngine {
       else this.tone(350,.08,'triangle',.04,800);
     }
   }
+  kiss(){this.tone(650,.08,'sine',.09,950);this.noise(.035,.07,1600,'bandpass');}
+  sharkLick(){this.tone(430,.1,'sine',.08,160);this.noise(.07,.07,900,'bandpass');}
+  sharkTail(){this.whoosh(1.7);this.boom(1.1);this.noise(.18,.16,1400,'lowpass',0,150);}
   knuckleImpact(){
     this.tone(95,.24,'sine',.33,32);this.noise(.16,.22,950,'lowpass',0,120);
     this.noise(.08,.12,3200,'bandpass',.025,1000);this.tone(760,.06,'triangle',.08,320,.015);

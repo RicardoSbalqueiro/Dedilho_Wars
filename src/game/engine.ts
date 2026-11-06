@@ -1,3 +1,4 @@
+import {SHARK_ULT_DURATION,SHARK_ULT_BEATS,SHARK_ULT_TAIL_FRAME,SHARK_ULT_THROW,sharkUltMotion} from './shark-choreography';
 import { matchupLine, FINISHER_CALLS } from './presentation';
 import { challengeDefinition, challengeAvailable, saveChallengeBadge } from './challenges';
 import type { ChallengeId, ChallengeProgress } from './challenges';
@@ -965,7 +966,7 @@ export class Game {
     if (f.ch === 'aneninha' && m.id === 's3') { audio.say('Osasco!', 1.4, 1.1); audio.noise(.35, .17, 1300, 'bandpass'); }
     if(f.ch==='santox'&&m.id==='s3')audio.say('Você aí. Está me vendo?',1.25,1.15);
     if (f.ch === 'tubarao' && m.id === 's1') audio.bite();
-    if (f.ch === 'tubarao' && m.id === 's3') audio.whoosh(1.8);
+    if(f.ch==='tubarao'&&m.id==='s3')audio.kiss();
     if (m.id === 's3' && f.ch === 'orango') audio.roar();
     if (m.id === 's3' && f.ch === 'caetano') audio.say('Soco pego!', 1.2, 1.1);
     if (m.id === 's1' && f.ch === 'caetano') audio.say('Chute da conspiração!', 1.2, 1.1);
@@ -1318,7 +1319,6 @@ export class Game {
     if(f.ch==='jane'&&m.id==='bikeRush'&&f.bikeHits>=6)f.hbActive=false;
     if(f.ch==='jane'&&m.id==='bikeRush'&&t<a1&&t%2===0){this.dust(f.x-f.facing*45,FLOOR_Y,2);this.spark(f.x-f.facing*40,FLOOR_Y-20,'#fde047',2,3,2,10);}
     if(f.ch==='santox'&&m.id==='s3'&&t>=a0&&t<a1){f.invuln=1;this.camOv={x:f.x,zoom:1.75};this.camOvT=2;}
-    if (f.ch === 'tubarao' && m.id === 's3') f.armor = t >= 4 && t < a1;
     if (ranged && (t === a0 || ((rangedKind==='java'||rangedKind==='five')&&t===a0+10) || (rangedKind==='franco'&&(t===a0+6||t===a0+12)) || (rangedKind === 'bullet' && (t === a0 + 8 || t === a0 + 16)))) this.spawnProjectile(f, m);
     this.moveFx(f, m, t, o);
     if (f.connected && this.tryCancel(f)) return;
@@ -2000,7 +2000,7 @@ export class Game {
   }
 
   private startSeq(kind: Seq['kind'], a: Fighter, d: Fighter) {
-    const dur = { puxao: 86, mordida: 78, engole: 100, superC: 215, superO: 215, superT: 150, superR: 170, superB: 160, superN: 150, superG: 155, superA: 206,superS:180,superJ:195,superJane:180,superCristyan:185,superEneas:195, moon: 74, throw:60 }[kind];
+    const dur = { puxao: 86, mordida: 78, engole: 100, superC: 215, superO: 215, superT:SHARK_ULT_DURATION, superR: 170, superB: 160, superN: 150, superG: 155, superA: 206,superS:180,superJ:195,superJane:180,superCristyan:185,superEneas:195, moon: 74, throw:60 }[kind];
     const recovered=kind.startsWith('super')?this.recoveredCombos.get(d):undefined;
     if(recovered){d.comboHits=recovered.hits;d.comboDmg=recovered.damage;d.comboMoves=[...recovered.moves];d.comboKind=recovered.kind;d.comboLastSerial=recovered.serial;}
     const continuing=d.state==='hit'||d.state==='launched'||!!recovered;
@@ -2223,39 +2223,26 @@ export class Game {
   }
 
   private updateSuperT(s: Seq) {
-    const { a, d, t } = s;
-    const f = a.facing;
-    this.camOv = { x: (a.x + d.x) / 2, zoom: t < 85 ? 1.65 : 1.2 };
-    this.camOvT = 2;
-    a.aura = 1;
-    a.poseOverride = t < 72 ? 'kiss' : 'fin_a';
-    d.poseOverride = t < 72 ? 'grabbed' : 'air';
-    if (t < 50) d.x += (a.x + f * 60 - d.x) * 0.15;
-    if (t >= 28 && t <= 68 && t % 8 === 4) {
-      this.text(a.x + f * 45, FLOOR_Y - 175, '♥', '#fb7185', 30 + (t % 3) * 8);
-      this.ring(a.x + f * 45, FLOOR_Y - 145, '#fda4af', 50, 22, 3);
+    const {a,d,t}=s,f=a.facing,motion=sharkUltMotion(t);
+    this.camOv={x:(a.x+d.x)/2,zoom:t<138?1.35:1};this.camOvT=2;
+    a.aura=.6;a.poseOverride=t<30?'roar':t<116?'kiss':t<150?'fin_a':'win';
+    a.y=0;d.hidden=false;d.poseOverride=t<SHARK_ULT_TAIL_FRAME?'grabbed':t<185?'air':'down';
+    if(t<SHARK_ULT_TAIL_FRAME){d.x=a.x+f*80;d.y=-Math.sin(t*.15)*3;d.rotAdd=0;}
+    for(const [at,damage] of SHARK_ULT_BEATS)if(t===at){
+      const tail=t===SHARK_ULT_TAIL_FRAME;
+      this.seqHit(a,d,damage,tail?4:.65,tail?'#a5f3fc':'#f9a8d4');
+      if(tail){
+        this.flash={c:'#a5f3fc',a:.45};this.shake=30;this.hitstop=12;
+        this.text(d.x,FLOOR_Y-160,'RABADA!', '#a5f3fc',46);audio.sharkTail();
+        this.ring(d.x,FLOOR_Y-80,'#7dd3fc',180,26,6);
+      }else{audio.sharkLick();this.text(a.x+f*65,FLOOR_Y-170,'♥','#f9a8d4',28);}
     }
-    if (t === 72) {
-      this.seqHit(a, d, 290, 4, a.def.glow);
-      this.flash = { c: '#e0f2fe', a: 0.95 };
-      this.shake = 40;
-      this.hitstop = 12;
-      this.text(d.x, FLOOR_Y - 160, 'FISCALIZADO!', '#bae6fd', 46);
-      audio.boom(1.5);
-      for (let i = 0; i < 5; i++) this.ring(d.x, FLOOR_Y - 80, i % 2 ? '#7dd3fc' : '#ffffff', 140 + i * 60, 30, 6);
+    if(t>=SHARK_ULT_TAIL_FRAME){
+      d.x=s.x0+f*SHARK_ULT_THROW*motion.flight;d.y=-250*Math.sin(motion.flight*Math.PI);
+      d.rotAdd=motion.flight<1?-motion.flight*Math.PI*2:0;
+      if(t>=185){d.y=0;d.rotAdd=0;}
     }
-    if (t >= 72 && t < 110) {
-      const u = (t - 72) / 38;
-      d.x = s.x0 + f * 340 * u;
-      d.y = -230 * Math.sin(u * Math.PI);
-      d.rotAdd = -u * Math.PI * 2;
-    }
-    if (t >= 110) {
-      d.y = 0;
-      d.rotAdd = 0;
-      d.poseOverride = 'down';
-      a.poseOverride = 'win';
-    }
+    if(t===190)audio.say('Quando terá live?',1.2,.85);
   }
 
   private updateSuperR(s: Seq) {

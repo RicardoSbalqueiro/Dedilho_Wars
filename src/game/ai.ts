@@ -297,11 +297,12 @@ export function aiAct(g: Game, f: Fighter, diff: Difficulty) {
       if (dist > 290) {
         ai.walk = 1;
         ai.stopDist = 120;
-        if (r < 0.2 + P.spec * 0.35) tap('s3');
+        if(r>.85)ai.dashAt=tk+4;
       } else if (dist > 145) {
         ai.walk = 1;
         ai.stopDist = 90;
-        if (r < 0.25 + P.spec * 0.4) tap(rnd() < 0.55 ? 's1' : 's3');
+        if(r<.25+P.spec*.4)tap('s1');
+      } else if(dist<130&&r<P.spec*.25&&!o.guard){tap('s3');ai.walk=0;
       } else if (dist < 115 && r < P.spec * 0.55) {
         tap('s2');
         ai.walk = 0;

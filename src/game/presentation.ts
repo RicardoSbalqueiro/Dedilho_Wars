@@ -4,7 +4,7 @@ export const FIGHTER_STYLE:Record<CharId,{name:string;help:string;victory:string
  orango:{name:'PRESSÃO',help:'Acertos seguidos acumulam até 3 de Ímpeto: mais dano e avanço. Ser atingido ou recuar por muito tempo encerra a pressão.',victory:'A SELVA TEM UM CAMPEÃO'},
  renngotti:{name:'CONTROLE DE ALCANCE',help:'Microfones que não acertam viram armadilhas no chão. Use Grito para ampliar a ressonância dessas zonas.',victory:'O MICROFONE FICOU COM ELE'},
  aneninha:{name:'IMPROVISO',help:'Baixo + ESP 1 troca o soco por uma rasteira. Frente + ESP 2 pinta atrás do rival próximo. Varie os lados e a altura dos ataques.',victory:'OSASCO EM RITMO DE FESTA'},
- tubarao:{name:'AGARRÕES',help:'Aproxime-se, ameace com Mordida e use Engole para punir quem só defende.',victory:'FISCALIZAÇÃO CONCLUÍDA'},
+ tubarao:{name:'AGARRÕES',help:'Mordida avança, Beijo pressiona de perto e Engole pune a guarda. A ULT termina com uma rabada de longa distância.',victory:'FISCALIZAÇÃO CONCLUÍDA'},
  rickzera:{name:'MOBILIDADE',help:'Controle a distância com notas e Pix; mude a trajetória com salto duplo.',victory:'O PIX DA VITÓRIA CAIU'},
  bieu:{name:'ARMADILHAS',help:'Misture o Rato rasteiro, a Pichação e o avanço da Chave de Fenda.',victory:'PRESTÍGIO NA ARENA'},
  nomad:{name:'PROJÉTEIS',help:'Alterne Burger, tiros altos e Boomerang; respeite o cooldown de distância.',victory:'O LOBBY TEM NOVO DONO'},
