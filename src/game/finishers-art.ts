@@ -171,7 +171,7 @@ function banknote(ctx: CanvasRenderingContext2D, x: number, y: number, angle: nu
   ctx.save(); ctx.translate(x, y); ctx.rotate(angle); ctx.scale(scale, scale); ctx.fillStyle = '#a6ffb5'; ctx.fillRect(-32, -17, 64, 34); ctx.strokeStyle = '#286945'; ctx.lineWidth = 3; ctx.strokeRect(-29, -14, 58, 28); ellipse(ctx, 0, 0, 12, 12, '#d7ffcc', '#317653', 1); text(ctx, label, 0, 1, 12, '#2b6543', 50); ctx.restore();
 }
 function rickzera(ctx: CanvasRenderingContext2D, loser: CharId, t: number) {
-  actor(ctx, 'rickzera', 245 + ease(t / 45) * 65, FLOOR, t, t < 45 ? 'franco_s' : 'pix_a');
+  actor(ctx, 'rickzera', 245 + ease(t / 45) * 65, FLOOR, t, t < 45 ? 'franco_s' : 'wise_a');
   actor(ctx, loser, 725, FLOOR - (t >= 70 ? Math.sin(clamp((t - 70) / 76) * Math.PI) * 60 : 0), t, t < 45 ? 'idle' : 'hit', 1.4, true);
   const count = Math.min(6, Math.max(0, Math.floor((t - 42) / 14) + 1));
   for (let i = 0; i < count; i++) {

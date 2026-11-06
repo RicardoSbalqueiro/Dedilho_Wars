@@ -248,15 +248,21 @@ class AudioEngine {
     const p=Math.max(.4,Math.min(2.6,m.power));
     const kick=/^(k|cK|jK)/.test(m.id)||m.trail==='fa'||m.trail==='ba';
     this.noise(kick?.09:.05,.07+p*.025,kick?720:1200,'bandpass',0,kick?2400:3600);
+    if(m.id==='headbutt')this.tone(150,.09,'sine',.1,65);
     // Identifiable material accents. Nothing plays twice for a held input.
     if(m.kind==='special') {
       if(ch==='tubarao')this.noise(.16,.12,3200,'highpass',0,650);
       else if(ch==='santox')this.tone(180,.13,'triangle',.08,740);
+      else if(ch==='rickzera'&&m.id==='s2')this.tone(710,.09,'triangle',.09,260);
       else if(ch==='jane')this.tone(m.id==='s1'?780:130,.11,'triangle',.07,m.id==='s1'?1300:70);
       else if(ch==='renngotti'||ch==='eneas')this.tone(125,.14,'sine',.1,65);
       else if(ch==='orango')this.noise(.11,.1,420,'lowpass');
       else this.tone(350,.08,'triangle',.04,800);
     }
+  }
+  knuckleImpact(){
+    this.tone(95,.24,'sine',.33,32);this.noise(.16,.22,950,'lowpass',0,120);
+    this.noise(.08,.12,3200,'bandpass',.025,1000);this.tone(760,.06,'triangle',.08,320,.015);
   }
   block() {
     this.noise(0.05, 0.3, 3000, 'highpass');

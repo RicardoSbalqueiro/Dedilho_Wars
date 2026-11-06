@@ -1,15 +1,17 @@
 import { Game } from './engine';
 import { computeRig } from './rig';
-export const ONLINE_PROTOCOL = 'dw-online-8';
-const FIELDS = ['x','y','vx','vy','facing','manualFacing','hp','maxHp','dispHp','meter','state','stateT','move','moveT','connected','contact','contactFrame','poseName','impact','hitDone','hbActive','serial','hitstun','blockstun','stunLow','crouch','guard','guardSpentAt','guardResult','guardResultT','guardReadyT','walking','landLag','airAttacked','airJumps','precision','parryCooldown','momentum','momentumT','throwShield','throwTechUntil','rangedUses','rangedCooldown','fourthCooldown','bikeCooldown','bikeTicks','bikeHits','bikeNextHit','bikeDizzy','hidden','juggle','invuln','armor','ko','pose','poseOverride','animT','turn','rotAdd','exprT','exprOverride','expr','glow','aura','comboHits','comboDmg','comboMoves','comboKind','comboLastSerial','comboResult','wins'] as const;
+export const ONLINE_PROTOCOL = 'dw-online-9';
+const FIELDS = ['x','y','vx','vy','facing','manualFacing','hp','maxHp','dispHp','meter','state','stateT','move','moveT','connected','contact','contactFrame','poseName','impact','hitDone','hbActive','serial','hitstun','blockstun','stunLow','groundSmash','crouch','guard','guardSpentAt','guardResult','guardResultT','guardReadyT','walking','landLag','airAttacked','airJumps','precision','parryCooldown','momentum','momentumT','throwShield','throwTechUntil','rangedUses','rangedCooldown','fourthCooldown','bikeCooldown','bikeTicks','bikeHits','bikeNextHit','bikeDizzy','hidden','juggle','invuln','armor','ko','pose','poseOverride','animT','turn','rotAdd','exprT','exprOverride','expr','glow','aura','comboHits','comboDmg','comboMoves','comboKind','comboLastSerial','comboResult','wins'] as const;
 const GLOBAL = ['tick','hitstop','slowmo','paused','phase','phaseT','round','winsNeeded','timeLeft','timeAcc','cam','camOv','camOvT','flash','shake','ann','moveBanner','expl','comboShow','hype','speed','perfect','winner','finisher','finishedBy','elapsedTicks'] as const;
 export interface NetState {v: string; inputAck?:number; f: Record<string, unknown>[]; g: Record<string, unknown>; parts: Game['parts']; projectiles: Game['projectiles']; seq: Record<string, unknown>|null; cine: Record<string, unknown>|null; clash: Record<string, unknown>|null}
 export function captureState(game: Game): NetState {
+  // Keep recent floor impacts visible during particle-heavy online fights.
+  const craters=game.parts.filter(p=>p.type==='crater').slice(-4);
   return {
     v: ONLINE_PROTOCOL,
     f: game.f.map(f=>Object.fromEntries(FIELDS.map(k=>[k,f[k]]))),
     g: Object.fromEntries(GLOBAL.map(k=>[k,game[k]])),
-    parts: game.parts.slice(-60),projectiles:game.projectiles,
+    parts: [...craters,...game.parts.filter(p=>p.type!=='crater').slice(-(60-craters.length))],projectiles:game.projectiles,
     seq: game.seq ? {...game.seq,a:game.seq.a.idx,d:game.seq.d.idx}:null,
     cine: game.cine ? {...game.cine,f:game.cine.f.idx}:null,
     clash: game.clash ? {...game.clash,a:game.clash.a.idx,b:game.clash.b.idx}:null,

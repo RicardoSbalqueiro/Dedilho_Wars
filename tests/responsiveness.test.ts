@@ -109,7 +109,7 @@ for(const state of ['attack','hit','block','getup','dizzy','landing'] as const)f
 for(const recovering of [0,1])game(`held defense blocks a strike on recovery, player ${recovering+1}`,g=>{
   near(g);const d=g.f[recovering],a=g.f[1-recovering];
   const m=d.def.moves.pH;g.startMove(d,m);d.moveT=m.startup+m.active+m.recovery+m.whiff-1;
-  keyboard.down.add(recovering===0?'KeyL':'Numpad3');
+  keyboard.down.add(recovering===0?'KeyE':'Numpad3');
   g.startMove(a,a.def.moves.pL);a.moveT=a.move!.startup;g.step();
   assert.equal(d.state,'block');assert(d.maxHp-d.hp<2);assert.equal(a.contact,'block');
 });

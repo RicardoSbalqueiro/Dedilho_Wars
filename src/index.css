@@ -235,7 +235,8 @@ input[type='range'] {
 @media(pointer:coarse) and (orientation:portrait) {.training-challenge-grid{grid-template-columns:1fr}}
 @media(pointer:coarse) and (orientation:landscape) {.training-touch-widget{top:72px;left:50%;right:auto;transform:translateX(-50%);width:300px;padding:6px 10px}.training-touch-widget button{min-height:36px}.training-touch-widget strong{font-size:10px}}
 
-.touch-buttons .touch-menu {grid-column:auto;width:48px;}
+.touch-buttons .touch-menu {grid-column:1 / -1;width:auto;height:28px;}
+.touch-buttons button[data-touch-action='headbutt'] {font-size:9px;letter-spacing:-.3px;}
 .finisher-prompt{display:flex;align-items:center;justify-content:center;gap:12px;padding:12px 18px;white-space:nowrap;border:2px solid #fde047;border-radius:10px;background:#190a23ed;box-shadow:0 0 24px #facc1544;font-size:12px;}
 .finisher-prompt strong{color:#fde047;}.finisher-prompt span{color:#fff;font-size:16px;}.finisher-prompt p{font-size:11px;color:#ddd6fe;}
 .finisher-prompt button{background:#facc15;color:#210b22;border-radius:6px;padding:10px 15px;cursor:pointer;font-family:var(--font-fight);}

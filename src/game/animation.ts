@@ -79,7 +79,11 @@ export function attackAnimation(ch: CharId, m: Move, frame: number, connected: b
       [activeEnd, follow], [end - 1, idle]];
   }
   // Engine-controlled spins must not be recreated as skeletal rotations.
-  return sampleTrack(keys, Math.max(0, frame));
+  const result=sampleTrack(keys,Math.max(0,frame));
+  if(ch==='rickzera'&&m.id==='s1'&&frame>=m.startup&&frame<activeEnd){
+    const flick=Math.sin(((frame-m.startup)%6)/6*Math.PI);result.ba1-=flick*8;result.ba2-=flick*6;
+  }
+  return result;
 }
 
 export interface MotionState {

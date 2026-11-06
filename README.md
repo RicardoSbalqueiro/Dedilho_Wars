@@ -30,6 +30,18 @@ A luta usa 60 ticks de simulação por segundo, e abertura, seleção, cenários
 
 Cada um dos 13 lutadores tem **1.098 quadros de animação distintos** em nove ciclos, totalizando **14.274 quadros**, além dos golpes e das cinematográficas. Inspecione-os em **TREINAMENTO → FRAME DATA → ANIMAÇÕES** ou gere o catálogo com `npm run animation:audit`. Os lutadores têm acabamento vetorial inspirado nos pôsteres, sombras de volume e movimentos contínuos. Golpes usam oito etapas visuais sem alterar o frame data; caminhada, salto, defesa, reações, Ultimates e finishers têm novas transições. Impactos leves, fortes e bloqueados recebem sons e efeitos distintos. O convidado online tem suavização visual entre snapshots. Em Configurações, **DICAS DE COMBATE** orienta iniciantes e **REDUZIR FLASHES** atenua os efeitos; as opções também estão no celular. Detalhes e validação em [docs/animation.md](docs/animation.md).
 
+## Rickzera: novo visual e Soco Inglês
+
+Rick usa camiseta preta de manga curta, braços expostos, calça cargo bege, tênis preto e **soco inglês dourado na mão esquerda**. **I / ESP 2** substitui Linhas do Pix por um soco descendente com **energia verde**, derrubada e cratera no contato com o chão. É um golpe de perto, bloqueável em pé, sem armadura ou invulnerabilidade e com recuperação maior ao errar. A cratera é visual e não causa dano adicional.
+
+**U / ESP 1** lança três notas suíças em sequência, contando como um uso no limite de ataques à distância. Cada nota causa 24 de dano antes da redução progressiva de combo; a preparação e o compromisso da rajada foram preservados. Double Jump, Wise 6x e o finisher continuam disponíveis. Valores antes/depois e validação em [docs/rickzera.md](docs/rickzera.md).
+
+## Cabeçada e novos controles
+
+**P1: E defende, L dá Cabeçada.** P2 mantém Num 3 / barra para defender e ganha Num 9 / `[` para Cabeçada. O celular tem um botão CABEÇADA separado, e os controles podem ser reconfigurados. Q/E continuam trocando categorias nos menus.
+
+Os 13 lutadores têm uma cabeçada de perto, com animação própria, dano proporcional à força dos seus normais, 14f de preparação, três ativos, 24f de recuperação e mais 12f no erro. É bloqueável em pé e agachado, sem chip, armadura, invulnerabilidade, lançamento ou cancelamento de saída. Pode entrar após um normal confirmado, dentro da janela já existente; não repete automaticamente ao segurar. Veja [regras, migração e testes](docs/headbutt.md).
+
 ## Combate e estilos
 
 A troca simultânea de golpes resolve os dois contatos; um double KO empata o round. Comandos de combo permanecem disponíveis durante a pausa de impacto, ataques de chão não interrompem a gravidade no ar, e a defesa responde já no primeiro instante após o hitstun. Há aceleração curta de caminhada e controle limitado da direção no salto. Caixas de ataque usam o golpe e a direção capturados no contato, incluindo espelhamento e projéteis; o modo de colisões continua disponível nas configurações.
@@ -40,13 +52,13 @@ Cancelamentos têm **seis frames de confirmação após o contato**, congelados 
 
 Normais fracos de chão iniciam um frame mais cedo, com mínimo de três; os fortes mantêm seu compromisso. Os ajustes individuais dos agarrões estão na auditoria de balanceamento abaixo. A defesa e os ataques em buffer respondem também no término do hitstun, blockstun e atraso de aterrissagem. Dashes avançam no frame da ativação e aceitam defesa/ataque após quatro frames de compromisso; precisam de dois novos toques. Caminhada acelera e desacelera em poucos frames, e a direção no ar continua limitada à velocidade de salto, inclusive durante ataques aéreos.
 
-Animação e hitbox usam o mesmo frame de ataque. A pose retorna gradualmente ao neutro durante toda a recuperação, com interpolação das articulações pelo caminho angular mais curto. Acertos leves têm som e partículas curtos; impactos fortes recebem graves, partículas maiores e um flash breve. Bloqueios usam som de defesa e efeitos azuis. O painel de treino mostra **ACERTO**, **BLOQUEADO** ou **ERRO**, incluindo projéteis tardios. Combos básicos usam ciano, avançados lilás e punições laranja, sem bônus oculto de dano. O convidado online recebe orientação manual, pose, defesa, escala, classificação e resumo do combo pelo protocolo `dw-online-8`; ambos devem usar a versão atual do jogo.
+Animação e hitbox usam o mesmo frame de ataque. A pose retorna gradualmente ao neutro durante toda a recuperação, com interpolação das articulações pelo caminho angular mais curto. Acertos leves têm som e partículas curtos; impactos fortes recebem graves, partículas maiores e um flash breve. Bloqueios usam som de defesa e efeitos azuis. O painel de treino mostra **ACERTO**, **BLOQUEADO** ou **ERRO**, incluindo projéteis tardios. Combos básicos usam ciano, avançados lilás e punições laranja, sem bônus oculto de dano. O convidado online recebe orientação manual, pose, defesa, escala, classificação e resumo do combo pelo protocolo `dw-online-9`; ambos devem usar a versão atual do jogo.
 
 **Virada manual:** P1 usa **Q**, P2 usa **N**, e o celular tem **VIRAR** acima do direcional. Um aperto inverte a orientação atual imediatamente no chão, em neutro, inclusive agachado ou em guarda. A escolha não tem timeout: caminhada, saltos, ataques normais e cruzamentos mantêm a orientação. Outro aperto inverte novamente. Sofrer um acerto, entrar num agarrão, Clash ou ULT encerra a orientação manual; bloqueios comuns não encerram. Jane preserva a virada automática de seu chute após deslizar; os giros de Caetano e Cristyan mantêm sua coreografia. As hitboxes e os novos projéteis usam a direção escolhida; projéteis já lançados conservam sua trajetória, incluindo retornos/quiques próprios.
 
 Virar não cancela ataque, hitstun, blockstun, dash, atraso de aterrissagem, agarrão ou cinematográfica. Nesses estados o comando usa o buffer normal de 9 frames e só executa ao ficar legal; entradas antigas expiram. A virada não altera invulnerabilidade, velocidade, dano, barra ou tempos dos golpes. Q/E continuam trocando categorias na seleção. Controles antigos são preservados: se Q já for agarrão ou outro comando, Virar recebe uma tecla livre. A configuração mostra conflitos e recusa novas atribuições que apagariam outro comando. A tecla de virada também pode ser remapeada com teclado conectado no menu móvel.
 
-**Defesa:** segure **L** para altos e médios, **S + L** para baixos e médios. Ataques que exigem defesa em pé vencem a guarda agachada; agarrões continuam ignorando a defesa. Pode manter o botão durante hitstun: a guarda responde no primeiro frame livre, sem interromper combos verdadeiros ou a recuperação de seus ataques. A defesa não cobre os frames vulneráveis de aterrissagem. A orientação manual não exige um comando adicional para defender.
+**Defesa:** segure **E** para altos e médios, **S + E** para baixos e médios. Ataques que exigem defesa em pé vencem a guarda agachada; agarrões continuam ignorando a defesa. Pode manter o botão durante hitstun: a guarda responde no primeiro frame livre, sem interromper combos verdadeiros ou a recuperação de seus ataques. A defesa não cobre os frames vulneráveis de aterrissagem. A orientação manual não exige um comando adicional para defender.
 
 A **defesa perfeita universal** aceita um novo aperto nos três frames antes do contato (idades 0, 1 e 2). Ela reduz o blockstun para 60%, arredondado para cima, com mínimo de quatro frames, e produz anel ciano e som próprio. Cada aperto só pode gerar uma perfeita; manter o botão, recuperar o controle ou congelar o buffer no hitstop não renova essa janela. Não concede invulnerabilidade. **Karatê Caetano** tem uma janela especial de cinco frames: Leitura zera o chip, deixa quatro frames de blockstun e carrega Precisão por dois segundos, com recarga de 24 frames. Durante a recarga ele ainda pode usar a perfeita universal, sem renovar Precisão. O HUD diferencia guarda/bloqueio alto, baixo e perfeito e mostra **LIVRE PARA RESPONDER** quando o blockstun termina; iniciar outro ataque apaga esse indicador. No celular, uma faixa legível acima dos controles repete a defesa e o momento de responder.
 
@@ -116,7 +128,7 @@ Os confrontos têm provocações específicas entre Caetano, Orango, Renngotti e
 | Karatê Caetano | Chute da Conspiração | Dedilho Perfurante | Soco Pego | Conspiração Absoluta |
 | Orango Tango Bitencourt | Dedilho Supremo | Puxão de Camisa | Mordida na Perna | Instinto Primordial |
 | Tubarão Fiscal | Mordida | Engole | Cabeçada de Barbatana | Beijo do Fiscalizador |
-| Rickzera | Arremesso do Franco Suíço | Linhas do Pix | Double Jump | Wise 6x |
+| Rickzera | Arremesso do Franco Suíço (3 notas) | Soco Inglês | Double Jump | Wise 6x |
 | Bieubatman | Chave de Fenda | Jogar Rato | Pichação | Prestígio |
 | Nomad Lobby | Mario Burger | Rajada de Glock | Boomerang | Arena |
 | Renngotti | Joga pra Lua | Jogar Microfone | Grito Alto | TILT |
@@ -156,7 +168,7 @@ Os modos offline continuam sem cadastro. Resultados do P1 têm histórico e tota
 
 ## Celular e tablet
 
-Os menus têm botões e formulários em tamanho nativo. Durante a luta aparece um direcional de toque com diagonais, salto e agachamento, além de soco, chute, defesa, três especiais e ULT. Vários dedos podem ser usados juntos; toques rápidos são registrados. O botão MENU abre a pausa local ou a saída da partida online.
+Os menus têm botões e formulários em tamanho nativo. Durante a luta aparece um direcional de toque com diagonais, salto e agachamento, além de soco, chute, cabeçada, defesa, três especiais e ULT. Vários dedos podem ser usados juntos; toques rápidos são registrados. O botão MENU abre a pausa local ou a saída da partida online.
 
 É possível jogar na vertical, com a arena em 16:9 acima dos controles, ou na horizontal. A mudança de orientação preserva a partida. Música, configurações e desafios também têm telas adaptadas. Os botões de toque controlam o P1 no versus local; o segundo jogador pode usar um teclado conectado.
 
@@ -194,14 +206,16 @@ Bieubatman recebeu redução de aproximadamente 9% nos normais, Chave de Fenda 8
 | --- | --- | --- |
 | Mover | A / D | Setas esquerda / direita |
 | Pular / agachar | W / S | Setas cima / baixo |
-| Soco / chute / defesa | J / K / L | Num 1 / Num 2 / Num 3 |
+| Soco / chute | J / K | Num 1 / Num 2 |
+| Defesa | E | Num 3 ou / |
+| Cabeçada | L | Num 9 ou [ |
 | Virar | Q | N |
 | Especiais | U / I / O | Num 4 / Num 5 / Num 6 |
 | ULT / Finisher | H | Num 0 |
 | Agarrar | G | Num 7 ou B |
 | Pausar | Esc ou P | Esc ou P |
 
-Sem numpad, P2 também usa vírgula, ponto e barra para soco/chute/defesa; ponto e vírgula, apóstrofo e Enter para especiais; Shift direito para ULT. Ative Num Lock. As teclas podem ser alteradas em Controles.
+Sem numpad, P2 também usa vírgula, ponto e barra para soco/chute/defesa; ponto e vírgula, apóstrofo e Enter para especiais; Shift direito para ULT. Ative Num Lock. As teclas podem ser alteradas em Controles. O antigo preset intacto migra de L para E na defesa e passa L para Cabeçada; configurações personalizadas são preservadas, e a nova ação recebe uma tecla livre.
 
 Segure baixo para agachar e reduzir a caixa de colisão. Baixo + Defesa bloqueia golpes rasteiros; ataques aéreos altos exigem defesa em pé. Soco/chute agachado usa os ataques baixos do personagem. No treino, R reinicia posições e T troca o comportamento do oponente.
 

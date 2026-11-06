@@ -52,7 +52,7 @@ export interface GameEvent {
 }
 
 export interface Particle {
-  type: 'spark' | 'dust' | 'ring' | 'streak' | 'leaf' | 'glow' | 'text';
+  type: 'spark' | 'dust' | 'ring' | 'streak' | 'leaf' | 'glow' | 'text' | 'crater';
   x: number;
   y: number;
   vx: number;
@@ -96,6 +96,7 @@ export interface Fighter {
   hitstun: number;
   blockstun: number;
   stunLow: boolean;
+  groundSmash:boolean;
   crouch: boolean;
   guard: boolean;
   guardSpentAt:number;
@@ -163,7 +164,7 @@ const SUPER_SEQUENCE={caetano:'superC',orango:'superO',tubarao:'superT',rickzera
 export interface Projectile {
   owner: 0 | 1;
   launchFacing?:1|-1;
-  kind: 'franco' | 'pix' | 'rat' | 'spray' | 'burger' | 'bullet' | 'boomerang' | 'bazooka' | 'microphone' | 'osasco' | 'chess' | 'formula' | 'basketball' | 'java' | 'ecg' | 'five' | 'six';
+  kind: 'franco' | 'rat' | 'spray' | 'burger' | 'bullet' | 'boomerang' | 'bazooka' | 'microphone' | 'osasco' | 'chess' | 'formula' | 'basketball' | 'java' | 'ecg' | 'five' | 'six';
   bounces?: number;
   age?: number;
   returning?: boolean;
@@ -227,7 +228,7 @@ function makeFighter(idx: 0 | 1, ch: CharId, cpu: boolean): Fighter {
     move: null,
     moveT: 0,
     connected: false,
-    contact:'pending',contactFrame:-1,poseName:'idle',impact:null,
+    contact:'pending',contactFrame:-1,poseName:'idle',impact:null,groundSmash:false,
     hitDone: false,
     hbActive: false,
     serial: 0,
@@ -385,7 +386,7 @@ export class Game {
       f.state = 'ground';
       f.stateT = 0;
       f.move = null;
-      f.contact='pending';f.contactFrame=-1;f.poseName='idle';f.impact=null;
+      f.contact='pending';f.contactFrame=-1;f.poseName='idle';f.impact=null;f.groundSmash=false;
       f.hbActive = false;
       f.hitstun = f.blockstun = 0;
       f.landLag = 0;
@@ -857,6 +858,7 @@ export class Game {
         pad.consume(s);return true;
       }
     }
+    if(pad.buffered('headbutt',tk)&&this.startMove(f,f.def.moves.headbutt)){pad.consume('headbutt');return true;}
     for (const b of ['p', 'k'] as const) {
       if (pad.buffered(b, tk) && this.startMove(f, f.def.moves[this.pickNormal(f, b)])) {
         pad.consume(b);return true;
@@ -968,12 +970,14 @@ export class Game {
     if (m.id === 's3' && f.ch === 'caetano') audio.say('Soco pego!', 1.2, 1.1);
     if (m.id === 's1' && f.ch === 'caetano') audio.say('Chute da conspiração!', 1.2, 1.1);
     if (m.id === 's2' && f.ch === 'caetano') audio.say('Dedilho!', 1.3, 1.2);
+    if(f.ch==='rickzera'&&m.id==='s2')audio.say('Soco inglês!',1.1,1.15);
     this.trainingEvent('start',f,m.id);
     return true;
   }
 
   private tryCancel(f: Fighter): boolean {
     const m = f.move!;
+    if(m.id==='headbutt')return false; // Its short range and recovery are a real commitment.
     const pad = f.pad;
     const tk = this.tick;
     if (!f.connected || f.contactFrame<0 || f.moveT-f.contactFrame>CANCEL_CONFIRM_FRAMES || this.phase !== 'fight' || (f.ch==='jane'&&['s2','bikeRush','s3'].includes(m.id))) return false;
@@ -998,6 +1002,7 @@ export class Game {
       return true;
     }
     if (m.kind === 'normal') {
+      if(clean&&m.rank<3&&pad.buffered('headbutt',tk)&&this.startMove(f,f.def.moves.headbutt)){pad.consume('headbutt');return true;}
       for (const s of ['s1', 's2', 's3'] as const) {
         if (clean && pad.buffered(s, tk)) {
           let special=f.def.moves[s];
@@ -1219,6 +1224,7 @@ export class Game {
           audio.land();
           this.dust(f.x, FLOOR_Y, 8);
           this.shake = Math.max(this.shake, f.ko ? 14 : 6);
+          if(f.groundSmash){f.groundSmash=false;this.knuckleCrater(f.x);}
         }
         break;
       case 'down':
@@ -1313,7 +1319,7 @@ export class Game {
     if(f.ch==='jane'&&m.id==='bikeRush'&&t<a1&&t%2===0){this.dust(f.x-f.facing*45,FLOOR_Y,2);this.spark(f.x-f.facing*40,FLOOR_Y-20,'#fde047',2,3,2,10);}
     if(f.ch==='santox'&&m.id==='s3'&&t>=a0&&t<a1){f.invuln=1;this.camOv={x:f.x,zoom:1.75};this.camOvT=2;}
     if (f.ch === 'tubarao' && m.id === 's3') f.armor = t >= 4 && t < a1;
-    if (ranged && (t === a0 || ((rangedKind==='java'||rangedKind==='five')&&t===a0+10) || ((rangedKind === 'pix' || rangedKind === 'bullet') && (t === a0 + 8 || t === a0 + 16)))) this.spawnProjectile(f, m);
+    if (ranged && (t === a0 || ((rangedKind==='java'||rangedKind==='five')&&t===a0+10) || (rangedKind==='franco'&&(t===a0+6||t===a0+12)) || (rangedKind === 'bullet' && (t === a0 + 8 || t === a0 + 16)))) this.spawnProjectile(f, m);
     this.moveFx(f, m, t, o);
     if (f.connected && this.tryCancel(f)) return;
     f.moveT++;
@@ -1364,7 +1370,7 @@ export class Game {
   }
 
   private projectileKind(f: Fighter, m: Move): Projectile['kind'] | null {
-    if (f.ch === 'rickzera') return m.id === 's1' ? 'franco' : m.id === 's2' ? 'pix' : null;
+    if (f.ch === 'rickzera') return m.id === 's1' ? 'franco' : null;
     if (f.ch === 'bieu') return m.id === 's2' ? 'rat' : m.id === 's3' ? 'spray' : null;
     if (f.ch === 'nomad') return m.id === 's1' ? 'burger' : m.id === 's2' ? 'bullet' : m.id === 's3' ? 'boomerang' : null;
     if (f.ch === 'renngotti') return m.id === 's2' ? 'microphone' : null;
@@ -1389,7 +1395,7 @@ export class Game {
       this.ring(f.x+f.facing*230,FLOOR_Y-5,f.def.glow,220,25,4);audio.tone(330,.2,'triangle',.14,660);return;
     }
     if(kind==='five'&&f.moveT>m.startup){kind='six';m={...m,dmg:34,launch:0,spike:true,kb:6,hitstun:22,poses:['five_s','six_a']};}
-    const speed = { franco: 12, pix: 16, rat: 8, spray: 0, burger: 9, bullet: 20, boomerang: 11, bazooka: 20, microphone: 11, osasco: 0,formula:10,basketball:9,java:10,ecg:11,five:10,six:10 }[kind];
+    const speed = { franco: 12, rat: 8, spray: 0, burger: 9, bullet: 20, boomerang: 11, bazooka: 20, microphone: 11, osasco: 0,formula:10,basketball:9,java:10,ecg:11,five:10,six:10 }[kind];
     const y = kind==='java'?-72:kind==='ecg'?-96:kind==='five'||kind==='six'?-100:kind === 'rat' ? -18 : kind === 'bullet' ? -145 : kind === 'spray' || kind === 'osasco' ? -70 : kind === 'microphone' ? -115 : -104;
     const radius = kind === 'osasco' ? 48 : kind === 'spray' ? 62 : kind === 'rat' ? 14 : kind === 'bullet' ? 6 : kind === 'burger' ? 25 : 20;
     this.projectiles.push({ owner: f.idx, launchFacing:f.facing, kind, x: kind==='osasco'&&m.variant==='reverse'&&Math.abs(f.x-this.opp(f).x)<220?this.opp(f).x+f.facing*80:f.x + f.facing * (kind === 'spray' || kind === 'osasco' ? 115 : 65), y, vx: f.facing * speed, life: kind === 'osasco' ? 96 : kind === 'spray' ? 64 : kind === 'boomerang' ? 110 : 95, serial: f.serial, move: m, age: 0, radius:kind==='basketball'?23:radius, vy: kind === 'microphone' ? -2.4 : kind==='basketball'?-2.3:undefined });
@@ -1696,6 +1702,7 @@ export class Game {
     d.stunLow = m.level === 'low' || d.crouch;
     d.hitstun = m.hitstun;
     d.stateT = 0;
+    d.groundSmash=a.ch==='rickzera'&&m.id==='s2';
     if (m.launch > 0 || air) {
       d.state = 'launched';
       d.vy = m.spike?9:-(m.launch > 0 ? m.launch : 6.5);
@@ -1713,7 +1720,7 @@ export class Game {
     this.hitFx(a, d, m, px, py);
     if (this.training) this.train.idle = 0;
     if (d.hp <= 0) {
-      d.vy = -11;
+      d.vy = d.groundSmash?9:-11;
       d.vx = dir * 7;
       d.y = Math.min(d.y, -2);
       d.state = 'launched';
@@ -1763,7 +1770,19 @@ export class Game {
       this.text(px, py - 60, 'SMASH!', '#fecaca', 50);
     }
     if (a.ch === 'caetano' && m.id === 's1') this.spark(px, py, '#e9d5ff', 22, 11, 4, 20);
+    if(a.ch==='rickzera'&&m.id==='s2'){
+      this.spark(px,py,'#a3ff36',12,7,3,20);
+      this.ring(px,py,'#39df71',75,18,4);
+      this.flash={c:'#65ef80',a:.28};
+    }
     void d;
+  }
+
+  private knuckleCrater(x:number){
+    this.dust(x,FLOOR_Y,10);this.spark(x,FLOOR_Y-6,'#a3ff36',16,8,3,24);
+    this.ring(x,FLOOR_Y-4,'#86efac',84,20,4);
+    this.parts.push({type:'crater',x,y:FLOOR_Y+4,vx:0,vy:0,life:180,max:180,size:64,color:'#a3ff36',g:0,rot:0,grow:0});
+    this.shake=Math.max(this.shake,15);audio.knuckleImpact();
   }
 
   private recordImpact(d:Fighter,kind:NonNullable<Fighter['impact']>['kind'],strength:number){
@@ -1771,6 +1790,7 @@ export class Game {
   }
 
   // ------------------------------------------------------------ DEDILHO CLASH
+
   private startClash(a: Fighter, b: Fighter,kind:Clash['kind']='dedilho') {
     this.clash = { kind,startedAt:this.tick,pending:[0,0],a, b, t:this.cfg.online?-60:0,c: [0, 0], m: [a.move!, b.move!], x: (a.x + b.x) / 2 };
     for (const f of [a, b]) {
@@ -1989,7 +2009,7 @@ export class Game {
     this.seq = { kind, a, d, t: 0, dur, x0: d.x, damageScale:comboDamageScale(d.comboHits) };
     a.state = 'seq';
     d.state = 'seq';
-    for(const f of [a,d]){f.manualFacing=false;f.guardResultT=f.guardReadyT=0;f.landLag=0;}
+    for(const f of [a,d]){f.manualFacing=false;f.guardResultT=f.guardReadyT=0;f.landLag=0;f.groundSmash=false;}
     this.interruptBike(a);this.interruptBike(d);
     a.move = d.move = null;
     a.hbActive = d.hbActive = false;
@@ -2246,7 +2266,7 @@ export class Game {
     a.aura = a.glow = 1;
     const beats = [18, 38, 58, 78, 98, 122];
     const i = beats.indexOf(t);
-    a.poseOverride = t < 122 ? ['franco_a', 'pM_a', 'pix_a', 'kM_a', 'pH_a'][Math.min(4, Math.floor(t / 24))] : 'pix_a';
+    a.poseOverride = t < 122 ? ['franco_a', 'pM_a', 'wise_a', 'kM_a', 'pH_a'][Math.min(4, Math.floor(t / 24))] : 'wise_a';
     d.poseOverride = 'hit';
     d.x = a.x + f * 105;
     if (i >= 0) {

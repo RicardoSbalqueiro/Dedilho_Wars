@@ -161,6 +161,9 @@ export function aiAct(g: Game, f: Fighter, diff: Difficulty) {
       return;
     }
     if(dist<82&&o.y===0&&o.guard&&o.blockstun<=0&&o.throwShield===0&&r<.3){tap('grab');return;}
+    if(o.move&&o.state==='attack'&&o.y===0&&o.moveT>=o.move.startup+o.move.active&&
+      o.move.startup+o.move.active+o.move.recovery+(o.connected?0:o.move.whiff)-o.moveT>f.def.moves.headbutt.startup+2&&
+      dist<f.def.moves.headbutt.hb[1]+o.def.pushW&&r<P.aggr*.3){tap('headbutt');ai.walk=0;return;}
     if (f.ch === 'caetano') {
       if (dist > 300) {
         ai.walk = 1;
@@ -219,13 +222,12 @@ export function aiAct(g: Game, f: Fighter, diff: Difficulty) {
       else {ai.walk=dist<260?-1:1;ai.stopDist=310;if(r>.85)tap('up');}
     } else if (f.ch === 'rickzera') {
       if (dist > 270) {
-        ai.walk = dist > 620 ? 1 : 0;
-        ai.stopDist = 480;
-        if (r < 0.45 * P.spec + 0.2) tap('s1');
-        else if (r < 0.7 * P.spec + 0.25) tap('s2');
+        ai.walk = dist > 620 || f.rangedCooldown>0 ? 1 : 0;
+        ai.stopDist = f.rangedCooldown>0 ? 140 : 480;
+        if (f.rangedCooldown===0&&r < 0.45 * P.spec + 0.2) tap('s1');
         else if (r > 0.8 && dist < 550) tap('s3');
       } else if (dist > 145) {
-        if (r < 0.2 + P.spec * 0.35) tap('s2');
+        if (dist<175&&o.y===0&&r < 0.2 + P.spec * 0.35) tap('s2');
         else if (r < 0.5) tap('s3');
         else { ai.walk = 1; ai.stopDist = 100; }
       } else if (r < P.aggr) {

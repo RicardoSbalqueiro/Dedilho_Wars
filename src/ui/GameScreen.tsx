@@ -149,9 +149,9 @@ export function GameScreen({ cfg, onExit, onSelect, onMap, onRadio, inputSuspend
           )}
           {cfg.mode === 'training' && <button className="text-xs py-2 px-4 bg-white/10 rounded cursor-pointer" onClick={() => {if(g){g.train.dummy=(g.train.dummy+1)%4;g.f[1].cpu=g.train.dummy===1;g.f[1].pad.reset();setDummy(g.train.dummy)}}}>OPONENTE: {['PARADO','IA','DEFENDE','P2'][g?.train.dummy ?? dummy]}</button>}
           <div className="mt-3 text-[10px] text-white/60 text-center leading-5">
-            P1: G agarrar · A/D mover · W pular · S agachar · J soco · K chute · L defesa · U/I/O especiais · H super
+            P1: G agarrar · A/D mover · W pular · S agachar · J soco · K chute · L cabeçada · E defesa · U/I/O especiais · H super
             <br />
-            P2: Num 7 agarrar · Setas · Num 1/2/3 soco/chute/defesa · Num 4/5/6 especiais · Num 0 super (ou , . / ; &apos; Enter ShiftD)
+            P2: Num 9 cabeçada · Num 7 agarrar · Setas · Num 1/2/3 soco/chute/defesa · Num 4/5/6 especiais · Num 0 super (ou , . / ; &apos; Enter ShiftD)
           </div>
         </div></GameOverlay>
       )}

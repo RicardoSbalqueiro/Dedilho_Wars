@@ -41,7 +41,7 @@ check('explicit custom/unassigned turn and old duplicate controls are preserved 
  (globalThis as any).localStorage={getItem:()=>JSON.stringify(b)};
  try{assert.deepEqual(loadBindings(),b);assert(bindingNotices(b).some(s=>s.includes('conflito')));assert(bindingNotices(b).some(s=>s.includes('sem tecla')))}finally{delete (globalThis as any).localStorage}
  assert.equal(DEFAULT_BINDINGS[0].turn[0],'KeyQ');assert.equal(DEFAULT_BINDINGS[1].turn[0],'KeyN');
- assert.equal(ACTIONS.indexOf('grab'),11);assert.equal(ACTIONS.indexOf('turn'),12);assert.equal(MAX_INPUT_MASK,8191);
+ assert.equal(ACTIONS.indexOf('grab'),11);assert.equal(ACTIONS.indexOf('turn'),12);assert.equal(MAX_INPUT_MASK,16383);
  assert.match(bindingConflict(DEFAULT_BINDINGS,0,'turn','KeyP')!,/Pausa/);
 });
 
@@ -108,7 +108,7 @@ game('Jane slide keeps its original automatic kick turn on frame 18',g=>{
  f.moveT=17;f.pad.tap('turn',0);g.step();assert.equal(f.facing,-1);g.step();assert.equal(f.facing,1);assert.equal(f.move?.id,'s3');
 },'jane');
 game('released projectiles keep velocity while new projectiles use the new facing',g=>{
- const f=g.f[0];g.startMove(f,f.def.moves.s1);step(g,45);const old=g.projectiles[0];assert(old&&old.vx>0);const x=old.x;
+ const f=g.f[0];g.startMove(f,f.def.moves.s1);while(f.move)g.step();const old=g.projectiles[0];assert(old&&old.vx>0);const x=old.x;
  f.pad.tap('turn',g.tick);g.step();assert.equal(f.facing,-1);assert(old.x>x&&old.vx>0);assert.equal(old.launchFacing,1);
  f.pad.tap('s1',g.tick);g.step();step(g,f.def.moves.s1.startup+1);const fresh=g.projectiles.find(p=>p.serial===f.serial);
  assert(fresh&&fresh.vx<0);assert.equal(fresh.launchFacing,-1);
@@ -142,13 +142,13 @@ for(const state of ['attack','hit','launched','dizzy'] as const)game(`${state}: 
  assert.equal(d.state,state==='launched'?'launched':'hit');assert(d.hp<d.maxHp);assert.equal(d.facing,facing);
 });
 game('landing lag remains punishable until its final frame',g=>{
- near(g);const [d,a]=g.f;d.landLag=4;keyboard.down.add('KeyL');g.step();assert(!d.guard);
+ near(g);const [d,a]=g.f;d.landLag=4;keyboard.down.add('KeyE');g.step();assert(!d.guard);
  g.startMove(a,a.def.moves.pL);a.moveT=a.move!.startup;g.step();assert.equal(d.state,'hit');assert(d.hp<d.maxHp);
  assert.equal(d.landLag,0,'hitstun replaces the old landing commitment');g.hitstop=0;step(g,d.hitstun-1);
  a.x=d.x+60;g.startMove(a,a.def.moves.pL);a.moveT=a.move!.startup;g.step();assert.equal(d.state,'block','held defense works on the first recovered frame after a landing punish');
 });
 game('held defense blocks on the first recovered frame, not during true hitstun',g=>{
- near(g);const [d,a]=g.f;d.state='hit';d.hitstun=3;keyboard.down.add('KeyL');g.step();assert.equal(d.state,'hit');
+ near(g);const [d,a]=g.f;d.state='hit';d.hitstun=3;keyboard.down.add('KeyE');g.step();assert.equal(d.state,'hit');
  g.startMove(a,a.def.moves.pL);a.moveT=a.move!.startup;g.step();assert.equal(d.state,'hit');assert(d.hp<d.maxHp);
  g.hitstop=0;step(g,6);d.hitstun=1;g.startMove(a,a.def.moves.pL);a.moveT=a.move!.startup;g.step();assert.equal(d.state,'block');assert.equal(d.guardResult,'block');
 });
@@ -197,7 +197,7 @@ check('direct online transport accepts turn bit and rejects invalid mask/event r
  const received:any[]=[];const connection=new FightConnection({host:{id:'host'},code:'TESTROOM'} as any,{id:'host'} as any,{state(){},input:n=>received.push(n),status(){},lost(){}});
  const packet=(n:number,mask:number,events:any[]=[])=>({type:'input',n,input:{mask,events}});
  (connection as any).accept(packet(1,4096,[{id:1,mask:4096}]));assert.equal(received.length,1);
- (connection as any).accept(packet(2,8192));(connection as any).accept(packet(2,0,[{id:2,mask:8192}]));assert.equal(received.length,1);
+ (connection as any).accept(packet(2,16384));(connection as any).accept(packet(2,0,[{id:2,mask:16384}]));assert.equal(received.length,1);
  (connection as any).accept(packet(2,MAX_INPUT_MASK,[{id:2,mask:4096}]));assert.equal(received.length,2);
 });
 console.log(`Turn/defense: ${cases} cases passed (both players/sides/crossings, buffered turns, all 13 rigs/hitboxes, authored spins, projectiles, legacy bindings, guard posture/commitment, zero normal chip, individual special chip, 3-frame perfect/Precision, AI and online).`);

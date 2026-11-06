@@ -11,6 +11,7 @@ import { keyLabel } from './input';
 import { drawMotionInk, drawGuardInk } from './combat-art';
 import { combatHint } from './combat-feel';
 import { remotePresentation,localPresentation } from './render-motion';
+import { drawKnuckleEnergy,drawKnuckleCrater } from './rick-art';
 
 const FONT = "'Russo One','Impact','Arial Black','Segoe UI',sans-serif";
 
@@ -100,6 +101,10 @@ function drawFx(ctx: CanvasRenderingContext2D, g: Game, f: Fighter, time: number
   const glow = f.def.glow;
   if (f.state === 'attack' && m) {
     const t = f.moveT;
+    if(m.id==='headbutt'&&t>=m.startup-2&&t<m.startup+m.active+3){
+      ctx.save();ctx.strokeStyle='#fef3c7';ctx.lineWidth=3;ctx.globalAlpha=.75;
+      ctx.beginPath();ctx.arc(p.head.x+6,p.head.y,25,-.8,.8);ctx.stroke();ctx.restore();
+    }
     if (m.id === 's2' && f.ch === 'caetano' && t >= 2 && t < m.startup + m.active + 4) {
       spear(ctx, p.wF.x + 6, p.wF.y, Math.min(m.hb[1] + 20, p.wF.x + 150), 14, col);
       orb(ctx, p.wF.x + 22, p.wF.y, 20 + Math.sin(time) * 3, '#e9d5ff');
@@ -153,7 +158,8 @@ function drawFx(ctx: CanvasRenderingContext2D, g: Game, f: Fighter, time: number
       }
     }
     if (f.ch === 'rickzera') {
-      if (m.id === 's1' || m.id === 's2') orb(ctx, p.wF.x, p.wF.y, 22 + Math.sin(time * 0.3) * 5, glow, 0.7);
+      if(m.id==='s1')orb(ctx,p.wB.x,p.wB.y,22+Math.sin(time*.3)*5,glow,.7);
+      if(m.id==='s2')drawKnuckleEnergy(ctx,p.wF,Math.max(0,f.moveT-1),m.startup,m.active,settings.reducedFlash);
       if (m.id === 's3') {
         ctx.save();
         ctx.strokeStyle = '#4ade80'; ctx.lineWidth = 5;
@@ -454,7 +460,7 @@ function drawProjectiles(ctx: CanvasRenderingContext2D, g: Game) {
     }else if(shot.kind==='formula'||shot.kind==='basketball'){
       drawViewerProjectile(ctx,shot.kind,shot.age??g.tick);
     }else if (shot.kind === 'franco') {
-      ctx.rotate(Math.sin(g.tick * 0.3) * 0.15);
+      ctx.rotate(Math.sin((shot.age??g.tick)*.3)*.15);
       ctx.shadowColor = '#4ade80'; ctx.shadowBlur = 15;
       ctx.fillStyle = '#dbeafe'; ctx.strokeStyle = '#15803d'; ctx.lineWidth = 2;
       ctx.fillRect(-22, -12, 44, 24); ctx.strokeRect(-22, -12, 44, 24);
@@ -463,15 +469,6 @@ function drawProjectiles(ctx: CanvasRenderingContext2D, g: Game) {
       ctx.fillStyle = '#dc2626'; ctx.fillRect(10, -9, 9, 9);
       ctx.fillStyle = '#fff'; ctx.fillRect(14, -8, 2, 7); ctx.fillRect(11, -5, 7, 2);
       ctx.fillStyle = '#0f172a'; ctx.font = 'bold 9px sans-serif'; ctx.textAlign = 'left'; ctx.fillText('100', -20, 8);
-    } else if (shot.kind === 'pix') {
-      ctx.shadowColor = '#4ade80'; ctx.shadowBlur = 18;
-      ctx.strokeStyle = '#86efac'; ctx.lineWidth = 5; ctx.lineJoin = 'round';
-      for (const dx of [-10, 10]) {
-        ctx.beginPath(); ctx.moveTo(dx, -17); ctx.lineTo(dx + 17, 0);
-        ctx.lineTo(dx, 17); ctx.lineTo(dx - 17, 0); ctx.closePath(); ctx.stroke();
-      }
-      ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5;
-      ctx.beginPath(); ctx.moveTo(-38, 0); ctx.lineTo(35, 0); ctx.stroke();
     } else if (shot.kind === 'osasco') {
       const rise=Math.min(1,(shot.age??0)/8);
       ctx.scale(1,rise);ctx.globalAlpha=Math.min(1,shot.life/18);
@@ -539,6 +536,7 @@ function drawParticle(ctx: CanvasRenderingContext2D, p: Particle) {
   const a = Math.max(0, p.life / p.max);
   ctx.save();
   switch (p.type) {
+    case 'crater':drawKnuckleCrater(ctx,p.x,p.y,p.size,a);break;
     case 'spark':
       ctx.globalCompositeOperation = 'lighter';
       ctx.globalAlpha = a;
@@ -1056,6 +1054,7 @@ export function render(ctx: CanvasRenderingContext2D, g: Game, stage: Stage, tim
   ctx.scale(g.cam.zoom, g.cam.zoom);
   ctx.translate(-g.cam.x, -FLOOR_Y);
   stage.drawFloor(ctx);
+  for(const p of g.parts)if(p.type==='crater')drawParticle(ctx,p);
   for(const p of g.projectiles)if(p.kind==='chess'&&p.life>0){ctx.save();ctx.translate(p.x,FLOOR_Y);ctx.globalAlpha=Math.min(1,(p.age??0)/8,p.life/20);drawChessFloor(ctx,(p.radius??110)*2,time);ctx.restore();}
   let tint: string | null = null;
   let tintAmt = 0;
@@ -1113,7 +1112,7 @@ export function render(ctx: CanvasRenderingContext2D, g: Game, stage: Stage, tim
   drawDanceHorde(ctx,g,true);
   drawVehicles(ctx, g);
   drawProjectiles(ctx, g);
-  for (const p of g.parts) drawParticle(ctx, p);
+  for (const p of g.parts)if(p.type!=='crater')drawParticle(ctx,p);
   ctx.restore();
 
   // ---- sobreposições de tela

@@ -869,65 +869,66 @@ function drawTubarao(ctx: CanvasRenderingContext2D, r: Rig, pose: Pose, o: DrawO
   arm(p.eF, p.wF, true);
 }
 
-function drawRickzera(ctx: CanvasRenderingContext2D, r: Rig, pose: Pose, o: DrawOpts) {
-  const p = r.p;
-  const { at, side } = bodyAxes(p);
-  const black = '#20222b';
-  const shade = '#10131c';
-  const highlight = '#3c414b';
-  const green = '#a3ff36';
-  const skin = '#e3ae83';
-  const edge = '#11151c';
-  const arm = (e: P2, w: P2, front: boolean) => {
-    cap(ctx, p.sh, e, 18, 15.5, front ? black : shade, edge, 2.1);
-    cap(ctx, e, w, 16, 10, front ? black : shade, edge, 2.1);
-    const u = unit(e, w);
-    strokePath(ctx, [{ x: p.sh.x - 4, y: p.sh.y - 3 }, { x: e.x - 4, y: e.y - 4 }], highlight, 1.6);
-    cap(ctx, { x: w.x - u.x * 5, y: w.y - u.y * 5 }, w, 11, 10, '#41464b', edge, 1.2);
-    const h = { x: w.x + u.x * 4, y: w.y + u.y * 4 };
-    circ(ctx, h.x, h.y, 6.5, skin, edge, 1.7);
-    if (front && pose.finger > 0.5) {
-      cap(ctx, h, { x: h.x + u.x * 19, y: h.y + u.y * 19 }, 4.7, 3.2, skin, edge, 1.2);
-      cap(ctx, { x: h.x + u.y * 3, y: h.y - u.x * 3 }, { x: h.x + u.x * 12 + u.y * 9, y: h.y + u.y * 12 - u.x * 9 }, 4, 3, skin, edge, 1.2);
-    } else strokePath(ctx, [{ x: h.x + u.x * 4 - u.y * 4, y: h.y + u.y * 4 + u.x * 4 }, { x: h.x + u.x * 4 + u.y * 4, y: h.y + u.y * 4 - u.x * 4 }], '#ab7254', 1);
-    // Faixa fina fluorescente no punho direito.
-    if (front) strokePath(ctx, [{ x: w.x - u.x * 4 - u.y * 4.5, y: w.y - u.y * 4 + u.x * 4.5 }, { x: w.x - u.x * 4 + u.y * 4.5, y: w.y - u.y * 4 - u.x * 4.5 }], green, 1.6);
-  };
-  const leg = (k: P2, a: P2, t: P2, back: boolean) => {
-    cap(ctx, p.hip, k, 21, 16, back ? shade : black, edge, 2.2);
-    cap(ctx, k, a, 17, 11, back ? shade : black, edge, 2);
-    strokePath(ctx, [{ x: k.x - 4, y: k.y + 2 }, { x: a.x - 3, y: a.y - 6 }], highlight, 1.5);
-    const u = unit(a, t);
-    const n = { x: -u.y, y: u.x };
-    // Tênis de cano baixo, biqueira escura e sola branca visível nos chutes.
-    cap(ctx, a, t, 13, 12, '#16191f', edge, 2);
-    strokePath(ctx, [{ x: a.x + n.x * 5, y: a.y + n.y * 5 }, { x: t.x + n.x * 5, y: t.y + n.y * 5 }], '#efefea', 4.2);
-    strokePath(ctx, [{ x: a.x + n.x * 1.2 + u.x * 2, y: a.y + n.y * 1.2 + u.y * 2 }, { x: a.x - n.x * 4 + u.x * 6, y: a.y - n.y * 4 + u.y * 6 }], '#b7c0b9', 1.2);
-    if (!back) strokePath(ctx, [{ x: p.hip.x - side.x * 7, y: p.hip.y - side.y * 7 }, { x: k.x - side.x * 6, y: k.y - side.y * 6 }], '#71c325', 1.2);
-  };
-  arm(p.eB, p.wB, false);
-  leg(p.kB, p.aB, p.tB, true);
-  cap(ctx, p.sh, p.head, 10, 11, skin, edge, 1.8);
-  poly(ctx, [at(-0.1, -15), at(-0.1, 15), at(0.66, 19), at(1.06, 20), at(1.1, -16), at(0.58, -19)], black, edge, 2.4);
-  poly(ctx, [at(-0.1, -15), at(0.66, -19), at(1.1, -16), at(0.9, -6), at(0.2, -7)], shade, undefined, 0);
-  // Capuz acumulado no pescoço e gola em V, com cordões.
-  poly(ctx, [at(0.84, -16), at(1.23, -18), at(1.24, 9), at(0.94, 17), at(0.73, 8)], '#30343e', edge, 1.8);
-  poly(ctx, [at(1.17, -3), at(1.15, 8), at(0.94, 5)], '#a57759', edge, 1.2);
-  strokePath(ctx, [at(1.1, 0), at(0.66, 0)], '#a2a7a7', 1.2);
-  strokePath(ctx, [at(1.1, 9), at(0.7, 11)], '#a2a7a7', 1.2);
-  // Bolso canguru, pregas do moletom e cós.
-  strokePath(ctx, [at(0.35, -6), at(0.24, -10), at(0.18, 9), at(0.3, 13)], highlight, 1.6);
-  strokePath(ctx, [at(0.06, -15), at(0.06, 15)], '#404550', 4);
-  strokePath(ctx, [at(0.08, -12), at(0.09, 8)], '#66705c', 1);
-  // Pequena coroa verde no peito, identificável até na seleção.
-  poly(ctx, [at(0.67, 8), at(0.77, 5), at(0.72, 10), at(0.83, 12), at(0.72, 13), at(0.76, 17), at(0.65, 15)], green, undefined, 0);
-  leg(p.kF, p.aF, p.tF, false);
-  ctx.save();
-  ctx.translate(p.head.x, p.head.y);
-  ctx.rotate(rad(pose.lean + pose.head) * 0.6 + pose.rot);
-  headRickzera(ctx, 17, { ...o, expr: o.expr || (pose.mouth > 0.5 ? 'shout' : 'n') });
+// Rick's front/near hand is consistently his left, including mirrored drawing.
+function drawRickKnuckles(ctx:CanvasRenderingContext2D,w:P2,e:P2,time:number){
+  const u=unit(e,w);ctx.save();ctx.translate(w.x+u.x*6,w.y+u.y*6);ctx.rotate(Math.atan2(u.y,u.x));
+  const gold=ctx.createLinearGradient(-5,-12,9,12);gold.addColorStop(0,'#fff3a3');gold.addColorStop(.28,'#e9b83d');gold.addColorStop(.52,'#ffe882');gold.addColorStop(1,'#a96b16');
+  ctx.beginPath();ctx.roundRect(-2,-12,11,24,4);ctx.fillStyle=gold;ctx.fill();ctx.strokeStyle='#624017';ctx.lineWidth=1.2;ctx.stroke();
+  for(let i=0;i<4;i++){
+    const y=-8.6+i*5.7;ell(ctx,5,y,4.3,3.3,gold,'#725020',.9);ell(ctx,5.5,y,2.1,1.8,'#9b6a3f','#fff0a4',.6);
+  }
+  cap(ctx,{x:-4,y:-5},{x:-4,y:5},3.5,3.5,'#d59b28','#76521d',.8);
+  if(Math.sin(time*.08)>.88){strokePath(ctx,[{x:8,y:-13},{x:8,y:-7}],'#fffad5',1);strokePath(ctx,[{x:5,y:-10},{x:11,y:-10}],'#fffad5',1);}
   ctx.restore();
-  arm(p.eF, p.wF, true);
+}
+
+function drawRickzera(ctx: CanvasRenderingContext2D, r: Rig, pose: Pose, o: DrawOpts) {
+  const p=r.p,{at}=bodyAxes(p),edge='#151b20',skin='#e3ae83',skinShade='#bb7f5b',light='#f3c69c';
+  const shirt='#171d24',shirtShade='#0d1219',cargo='#c8b288',cargoShade='#968364';
+  const arm=(e:P2,w:P2,left:boolean)=>{
+    cap(ctx,p.sh,e,21,16.5,left?skin:skinShade,edge,1.8);cap(ctx,e,w,16,10,left?skin:skinShade,edge,1.7);
+    const upper=unit(p.sh,e),u=unit(e,w),n={x:-u.y,y:u.x};
+    const sleeve={x:p.sh.x+(e.x-p.sh.x)*.38,y:p.sh.y+(e.y-p.sh.y)*.38};
+    cap(ctx,p.sh,sleeve,23,21,left?shirt:shirtShade,edge,1.8);
+    strokePath(ctx,[{x:sleeve.x-upper.y*8,y:sleeve.y+upper.x*8},{x:sleeve.x+upper.y*8,y:sleeve.y-upper.x*8}],'#62676e',1);
+    strokePath(ctx,[{x:e.x-u.x*8-u.y*4,y:e.y-u.y*8+u.x*4},{x:w.x-u.x*8-u.y*3,y:w.y-u.y*8+u.x*3}],left?light:'#d59872',1.4);
+    const h={x:w.x+u.x*4,y:w.y+u.y*4};ell(ctx,h.x,h.y,7.5,6.7,left?skin:skinShade,edge,1.5,Math.atan2(u.y,u.x));
+    if(left)drawRickKnuckles(ctx,w,e,o.time);
+    else if(o.poseName?.startsWith('franco')){
+      for(let i=0;i<3;i++)cap(ctx,h,{x:h.x+u.x*(13+i%2*3)+n.x*(i-1)*5,y:h.y+u.y*(13+i%2*3)+n.y*(i-1)*5},3.2,2.2,skin,edge,.8);
+      if(o.poseName==='franco_s')for(let i=0;i<3;i++){
+        ctx.save();ctx.translate(h.x+u.x*13,h.y+u.y*13);ctx.rotate(Math.atan2(u.y,u.x)+(i-1)*.24);
+        poly(ctx,[{x:0,y:-7},{x:22,y:-7},{x:22,y:7},{x:0,y:7}],'#dce9ed','#638f9e',.8);ctx.fillStyle='#ce3435';ctx.fillRect(15,-6,6,6);ctx.fillStyle='#fff';ctx.fillRect(17,-5,1.5,4);ctx.fillRect(16,-4,4,1.5);ctx.restore();
+      }
+    }
+  };
+  const leg=(k:P2,a:P2,t:P2,back:boolean)=>{
+    const c=back?cargoShade:cargo;
+    cap(ctx,p.hip,k,27,23,c,edge,1.9);cap(ctx,k,a,23,14,c,edge,1.8);
+    const thigh=unit(p.hip,k),shin=unit(k,a),n={x:-thigh.y,y:thigh.x};
+    const q={x:p.hip.x+(k.x-p.hip.x)*.59,y:p.hip.y+(k.y-p.hip.y)*.59};
+    ctx.save();ctx.translate(q.x,q.y);ctx.rotate(Math.atan2(thigh.y,thigh.x)-Math.PI/2);
+    poly(ctx,[{x:-11,y:-5},{x:2,y:-5},{x:3,y:11},{x:-10,y:13}],back?'#a08b69':'#d8c59d','#78694f',1);
+    poly(ctx,[{x:-12,y:-6},{x:3,y:-6},{x:2,y:-1},{x:-4,y:2},{x:-11,y:0}],back?'#b09a76':'#e0cfa9','#7e6b4f',.8);circ(ctx,-4,-1,1.1,'#64704d',undefined,0);ctx.restore();
+    strokePath(ctx,[{x:q.x+n.x*4,y:q.y+n.y*4},{x:k.x+n.x*5,y:k.y+n.y*5},{x:k.x+n.x*9-shin.x*4,y:k.y+n.y*9-shin.y*4}],'#8c7859',1.2);
+    strokePath(ctx,[{x:k.x+3,y:k.y-5},{x:k.x-4,y:k.y+3},{x:a.x-shin.x*12-3,y:a.y-shin.y*12}],back?'#796c54':'#a4926e',1.2);
+    cap(ctx,{x:a.x-shin.x*4,y:a.y-shin.y*4},a,16,14,'#aa9571',edge,1.1);
+    const u=unit(a,t),side={x:-u.y,y:u.x};
+    cap(ctx,a,t,15,13,'#1b2026',edge,1.7);
+    strokePath(ctx,[{x:a.x+side.x*6,y:a.y+side.y*6},{x:t.x+side.x*6,y:t.y+side.y*6}],'#aeb3ad',3);
+    strokePath(ctx,[{x:a.x+u.x*2-side.x*1,y:a.y+u.y*2-side.y*1},{x:a.x+u.x*7+side.x*2,y:a.y+u.y*7+side.y*2},{x:t.x-u.x*2-side.x*2,y:t.y-u.y*2-side.y*2}],'#f0eee2',1.4);
+  };
+  arm(p.eB,p.wB,false);leg(p.kB,p.aB,p.tB,true);cap(ctx,p.sh,p.head,12,11,skinShade,edge,1.7);
+  poly(ctx,[at(-.08,-16),at(-.08,17),at(.34,18),at(.77,22),at(1.08,19),at(1.12,9),at(1.12,-11),at(.93,-21),at(.44,-20)],shirt,edge,2);
+  poly(ctx,[at(-.05,-16),at(.8,-21),at(1.06,-18),at(.86,-8),at(.43,-7),at(.02,-10)],shirtShade,undefined,0);
+  strokePath(ctx,[at(1.06,-9),at(1.0,-2),at(1.07,9)],'#707477',1.1);
+  strokePath(ctx,[at(.83,-15),at(.53,-13),at(.25,-14)],'#474e54',1.2);strokePath(ctx,[at(.75,15),at(.45,12),at(.17,14)],'#5a6267',1.2);
+  strokePath(ctx,[at(.24,-7),at(.2,8)],'#3b444d',1);strokePath(ctx,[at(-.01,-15),at(-.01,17)],'#4a5056',2.6);
+  const logo=at(.86,9);strokePath(ctx,[{x:logo.x-3,y:logo.y-2},{x:logo.x-1,y:logo.y+1},{x:logo.x+6,y:logo.y-5}],'#f7f8f1',1.6);
+  leg(p.kF,p.aF,p.tF,false);poly(ctx,[at(-.04,-17),at(-.04,18),at(.11,18),at(.11,-17)],'#a48d65',edge,1.3);
+  strokePath(ctx,[at(.07,-7),at(.07,12)],'#504b3a',2);const buckle=at(.07,4);ctx.strokeStyle='#b6b9a3';ctx.lineWidth=1.1;ctx.strokeRect(buckle.x-3,buckle.y-2,6,4);
+  ctx.save();ctx.translate(p.head.x,p.head.y);ctx.rotate(rad(pose.lean+pose.head)*.6+pose.rot);headRickzera(ctx,17,{...o,expr:o.expr||(pose.mouth>.5?'shout':'n')});ctx.restore();
+  arm(p.eF,p.wF,true);
 }
 
 function headBieu(ctx: CanvasRenderingContext2D, r: number, o: DrawOpts) {

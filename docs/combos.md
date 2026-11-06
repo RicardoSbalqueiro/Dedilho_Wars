@@ -42,7 +42,7 @@ Teclas padrão do P1: J soco, K chute, U/I/O especiais, W salto, S agachar. Nas 
 | TUBARÃO FISCAL | Aéreo · Rasteira e perseguição | ↓+K → ↑ → K | 2 | 129,8 |
 | RICKZERA | Básico · Um, dois! | J → K | 2 | 56,9 |
 | RICKZERA | Básico · Três tempos | J → K → J | 3 | 104,1 |
-| RICKZERA | Intermediário · Franco confirmado | J → K → U | 3 | 98,5 |
+| RICKZERA | Intermediário · Franco confirmado | J → K → U | 5 | 107,3 |
 | RICKZERA | Aéreo · Rasteira e perseguição | ↓+K → ↑ → J → K | 3 | 125,5 |
 | BIEUBATMAN | Básico · Um, dois! | J → K | 2 | 65,3 |
 | BIEUBATMAN | Básico · Três tempos | J → K → J | 3 | 119,7 |

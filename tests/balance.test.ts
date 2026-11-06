@@ -203,7 +203,7 @@ check('HP, mobility, silhouettes and normal move identities preserve all 13 asym
  const before=JSON.parse(readFileSync('docs/balance-before.json','utf8')).characters;
  for(const ch of CHAR_IDS){
   for(const key of ['hp','walk','walkBack','jumpVy','jumpVx','dashVx','dashDur','pushW','hurtH','crouchH'] as const)assert.equal(CHARS[ch][key],before[ch][key]);
-  for(const m of Object.values(CHARS[ch].moves).filter(m=>m.kind==='normal'))assert.deepEqual(m,before[ch].moves[m.id]);
+  for(const m of Object.values<{kind:string;id:string}>(before[ch].moves).filter(m=>m.kind==='normal'))assert.deepEqual(CHARS[ch].moves[m.id],m);
  }
  assert(frameData('santox','s2').variable&&frameData('jao','s2').variable&&frameData('renngotti','s1').variable,'conditional advantage is never presented as guaranteed');
 });

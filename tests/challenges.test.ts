@@ -13,7 +13,7 @@ for(const [id,move,count] of [['hits','pL',5],['low','cK',3],['air','jK',2],['da
  const g=make('special');for(const move of ['s1','s2','s3'])hit(g,move);assert(g.challenge?.done,'all3 unique specials');g.destroy();
 }
 {
- const g=make('combo','rickzera');hit(g,'s2');assert(g.challenge?.done,'3 hit projectile combo');g.destroy();
+ const g=make('combo','rickzera');hit(g,'s1');assert(g.challenge?.done,'3 Swiss notes complete the projectile combo');g.destroy();
 }
 {
  const g=make('jump');for(let i=0;i<5;i++){keyboard.down.add('KeyW');g.step();keyboard.down.clear();step(g,65)}assert(g.challenge?.done,'5 jumps');g.destroy();
@@ -25,7 +25,7 @@ for(const [id,move,count] of [['hits','pL',5],['low','cK',3],['air','jK',2],['da
  const g=make('crouch');keyboard.down.add('KeyS');step(g,180);keyboard.down.clear();assert(g.challenge?.done,'3 seconds crouch');g.destroy();
 }
 {
- const g=make('block');g.train.dummy=3;g.f[1].cpu=false;assert.equal(g.challenge?.current,0);keyboard.down.add('KeyL');step(g,60);assert.equal(g.challenge?.current,0,'holding block alone does not count');
+ const g=make('block');g.train.dummy=3;g.f[1].cpu=false;assert.equal(g.challenge?.current,0);keyboard.down.add('KeyE');step(g,60);assert.equal(g.challenge?.current,0,'holding block alone does not count');
  for(let i=0;i<3;i++){g.resetPositions();g.f[0].x=650;g.f[1].x=740;g.step();g.startMove(g.f[1],g.f[1].def.moves.pL);step(g,55)}keyboard.down.clear();assert(g.challenge?.done,'3 real blocked hits');g.destroy();
 }
 {
@@ -41,7 +41,7 @@ for(const id of ['perfect','blockLow'] as const){
  const g=make(id);assert.equal(g.train.dummy,1,'defensive drills activate CPU');g.train.dummy=3;g.f[1].cpu=false;
  for(let i=0;i<3;i++){
   keyboard.down.clear();g.resetPositions();g.f[0].x=650;g.f[1].x=725;
-  if(id==='blockLow')keyboard.down.add('KeyS');keyboard.down.add('KeyL');
+  if(id==='blockLow')keyboard.down.add('KeyS');keyboard.down.add('KeyE');
   const f=g.f[1];g.startMove(f,f.def.moves[id==='blockLow'?'cK':'pL']);f.moveT=f.move!.startup;g.step();
   assert.equal(g.f[0].state,'block');
  }

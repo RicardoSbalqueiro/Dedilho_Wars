@@ -38,7 +38,7 @@ export function TouchControls({onMenu,gameRef,side=0}:{onMenu:()=>void;gameRef?:
   const actions:Action[]=[];if(x<-r.width*.12)actions.push('left');if(x>r.width*.12)actions.push('right');if(y<-r.height*.18)actions.push('up');if(y>r.height*.18)actions.push('down');touchInput.set(e.pointerId,actions);
  };
  const release=(e:React.PointerEvent)=>{touchInput.set(e.pointerId,[]);setPoint({x:0,y:0})};
- const buttons:[Action,string,string][]=[['s1','ESP 1','#a855f7'],['s2','ESP 2','#a855f7'],['s3','ESP 3','#a855f7'],['p','SOCO','#22d3ee'],['k','CHUTE','#22d3ee'],['block','DEFESA','#38bdf8'],['super','ULT','#facc15'],['grab','AGARRAR','#fb923c']];
+ const buttons:[Action,string,string][]=[['s1','ESP 1','#a855f7'],['s2','ESP 2','#a855f7'],['s3','ESP 3','#a855f7'],['p','SOCO','#22d3ee'],['k','CHUTE','#22d3ee'],['headbutt','CABEÇADA','#fb923c'],['block','DEFESA','#38bdf8'],['super','ULT','#facc15'],['grab','AGARRAR','#fb923c']];
  const actionButton=(action:Action,label:string,color:string,className?:string)=><button key={action} className={className} type="button" data-touch-action={action} aria-label={label} style={{borderColor:color,color}} onPointerDown={e=>{e.preventDefault();e.currentTarget.setPointerCapture(e.pointerId);touchInput.set(e.pointerId,[action]);e.currentTarget.dataset.held='1'}} onPointerUp={e=>{touchInput.set(e.pointerId,[]);delete e.currentTarget.dataset.held}} onPointerCancel={e=>{touchInput.set(e.pointerId,[]);delete e.currentTarget.dataset.held}} onLostPointerCapture={e=>{touchInput.set(e.pointerId,[]);delete e.currentTarget.dataset.held}}>{label}</button>;
  return createPortal(<div className="touch-controls" onContextMenu={e=>e.preventDefault()}>
   {gameRef&&<TouchFeedback gameRef={gameRef} side={side}/>}

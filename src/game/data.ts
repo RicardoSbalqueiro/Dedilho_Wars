@@ -5,7 +5,7 @@ export type CharId = (typeof CHAR_IDS)[number];
 
 // Três usos compartilham o mesmo limite por lutador; rajadas contam como um uso.
 export const RANGED_MOVES: Record<CharId, readonly string[]> = {
-  caetano: [], orango: ['s1'], tubarao: [], rickzera: ['s1', 's2'],
+  caetano: [], orango: ['s1'], tubarao: [], rickzera: ['s1'],
   bieu: ['s2', 's3'], nomad: ['s1', 's2', 's3'],
   renngotti: ['s2', 's3'], aneninha: ['s2', 's3'],
   santox: ['s1'], jao: ['s1', 's2', 's3'],
@@ -305,10 +305,12 @@ const rickzeraPoses: Record<string, Pose> = {
   ...Object.fromEntries(Object.entries(caetanoPoses).map(([k, p]) => [k, { ...p }])),
   idle: cp({ lean: -3, head: 3, fa1: 75, fa2: -38, ba1: 103, ba2: -35, fl1: 78, fl2: 92, bl1: 106, bl2: 88 }),
   taunt: cp({ lean: -8, head: 5, fa1: -25, fa2: -8, finger: 1, ba1: 90, ba2: -35 }),
-  franco_s: cp({ lean: -16, fa1: 60, fa2: -120, ba1: 95, ba2: -60, finger: 1 }),
-  franco_a: cp({ lean: 16, fa1: -10, fa2: -5, ba1: 110, ba2: -70, finger: 1 }),
-  pix_s: cp({ lean: -8, fa1: 20, fa2: -85, ba1: -10, ba2: -110, finger: 1 }),
-  pix_a: cp({ lean: 20, fa1: -12, fa2: 0, ba1: -20, ba2: -5, finger: 1 }),
+  // For Rick, the front/near arm is his anatomical left: the golden knuckles.
+  franco_s: cp({ lean: -12, fa1: 60, fa2: -65, ba1: 65, ba2: -125 }),
+  franco_a: cp({ lean: 14, fa1: 65, fa2: -70, ba1: -10, ba2: -5 }),
+  knuckle_s: cp({ lean: -16, head: 10, fa1: -100, fa2: -145, ba1: 65, ba2: -65, fl1: 65, fl2: 101, bl1: 116, bl2: 83 }),
+  knuckle_a: cp({ lean: 48, head: -10, fa1: 25, fa2: 66, ba1: 130, ba2: -45, fl1: 26, fl2: 112, bl1: 133, bl2: 76, mouth: 1 }),
+  wise_a: cp({ lean: 20, fa1: -12, fa2: 0, ba1: -20, ba2: -5, finger: 1 }),
   double_s: cp({ lean: -12, fl1: 30, fl2: 125, bl1: 135, bl2: 145, fa1: -50, fa2: -110 }),
   double_a: cp({ lean: -18, fl1: -25, fl2: -20, bl1: 110, bl2: 155, fa1: -80, fa2: -120, ba1: 125, ba2: 150 }),
   roar: cp({ lean: -10, fa1: -40, fa2: -90, ba1: -130, ba2: -80, mouth: 1 }),
@@ -341,8 +343,8 @@ const rickzeraMoves: Record<string, Move> = Object.fromEntries(
   }]),
 );
 Object.assign(rickzeraMoves, Object.fromEntries([
-  mv('s1', { kind: 'special', rank: 9, startup: 12, active: 3, recovery: 19, whiff: 5, dmg: 52, hitstun: 20, blockstun: 12, kb: 5, kbBlock: 3, hb: [20, 105, 80, 145], hitstop: 7, shake: 5, power: 1.3, poses: ['franco_s', 'franco_a'], label: 'ARREMESSO DO FRANCO SUÍÇO' }),
-  mv('s2', { kind: 'special', rank: 9, startup: 18, active: 7, recovery: 23, whiff: 9, dmg: 24, hitstun: 17, blockstun: 10, kb: 2.5, kbBlock: 2, hb: [20, 125, 60, 145], hitstop: 4, shake: 3, power: 1.1, poses: ['pix_s', 'pix_a'], label: 'LINHAS DO PIX' }),
+  mv('s1', { kind: 'special', rank: 9, startup: 12, active: 13, recovery: 19, whiff: 5, dmg: 24, hitstun: 20, blockstun: 12, kb: 5, kbBlock: 3, hb: [20, 105, 80, 145], hitstop: 7, shake: 5, power: 1.3, poses: ['franco_s', 'franco_a'], label: 'ARREMESSO DO FRANCO SUÍÇO · 3 NOTAS' }),
+  mv('s2', { kind: 'special', rank: 9, startup: 24, active: 5, recovery: 29, whiff: 14, dmg: 84, hitstun: 24, blockstun: 14, kb: 3, kbBlock: 4, hb: [15, 118, 0, 168], level: 'high', launch: 1, launchVx: 2, spike: true, hitstop: 12, shake: 14, power: 2.3, poses: ['knuckle_s', 'knuckle_a'], advance: [15, 22, 2], trail: 'fw', label: 'SOCO INGLÊS' }),
   mv('s3', { kind: 'special', rank: 9, startup: 3, active: 12, recovery: 12, whiff: 5, dmg: 34, hitstun: 18, blockstun: 12, kb: 4, hb: [5, 110, -15, 130], launch: 5, launchVx: 3, hitstop: 6, shake: 5, power: 1.3, poses: ['double_s', 'double_a'], trail: 'fa', label: 'DOUBLE JUMP' }),
 ]));
 
@@ -633,12 +635,12 @@ export const CHARS: Record<CharId, CharDef> = {
     pushW: 26, hurtH: 172, crouchH: 108, moves: rickzeraMoves, poses: rickzeraPoses,
     attrs: [{ label: 'VELOCIDADE', v: 5 }, { label: 'FORÇA', v: 2 }, { label: 'ALCANCE', v: 5 }, { label: 'RESISTÊNCIA', v: 2 }, { label: 'MOBILIDADE', v: 5 }],
     specials: [
-      { key: 'U', name: 'ARREMESSO DO FRANCO SUÍÇO', desc: 'Lança uma nota à distância. O projétil pode ser defendido.' },
-      { key: 'I', name: 'LINHAS DO PIX', desc: 'Dispara três linhas verdes em sequência para pressionar.' },
+      { key: 'U', name: 'ARREMESSO DO FRANCO SUÍÇO', desc: 'Arremessa três notas em sequência. A rajada pode ser defendida e conta como um uso de distância.' },
+      { key: 'I', name: 'SOCO INGLÊS', desc: 'Soco descendente com energia verde e soco inglês dourado na mão esquerda. Esmaga o rival no chão e abre uma cratera. Defenda em pé; errar deixa uma abertura.' },
       { key: 'O', name: 'DOUBLE JUMP', desc: 'Salto com chute; no ar, ganha um segundo impulso. A tecla de pulo também dá o segundo salto.' },
     ],
     superName: 'WISE 6X', quote: 'TRANSFERÊNCIA CONCLUÍDA. SEIS VEZES.',
-    bio: 'Moletom preto, cabelo castanho e energia verde. Controla a distância com dinheiro, Pix e salto duplo.',
+    bio: 'Camiseta preta, calça cargo bege e soco inglês dourado na mão esquerda. Pressiona com três francos suíços, derrubada de perto e salto duplo.',
   },
   bieu: {
     id: 'bieu', name: 'BIEUBATMAN', short: 'BIEU', title: 'O PRESTÍGIO DA RUA',
@@ -777,6 +779,17 @@ for(const id of CHAR_IDS)for(const [i,key] of ['s1','s2','s3'].entries())CHARS[i
 // Only quick grounded normals get a one-frame adjustment. Heavy/special risk is intact.
 for(const def of Object.values(CHARS))for(const move of Object.values(def.moves))
   if(move.kind==='normal'&&!move.air&&move.rank===1)move.startup=Math.max(3,move.startup-1);
+
+// Universal committed close-range normal. Preserve each fighter's stance,
+// silhouette and strength instead of giving a ranged or invulnerable attack.
+for(const def of Object.values(CHARS)){
+  def.poses.headbutt_s={...def.poses.idle,lean:-12,head:12,fa1:65,fa2:-95,ba1:90,ba2:-105};
+  def.poses.headbutt_a={...def.poses.idle,lean:40,head:-22,fa1:88,fa2:-65,ba1:120,ba2:-85,mouth:1};
+  def.moves.headbutt=mv('headbutt',{rank:3,startup:14,active:3,recovery:24,whiff:12,
+    dmg:Math.round(def.moves.pM.dmg*1.05),hitstun:20,blockstun:12,kb:5,kbBlock:3,
+    hb:[15,Math.round(def.hurtH*.34+25),Math.round(def.hurtH*.45),Math.round(def.hurtH*.94)],
+    poses:['headbutt_s','headbutt_a'],hitstop:8,shake:5,power:1.2,label:'CABEÇADA'})[1];
+}
 
 export function movePhase(move:Move,frame:number,connected:boolean){
   if(frame<move.startup)return {phase:'startup' as const,progress:0};

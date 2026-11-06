@@ -41,8 +41,8 @@ async function submitResult(db, user, id, b, json2, fail2, time) {
 }
 
 // worker/index.js
-var VERSION = "dw-online-8";
-var MAX_INPUT_MASK = 8191;
+var VERSION = "dw-online-9";
+var MAX_INPUT_MASK = 16383;
 var CHARS = ["caetano", "orango", "tubarao", "rickzera", "bieu", "nomad", "renngotti", "aneninha", "santox", "jao", "jane", "cristyan", "eneas"];
 var STAGES = ["neto", "dojo", "liberdade", "curitiba", "piaui", "planalto", "casebre", "praca", "osasco", "bolivia", "morro", "campo", "casabranca", "letsgay", "ngb", "zoologico", "termodinamica"];
 var COOKIE = "dw_session";
