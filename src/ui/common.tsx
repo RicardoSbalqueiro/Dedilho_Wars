@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import {CanvasSurface,stageDensity,canvasFontRevision} from '../game/canvas';
+import { useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react';
 import type { ReactNode } from 'react';
 import { Stage, STAGE_IDS, W, H, FLOOR_Y } from '../game/stage';
 import { drawFullBody, drawPortrait } from '../game/rig';
@@ -10,12 +11,16 @@ import type { CharId } from '../game/data';
 import type { StageId } from '../game/stage';
 import { audio } from '../game/audio';
 
-const stageCache = new Map<StageId, Stage>();
-export function getStage(id: StageId = 'dojo') {
-  let stage = stageCache.get(id);
-  if (!stage) { stage = new Stage(id); stageCache.set(id, stage); }
-  stageCache.delete(id);stageCache.set(id,stage);
-  while(stageCache.size>8)stageCache.delete(stageCache.keys().next().value!);
+const stageCache = new Map<string, Stage>();
+const STAGE_CACHE_PIXELS=48*1024*1024;
+let cachedPixels=0,cachedFontRevision=-1;
+export function getStage(id:StageId='dojo',scale=1){
+  const density=stageDensity(scale),revision=canvasFontRevision();
+  if(revision!==cachedFontRevision){stageCache.clear();cachedPixels=0;cachedFontRevision=revision;}
+  const key=`${id}:${density}`;let stage=stageCache.get(key);
+  if(!stage){stage=new Stage(id,density);stageCache.set(key,stage);cachedPixels+=stage.pixelCount;}
+  stageCache.delete(key);stageCache.set(key,stage);
+  while(stageCache.size>8||cachedPixels>STAGE_CACHE_PIXELS){const oldest=stageCache.keys().next().value!;const item=stageCache.get(oldest)!;stageCache.delete(oldest);cachedPixels-=item.pixelCount;}
   return stage;
 }
 
@@ -31,16 +36,20 @@ function drawStageScene(ctx: CanvasRenderingContext2D, stage: Stage, t: number, 
 
 export function StagePreview({ stageId, animated = false, className = '' }: { stageId: StageId; animated?: boolean; className?: string }) {
   const ref = useRef<HTMLCanvasElement>(null);
-  useEffect(() => {
-    const ctx = ref.current?.getContext('2d');
-    if (!ctx) return;
-    const stage = getStage(stageId);
-    let raf = 0;
+  useEffect(()=>{
+    const surface=new CanvasSurface(ref.current!,W,H),ctx=surface.ctx;
+    let stage:Stage|undefined,raf=0;
     const clock=new FrameTimer(),rebase=()=>clock.rebase();
-    const draw = (now:number) => { clock.sample(now,!document.hidden);drawStageScene(ctx, stage, clock.frames);if (animated) raf = requestAnimationFrame(draw); };
+    const draw=(now:number)=>{
+      surface.prepare();const density=stageDensity(surface.scale);
+      if(!stage||stage.density!==density||stage.fontRevision!==canvasFontRevision())stage=getStage(stageId,density);
+      clock.sample(now,!document.hidden);drawStageScene(ctx,stage,clock.frames);
+      if(animated)raf=requestAnimationFrame(draw);
+    };
+    const stop=animated?()=>{}:surface.observe(()=>draw(performance.now()));
     document.addEventListener('visibilitychange',rebase);draw(performance.now());
-    return () => {cancelAnimationFrame(raf);document.removeEventListener('visibilitychange',rebase)};
-  }, [stageId, animated]);
+    return()=>{stop();cancelAnimationFrame(raf);document.removeEventListener('visibilitychange',rebase)};
+  },[stageId,animated]);
   return <canvas ref={ref} width={W} height={H} className={className} aria-hidden="true" />;
 }
 
@@ -52,18 +61,19 @@ export function MusicButton({ onClick }: { onClick: () => void }) {
   </button>;
 }
 
-/** Palco de 960x540 escalado para caber na janela. */
+/** Logical layout stays 960×540; CSS zoom paints text at the displayed size. */
 export function Frame({ children, game = false }: { children: ReactNode; game?: boolean }) {
   const [s, setS] = useState(1);
-  useEffect(() => {
-    const f = () => { const portrait = matchMedia('(pointer: coarse)').matches && window.innerHeight > window.innerWidth; setS(Math.min(window.innerWidth / W, (window.innerHeight - (game && portrait ? 190 : 0)) / H)); };
+  useLayoutEffect(() => {
+    const f = () => { const portrait = matchMedia('(pointer: coarse)').matches && window.innerHeight > window.innerWidth; setS(Math.min(Math.max(1,window.innerWidth)/W,Math.max(1,window.innerHeight-(game&&portrait?190:0))/H)); };
     f();
-    window.addEventListener('resize', f);
-    return () => window.removeEventListener('resize', f);
+    window.addEventListener('resize',f);window.visualViewport?.addEventListener('resize',f);
+    return()=>{window.removeEventListener('resize',f);window.visualViewport?.removeEventListener('resize',f)};
   }, [game]);
+  useLayoutEffect(()=>{window.dispatchEvent(new Event('dedilho-display-change'))},[s]);
   return (
     <div data-game-frame={game ? '1' : '0'} className="game-frame fixed inset-0 bg-black flex items-center justify-center overflow-hidden select-none">
-      <div style={{ width: W, height: H, transform: `scale(${s})`, position: 'relative', flexShrink: 0, overflow: 'hidden' }}>{children}</div>
+      <div style={{ width: W, height: H, zoom:s, position: 'relative', flexShrink: 0, overflow: 'hidden' }}>{children}</div>
     </div>
   );
 }
@@ -85,14 +95,17 @@ export function ArtCanvas({ variant, selected }: { variant: ArtVariant; selected
   propsRef.current = { variant, selected };
   useEffect(() => {
     const canvas = ref.current!;
-    const ctx = canvas.getContext('2d')!;
-    const stage = getStage(STAGE_IDS[Math.floor(Math.random() * STAGE_IDS.length)]);
+    const surface=new CanvasSurface(canvas,W,H,'scene'),ctx=surface.ctx;
+    const stageId=STAGE_IDS[Math.floor(Math.random()*STAGE_IDS.length)];
+    surface.prepare();let stage=getStage(stageId,surface.scale);
     let raf = 0;
     const clock=new FrameTimer(),rebase=()=>clock.rebase();
     const leaves: Leaf[] = Array.from({ length: 24 }, () => ({ x: Math.random() * W, y: Math.random() * H, vx: -1 - Math.random() * 1.5, vy: 0.5 + Math.random(), r: Math.random() * 6, s: 3 + Math.random() * 5 }));
     const loop = (now:number) => {
       clock.sample(now,!document.hidden);const t=clock.frames,dt=clock.deltaFrames;
       canvas.dataset.animationFrame=t.toFixed(4);
+      surface.prepare();const density=stageDensity(surface.scale);
+      if(stage.density!==density||stage.fontRevision!==canvasFontRevision())stage=getStage(stageId,density);
       const { variant: v, selected: sel } = propsRef.current;
       const camX = 800 + Math.sin(t * 0.006) * 40;
       stage.hype = 0.15;
@@ -145,7 +158,7 @@ export function ArtCanvas({ variant, selected }: { variant: ArtVariant; selected
     document.addEventListener('visibilitychange',rebase);raf = requestAnimationFrame(loop);
     return () => {cancelAnimationFrame(raf);document.removeEventListener('visibilitychange',rebase)};
   }, []);
-  return <canvas ref={ref} width={W} height={H} className="absolute inset-0" />;
+  return <canvas ref={ref} width={W} height={H} className="absolute inset-0 w-full h-full" />;
 }
 
 // Demonstração coreografada sem controles, áudio ou instâncias do motor de partida.
@@ -234,13 +247,11 @@ function glowBehind(ctx: CanvasRenderingContext2D, x: number, col: string, t: nu
 
 export function FighterPortrait({ ch, size = 32, className = '' }: { ch: CharId; size?: number; className?: string }) {
   const ref = useRef<HTMLCanvasElement>(null);
-  useEffect(() => {
-    const canvas = ref.current;
-    const ctx = canvas?.getContext('2d');
-    if (!canvas || !ctx) return;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawPortrait(ctx, ch, size + 6, ch==='santox'?size*1.45+8:ch==='eneas'?size*.75+8:size+8, ch==='santox'?size*.58:ch==='eneas'?size*.7:size, { time: 0 });
-  }, [ch, size]);
+  useEffect(()=>{
+    const width=(size+6)*2,height=(size+8)*2,surface=new CanvasSurface(ref.current!,width,height),ctx=surface.ctx;
+    const draw=()=>{surface.prepare();ctx.clearRect(0,0,width,height);drawPortrait(ctx,ch,size+6,ch==='santox'?size*1.45+8:ch==='eneas'?size*.75+8:size+8,ch==='santox'?size*.58:ch==='eneas'?size*.7:size,{time:0})};
+    const stop=surface.observe(draw);draw();return stop;
+  },[ch,size]);
   return <canvas aria-hidden="true" ref={ref} width={(size + 6) * 2} height={(size + 8) * 2} className={className} />;
 }
 

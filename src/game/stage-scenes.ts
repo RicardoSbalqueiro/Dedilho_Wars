@@ -1,6 +1,7 @@
+import {layerCanvas} from './canvas';
 // Cenários brasileiros desenhados em camadas vetoriais; nenhuma imagem externa.
 const TAU = Math.PI * 2;
-function canvas(w: number, h: number) { const c = document.createElement('canvas'); c.width = w; c.height = h; return c; }
+const canvas=layerCanvas;
 function rect(c: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, color: string) { c.fillStyle = color; c.fillRect(x, y, w, h); }
 function line(c: CanvasRenderingContext2D, points: number[][], color: string, width = 2) { c.strokeStyle = color; c.lineWidth = width; c.beginPath(); points.forEach(([x,y],i) => i ? c.lineTo(x,y) : c.moveTo(x,y)); c.stroke(); }
 function poly(c: CanvasRenderingContext2D, points: number[][], color: string, stroke?: string) { c.beginPath(); points.forEach(([x,y],i) => i ? c.lineTo(x,y) : c.moveTo(x,y)); c.closePath(); c.fillStyle=color;c.fill();if(stroke){c.strokeStyle=stroke;c.lineWidth=2;c.stroke();} }
@@ -10,7 +11,7 @@ function cloud(c:CanvasRenderingContext2D,x:number,y:number,scale:number,color='
 function gradient(c:CanvasRenderingContext2D,w:number,h:number,top:string,bottom:string){const g=c.createLinearGradient(0,0,0,h);g.addColorStop(0,top);g.addColorStop(1,bottom);c.fillStyle=g;c.fillRect(0,0,w,h);}
 function tree(c:CanvasRenderingContext2D,x:number,y:number,s:number,color:string){rect(c,x-6*s,y-100*s,12*s,100*s,'#554331');ellipse(c,x,y-120*s,42*s,48*s,color);ellipse(c,x-30*s,y-98*s,34*s,30*s,color);ellipse(c,x+27*s,y-100*s,38*s,35*s,color);}
 function skyline(c:CanvasRenderingContext2D,w:number,base:number,color:string){for(let i=0;i<Math.ceil(w/66)+2;i++){const x=i*66-40;const h=45+((i*73)%130);rect(c,x,base-h,49,h,color);for(let j=0;j<4;j++)for(let k=0;k<Math.floor(h/22)-1;k++)rect(c,x+7+j*10,base-h+12+k*20,4,7,'#d6e1e144');}}
-function floor(id:string,w:number){const out=canvas(w,150),c=out.getContext('2d')!;const colors:Record<string,[string,string]>={neto:['#b9b3a5','#777873'],liberdade:['#898d9c','#414554'],curitiba:['#b4bba7','#728577'],piaui:['#c98857','#855033'],planalto:['#dae5e9','#9baeb9']};const a=colors[id]??colors.neto;gradient(c,w,150,a[0],a[1]);const ys=[0,10,26,50,83,126,150];for(let row=0;row<ys.length-1;row++){line(c,[[0,ys[row]],[w,ys[row]]],id==='piaui'?'#60392055':'#26343e44',1.5);for(let col=-10;col<30;col++){const u=(col+(row%2)*.5)*90;line(c,[[800+(u-800)*(1+ys[row]/180),ys[row]],[800+(u-800)*(1+ys[row+1]/180),ys[row+1]]],id==='piaui'?'#75452944':'#24323c33',1);}}if(id==='liberdade'){for(let x=0;x<w;x+=88)poly(c,[[x,22],[x+22,36],[x,50],[x-22,36]],'#d9d6c855');}if(id==='piaui'){for(let i=0;i<65;i++)ellipse(c,(i*83)%w,7+(i*17)%137,2+(i%4),1,'#edc99766');}rect(c,0,0,w,4,'#26313c88');return out;}
+function floor(id:string,w:number,density:number){const out=canvas(w,150,density),c=out.getContext('2d')!;const colors:Record<string,[string,string]>={neto:['#b9b3a5','#777873'],liberdade:['#898d9c','#414554'],curitiba:['#b4bba7','#728577'],piaui:['#c98857','#855033'],planalto:['#dae5e9','#9baeb9']};const a=colors[id]??colors.neto;gradient(c,w,150,a[0],a[1]);const ys=[0,10,26,50,83,126,150];for(let row=0;row<ys.length-1;row++){line(c,[[0,ys[row]],[w,ys[row]]],id==='piaui'?'#60392055':'#26343e44',1.5);for(let col=-10;col<30;col++){const u=(col+(row%2)*.5)*90;line(c,[[800+(u-800)*(1+ys[row]/180),ys[row]],[800+(u-800)*(1+ys[row+1]/180),ys[row+1]]],id==='piaui'?'#75452944':'#24323c33',1);}}if(id==='liberdade'){for(let x=0;x<w;x+=88)poly(c,[[x,22],[x+22,36],[x,50],[x-22,36]],'#d9d6c855');}if(id==='piaui'){for(let i=0;i<65;i++)ellipse(c,(i*83)%w,7+(i*17)%137,2+(i%4),1,'#edc99766');}rect(c,0,0,w,4,'#26313c88');return out;}
 function neto(c:CanvasRenderingContext2D,w:number){
  skyline(c,w,302,'#768aa0');rect(c,0,315,w,130,'#b3ae9c');
  // Fachada baseada na referência: faixa azul, letreiro creme e vitrines abertas.
@@ -96,16 +97,16 @@ function planalto(c:CanvasRenderingContext2D,w:number){
  rect(c,304,159,4,225,'#c7d7d8');rect(c,308,163,85,51,'#287e48');poly(c,[[319,188],[350,169],[382,188],[350,207]],'#f7d456');ellipse(c,350,188,12,12,'#315483');line(c,[[340,186],[360,190]],'#fff',2);
  rect(c,566,402,468,26,'#3d6774');text(c,'PALÁCIO DO PLANALTO',800,415,18,'#edf6ed');
 }
-export function buildOutdoorScene(id: string, w: number, h: number) {
- const sky=canvas(960,h),sc=sky.getContext('2d')!;
+export function buildOutdoorScene(id:string,w:number,h:number,density=1) {
+ const sky=canvas(960,h,density),sc=sky.getContext('2d')!;
  const palette:Record<string,[string,string]>={neto:['#2673a7','#d5e8e0'],liberdade:['#7b87ac','#efd1c0'],curitiba:['#7ba7b7','#e5ead9'],piaui:['#6d3a69','#ffd17b'],planalto:['#2f86bf','#d7edf0']};
  const colors=palette[id]??palette.neto;gradient(sc,960,h,colors[0],colors[1]);
  if(id==='piaui'){ellipse(sc,677,203,57,57,'#ffd780');cloud(sc,220,125,1.5,'#e5a8a366');cloud(sc,700,83,1.4,'#e7a4ad44');}else{cloud(sc,170,99,1.1);cloud(sc,707,126,1.4);cloud(sc,441,47,.8);}
- const mountains=canvas(w,h),mc=mountains.getContext('2d')!;
+ const mountains=canvas(w,h,density),mc=mountains.getContext('2d')!;
  // Distant landscape layer creates stable low-cost parallax across all camera positions.
  if(id==='piaui'){poly(mc,[[0,430],[0,324],[170,287],[350,340],[570,290],[820,335],[1040,280],[1260,331],[1450,284],[1600,315],[1600,430]],'#87526488');}
  else {skyline(mc,w,355,id==='curitiba'?'#7c9c8c':'#7894a088');}
- const hall=canvas(w,h),hc=hall.getContext('2d')!;
+ const hall=canvas(w,h,density),hc=hall.getContext('2d')!;
  ({neto,liberdade,curitiba,piaui,planalto}[id]??neto)(hc,w);
- return {sky,mountains,hall,floor:floor(id,w)};
+ return {sky,mountains,hall,floor:floor(id,w,density)};
 }

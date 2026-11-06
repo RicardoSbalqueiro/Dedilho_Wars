@@ -1,10 +1,11 @@
+import {layerCanvas} from './canvas';
 // Arenas adicionais em camadas: arquitetura pré-renderizada e pequenos detalhes vivos.
 // Todas compartilham o mesmo chão e os mesmos limites físicos do jogo.
 const TAU = Math.PI * 2;
 type Ctx = CanvasRenderingContext2D;
 type Scene = { sky: HTMLCanvasElement; mountains: HTMLCanvasElement; hall: HTMLCanvasElement; floor: HTMLCanvasElement };
 const IDS = new Set(['casebre', 'praca', 'osasco', 'bolivia', 'morro', 'campo', 'casabranca', 'letsgay', 'ngb', 'zoologico', 'termodinamica']);
-function canvas(w: number, h: number) { const c = document.createElement('canvas'); c.width = w; c.height = h; return c; }
+const canvas=layerCanvas;
 function rect(c: Ctx, x: number, y: number, w: number, h: number, color: string) { c.fillStyle = color; c.fillRect(x, y, w, h); }
 function line(c: Ctx, points: number[][], color: string, width = 2) { c.strokeStyle = color; c.lineWidth = width; c.beginPath(); points.forEach(([x, y], i) => i ? c.lineTo(x, y) : c.moveTo(x, y)); c.stroke(); }
 function poly(c: Ctx, points: number[][], color: string, stroke?: string) { c.beginPath(); points.forEach(([x, y], i) => i ? c.lineTo(x, y) : c.moveTo(x, y)); c.closePath(); c.fillStyle = color; c.fill(); if (stroke) { c.strokeStyle = stroke; c.lineWidth = 2; c.stroke(); } }
@@ -189,8 +190,8 @@ function zoologico(c: Ctx) {
   for (const x of [300, 1260]) { palm(c, x, 439, .75, '#397b53'); oval(c, x + 40, 409, 17, 6, '#d7b64e'); }
 }
 
-function makeFloor(id: string, w: number) {
-  const out = canvas(w, 150), c = out.getContext('2d')!;
+function makeFloor(id:string,w:number,density:number) {
+  const out = canvas(w,150,density), c = out.getContext('2d')!;
   const palette: Record<string, [string, string]> = { casebre: ['#b59368', '#776950'], praca: ['#b4b8c0', '#767d94'], osasco: ['#6d747b', '#414d59'], bolivia: ['#b9a88a', '#7a726a'], morro: ['#9e8b89', '#6c6473'], campo: ['#5d9753', '#2b684b'], casabranca: ['#adc0ae', '#758e8d'], letsgay: ['#eac5bf', '#bb92ad'], ngb: ['#30536b', '#142b43'], zoologico: ['#baa277', '#727b54'], termodinamica: ['#ead2a3', '#c1a883'] };
   const colors = palette[id]; gradient(c, w, 150, colors[0], colors[1]);
   if (id === 'campo') {
@@ -209,23 +210,23 @@ function makeFloor(id: string, w: number) {
   rect(c, 0, 0, w, 4, '#1b35394d'); return out;
 }
 
-export function buildExtraScene(id: string, w: number, h: number): Scene | null {
+export function buildExtraScene(id:string,w:number,h:number,density=1): Scene | null {
   if (!IDS.has(id)) return null;
-  const sky = canvas(960, h), sc = sky.getContext('2d')!;
+  const sky = canvas(960,h,density), sc = sky.getContext('2d')!;
   const palettes: Record<string, [string, string]> = { casebre: ['#607b87', '#d2c1a5'], praca: ['#373e68', '#c69b9e'], osasco: ['#687f99', '#e3bb83'], bolivia: ['#4d8db2', '#c8e2dd'], morro: ['#4b436e', '#e29c8c'], campo: ['#234a5b', '#84a7a3'], casabranca: ['#0c1937', '#536b83'], letsgay: ['#8e6cac', '#ffc5be'], ngb: ['#0c2137', '#214764'], zoologico: ['#698f86', '#d0d8ad'], termodinamica: ['#2c8eb6', '#ffe0ab'] };
   gradient(sc, 960, h, ...palettes[id]);
   if (id === 'casabranca') { for (let i = 0; i < 83; i++) oval(sc, (i * 127) % 960, 13 + i * 47 % 246, i % 5 ? 1 : 1.7, i % 5 ? 1 : 1.7, '#e1f3e4aa'); oval(sc, 768, 92, 29, 29, '#dcdfc7'); oval(sc, 759, 86, 27, 27, '#162647'); }
   else if (id !== 'ngb') { cloud(sc, 169, 109, 1.1); cloud(sc, 709, 77, 1.3); cloud(sc, 465, 164, .7, '#fff3d138'); }
-  const mountains = canvas(w, h), mc = mountains.getContext('2d')!;
+  const mountains = canvas(w,h,density), mc = mountains.getContext('2d')!;
   if (id === 'bolivia') hill(mc, 339, '#91a4aa', 1, 84);
   else if (id === 'letsgay' || id === 'termodinamica') hill(mc, 344, id === 'letsgay' ? '#8789ab' : '#88a9a5', 1, 33);
   else if (id === 'casabranca') hill(mc, 368, '#273e50', 2, 21);
   else if (id === 'ngb') { rect(mc, 0, 55, w, 390, '#12354a'); skyline(mc, 341, '#24617a'); }
   else skyline(mc, 344, ['casebre', 'zoologico', 'campo'].includes(id) ? '#648b7c88' : '#8b8b9b66');
-  const hall = canvas(w, h), hc = hall.getContext('2d')!;
+  const hall = canvas(w,h,density), hc = hall.getContext('2d')!;
   const builders: Record<string, (c: Ctx) => void> = { casebre, praca, osasco, bolivia, morro, campo, casabranca, letsgay: c => beach(c, false), ngb, zoologico, termodinamica: c => beach(c, true) };
   builders[id](hc);
-  return { sky, mountains, hall, floor: makeFloor(id, w) };
+  return { sky, mountains, hall, floor: makeFloor(id,w,density) };
 }
 
 /** Detalhes pequenos animados no mesmo plano de parallax da arquitetura. */

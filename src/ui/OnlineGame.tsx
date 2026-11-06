@@ -1,3 +1,4 @@
+import {CanvasSurface,stageDensity,canvasFontRevision} from '../game/canvas';
 import { FinisherPrompt } from './FinisherPrompt';
 import { FINISHER_NAMES } from '../game/finishers-art';
 import { FIGHTER_STYLE } from '../game/presentation';
@@ -30,7 +31,7 @@ export function OnlineGame({room,user,onLobby,onLeave}:{room:Room;user:User;onLo
  const blocked=useRef(false);blocked.current=leaving;
  const host=room.host.id===user.id;
  useEffect(()=>{
-  const ctx=canvas.current!.getContext('2d')!,bindings=loadBindings();
+  const surface=new CanvasSurface(canvas.current!,W,H,'scene'),ctx=surface.ctx,bindings=loadBindings();surface.prepare();
   const game=new Game({mode:'versus',online:true,p1:room.host.char,p2:room.guest!.char,stage:room.stage,difficulty:'normal',bindings},()=>{});
   gameRef.current=game;
   (window as unknown as {__game?:Game}).__game=game;
@@ -54,7 +55,7 @@ export function OnlineGame({room,user,onLobby,onLeave}:{room:Room;user:User;onLo
   const blur=()=>{keyboard.down.clear();physicalPressed=0};
   const visibility=()=>{game.resetClock();if(document.hidden){blur();touchInput.clear();}};
   document.addEventListener('visibilitychange',visibility);window.addEventListener('blur',blur);window.addEventListener('keydown',keydown);
-  const stage=getStage(room.stage);
+  let stage=getStage(room.stage,surface.scale);
   const loop=(now:number)=>{
    const mask=blocked.current?0:ACTIONS.reduce((m,a,i)=>m|((bindings[0][a].some(k=>k&&keyboard.down.has(k))||touchInput.held.has(a))?1<<i:0),0);
    const touchPressed=touchInput.consume().reduce((m,a)=>m|(1<<ACTIONS.indexOf(a)),0),pressed=(mask&~lastMask)|touchPressed|physicalPressed;physicalPressed=0;
@@ -62,6 +63,8 @@ export function OnlineGame({room,user,onLobby,onLeave}:{room:Room;user:User;onLo
    if(host){game.onlinePressed[0]|=pressed;game.onlineInputs=[mask,link.inputStale()?0:otherInput];game.paused=link.stale();game.advance(now)}
    if(now-lastSend>=50||mask!==lastMask||pressed){if(host){const s=captureState(game);s.inputAck=lastEvent;link.sendState(s)}else link.sendInput({mask,events:pending});lastSend=now}lastMask=mask;
    if((game.phase==='finisher'||!!game.seq?.kind.startsWith('super'))!==lastCinematic){lastCinematic=game.phase==='finisher'||!!game.seq?.kind.startsWith('super');setCinematic(lastCinematic);}
+   surface.prepare();const density=stageDensity(surface.scale);
+   if(stage.density!==density||stage.fontRevision!==canvasFontRevision())stage=getStage(room.stage,density);
    render(ctx,game,stage,game.tick,host?undefined:now);
    if(game.phase==='matchEnd'&&!done){
     done=true;setResult(game.winner);setFinishName(game.finishedBy!==null?FINISHER_NAMES[game.f[game.finishedBy].ch]:'');
@@ -79,7 +82,7 @@ export function OnlineGame({room,user,onLobby,onLeave}:{room:Room;user:User;onLo
  return <div className="absolute inset-0">
   {result===null && !leaving && !cinematic && <TouchControls gameRef={gameRef} side={host?0:1} onMenu={()=>setLeaving(true)}/>}
   <FinisherPrompt gameRef={gameRef} side={host?0:1}/>
-  <canvas ref={canvas} width={W} height={H} className="absolute inset-0"/>
+  <canvas ref={canvas} width={W} height={H} className="absolute inset-0 w-full h-full"/>
   {!cinematic && <div className="absolute left-1/2 -translate-x-1/2 top-[70px] text-center pointer-events-none text-[9px] text-white/80 bg-black/45 px-3 py-1 rounded">
    <span className={network==='RECONECTANDO'?'text-amber-300':'text-cyan-300'}>● {network}{ping>0?` · ${ping} ms`:''}</span><br/>{room.host.username} × {room.guest?.username} · VOCÊ É P{host?1:2}
   </div>}

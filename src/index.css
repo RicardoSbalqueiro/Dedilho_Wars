@@ -29,6 +29,10 @@ canvas {
   image-rendering: auto;
 }
 
+@layer base {
+  canvas[data-surface] {width:var(--canvas-width);height:var(--canvas-height);}
+}
+
 .fight-font {
   font-family: var(--font-fight);
   font-style: italic;

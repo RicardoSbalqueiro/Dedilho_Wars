@@ -1,3 +1,4 @@
+import {layerCanvas,stageDensity,canvasFontRevision} from './canvas';
 // Arenas em camadas com parallax; a geometria do combate é igual em todos os mapas.
 import { buildOutdoorScene } from './stage-scenes';
 import { buildExtraScene, drawExtraStageDetails } from './extra-stage-scenes';
@@ -29,12 +30,7 @@ export const FLOOR_Y = 470; // y do chão onde os lutadores pisam
 export const STAGE_W = 1600;
 const BASE = 440;
 
-function mk(w: number, h: number) {
-  const c = document.createElement('canvas');
-  c.width = w;
-  c.height = h;
-  return c;
-}
+const mk=layerCanvas;
 
 let seed = 7;
 const rnd = () => {
@@ -74,8 +70,8 @@ function banner(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, 
   ctx.strokeRect(x, y, w, h);
 }
 
-function buildSky() {
-  const c = mk(W, H);
+function buildSky(density:number) {
+  const c = mk(W, H,density);
   const ctx = c.getContext('2d')!;
   const g = ctx.createLinearGradient(0, 0, 0, 440);
   g.addColorStop(0, '#120a2b');
@@ -111,8 +107,8 @@ function buildSky() {
   return c;
 }
 
-function buildMountains() {
-  const c = mk(STAGE_W, H);
+function buildMountains(density:number) {
+  const c = mk(STAGE_W,H,density);
   const ctx = c.getContext('2d')!;
   const ridge = (base: number, amp: number, col: string, step: number, snow = false) => {
     ctx.fillStyle = col;
@@ -156,8 +152,8 @@ function buildMountains() {
   return c;
 }
 
-function buildHall() {
-  const c = mk(STAGE_W, H);
+function buildHall(density:number) {
+  const c = mk(STAGE_W,H,density);
   const ctx = c.getContext('2d')!;
   // telhado
   const rg = ctx.createLinearGradient(0, 20, 0, 130);
@@ -279,8 +275,8 @@ function buildHall() {
   return c;
 }
 
-function buildFloor() {
-  const c = mk(STAGE_W, 150);
+function buildFloor(density:number) {
+  const c = mk(STAGE_W,150,density);
   const ctx = c.getContext('2d')!;
   const g = ctx.createLinearGradient(0, 0, 0, 150);
   g.addColorStop(0, '#6b4126');
@@ -356,14 +352,19 @@ export class Stage {
   hype = 0;
   private lastBackgroundTime:number|null=null;
 
-  constructor(public readonly id: StageId = 'dojo') {
+  readonly fontRevision=canvasFontRevision();
+  get pixelCount(){return [this.sky,this.mountains,this.hall,this.floor].reduce((sum,c)=>sum+c.width*c.height,0)}
+
+  constructor(public readonly id:StageId='dojo',public readonly density=1){
+    this.density=stageDensity(density);
+    seed=7+STAGE_IDS.indexOf(id)*997;
     if (id === 'dojo') {
-      this.sky = buildSky(); this.mountains = buildMountains(); this.hall = buildHall(); this.floor = buildFloor();
+      this.sky = buildSky(this.density); this.mountains = buildMountains(this.density); this.hall = buildHall(this.density); this.floor = buildFloor(this.density);
       const sign = this.hall.getContext('2d')!;
       sign.fillStyle = '#170d22dd'; sign.fillRect(617, 52, 366, 39);
       sign.font = "900 23px 'Russo One',Impact,sans-serif"; sign.textAlign = 'center'; sign.fillStyle = '#f7dca9'; sign.fillText('DOJO SENBUKAN', 800, 80);
     } else {
-      const scene = buildExtraScene(id, STAGE_W, H) ?? buildOutdoorScene(id, STAGE_W, H);
+      const scene = buildExtraScene(id,STAGE_W,H,this.density)??buildOutdoorScene(id,STAGE_W,H,this.density);
       this.sky = scene.sky; this.mountains = scene.mountains; this.hall = scene.hall; this.floor = scene.floor;
     }
     const skins = ['#f1c8a0', '#c98d5c', '#8d5a3a', '#e8b58a', '#6b4430'];
@@ -392,15 +393,15 @@ export class Stage {
   }
 
   drawBackground(ctx: CanvasRenderingContext2D, camX: number, zoom: number, time: number) {
-    ctx.drawImage(this.sky, 0, 0);
+    ctx.drawImage(this.sky,0,0,W,H);
     ctx.save();
     this.layer(ctx, camX, zoom, 0.1);
-    ctx.drawImage(this.mountains, 0, 0);
+    ctx.drawImage(this.mountains,0,0,STAGE_W,H);
     ctx.restore();
 
     ctx.save();
     this.layer(ctx, camX, zoom, 0.35);
-    ctx.drawImage(this.hall, 0, 0);
+    ctx.drawImage(this.hall,0,0,STAGE_W,H);
     drawExtraStageDetails(ctx, this.id, time);
     // lanternas
     for (let i = 0; this.id === 'dojo' && i < 10; i++) {
@@ -496,7 +497,7 @@ export class Stage {
 
   /** Desenhado já dentro da transformação do mundo (câmera). */
   drawFloor(ctx: CanvasRenderingContext2D) {
-    ctx.drawImage(this.floor, 0, BASE + 8);
+    ctx.drawImage(this.floor,0,BASE+8,STAGE_W,150);
   }
 
   drawLights(ctx: CanvasRenderingContext2D, camX: number, tint: string | null, tintAmt: number) {

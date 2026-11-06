@@ -1,3 +1,4 @@
+import {CanvasSurface} from '../game/canvas';
 import {useEffect,useRef,useState} from 'react';
 import {CHAR_IDS,CHARS} from '../game/data';
 import type {CharId} from '../game/data';
@@ -11,10 +12,10 @@ export function AnimationGallery({initial}:{initial:CharId}){
   const canvas=useRef<HTMLCanvasElement>(null),position=useRef(0),frames=ANIMATION_CLIPS[clip].frames;
   const seek=(n:number)=>{setPlaying(false);position.current=Math.max(0,Math.min(frames-1,n));setFrame(Math.floor(position.current))};
   useEffect(()=>{
-    const ctx=canvas.current!.getContext('2d')!,clock=new FrameTimer();let raf=0,notice=0;
+    const surface=new CanvasSurface(canvas.current!,680,380),ctx=surface.ctx,clock=new FrameTimer();let raf=0,notice=0;
     const rebase=()=>clock.rebase();document.addEventListener('visibilitychange',rebase);
     const draw=(now:number)=>{
-      clock.sample(now,playing&&!document.hidden);
+      surface.prepare();clock.sample(now,playing&&!document.hidden);
       position.current+=clock.deltaFrames*ANIMATION_SUBFRAMES;
       if(position.current>=frames)position.current=ANIMATION_CLIPS[clip].loop?position.current%frames:frames-1;
       const i=Math.floor(position.current),pose=animationFrame(ch,clip,position.current);

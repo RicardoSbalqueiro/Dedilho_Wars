@@ -22,6 +22,12 @@ Arenas originais: **Neto Supermercados**, **Dojo Senbukan**, **Liberdade SP**, *
 
 Novas arenas: **Casebre**, **Praça do Dedilhador**, **Osasco**, **Bolívia**, **Morro do Bieu**, **Campo do futebol dos campeões**, **Casa Branca com Ovnis** (ideia de Jalam), **Praia do Lets Gay** (ideia de Jalam e Diegão), **Lugar do NGB News**, **Zoológico do Orangotango** e **Praia da Termodinâmica**. Todas têm arte, pisos e detalhes animados próprios. A seleção tem três páginas; os 17 mapas também participam do sorteio da abertura e das salas online.
 
+## Resolução e nitidez
+
+O jogo, as aberturas e a seleção renderizam em **Full HD (1920×1080) ou mais**, adaptando a resolução interna até **4K (3840×2160)** à área exibida e à densidade de pixels da tela. Textos de menu são pintados pelo navegador no tamanho final; retratos, miniaturas e a galeria de animações também respeitam a densidade de pixels. Os 17 cenários têm suas camadas redesenhadas na resolução necessária.
+
+Redimensionar a janela, mudar de monitor/DPI ou girar o celular atualiza a imagem sem reiniciar a partida. A geometria do combate continua usando suas coordenadas lógicas originais, e a simulação continua a 60 Hz. Não há mudança de alcance, hitboxes, controles ou protocolo online. [Implementação e verificações](docs/resolution.md).
+
 ## Velocidade consistente
 
 A luta usa 60 ticks de simulação por segundo, e abertura, seleção, cenários e galeria usam o tempo decorrido. Monitores de alta frequência não aceleram os movimentos. A renderização interpola poses entre ticks, mantendo ataques ativos, defesa, viradas, hitstop e giros próprios imediatos. Ao trocar de aba, a luta offline pausa; ao retomar não há uma rajada para compensar o tempo ausente. Detalhes e resultados em [docs/timing.md](docs/timing.md).

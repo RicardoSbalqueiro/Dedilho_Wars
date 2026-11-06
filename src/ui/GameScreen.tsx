@@ -1,3 +1,4 @@
+import {CanvasSurface,stageDensity,canvasFontRevision} from '../game/canvas';
 import { FIGHTER_STYLE } from '../game/presentation';
 import { FINISHER_NAMES } from '../game/finishers-art';
 import { rememberLocal } from '../game/progression';
@@ -29,8 +30,8 @@ export function GameScreen({ cfg, onExit, onSelect, onMap, onRadio, inputSuspend
 
   useEffect(() => {
     const canvas = ref.current!;
-    const ctx = canvas.getContext('2d')!;
-    const stage = getStage(cfg.stage ?? 'dojo');
+    const surface=new CanvasSurface(canvas,W,H,'scene'),ctx=surface.ctx;surface.prepare();
+    let stage=getStage(cfg.stage??'dojo',surface.scale);
     const game = new Game(cfg, (e) => {
       if (e.type === 'pause') { setPaused(!!e.paused); setSel(0); }
       if (e.type === 'matchEnd') {
@@ -47,6 +48,8 @@ export function GameScreen({ cfg, onExit, onSelect, onMap, onRadio, inputSuspend
     const loop = (now: number) => {
       game.advance(now);
       if((game.phase==='finisher'||!!game.seq?.kind.startsWith('super'))!==lastCinematic){lastCinematic=game.phase==='finisher'||!!game.seq?.kind.startsWith('super');setCinematic(lastCinematic);}
+      surface.prepare();const density=stageDensity(surface.scale);
+      if(stage.density!==density||stage.fontRevision!==canvasFontRevision())stage=getStage(cfg.stage??'dojo',density);
       render(ctx, game, stage, game.tick);
       raf = requestAnimationFrame(loop);
     };
@@ -100,7 +103,7 @@ export function GameScreen({ cfg, onExit, onSelect, onMap, onRadio, inputSuspend
       {cfg.mode === 'training' && <TrainingChallenges gameRef={gameRef}/>}
       {cfg.mode === 'training' && <FrameDataLab gameRef={gameRef} onOpenChange={setFrameLabOpen}/>}
       <FinisherPrompt gameRef={gameRef}/>
-      <canvas ref={ref} width={W} height={H} className="absolute inset-0" />
+      <canvas ref={ref} width={W} height={H} className="absolute inset-0 w-full h-full" />
       {!cinematic && !paused && result===null && <div className="absolute bottom-[3px] left-1/2 -translate-x-1/2 text-[10px] tracking-widest text-white/50 pointer-events-none">P1: {keyLabel(cfg.bindings[0].down[0])} AGACHAR · P2: {keyLabel(cfg.bindings[1].down[0])} AGACHAR · ESC / P: PAUSA</div>}
 
       {!paused && !cinematic && result === null && <TouchControls gameRef={gameRef} onMenu={() => gameRef.current?.togglePause()}/>}
