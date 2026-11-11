@@ -15,6 +15,11 @@ export const ANIMATION_STYLE: Record<CharId, { weight: number; tempo: number; sw
   jao: { weight: .85, tempo: .065, swing: 15, recoil: .75 },
   jane: { weight: .65, tempo: .095, swing: 23, recoil: 1 },
   cristyan: { weight: 1.1, tempo: .08, swing: 18, recoil: 1 },
+  patrick:{weight:1.4,tempo:.052,swing:12,recoil:1.2},
+  gabrielzin:{weight:.65,tempo:.09,swing:27,recoil:.9},
+  ulisses:{weight:.95,tempo:.062,swing:17,recoil:1.1},
+  felipence:{weight:1.1,tempo:.075,swing:22,recoil:1.15},
+  hdsh:{weight:.85,tempo:.068,swing:14,recoil:.8},
   eneas: { weight: 1.3, tempo: .055, swing: 12, recoil: 1.1 },
 };
 

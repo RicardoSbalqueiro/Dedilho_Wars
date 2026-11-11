@@ -1,3 +1,4 @@
+import {canTransform} from './resources';
 // IA do computador: aproxima, defende, combina golpes, usa especiais e super.
 import type { Game, Fighter, Difficulty } from './engine';
 import type { Action } from './input';
@@ -52,7 +53,7 @@ export function aiAct(g: Game, f: Fighter, diff: Difficulty) {
   const P = PROFILE[diff];
   const ai = f.ai;
   const pad = f.pad;
-  const tk = g.tick;
+  const tk = g.tick;pad.set('charge',false,tk);
 
   for (const k in ai.tapAt) {
     const a = k as Action;
@@ -143,6 +144,9 @@ export function aiAct(g: Game, f: Fighter, diff: Difficulty) {
     } else decide();
   }
 
+  if(canAct&&canTransform(f)&&tk%90===0&&rnd()<.6){tap('transform');return;}
+  if(canAct&&f.ch==='rickzera'&&f.formT===0&&f.energy<22&&dist>220){for(const a of ['left','right','down','block'] as const)pad.set(a,false,tk);f.pad.set('charge',true,tk);return;}
+  if(canAct&&f.exhaustT>0){f.pad.set('block',true,tk);return;}
   function startPlan(list: Action[]) {
     const n = Math.max(1, Math.min(list.length, P.combo));
     ai.plan = list.slice(0, n);

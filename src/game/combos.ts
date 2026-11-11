@@ -7,9 +7,9 @@ export interface ComboResult {hits:number;damage:number;moves:string[];kind:Comb
 export interface ComboStep {input:Action[];move:string;hint:string}
 export interface ComboRoute {id:string;ch:CharId;name:string;level:'Básico'|'Intermediário'|'Aéreo';steps:ComboStep[];help:string}
 const step=(move:string,input:Action[],hint='Confirme o acerto antes de continuar.'):ComboStep=>({move,input,hint});
-const SPECIAL:Record<CharId,[Action,string]>={caetano:['s2','Dedilho técnico'],orango:['s1','Dedilho Supremo'],tubarao:['s1','Mordida do Fiscal'],rickzera:['s1','Franco confirmado'],bieu:['s1','Chave confirmada'],nomad:['s1','Lanche na sequência'],renngotti:['s2','Microfone no combo'],aneninha:['s1','Osasco confirmado'],santox:['s2','Chute do Coelho'],jao:['s2','Equação confirmada'],jane:['s2','Grau na sequência'],cristyan:['s1','Teep baiano'],eneas:['s2','Diagnóstico confirmado']};
+const SPECIAL:Record<CharId,[Action,string]>={caetano:['s2','Dedilho técnico'],orango:['s1','Dedilho Supremo'],tubarao:['s1','Mordida do Fiscal'],rickzera:['s1','Transferência de energia'],bieu:['s1','Chave confirmada'],nomad:['s1','Lanche na sequência'],renngotti:['s2','Microfone no combo'],aneninha:['s1','Osasco confirmado'],santox:['s2','Chute do Coelho'],jao:['s2','Equação confirmada'],jane:['s2','Grau na sequência'],cristyan:['s1','Teep baiano'],eneas:['s2','Diagnóstico confirmado'],patrick:['s1','Casco confirmado'],gabrielzin:['s1','Coração confirmado'],ulisses:['s1','Membro distorcido'],felipence:['s1','Riff confirmado'],hdsh:['s2','Tendência confirmada']};
 export const COMBO_ROUTES:ComboRoute[]=CHAR_IDS.flatMap(ch=>{
- const [special,name]=SPECIAL[ch],longAir=!['orango','tubarao','eneas'].includes(ch);
+ const [special,name]=SPECIAL[ch],longAir=!['orango','tubarao','eneas','patrick'].includes(ch);
  return [
   {id:`${ch}-two`,ch,name:'Um, dois!',level:'Básico',steps:[step('pL',['p']),step('kM',['k'])],help:'Dois golpes com soco e chute. Comece perto e aperte o segundo durante o impacto.'},
   {id:`${ch}-three`,ch,name:'Três tempos',level:'Básico',steps:[step('pL',['p']),step('kM',['k']),step('pH',['p'])],help:'Leve → médio → forte. O forte termina a cadeia; errar continua punível.'},

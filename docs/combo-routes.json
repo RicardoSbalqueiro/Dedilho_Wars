@@ -3,7 +3,7 @@
     "fps": 60,
     "target": "cristyan",
     "spacing": "sum of push widths + 5",
-    "routes": 52,
+    "routes": 72,
     "guard": "held after first hit",
     "limitations": "Validated reference routes, not a global damage maximum or human balance evaluation. Timing/spacing can vary with the opponent silhouette."
   },
@@ -218,7 +218,7 @@
     {
       "id": "rickzera-special",
       "character": "rickzera",
-      "name": "Franco confirmado",
+      "name": "Transferência de energia",
       "level": "Intermediário",
       "commands": "J → K → U",
       "moves": [
@@ -228,7 +228,7 @@
       ],
       "hits": 5,
       "damage": 107.3,
-      "recoveredAt": 93
+      "recoveredAt": 95
     },
     {
       "id": "rickzera-air",
@@ -784,6 +784,305 @@
       "hits": 2,
       "damage": 97.6,
       "recoveredAt": 115
+    },
+    {
+      "id": "patrick-two",
+      "character": "patrick",
+      "name": "Um, dois!",
+      "level": "Básico",
+      "commands": "J → K",
+      "moves": [
+        "pL",
+        "kM"
+      ],
+      "hits": 2,
+      "damage": 65.3,
+      "recoveredAt": 48
+    },
+    {
+      "id": "patrick-three",
+      "character": "patrick",
+      "name": "Três tempos",
+      "level": "Básico",
+      "commands": "J → K → J",
+      "moves": [
+        "pL",
+        "kM",
+        "pH"
+      ],
+      "hits": 3,
+      "damage": 119.7,
+      "recoveredAt": 127
+    },
+    {
+      "id": "patrick-special",
+      "character": "patrick",
+      "name": "Casco confirmado",
+      "level": "Intermediário",
+      "commands": "J → K → U",
+      "moves": [
+        "pL",
+        "kM",
+        "s1"
+      ],
+      "hits": 3,
+      "damage": 117.3,
+      "recoveredAt": 70
+    },
+    {
+      "id": "patrick-air",
+      "character": "patrick",
+      "name": "Rasteira e perseguição",
+      "level": "Aéreo",
+      "commands": "↓+K → ↑ → K",
+      "moves": [
+        "cK",
+        "jump",
+        "jK"
+      ],
+      "hits": 2,
+      "damage": 105.2,
+      "recoveredAt": 115
+    },
+    {
+      "id": "gabrielzin-two",
+      "character": "gabrielzin",
+      "name": "Um, dois!",
+      "level": "Básico",
+      "commands": "J → K",
+      "moves": [
+        "pL",
+        "kM"
+      ],
+      "hits": 2,
+      "damage": 53.2,
+      "recoveredAt": 44
+    },
+    {
+      "id": "gabrielzin-three",
+      "character": "gabrielzin",
+      "name": "Três tempos",
+      "level": "Básico",
+      "commands": "J → K → J",
+      "moves": [
+        "pL",
+        "kM",
+        "pH"
+      ],
+      "hits": 3,
+      "damage": 97.2,
+      "recoveredAt": 121
+    },
+    {
+      "id": "gabrielzin-special",
+      "character": "gabrielzin",
+      "name": "Coração confirmado",
+      "level": "Intermediário",
+      "commands": "J → K → U",
+      "moves": [
+        "pL",
+        "kM",
+        "s1"
+      ],
+      "hits": 3,
+      "damage": 83.6,
+      "recoveredAt": 66
+    },
+    {
+      "id": "gabrielzin-air",
+      "character": "gabrielzin",
+      "name": "Rasteira e perseguição",
+      "level": "Aéreo",
+      "commands": "↓+K → ↑ → J → K",
+      "moves": [
+        "cK",
+        "jump",
+        "jP",
+        "jK"
+      ],
+      "hits": 3,
+      "damage": 119.3,
+      "recoveredAt": 129
+    },
+    {
+      "id": "ulisses-two",
+      "character": "ulisses",
+      "name": "Um, dois!",
+      "level": "Básico",
+      "commands": "J → K",
+      "moves": [
+        "pL",
+        "kM"
+      ],
+      "hits": 2,
+      "damage": 59.7,
+      "recoveredAt": 44
+    },
+    {
+      "id": "ulisses-three",
+      "character": "ulisses",
+      "name": "Três tempos",
+      "level": "Básico",
+      "commands": "J → K → J",
+      "moves": [
+        "pL",
+        "kM",
+        "pH"
+      ],
+      "hits": 3,
+      "damage": 109.3,
+      "recoveredAt": 121
+    },
+    {
+      "id": "ulisses-special",
+      "character": "ulisses",
+      "name": "Membro distorcido",
+      "level": "Intermediário",
+      "commands": "J → K → U",
+      "moves": [
+        "pL",
+        "kM",
+        "s1"
+      ],
+      "hits": 3,
+      "damage": 109.3,
+      "recoveredAt": 66
+    },
+    {
+      "id": "ulisses-air",
+      "character": "ulisses",
+      "name": "Rasteira e perseguição",
+      "level": "Aéreo",
+      "commands": "↓+K → ↑ → J → K",
+      "moves": [
+        "cK",
+        "jump",
+        "jP",
+        "jK"
+      ],
+      "hits": 3,
+      "damage": 132.8,
+      "recoveredAt": 129
+    },
+    {
+      "id": "felipence-two",
+      "character": "felipence",
+      "name": "Um, dois!",
+      "level": "Básico",
+      "commands": "J → K",
+      "moves": [
+        "pL",
+        "kM"
+      ],
+      "hits": 2,
+      "damage": 59.7,
+      "recoveredAt": 44
+    },
+    {
+      "id": "felipence-three",
+      "character": "felipence",
+      "name": "Três tempos",
+      "level": "Básico",
+      "commands": "J → K → J",
+      "moves": [
+        "pL",
+        "kM",
+        "pH"
+      ],
+      "hits": 3,
+      "damage": 109.3,
+      "recoveredAt": 121
+    },
+    {
+      "id": "felipence-special",
+      "character": "felipence",
+      "name": "Riff confirmado",
+      "level": "Intermediário",
+      "commands": "J → K → U",
+      "moves": [
+        "pL",
+        "kM",
+        "s1"
+      ],
+      "hits": 3,
+      "damage": 107.7,
+      "recoveredAt": 68
+    },
+    {
+      "id": "felipence-air",
+      "character": "felipence",
+      "name": "Rasteira e perseguição",
+      "level": "Aéreo",
+      "commands": "↓+K → ↑ → J → K",
+      "moves": [
+        "cK",
+        "jump",
+        "jP",
+        "jK"
+      ],
+      "hits": 3,
+      "damage": 132.8,
+      "recoveredAt": 129
+    },
+    {
+      "id": "hdsh-two",
+      "character": "hdsh",
+      "name": "Um, dois!",
+      "level": "Básico",
+      "commands": "J → K",
+      "moves": [
+        "pL",
+        "kM"
+      ],
+      "hits": 2,
+      "damage": 59.7,
+      "recoveredAt": 44
+    },
+    {
+      "id": "hdsh-three",
+      "character": "hdsh",
+      "name": "Três tempos",
+      "level": "Básico",
+      "commands": "J → K → J",
+      "moves": [
+        "pL",
+        "kM",
+        "pH"
+      ],
+      "hits": 3,
+      "damage": 109.3,
+      "recoveredAt": 121
+    },
+    {
+      "id": "hdsh-special",
+      "character": "hdsh",
+      "name": "Tendência confirmada",
+      "level": "Intermediário",
+      "commands": "J → K → I",
+      "moves": [
+        "pL",
+        "kM",
+        "s2"
+      ],
+      "hits": 3,
+      "damage": 96.5,
+      "recoveredAt": 70
+    },
+    {
+      "id": "hdsh-air",
+      "character": "hdsh",
+      "name": "Rasteira e perseguição",
+      "level": "Aéreo",
+      "commands": "↓+K → ↑ → J → K",
+      "moves": [
+        "cK",
+        "jump",
+        "jP",
+        "jK"
+      ],
+      "hits": 3,
+      "damage": 132.8,
+      "recoveredAt": 129
     }
   ]
 }

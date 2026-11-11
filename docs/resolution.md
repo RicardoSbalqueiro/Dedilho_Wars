@@ -25,17 +25,17 @@ Os menus mantêm o layout lógico de 960×540 e usam CSS `zoom`, para que o nave
 
 As camadas de céu, arquitetura, paisagem e piso dos 17 mapas são reconstruídas na densidade necessária. `drawImage` recebe explicitamente os tamanhos lógicos, mantendo posição, parallax, escala e chão corretos. O desenho aleatório decorativo tem semente estável por mapa para evitar mudanças de cenário ao trocar a resolução. O cache distingue mapa e densidade, é invalidado quando as fontes carregam e retém no máximo oito entradas ou 48 Mi pixels de camadas. Referências ainda usadas por uma tela ativa continuam válidas.
 
-Não se altera o motor, o buffer de inputs, o frame data, o balanceamento, o limite de juggle, as Ultimates, os finishers ou os controles. A partida não é recriada ao redimensionar. O protocolo permanece `dw-online-10` e não há migração de contas ou banco.
+Não se altera o motor, o buffer de inputs, o frame data, o balanceamento, o limite de juggle, as Ultimates, os finishers ou os controles. A partida não é recriada ao redimensionar. O protocolo permanece `dw-online-11` e não há migração de contas ou banco.
 
 ## Validação
 
 - `npm run typecheck`: passou.
-- `npm test`: passou, incluindo **55 regressões novas** de dimensões físicas, Full HD/1440p/4K, Retina e zoom, limites de memória, métricas inválidas, ausência de realocação a cada frame e preservação de inputs/estado/simulação online ao mudar a resolução. Todas as suítes anteriores de combate, 13 lutadores, Ultimates/finishers, combos, treino, defesa, tempo, progressão e API continuam passando.
+- `npm test`: passou, incluindo **55 regressões novas** de dimensões físicas, Full HD/1440p/4K, Retina e zoom, limites de memória, métricas inválidas, ausência de realocação a cada frame e preservação de inputs/estado/simulação online ao mudar a resolução. Todas as suítes anteriores de combate, 18 lutadores, Ultimates/finishers, combos, treino, defesa, tempo, progressão e API continuam passando.
 - `npm run build`: passou.
 - Chromium: menus, seleção, retratos, combate e galeria em 1920×1080, 2560×1440, 3840×2160, 1280×720 com DPR 2 e 1536×864 com DPR 1,25. A resolução física observada corresponde à tabela; o layout principal não usa transformação de ampliação.
 - A mesma instância e os mesmos campos dos lutadores foram preservados ao redimensionar a partida pausada. Retratos estáticos foram verificados após mudar a janela e após uma mudança de DPR em execução.
 - Os 17 mapas tiveram camadas Full HD verificadas; Dojo, Neto Supermercados e NGB News também tiveram buffers na densidade de 4K conferidos. Foram desenhados com as dimensões lógicas existentes.
-- Online com dois jogadores autenticados, relay HTTP, host Full HD redimensionado para 1440p e convidado móvel com DPR 3: mesma partida após resize, especial por toque, Ultimates de P1/teclado e P2/toque, dano e recuperação sincronizados. Nenhum erro JavaScript. O protocolo `dw-online-10` permanece igual.
+- Online com dois jogadores autenticados, relay HTTP, host Full HD redimensionado para 1440p e convidado móvel com DPR 3: mesma partida após resize, especial por toque, Ultimates de P1/teclado e P2/toque, dano e recuperação sincronizados. Nenhum erro JavaScript. O protocolo `dw-online-11` permanece igual.
 - Celular com DPR 3, vertical e horizontal: menus nativos, resolução de combate Full HD ou maior, toque, Soco Inglês/cratera e rotação sem reinício da partida. Nenhum erro JavaScript nas verificações concluídas.
 
 As resoluções e o toque foram emulados no navegador. Esses resultados não são uma homologação de FPS em todos os aparelhos ou GPUs.

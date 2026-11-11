@@ -26,10 +26,10 @@ const near=(g:Game)=>{g.f[0].x=650;g.f[1].x=710};
 function lockedAttack(g:Game,f:Fighter,remaining:number){const m=f.def.moves.pH;g.startMove(f,m);f.moveT=m.startup+m.active+m.recovery+m.whiff-remaining}
 
 check('legacy bindings keep Q grab and all custom controls; turn gets a globally free key',()=>{
- const old:any=structuredClone(DEFAULT_BINDINGS);delete old[0].turn;delete old[1].turn;
+ const old:any=structuredClone(DEFAULT_BINDINGS);for(const v of old){delete v.transform;delete v.charge;}delete old[0].turn;delete old[1].turn;
  old[0].grab=['KeyQ',''];old[0].p=['KeyF',''];old[1].s3=['KeyN','Enter'];
  (globalThis as any).localStorage={getItem:()=>JSON.stringify(old)};
- try{const next=loadBindings();for(const p of [0,1])for(const a of ACTIONS.filter(a=>a!=='turn'))assert.deepEqual(next[p][a],old[p][a]);
+ try{const next=loadBindings();for(const p of [0,1])for(const a of ACTIONS.filter(a=>!['turn','transform','charge'].includes(a)))assert.deepEqual(next[p][a],old[p][a]);
   assert.equal(next[0].turn[0],'KeyV');assert.equal(next[1].turn[0],'Numpad8');
   assert.equal(bindingConflict(next,0,'turn','KeyQ'),'P1 · Agarrão');assert(bindingNotices(next).some(s=>s.includes('Q já está')));
   assert.equal(bindingConflict(next,0,'turn',next[0].turn[0]),null);
@@ -41,7 +41,7 @@ check('explicit custom/unassigned turn and old duplicate controls are preserved 
  (globalThis as any).localStorage={getItem:()=>JSON.stringify(b)};
  try{assert.deepEqual(loadBindings(),b);assert(bindingNotices(b).some(s=>s.includes('conflito')));assert(bindingNotices(b).some(s=>s.includes('sem tecla')))}finally{delete (globalThis as any).localStorage}
  assert.equal(DEFAULT_BINDINGS[0].turn[0],'KeyQ');assert.equal(DEFAULT_BINDINGS[1].turn[0],'KeyN');
- assert.equal(ACTIONS.indexOf('grab'),11);assert.equal(ACTIONS.indexOf('turn'),12);assert.equal(MAX_INPUT_MASK,16383);
+ assert.equal(ACTIONS.indexOf('grab'),11);assert.equal(ACTIONS.indexOf('turn'),12);assert.equal(MAX_INPUT_MASK,65535);
  assert.match(bindingConflict(DEFAULT_BINDINGS,0,'turn','KeyP')!,/Pausa/);
 });
 
@@ -197,7 +197,7 @@ check('direct online transport accepts turn bit and rejects invalid mask/event r
  const received:any[]=[];const connection=new FightConnection({host:{id:'host'},code:'TESTROOM'} as any,{id:'host'} as any,{state(){},input:n=>received.push(n),status(){},lost(){}});
  const packet=(n:number,mask:number,events:any[]=[])=>({type:'input',n,input:{mask,events}});
  (connection as any).accept(packet(1,4096,[{id:1,mask:4096}]));assert.equal(received.length,1);
- (connection as any).accept(packet(2,16384));(connection as any).accept(packet(2,0,[{id:2,mask:16384}]));assert.equal(received.length,1);
+ (connection as any).accept(packet(2,65536));(connection as any).accept(packet(2,0,[{id:2,mask:65536}]));assert.equal(received.length,1);
  (connection as any).accept(packet(2,MAX_INPUT_MASK,[{id:2,mask:4096}]));assert.equal(received.length,2);
 });
-console.log(`Turn/defense: ${cases} cases passed (both players/sides/crossings, buffered turns, all 13 rigs/hitboxes, authored spins, projectiles, legacy bindings, guard posture/commitment, zero normal chip, individual special chip, 3-frame perfect/Precision, AI and online).`);
+console.log(`Turn/defense: ${cases} cases passed (both players/sides/crossings, buffered turns, all 18 rigs/hitboxes, authored spins, projectiles, legacy bindings, guard posture/commitment, zero normal chip, individual special chip, 3-frame perfect/Precision, AI and online).`);

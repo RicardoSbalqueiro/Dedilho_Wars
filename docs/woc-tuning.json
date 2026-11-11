@@ -1,0 +1,374 @@
+{
+  "status": "experimental",
+  "resources": {
+    "meterMax": 200,
+    "ultimateCost": 100,
+    "transformationCost": 200,
+    "staminaMax": 120,
+    "regenDelay": 32,
+    "regenIdle": 0.48,
+    "regenMoving": 0.24,
+    "exhaustFrames": 120,
+    "exhaustRelease": 24,
+    "jumpCost": 5,
+    "dashCost": 7,
+    "blockCost": 3,
+    "activationFrames": 72,
+    "commitFrame": 36,
+    "energyMax": 100,
+    "energyStart": 40,
+    "energyCharge": 0.42,
+    "energyOnDamage": 0.22,
+    "energyCosts": {
+      "s1": 16,
+      "s2": 22,
+      "s3": 18
+    },
+    "batteryMax": 100,
+    "regenerationBloodMax": 3
+  },
+  "fighters": [
+    {
+      "id": "caetano",
+      "name": "KARATÊ CAETANO",
+      "hpBefore": 1000,
+      "hp": 2000,
+      "transformation": {
+        "name": "Karatê Prime",
+        "duration": 720,
+        "damage": 1.35,
+        "speed": 1.2,
+        "defense": 1,
+        "reach": 1,
+        "scale": 1,
+        "drain": 0.24,
+        "aftermath": 120,
+        "cost": "200 ULT + fôlego",
+        "help": "Precisão, foco e pressão laranja. A leitura perfeita exclusiva continua valendo."
+      }
+    },
+    {
+      "id": "orango",
+      "name": "ORANGO TANGO BITENCOURT",
+      "hpBefore": 1150,
+      "hp": 2300,
+      "transformation": {
+        "name": "Albino 00",
+        "duration": 720,
+        "damage": 1.35,
+        "speed": 1.08,
+        "defense": 0.8,
+        "reach": 1.15,
+        "scale": 1,
+        "drain": 0.27,
+        "aftermath": 120,
+        "cost": "200 ULT + fôlego",
+        "help": "Pelagem branca, levitação visual e pulsos psíquicos. Agarrões continuam exigindo aproximação."
+      }
+    },
+    {
+      "id": "tubarao",
+      "name": "TUBARÃO FISCALIZADOR",
+      "hpBefore": 1230,
+      "hp": 2460,
+      "transformation": {
+        "name": "Benzinho, Fiquei Puto",
+        "duration": 600,
+        "damage": 1.5,
+        "speed": 0.9,
+        "defense": 0.8,
+        "reach": 1.25,
+        "scale": 1.22,
+        "drain": 0.3,
+        "aftermath": 7200,
+        "cost": "200 ULT + fôlego",
+        "help": "Forma Megalodonte. Stomp e devorar de perto; depois retorna filhote e cresce em dois minutos."
+      }
+    },
+    {
+      "id": "rickzera",
+      "name": "RICKZERA",
+      "hpBefore": 940,
+      "hp": 1880,
+      "transformation": {
+        "name": "Cruz de Energia",
+        "duration": 600,
+        "damage": 2,
+        "speed": 2,
+        "defense": 0.5,
+        "reach": 1.12,
+        "scale": 1,
+        "drain": 0.18,
+        "aftermath": 120,
+        "cost": "200 ULT + toda a energia",
+        "help": "Consome toda a energia. Atributos físicos 2×; não recarrega energia durante a forma. Ao terminar, especiais exigem nova carga."
+      }
+    },
+    {
+      "id": "bieu",
+      "name": "BIEUBATMAN",
+      "hpBefore": 1080,
+      "hp": 2160,
+      "transformation": {
+        "name": "Maldito BuggyBatman",
+        "duration": 720,
+        "damage": 1.25,
+        "speed": 1.15,
+        "defense": 1,
+        "reach": 1,
+        "scale": 1,
+        "drain": 0.28,
+        "aftermath": 120,
+        "cost": "200 ULT + fôlego",
+        "help": "Domínio de ilusões: nuvens de tinta causam confusão curta. Agarrões e pressão ainda podem interromper."
+      }
+    },
+    {
+      "id": "nomad",
+      "name": "NOMAD LOBBY",
+      "hpBefore": 1100,
+      "hp": 2200,
+      "transformation": {
+        "name": "Jogatina",
+        "duration": 600,
+        "damage": 1,
+        "speed": 1,
+        "defense": 1,
+        "reach": 1,
+        "scale": 1,
+        "drain": 0.16,
+        "aftermath": 120,
+        "cost": "200 ULT + 10% HP máximo",
+        "help": "Paga 10% do HP máximo; sorteia força, velocidade ou tamanho. O resultado aparece na tela."
+      }
+    },
+    {
+      "id": "renngotti",
+      "name": "RENNGOTTI",
+      "hpBefore": 1020,
+      "hp": 2040,
+      "transformation": {
+        "name": "Berserker",
+        "duration": 600,
+        "damage": 2,
+        "speed": 2,
+        "defense": 0.5,
+        "reach": 1,
+        "scale": 1,
+        "drain": 0.28,
+        "aftermath": 900,
+        "cost": "200 ULT + fôlego",
+        "help": "Atributos físicos 2×. Após o fim, força/mobilidade caem pela metade por 15 segundos."
+      }
+    },
+    {
+      "id": "aneninha",
+      "name": "ANENINHA",
+      "hpBefore": 1000,
+      "hp": 2000,
+      "transformation": {
+        "name": "Raiane Rindo",
+        "duration": 720,
+        "damage": 1.2,
+        "speed": 1.2,
+        "defense": 1,
+        "reach": 1,
+        "scale": 1,
+        "drain": 0.25,
+        "aftermath": 120,
+        "cost": "200 ULT + fôlego",
+        "help": "Fumaça rosa amplia o controle de Osasco. Efeito de confusão curto, com proteção contra repetição."
+      }
+    },
+    {
+      "id": "santox",
+      "name": "1SANT0X",
+      "hpBefore": 950,
+      "hp": 1900,
+      "transformation": {
+        "name": "Jax — Domínio de Loucura",
+        "duration": 600,
+        "damage": 1.35,
+        "speed": 1.2,
+        "defense": 1,
+        "reach": 1.18,
+        "scale": 1,
+        "drain": 0.3,
+        "aftermath": 180,
+        "cost": "200 ULT + fôlego",
+        "help": "Coelho glitch, membros elásticos e domínio instável. A esquiva mantém seu startup e cooldown."
+      }
+    },
+    {
+      "id": "jao",
+      "name": "JaoDoPikles",
+      "hpBefore": 990,
+      "hp": 1980,
+      "transformation": {
+        "name": "Falso Gênio",
+        "duration": 720,
+        "damage": 1.2,
+        "speed": 1.1,
+        "defense": 1,
+        "reach": 1,
+        "scale": 1,
+        "drain": 0.24,
+        "aftermath": 180,
+        "cost": "200 ULT + fôlego",
+        "help": "Antecipação sinalizada: auxilia uma guarda em neutro a cada segundo. Não escapa de hitstun, agarrões ou baixos."
+      }
+    },
+    {
+      "id": "jane",
+      "name": "JANE",
+      "hpBefore": 860,
+      "hp": 1720,
+      "transformation": {
+        "name": "EVA",
+        "duration": 720,
+        "damage": 1.35,
+        "speed": 1.1,
+        "defense": 0.75,
+        "reach": 1.2,
+        "scale": 2.65,
+        "drain": 0.12,
+        "aftermath": 120,
+        "cost": "200 ULT + bateria do robô",
+        "help": "Traje robótico de 3 m: lasers nas mãos, dash ampliado e bateria finita. Hurtbox também cresce."
+      }
+    },
+    {
+      "id": "cristyan",
+      "name": "CRISTYAN",
+      "hpBefore": 1060,
+      "hp": 2120,
+      "transformation": {
+        "name": "Muayfimeu",
+        "duration": 600,
+        "damage": 1.4,
+        "speed": 1.15,
+        "defense": 1,
+        "reach": 1,
+        "scale": 1,
+        "drain": 0.3,
+        "aftermath": 120,
+        "cost": "200 ULT + fôlego",
+        "help": "Sequência dourada de Muay Thai. Golpes fortes continuam comprometidos e a guarda perfeita é preservada."
+      }
+    },
+    {
+      "id": "eneas",
+      "name": "DR. ACREANO",
+      "hpBefore": 1080,
+      "hp": 2160,
+      "transformation": {
+        "name": "Quando Debate não Resolve",
+        "duration": 720,
+        "damage": 2,
+        "speed": 1.05,
+        "defense": 1,
+        "reach": 1,
+        "scale": 1,
+        "drain": 0.33,
+        "aftermath": 120,
+        "cost": "200 ULT + fôlego",
+        "help": "Dr. Acreano rasga o paletó e revela as tatuagens do Brasil. Dobra a força física, com alto desgaste."
+      }
+    },
+    {
+      "id": "patrick",
+      "name": "PATRICK INVINCIBLE",
+      "hpBefore": 1160,
+      "hp": 2320,
+      "transformation": {
+        "name": "Rei Tatu",
+        "duration": 720,
+        "damage": 1.5,
+        "speed": 0.9,
+        "defense": 0.6,
+        "reach": 1,
+        "scale": 1,
+        "drain": 0.32,
+        "aftermath": 180,
+        "cost": "200 ULT + alto desgaste",
+        "help": "Couraça vermelha reduz dano. Três contatos têm armadura, mas agarrões/ULTs vencem a proteção."
+      }
+    },
+    {
+      "id": "gabrielzin",
+      "name": "GABRIELZIN",
+      "hpBefore": 930,
+      "hp": 1860,
+      "transformation": {
+        "name": "Gatito",
+        "duration": 720,
+        "damage": 1.3,
+        "speed": 1.1,
+        "defense": 1,
+        "reach": 1.2,
+        "scale": 1,
+        "drain": 0.25,
+        "aftermath": 120,
+        "cost": "200 ULT + fôlego",
+        "help": "Fantasia de gato bege: patas, força e alcance ampliados. A melodia é sintetizada pelo jogo."
+      }
+    },
+    {
+      "id": "ulisses",
+      "name": "ULISSES O NEFASTO",
+      "hpBefore": 1020,
+      "hp": 2040,
+      "transformation": {
+        "name": "Regeneração Imediata",
+        "duration": 900,
+        "damage": 1.15,
+        "speed": 1.08,
+        "defense": 1,
+        "reach": 1,
+        "scale": 1,
+        "drain": 0.22,
+        "aftermath": 120,
+        "cost": "200 ULT + sangue capturado",
+        "help": "Consome um estoque de sangue a cada 5 s para curar 100 HP. Sem estoque, a forma acaba; HP nunca excede o máximo."
+      }
+    },
+    {
+      "id": "felipence",
+      "name": "FELIPENCE",
+      "hpBefore": 1010,
+      "hp": 2020,
+      "transformation": {
+        "name": "Sinfonia do Caos",
+        "duration": 720,
+        "damage": 1.3,
+        "speed": 1.08,
+        "defense": 1,
+        "reach": 1.18,
+        "scale": 1,
+        "drain": 0.27,
+        "aftermath": 120,
+        "cost": "200 ULT + fôlego",
+        "help": "Sobrecarga sonora laranja amplia o alcance. Ondas continuam bloqueáveis e limitadas."
+      }
+    },
+    {
+      "id": "hdsh",
+      "name": "H?D?SH",
+      "hpBefore": 980,
+      "hp": 1960,
+      "transformation": {
+        "name": "Overclock Analítico",
+        "duration": 720,
+        "damage": 1.2,
+        "speed": 1.2,
+        "defense": 1,
+        "reach": 1,
+        "scale": 1,
+        "drain": 0.25,
+        "aftermath": 180,
+        "cost": "200 ULT + fôlego",
+        "help": "Predição sinalizada ajuda a guarda em neutro, com intervalo. Exaustão mental após a forma."
+      }
+    }
+  ]
+}

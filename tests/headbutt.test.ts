@@ -22,7 +22,7 @@ function press(g:Game,side:0|1,source:'keyboard'|'touch'|'online'){
 }
 check('new defaults, stable bit positions and conflicts',()=>{
  assert.deepEqual(DEFAULT_BINDINGS[0].block,['KeyE','']);assert.deepEqual(DEFAULT_BINDINGS[0].headbutt,['KeyL','']);assert.equal(DEFAULT_BINDINGS[1].headbutt[0],'Numpad9');assert.equal(DEFAULT_BINDINGS[1].block[0],'Numpad3');
- assert.equal(ACTIONS.indexOf('block'),6);assert.equal(ACTIONS.indexOf('turn'),12);assert.equal(ACTIONS.indexOf('headbutt'),13);assert.equal(MAX_INPUT_MASK,16383);assert.equal(bindingConflict(DEFAULT_BINDINGS,0,'block','KeyL'),'P1 · Cabeçada');
+ assert.equal(ACTIONS.indexOf('block'),6);assert.equal(ACTIONS.indexOf('turn'),12);assert.equal(ACTIONS.indexOf('headbutt'),13);assert.equal(MAX_INPUT_MASK,65535);assert.equal(bindingConflict(DEFAULT_BINDINGS,0,'block','KeyL'),'P1 · Cabeçada');
 });
 check('old untouched saved preset migrates L guard to E and gives L to headbutt',()=>{
  let raw=structuredClone(DEFAULT_BINDINGS) as any;delete raw[0].headbutt;delete raw[1].headbutt;raw[0].block=['KeyL',''];
@@ -69,12 +69,12 @@ test('headbutt only enters a confirmed ascending normal chain inside the existin
  const a=g.f[0];g.startMove(a,a.def.moves.kM);a.connected=true;a.contact='hit';a.moveT=8;a.contactFrame=8;a.pad.tap('headbutt',g.tick);assert((g as any).tryCancel(a));assert.equal(a.move?.id,'headbutt');
  for(const result of ['block','whiff','hit'] as const){g.startMove(a,a.def.moves.kM);a.connected=result!=='whiff';a.contact=result;a.moveT=8;a.contactFrame=result==='hit'?8-CANCEL_CONFIRM_FRAMES-1:8;a.pad.tap('headbutt',g.tick);assert(!(g as any).tryCancel(a));}
 });
-test('headbutt frame data is visible for all thirteen fighters',()=>{
+test('headbutt frame data is visible for all eighteen fighters',()=>{
  for(const ch of CHAR_IDS){const m=frameData(ch,'headbutt');assert.equal(m.name,'CABEÇADA');assert.equal(m.startup,14);assert.equal(m.active,3);assert.equal(m.recovery,24);assert.equal(m.whiff,12);assert.equal(m.chip,0);assert.equal(m.blockAdvantage,-14);assert(m.notes.includes('sem cancelamento'))}
 });
 check('direct online transport accepts headbutt held and press bits and still rejects higher bits',()=>{
  const received:any[]=[];const c=new FightConnection({host:{id:'h'},code:'TESTROOM'} as any,{id:'h'} as any,{state(){},input:n=>received.push(n),status(){},lost(){}});
  (c as any).accept({type:'input',n:1,input:{mask:8192,events:[{id:1,mask:8192}]}});assert.equal(received.length,1);assert.equal(received[0].mask,8192);
- (c as any).accept({type:'input',n:2,input:{mask:16384,events:[]}});assert.equal(received.length,1);
+ (c as any).accept({type:'input',n:2,input:{mask:65536,events:[]}});assert.equal(received.length,1);
 });
-console.log(`Defense/headbutt: ${cases} regressions passed (E guard, L headbutt, all thirteen fighters/both sides/keyboard/touch/online, migration/conflicts, guard/chip, animation/hitbox/snapshots, bounded cancels and punishable recovery).`);
+console.log(`Defense/headbutt: ${cases} regressions passed (E guard, L headbutt, all eighteen fighters/both sides/keyboard/touch/online, migration/conflicts, guard/chip, animation/hitbox/snapshots, bounded cancels and punishable recovery).`);

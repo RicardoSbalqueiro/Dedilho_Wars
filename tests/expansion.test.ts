@@ -8,7 +8,7 @@ import { captureState,applyState } from '../src/game/net-state';
 import { levelFor } from '../src/game/progression';
 (globalThis as any).window={addEventListener(){},removeEventListener(){},setInterval(){return 0}};
 {
- const legacy=JSON.parse(JSON.stringify(DEFAULT_BINDINGS));delete legacy[0].grab;delete legacy[1].grab;
+ const legacy=JSON.parse(JSON.stringify(DEFAULT_BINDINGS));for(const v of legacy){delete v.transform;delete v.charge;}delete legacy[0].grab;delete legacy[1].grab;
  legacy[0].p=['KeyG',''];legacy[0].k=['KeyF',''];legacy[1].p=['Numpad7',''];legacy[1].k=['KeyB',''];
  (globalThis as any).localStorage={getItem:()=>JSON.stringify(legacy)};
  const migrated=loadBindings();assert.equal(migrated[0].grab[0],'KeyV');assert.equal(migrated[1].grab[0],'Numpad8');assert.deepEqual(migrated[0].p,legacy[0].p,'preserve existing custom controls');
@@ -65,4 +65,4 @@ for(const ch of CHAR_IDS){let ends=0;const g=make(ch,'caetano','versus',()=>{end
  const g=make('caetano','orango','versus');g.f[0].wins=2;g.f[1].ko=true;g.phase='roundEnd';g.phaseT=210;g.step();step(g,241);assert.equal(g.phase,'matchEnd');assert.equal(g.finishedBy,null);g.destroy();
 }
 assert.equal(STAGE_IDS.length,17);assert.equal(STAGES.casabranca.credit,'Jalam');assert.equal(STAGES.letsgay.credit,'Jalam e Diegão');assert.equal(levelFor(100).level,2);
-console.log('Expansion combat: trades/double KO, buffered keyboard/touch/network combos, air physics, guard recovery,4 styles, throws/tech/recovery, armor, crouch hitboxes, all13 finishers/snapshots and17 stages passed.');
+console.log('Expansion combat: trades/double KO, buffered keyboard/touch/network combos, air physics, guard recovery,4 styles, throws/tech/recovery, armor, crouch hitboxes, all18 finishers/snapshots and17 stages passed.');

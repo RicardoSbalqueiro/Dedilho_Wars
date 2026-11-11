@@ -1,3 +1,6 @@
+import {formStats} from './resources';
+import {WOC_ULTIMATES} from './woc-choreography';
+import {drawWocUltimate,drawWocProjectile,drawFormAura,drawTransformCutin,drawResourcesHud} from './woc-art';
 import {drawSharkSuper} from './shark-art';
 import { drawFinisherArt } from './finishers-art';
 import { drawViewerSuper, drawFourthWall, drawViewerProjectile, drawChessFloor } from './viewer-art';
@@ -328,16 +331,16 @@ function drawFighter(ctx: CanvasRenderingContext2D, g: Game, f: Fighter, time: n
   if (f.hidden || (g.seq?.kind === 'superB' && g.seq.a === f && g.seq.t < 112)) return;
   ctx.save();
   ctx.translate(f.x, FLOOR_Y + f.y);
-  ctx.scale(f.facing * f.turn, 1);
+  const form=formStats(f);ctx.scale(f.facing*f.turn*form.scale,form.scale);
   if (f.rotAdd) {
     ctx.translate(0, -70);
     ctx.rotate(f.rotAdd);
     ctx.translate(0, 70);
   }
-  if (!reflect) drawAura(ctx, f, time);
+  if (!reflect){drawAura(ctx,f,time);drawFormAura(ctx,f,time);}
   const m=f.move;
   const frame=Math.max(0,f.moveT-1);
-  if(f.ch==='jane'){
+  if(f.ch==='jane'&&f.formT===0){
     if(m?.id==='s2'||m?.id==='bikeRush'){
       ctx.save();if(m.id==='bikeRush'){ctx.translate(0,-25);ctx.rotate(Math.sin(f.moveT*1.6)*.075);ctx.translate(0,25);}drawJaneBike(ctx,time,Math.min(1,f.bikeTicks/300));ctx.restore();
     }
@@ -348,7 +351,7 @@ function drawFighter(ctx: CanvasRenderingContext2D, g: Game, f: Fighter, time: n
   const phase=m?movePhase(m,frame,f.connected):null;
   const accessoryPose=f.poseOverride||(m&&phase?.phase==='recovery'&&phase.progress<.35?m.recoveryPose||m.poses[1]:f.poseName);
   if(!reflect)drawMotionInk(ctx,f,settings.reducedFlash);
-  drawRig(ctx, f.ch, f.rig, f.pose, { time:f.animT, expr: f.expr, glow: f.glow, glowColor: f.def.glow, stretch, poseName: accessoryPose });
+  drawRig(ctx, f.ch, f.rig, f.pose, { time:f.animT, expr: f.expr, glow: f.glow, glowColor: f.def.glow, stretch,transformation:f.formT>0,formVariant:f.formVariant,formTime:f.formElapsed,poseName:accessoryPose });
   if(!reflect)drawGuardInk(ctx,f,g.tick,settings.reducedFlash);
   if (!reflect) drawFx(ctx, g, f, time);
   if(!reflect&&m&&(f.ch==='jane'||f.ch==='cristyan'||f.ch==='eneas')&&/^s[123]$/.test(m.id)&&frame>=m.startup-3&&frame<m.startup+Math.min(m.active,30)+8)drawTrioMoveFx(ctx,f.ch,m.id,frame-m.startup);
@@ -440,7 +443,9 @@ function drawVehicles(ctx: CanvasRenderingContext2D, g: Game) {
 
 function drawProjectiles(ctx: CanvasRenderingContext2D, g: Game) {
   for (const shot of g.projectiles) {
-    if(shot.kind==='chess'||shot.life<=0)continue;
+    if(shot.life<=0)continue;
+    if(drawWocProjectile(ctx,shot,g.f[shot.owner].def.glow))continue;
+    if(shot.kind==='chess')continue;
     const facing = shot.vx >= 0 ? 1 : -1;
     const color = g.f[shot.owner].def.glow;
     ctx.save(); ctx.translate(shot.x, FLOOR_Y + shot.y); ctx.scale(facing, 1);
@@ -678,7 +683,7 @@ function drawBar(ctx: CanvasRenderingContext2D, g: Game, f: Fighter, side: 0 | 1
   ctx.fillStyle = gp;
   ctx.fillRect(px - 32, 6, 64, 64);
   const hurt = f.state === 'hit' || f.state === 'launched' || f.hp / f.maxHp < 0.2;
-  drawPortrait(ctx, f.ch, px + (side === 0 ? -2 : 2), f.ch==='santox'?49:f.ch==='eneas'?33:42, f.ch==='santox'?14:f.ch==='eneas'?15:f.ch === 'caetano' ? 22 : 20, { time: g.tick, expr: hurt ? 'hit' : 'n', glow: f.glow }, side === 1);
+  drawPortrait(ctx, f.ch, px + (side === 0 ? -2 : 2), 42,20, { time: g.tick, expr: hurt ? 'hit' : 'n', glow:f.glow,transformation:f.formT>0,formVariant:f.formVariant,formTime:f.formElapsed},side===1);
   ctx.restore();
   ctx.beginPath();
   ctx.arc(px, 38, 30, 0, Math.PI * 2);
@@ -708,55 +713,17 @@ function drawBar(ctx: CanvasRenderingContext2D, g: Game, f: Fighter, side: 0 | 1
   }
 }
 
-function drawMeter(ctx: CanvasRenderingContext2D, g: Game, f: Fighter, side: 0 | 1) {
-  const w = 330;
-  const y = 504;
-  const h = 16;
-  const x = side === 0 ? 40 : W - 40 - w;
-  const r = Math.min(1, f.meter / 100);
-  const full = f.meter >= 100;
-  ctx.save();
-  if (side === 1) {
-    ctx.translate(W, 0);
-    ctx.scale(-1, 1);
-  }
-  const bx = side === 0 ? x : W - x - w;
-  para(ctx, bx, y, w, h, 10);
-  ctx.fillStyle = 'rgba(10,6,16,0.85)';
-  ctx.fill();
-  ctx.save();
-  para(ctx, bx, y, w, h, 10);
-  ctx.clip();
-  const gr = ctx.createLinearGradient(bx, 0, bx + w, 0);
-  if (f.ch === 'caetano') {
-    gr.addColorStop(0, f.def.color2);
-    gr.addColorStop(1, full ? f.def.glow : f.def.color);
-  } else if (f.ch === 'orango') {
-    gr.addColorStop(0, '#991b1b');
-    gr.addColorStop(1, full ? '#fecaca' : '#fb923c');
-  } else {
-    gr.addColorStop(0, f.def.color2);
-    gr.addColorStop(1, full ? f.def.glow : f.def.color);
-  }
-  ctx.fillStyle = gr;
-  ctx.fillRect(bx, y, w * r, h);
-  if (full) {
-    ctx.globalAlpha = 0.4 + 0.4 * Math.sin(g.tick * 0.3);
-    ctx.fillStyle = '#fff';
-    ctx.fillRect(bx, y, w, h);
-  }
-  ctx.restore();
-  para(ctx, bx, y, w, h, 10);
-  ctx.lineWidth = 2.5;
-  ctx.strokeStyle = full ? '#fde047' : '#f5e6c8';
-  ctx.stroke();
-  ctx.restore();
-  const tx = side === 0 ? x + 6 : x + w - 6;
-  const al: CanvasTextAlign = side === 0 ? 'left' : 'right';
-  if (full) {
-    const k = g.cfg.bindings[f.idx].super[0];
-    label(ctx, `SUPER PRONTO! [${keyLabel(k)}]`, tx, y - 12, 15 + Math.sin(g.tick * 0.3) * 1.5, '#fde047', '#3a0a00', al, side === 0 ? -0.18 : 0.18, 4);
-  } else label(ctx, 'SUPER', tx, y - 10, 12, '#e5e7eb', '#150a1e', al, side === 0 ? -0.18 : 0.18, 3);
+function drawMeter(ctx:CanvasRenderingContext2D,g:Game,f:Fighter,side:0|1){
+ const x=side===0?40:590,y=504,w=330,h=14;
+ ctx.save();ctx.fillStyle='#0b0a18';ctx.fillRect(x,y,w,h);
+ for(let stock=0;stock<2;stock++){
+  const value=Math.max(0,Math.min(1,(f.meter-stock*100)/100));
+  const fill=ctx.createLinearGradient(x,y,x,y+h);fill.addColorStop(0,stock===0?'#fff2a0':'#b6ff9c');fill.addColorStop(1,stock===0?'#e88b25':'#16a34a');ctx.fillStyle=fill;ctx.fillRect(x+stock*166,y,164*value,h);
+  ctx.strokeStyle='#fff0c3';ctx.lineWidth=1.5;ctx.strokeRect(x+stock*166,y,164,h);
+ }
+ const tx=side===0?x:x+w,align=side===0?'left':'right';
+ label(ctx,`ULT ${Math.floor(f.meter/100)}/2 · ${Math.floor(f.meter)}/200 [${keyLabel(g.cfg.bindings[f.idx].super[0])}]`,tx,y-9,12,f.meter>=100?'#fde047':'#d5cfdf','#150a1e',align,0,3);
+ ctx.restore();
 }
 
 function drawHUD(ctx: CanvasRenderingContext2D, g: Game) {
@@ -767,13 +734,13 @@ function drawHUD(ctx: CanvasRenderingContext2D, g: Game) {
     if (!RANGED_MOVES[f.ch].length) continue;
     const right = f.idx === 1;
     const text = f.rangedCooldown > 0 ? `DISTÂNCIA: ${(f.rangedCooldown / 60).toFixed(1)}s` : `DISTÂNCIA: ${f.rangedUses}/3`;
-    label(ctx, text, right ? W - 48 : 48, 86, 11, f.rangedCooldown ? '#fb7185' : '#ddd6fe', '#150a1e', right ? 'right' : 'left', 0, 3);
+    label(ctx, text, right ? W - 48 : 48,94,11, f.rangedCooldown ? '#fb7185' : '#ddd6fe', '#150a1e', right ? 'right' : 'left', 0, 3);
   }
   for(const f of g.f){const x=f.idx===0?48:W-48,align=f.idx===0?'left':'right';
-    if(f.ch==='caetano'&&f.precision>0)label(ctx,'PRECISÃO PRONTA',x,102,11,'#fef08a','#150a1e',align,0,3);
-    if(f.ch==='orango'&&f.momentum>0)label(ctx,`ÍMPETO ${f.momentum}/3`,x,102,11,'#fb923c','#150a1e',align,0,3);
-    if(f.ch==='santox')label(ctx,f.fourthCooldown>0?`QUARTA PAREDE: ${(f.fourthCooldown/60).toFixed(1)}s`:'QUARTA PAREDE PRONTA',x,102,11,f.fourthCooldown?'#f0abfc':'#fde68a','#150a1e',align,0,3);
-    if(f.ch==='jane')label(ctx,f.move?.id==='bikeRush'?'MOTO SEM CONTROLE!':f.bikeDizzy>0?`TONTA: ${(f.bikeDizzy/60).toFixed(1)}s`:f.bikeCooldown>0?`MOTO: ${(f.bikeCooldown/60).toFixed(1)}s`:f.move?.id==='s2'?`MOTO: ${(f.bikeTicks/60).toFixed(1)}/5s · ${f.bikeHits}/6`:'MOTO PRONTA · SOLTE ANTES DE 5s',x,102,10,f.bikeDizzy?'#fb7185':'#fef08a','#150a1e',align,0,3);
+    if(f.ch==='caetano'&&f.precision>0)label(ctx,'PRECISÃO PRONTA',x,110,11,'#fef08a','#150a1e',align,0,3);
+    if(f.ch==='orango'&&f.momentum>0)label(ctx,`ÍMPETO ${f.momentum}/3`,x,110,11,'#fb923c','#150a1e',align,0,3);
+    if(f.ch==='santox')label(ctx,f.fourthCooldown>0?`QUARTA PAREDE: ${(f.fourthCooldown/60).toFixed(1)}s`:'QUARTA PAREDE PRONTA',x,110,11,f.fourthCooldown?'#f0abfc':'#fde68a','#150a1e',align,0,3);
+    if(f.ch==='jane')label(ctx,f.move?.id==='bikeRush'?'MOTO SEM CONTROLE!':f.bikeDizzy>0?`TONTA: ${(f.bikeDizzy/60).toFixed(1)}s`:f.bikeCooldown>0?`MOTO: ${(f.bikeCooldown/60).toFixed(1)}s`:f.move?.id==='s2'?`MOTO: ${(f.bikeTicks/60).toFixed(1)}/5s · ${f.bikeHits}/6`:'MOTO PRONTA · SOLTE ANTES DE 5s',x,110,10,f.bikeDizzy?'#fb7185':'#fef08a','#150a1e',align,0,3);
     const ready=f.state==='ground'&&f.landLag===0&&!f.ko;
     const defending=f.guard&&(ready||f.state==='block');
     if(defending||ready&&f.guardResultT>0){
@@ -1018,7 +985,7 @@ function drawCine(ctx: CanvasRenderingContext2D, g: Game) {
     ctx.save();
     ctx.translate(W / 2, 128);
     ctx.scale(s, s);
-    label(ctx, f.ch === 'orango' ? 'GRAAAAAAWRRR!!!' : f.ch === 'tubarao' ? 'QUANDO TERÁ LIVE?!' : f.ch === 'bieu' ? 'PRESTÍGIO NAS RUAS!' : f.ch === 'nomad' ? 'BEM-VINDO À ARENA!' : f.ch === 'renngotti' ? 'O TILT É INEVITÁVEL!' : f.ch === 'aneninha' ? '¡YO SOY DE BOLIVIA!' : f.ch==='santox'?'FORA DO ROTEIRO!':f.ch==='jao'?'XEQUE-MATE!':f.ch==='jane'?'AREIAZORD ONLINE!':f.ch==='cristyan'?'A REDE VAI CAIR!':f.ch==='eneas'?'MEU NOME É ENÉAS!':'TRANSFERÊNCIA EM 6X!', 0, 0, 46, f.def.glow, f.def.color2, 'center', -0.18, 12);
+    label(ctx, f.ch === 'orango' ? 'GRAAAAAAWRRR!!!' : f.ch === 'tubarao' ? 'QUANDO TERÁ LIVE?!' : f.ch === 'bieu' ? 'CRIAS DO CAPÃO!' : f.ch === 'nomad' ? 'BEM-VINDO À ARENA!' : f.ch === 'renngotti' ? 'O TILT É INEVITÁVEL!' : f.ch === 'aneninha' ? 'CRIAS DE OSASCO!' : f.ch==='santox'?'FORA DO ROTEIRO!':f.ch==='jao'?'XEQUE-MATE!':f.ch==='jane'?'AREIAZORD ONLINE!':f.ch==='cristyan'?'A REDE VAI CAIR!':f.ch==='eneas'?'MEU NOME É ACREANO!':'TRANSFERÊNCIA EM 6X!', 0, 0, 46, f.def.glow, f.def.color2, 'center', -0.18, 12);
     ctx.restore();
   }
   ctx.restore();
@@ -1028,6 +995,7 @@ function drawCine(ctx: CanvasRenderingContext2D, g: Game) {
 export function render(ctx: CanvasRenderingContext2D, g: Game, stage: Stage, time: number, remoteNow?:number) {
   ctx.save();
   if(g.finisher){drawFinisherArt(ctx,g.f[g.finisher.winner].ch,g.f[1-g.finisher.winner].ch,g.finisher.t,g.finisher.dur);ctx.restore();return;}
+  if(g.seq?.kind.startsWith('super')&&WOC_ULTIMATES[g.seq.a.ch]){drawWocUltimate(ctx,g.seq.a.ch,g.seq.d.ch,g.seq.t,g.seq.dur,g.seq.a.formT>0);ctx.restore();return;}
   if(g.seq?.kind==='superT'){drawSharkSuper(ctx,g.seq.d.ch,g.seq.t,g.seq.dur,g.seq.a.facing);ctx.restore();return;}
   if(g.seq&&(g.seq.a.ch==='jane'||g.seq.a.ch==='cristyan'||g.seq.a.ch==='eneas')&&g.seq.kind.startsWith('super')){drawTrioSuper(ctx,g.seq.a.ch,g.seq.d.ch,g.seq.t,g.seq.dur);ctx.restore();return;}
   if(g.seq&&(g.seq.a.ch==='santox'||g.seq.a.ch==='jao')&&g.seq.kind.startsWith('super')){drawViewerSuper(ctx,g.seq.a.ch,g.seq.d.ch,g.seq.t,g.seq.dur);ctx.restore();return;}
@@ -1165,8 +1133,8 @@ export function render(ctx: CanvasRenderingContext2D, g: Game, stage: Stage, tim
     ctx.fillRect(0, 0, W, H);
     ctx.globalAlpha = 1;
   }
-  drawCine(ctx, g);
-  drawHUD(ctx, g);
+  drawCine(ctx,g);drawTransformCutin(ctx,g);
+  drawHUD(ctx,g);drawResourcesHud(ctx,g);
   for(const f of g.f)if(f.ch==='santox'&&f.move?.id==='s3'&&movePhase(f.move,Math.max(0,f.moveT-1),f.connected).phase==='active')drawFourthWall(ctx,f.moveT-1-f.move.startup,f.move.active);
   drawClashUI(ctx, g);
   drawAnn(ctx, g);

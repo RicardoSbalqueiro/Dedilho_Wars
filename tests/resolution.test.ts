@@ -50,7 +50,7 @@ test('repeated resize/DPR changes do not spend inputs, reset a match or change o
    assert.equal(JSON.stringify(captureState(a)),before,'pixel changes are presentation-only');
    a.step();b.step();assert.equal(a.tick,b.tick);assert.deepEqual(a.f.map(f=>[f.x,f.y,f.vx,f.vy,f.hp,f.meter,f.state,f.moveT,f.serial]),b.f.map(f=>[f.x,f.y,f.vx,f.vy,f.hp,f.meter,f.state,f.moveT,f.serial]));
   }
-  assert.equal(ONLINE_PROTOCOL,'dw-online-10','resolution does not need a network protocol change');
+  assert.equal(ONLINE_PROTOCOL,'dw-online-11','resolution does not need a network protocol change');
  }finally{a.destroy();b.destroy();(window as any).devicePixelRatio=1}
 });
 console.log(`Resolution: ${cases} regressions passed (1080p/1440p/4K, Retina and browser zoom, bounded scene/detail buffers, invalid metrics, resize without reallocating normal frames, logical geometry and unchanged inputs/online simulation).`);

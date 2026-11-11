@@ -1,8 +1,8 @@
 import { rememberMatch, leaderboard, profile, submitResult } from './progression.js';
 // Public game API. Application accounts use usernames, never email addresses.
-const VERSION = 'dw-online-10';
-const MAX_INPUT_MASK = 16383; // 14 actions; headbutt is appended at bit 13.
-const CHARS = ['caetano','orango','tubarao','rickzera','bieu','nomad','renngotti','aneninha','santox','jao','jane','cristyan','eneas'];
+const VERSION = 'dw-online-11';
+const MAX_INPUT_MASK = 65535; // 16 actions; transform and charge append bits 14/15.
+const CHARS = ['caetano','orango','tubarao','rickzera','bieu','nomad','renngotti','aneninha','santox','jao','jane','cristyan','eneas','patrick','gabrielzin','ulisses','felipence','hdsh'];
 const STAGES = ['neto','dojo','liberdade','curitiba','piaui','planalto','casebre','praca','osasco','bolivia','morro','campo','casabranca','letsgay','ngb','zoologico','termodinamica'];
 const COOKIE = 'dw_session';
 const encoder = new TextEncoder();

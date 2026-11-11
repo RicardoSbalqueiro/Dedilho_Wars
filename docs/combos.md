@@ -36,13 +36,13 @@ Teclas padrão do P1: J soco, K chute, U/I/O especiais, W salto, S agachar. Nas 
 | ORANGO TANGO BITENCOURT | Básico · Três tempos | J → K → J | 3 | 161,94 |
 | ORANGO TANGO BITENCOURT | Intermediário · Dedilho Supremo | J → K → U | 3 | 204,34 |
 | ORANGO TANGO BITENCOURT | Aéreo · Rasteira e perseguição | ↓+K → ↑ → K | 2 | 129,89 |
-| TUBARÃO FISCAL | Básico · Um, dois! | J → K | 2 | 82,1 |
-| TUBARÃO FISCAL | Básico · Três tempos | J → K → J | 3 | 150,1 |
-| TUBARÃO FISCAL | Intermediário · Mordida do Fiscal | J → K → U | 3 | 162,1 |
-| TUBARÃO FISCAL | Aéreo · Rasteira e perseguição | ↓+K → ↑ → K | 2 | 129,8 |
+| TUBARÃO FISCALIZADOR | Básico · Um, dois! | J → K | 2 | 82,1 |
+| TUBARÃO FISCALIZADOR | Básico · Três tempos | J → K → J | 3 | 150,1 |
+| TUBARÃO FISCALIZADOR | Intermediário · Mordida do Fiscal | J → K → U | 3 | 162,1 |
+| TUBARÃO FISCALIZADOR | Aéreo · Rasteira e perseguição | ↓+K → ↑ → K | 2 | 129,8 |
 | RICKZERA | Básico · Um, dois! | J → K | 2 | 56,9 |
 | RICKZERA | Básico · Três tempos | J → K → J | 3 | 104,1 |
-| RICKZERA | Intermediário · Franco confirmado | J → K → U | 5 | 107,3 |
+| RICKZERA | Intermediário · Transferência de energia | J → K → U | 5 | 107,3 |
 | RICKZERA | Aéreo · Rasteira e perseguição | ↓+K → ↑ → J → K | 3 | 125,5 |
 | BIEUBATMAN | Básico · Um, dois! | J → K | 2 | 65,3 |
 | BIEUBATMAN | Básico · Três tempos | J → K → J | 3 | 119,7 |
@@ -76,10 +76,30 @@ Teclas padrão do P1: J soco, K chute, U/I/O especiais, W salto, S agachar. Nas 
 | CRISTYAN | Básico · Três tempos | J → K → J | 3 | 113,7 |
 | CRISTYAN | Intermediário · Teep baiano | J → K → U | 3 | 112,1 |
 | CRISTYAN | Aéreo · Rasteira e perseguição | ↓+K → ↑ → J → K | 3 | 138,2 |
-| DOUTOR ENÉAS | Básico · Um, dois! | J → K | 2 | 61,6 |
-| DOUTOR ENÉAS | Básico · Três tempos | J → K → J | 3 | 112,8 |
-| DOUTOR ENÉAS | Intermediário · Diagnóstico confirmado | J → K → I | 3 | 98,4 |
-| DOUTOR ENÉAS | Aéreo · Rasteira e perseguição | ↓+K → ↑ → K | 2 | 97,6 |
+| DR. ACREANO | Básico · Um, dois! | J → K | 2 | 61,6 |
+| DR. ACREANO | Básico · Três tempos | J → K → J | 3 | 112,8 |
+| DR. ACREANO | Intermediário · Diagnóstico confirmado | J → K → I | 3 | 98,4 |
+| DR. ACREANO | Aéreo · Rasteira e perseguição | ↓+K → ↑ → K | 2 | 97,6 |
+| PATRICK INVINCIBLE | Básico · Um, dois! | J → K | 2 | 65,3 |
+| PATRICK INVINCIBLE | Básico · Três tempos | J → K → J | 3 | 119,7 |
+| PATRICK INVINCIBLE | Intermediário · Casco confirmado | J → K → U | 3 | 117,3 |
+| PATRICK INVINCIBLE | Aéreo · Rasteira e perseguição | ↓+K → ↑ → K | 2 | 105,2 |
+| GABRIELZIN | Básico · Um, dois! | J → K | 2 | 53,2 |
+| GABRIELZIN | Básico · Três tempos | J → K → J | 3 | 97,2 |
+| GABRIELZIN | Intermediário · Coração confirmado | J → K → U | 3 | 83,6 |
+| GABRIELZIN | Aéreo · Rasteira e perseguição | ↓+K → ↑ → J → K | 3 | 119,3 |
+| ULISSES O NEFASTO | Básico · Um, dois! | J → K | 2 | 59,7 |
+| ULISSES O NEFASTO | Básico · Três tempos | J → K → J | 3 | 109,3 |
+| ULISSES O NEFASTO | Intermediário · Membro distorcido | J → K → U | 3 | 109,3 |
+| ULISSES O NEFASTO | Aéreo · Rasteira e perseguição | ↓+K → ↑ → J → K | 3 | 132,8 |
+| FELIPENCE | Básico · Um, dois! | J → K | 2 | 59,7 |
+| FELIPENCE | Básico · Três tempos | J → K → J | 3 | 109,3 |
+| FELIPENCE | Intermediário · Riff confirmado | J → K → U | 3 | 107,7 |
+| FELIPENCE | Aéreo · Rasteira e perseguição | ↓+K → ↑ → J → K | 3 | 132,8 |
+| H?D?SH | Básico · Um, dois! | J → K | 2 | 59,7 |
+| H?D?SH | Básico · Três tempos | J → K → J | 3 | 109,3 |
+| H?D?SH | Intermediário · Tendência confirmada | J → K → I | 3 | 96,5 |
+| H?D?SH | Aéreo · Rasteira e perseguição | ↓+K → ↑ → J → K | 3 | 132,8 |
 <!-- ROUTES_END -->
 
 `npm run combos:audit` reproduz as 52 rotas, verifica conexão contra a guarda mantida e regenera esta tabela e [combo-routes.json](combo-routes.json), incluindo o tick de recuperação. As rotas de Orango, Tubarão e Enéas usam finalização aérea curta; os demais têm a continuação soco → chute. A moto da Jane pode adicionar a arrancada à sequência se ela ainda encontrar o rival em stun; ambos os movimentos compartilham o teto de seis contatos.

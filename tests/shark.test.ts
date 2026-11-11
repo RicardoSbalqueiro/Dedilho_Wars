@@ -25,7 +25,7 @@ function capture(g:Game){for(let i=0;i<180&&!g.seq;i++)g.step();assert.equal(g.s
 function finish(g:Game){for(let i=0;i<400&&g.seq;i++)g.step();assert.equal(g.seq,null)}
 test('new move mapping, damage budget, inspector and preserved kit',g=>{
  const a=g.f[0];assert.equal(a.def.specials[2].name,'BEIJO DO FISCALIZADOR');assert.equal(a.def.moves.s3.label,a.def.specials[2].name);assert.equal(a.def.superName,'QUANDO TERÁ LIVE?');assert.equal(a.def.moves.s3.dmg,64);assert(SHARK_KISS_DAMAGE<290/4);assert.equal(SHARK_ULT_DAMAGE,290);assert.equal(frameData('tubarao','s3').chip,1.6);assert.equal(frameData('tubarao','s3').level,'médio');assert.equal(frameData('tubarao','super').damage,290);
- assert.equal(a.def.hp,1230);assert.equal(a.def.moves.s1.dmg,100);assert.equal(a.def.moves.s2.dmg,125);assert.equal(a.def.moves.s2.grab,'engole');assert.deepEqual(RANGED_MOVES.tubarao,[]);assert.equal(FINISHER_NAMES.tubarao,'MARÉ DA MALHA FINA');assert.equal(ONLINE_PROTOCOL,'dw-online-10');
+ assert.equal(a.def.hp,2460);assert.equal(a.def.moves.s1.dmg,100);assert.equal(a.def.moves.s2.dmg,125);assert.equal(a.def.moves.s2.grab,'engole');assert.deepEqual(RANGED_MOVES.tubarao,[]);assert.equal(FINISHER_NAMES.tubarao,'MARÉ DA MALHA FINA');assert.equal(ONLINE_PROTOCOL,'dw-online-11');
 });
 for(const side of [0,1] as const)for(const mirror of [false,true])for(const target of ['jane','cristyan'] as const)for(const source of ['keyboard','touch','online'] as const){
  if(source==='touch'&&side===1)continue;
@@ -71,18 +71,18 @@ for(const mirror of [false,true])test(`Ultimate respects arena boundaries and re
  const [a,d]=g.f;a.x=mirror?110:1490;d.x=mirror?40:1560;(g as any).startSeq('superT',a,d);finish(g);assert(a.x>=40&&a.x<=1560&&d.x>=40&&d.x<=1560);assert.equal(d.y,0);assert.equal(d.rotAdd,0);assert.equal(d.state,'down');assert(!d.hidden);assert.equal(a.state,'ground');step(g,90);assert.equal(d.state,'ground');
 },0,mirror);
 test('held kiss does not auto-repeat; unavailable state never spends Ultimate meter',g=>{
- g.cfg.online=false;keyboard.down.add('KeyO');step(g,150);assert.equal(g.f[0].serial,1);assert.equal(g.f[1].maxHp-g.f[1].hp,64);assert.equal(g.f[0].meter,100);
- const a=g.f[0];a.state='hit';a.hitstun=30;a.pad.tap('super',g.tick);step(g,20);assert.equal(a.meter,100);assert.equal(g.cine,null);
+ g.cfg.online=false;keyboard.down.add('KeyO');step(g,150);assert.equal(g.f[0].serial,1);assert.equal(g.f[1].maxHp-g.f[1].hp,64);assert(Math.abs(g.f[0].meter-105.12)<.001);
+ const a=g.f[0];a.state='hit';a.hitstun=30;a.pad.tap('super',g.tick);step(g,20);assert(Math.abs(a.meter-105.12)<.001);assert.equal(g.cine,null);
 });
 test('shared visual phases remain bounded and align lick/tail contacts',()=>{
  for(let t=0;t<=SHARK_ULT_DURATION;t++){const m=sharkUltMotion(t);for(const n of [m.transform,m.restore,m.tongue,m.windup,m.flight])assert(n>=0&&n<=1&&Number.isFinite(n))}
  for(const [at] of SHARK_ULT_BEATS.slice(0,3))assert.equal(sharkUltMotion(at).tongue,1);assert.equal(sharkUltMotion(SHARK_ULT_TAIL_FRAME).flight,0);assert.equal(sharkUltMotion(185).flight,1);assert.equal(SHARK_ULT_THROW,700);
 });
-test('protocol 10 rejects old kiss-as-Ultimate snapshots',g=>{
+test('protocol 11 rejects old kiss-as-Ultimate snapshots',g=>{
  const state=captureState(g);assert(applyState(g,JSON.parse(JSON.stringify(state))));assert(!applyState(g,{...state,v:'dw-online-9'}));
 });
 test('AI no longer selects the contact kiss from far away',g=>{
  const a=g.f[0];g.f[1].x=1300;a.meter=0;
  for(let i=0;i<100;i++){g.tick++;a.ai.thinkT=0;aiAct(g,a,'hard');assert(!a.pad.buffered('s3',g.tick));assert(a.ai.stopDist<=150)}
 });
-console.log(`Tubarão Fiscal: ${cases} regressions passed (reduced blockable kiss, no fin armor, 290-damage transformation/licks/tail, mirrored long throw/bounds/recovery, all 13 targets, keyboard/touch/P2/online, scaling, snapshots and protocol 10).`);
+console.log(`Tubarão Fiscal: ${cases} regressions passed (reduced blockable kiss, no fin armor, 290-damage transformation/licks/tail, mirrored long throw/bounds/recovery, all 18 targets, keyboard/touch/P2/online, scaling, snapshots and protocol 11).`);

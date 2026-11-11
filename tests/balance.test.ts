@@ -68,14 +68,14 @@ for(const ch of CHAR_IDS)for(const side of [0,1] as const)for(const direction of
 
 for(const ch of CHAR_IDS)game(`${ch}: neutral ULT startup is interruptible and costs meter even on interruption`,g=>{
  const [a,d]=g.f;a.meter=100;a.pad.tap('super',g.tick);g.step();while(g.cine)g.step();
- assert(!a.armor);d.pad.tap('p',g.tick);step(g,10);
+ assert(!a.armor);if(ch==='jane')g.startMove(d,d.def.moves.cP);else d.pad.tap('p',g.tick);step(g,10);
  assert(a.hp<a.maxHp);assert.equal(a.state,'hit');assert.equal(a.move,null);assert(!g.seq);assert(a.meter<100);
 },ch);
 for(const ch of CHAR_IDS)game(`${ch}: a missed ULT has vulnerable recovery`,g=>{
  const [a,d]=g.f;a.x=200;d.x=1080;a.meter=100;a.pad.tap('super',g.tick);g.step();while(g.cine)g.step();
  while(a.move&&a.moveT<a.move.startup+a.move.active)g.step();g.step();
  assert(a.move?.kind==='super');assert(!a.armor);assert(!a.hbActive);
- d.x=a.x+CHARS[ch].pushW+d.def.pushW+2;d.facing=-1;d.pad.tap('p',g.tick);step(g,10);
+ d.x=a.x+CHARS[ch].pushW+d.def.pushW+2;d.facing=-1;if(ch==='jane')g.startMove(d,d.def.moves.cP);else d.pad.tap('p',g.tick);step(g,10);
  assert(a.hp<a.maxHp);assert.equal(a.state,'hit');assert(!g.seq);
 },ch);
 
@@ -104,7 +104,7 @@ for(const ch of CHAR_IDS)game(`${ch}: four air contacts stop all later hitbox at
 },ch);
 
 for(const ch of CHAR_IDS)for(const target of ['jane','cristyan'] as const)for(const facing of [-1,1] as const)for(const edge of [-.01,.01])game(`${ch}: pL real hurtbox range vs ${target}, facing ${facing}, edge ${edge}`,g=>{
- const [a,d]=g.f,m=a.def.moves.pL;a.x=800;a.facing=facing;d.x=800+facing*(m.hb[1]+d.def.pushW+4+edge);
+ const [a,d]=g.f,m=a.def.moves[target==='jane'?'cP':'pL'];a.x=800;a.facing=facing;d.x=800+facing*(m.hb[1]+d.def.pushW+4+edge);
  g.startMove(a,m);a.hbActive=true;(g as any).resolveHits();
  assert.equal(d.hp<d.maxHp,edge<0);
 },ch,target);
@@ -199,10 +199,10 @@ for(const ch of CHAR_IDS)game(`${ch}: common three-normal → ULT route cannot d
  assert(d.maxHp-d.hp<=CHARS.jane.hp*.5,'bounded route damage is at most half the least HP');
 },ch,'jane');
 
-check('HP, mobility, silhouettes and normal move identities preserve all 13 asymmetric styles',()=>{
+check('doubled legacy HP, explicit Jane stature and otherwise preserved asymmetric mobility/normals',()=>{
  const before=JSON.parse(readFileSync('docs/balance-before.json','utf8')).characters;
- for(const ch of CHAR_IDS){
-  for(const key of ['hp','walk','walkBack','jumpVy','jumpVx','dashVx','dashDur','pushW','hurtH','crouchH'] as const)assert.equal(CHARS[ch][key],before[ch][key]);
+ for(const ch of CHAR_IDS.filter(ch=>before[ch])){
+  for(const key of ['hp','walk','walkBack','jumpVy','jumpVx','dashVx','dashDur','pushW','hurtH','crouchH'] as const)assert.equal(CHARS[ch][key],key==='hp'?before[ch][key]*2:ch==='jane'&&key==='hurtH'?96:ch==='jane'&&key==='crouchH'?60:before[ch][key]);
   for(const m of Object.values<{kind:string;id:string}>(before[ch].moves).filter(m=>m.kind==='normal'))assert.deepEqual(CHARS[ch].moves[m.id],m);
  }
  assert(frameData('santox','s2').variable&&frameData('jao','s2').variable&&frameData('renngotti','s1').variable,'conditional advantage is never presented as guaranteed');

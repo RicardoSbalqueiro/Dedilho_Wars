@@ -1,282 +1,98 @@
-# DEDILHO WARS
+# DEDILHO WARS — War of Champions
 
-By Rickzera — crédito em verde com brilho e tipografia de combate na abertura.
+By Rickzera. Jogo de luta anime 2D para navegador, com **18 lutadores**, **17 arenas**, rádio, contas por usuário/senha, versus, IA, multiplayer por salas, treinamento e finishers.
 
-Jogo de luta 2D com 13 lutadores, 17 cenários, finishers, progressão e rádio integrada.
+Jogue em https://dedilho-wars-luta.pithyblimp1.chatgpt.site. O download completo fica em [/baixar/](https://dedilho-wars-luta.pithyblimp1.chatgpt.site/baixar/). Extraia o ZIP e abra **JOGAR.html** com um navegador atualizado. Mantenha a pasta `src/assets/radio`: contém os sete MP3 locais. O `index.html` da raiz é a entrada de desenvolvimento do Vite. Modos locais e treinamento funcionam sem conta e offline; contas, ranking e salas usam o site.
 
-## Jogar
-
-Acesse https://dedilho-wars-luta.pithyblimp1.chatgpt.site em um computador, celular ou tablet com navegador atualizado. Os modos locais também funcionam offline. Para jogar offline, abra /baixar/ e baixe o ZIP completo. Extraia toda a pasta e abra **JOGAR.html** com Chrome, Edge ou Firefox atualizado. Não remova a pasta src/assets/radio: ela contém as sete músicas usadas pelo jogo offline. Clique na abertura para ativar o áudio.
-
-O ZIP inclui tanto o jogo pronto como o código-fonte. O index.html da raiz é a entrada de desenvolvimento do Vite; para jogar diretamente use JOGAR.html. A versão online carrega as músicas do próprio site sob demanda, e a versão extraída usa os MP3 locais, sem streaming externo. O narrador usa as vozes disponíveis no navegador/sistema.
-
-## Seleção e cenários
+## Elenco e identidade
 
 - **Streamers:** Rickzera, Karatê Caetano, Nomad Lobby, Bieubatman, Renngotti e Aneninha.
-- **Viewers:** 1SANT0X, JaoDoPikles, Jane e Cristyan.
-- **Especiais:** Tubarão Fiscal, Orango Tango Bitencourt e Doutor Enéas.
+- **Viewers:** 1SANT0X, JaoDoPikles, Jane, Cristyan, Patrick Invincible, Gabrielzin, Ulisses O Nefasto, Felipence e H?D?SH.
+- **Especiais:** Tubarão Fiscalizador, Orango Tango Bitencourt e Dr. Acreano.
 
-Use Q/E ou Tab para trocar de categoria, setas/WASD para escolher e Enter para confirmar. Escolha P1 e depois o adversário; ambos podem usar o mesmo personagem. A próxima tela escolhe o cenário e permite uma seleção aleatória. Há troca de lutadores e de mapa na pausa e após a partida; a revanche mantém o confronto atual.
+Os cinco novos personagens são Viewers. Dr. Acreano ocupa o lugar de Dr. Enéas. O identificador técnico antigo `eneas` é conservado para não invalidar histórico, perfis e salas; toda apresentação usa Dr. Acreano.
 
-Arenas originais: **Neto Supermercados**, **Dojo Senbukan**, **Liberdade SP**, **Curitiba**, **Piauí** e **Palácio do Planalto**. A geometria de combate é compartilhada; cada cenário tem seu próprio desenho, arquitetura e chão. A abertura usa um cenário aleatório e uma demonstração visual de luta entre os 13 personagens, sem interferir nos controles do menu ou na rádio.
+A arte foi redesenhada a partir das fichas fornecidas de War of Champions: proporções humanas estilizadas, novos contornos anatômicos, faces, íris, pupilas, cabelos, roupas, mãos e silhuetas. `anime-art.ts` desenha as partes articuladas e as aparências de transformação; retratos, luta, galeria e cinematográficas usam a mesma arte. Não depende de filtros aplicados aos desenhos anteriores ou de um PNG de corpo inteiro.
 
-Novas arenas: **Casebre**, **Praça do Dedilhador**, **Osasco**, **Bolívia**, **Morro do Bieu**, **Campo do futebol dos campeões**, **Casa Branca com Ovnis** (ideia de Jalam), **Praia do Lets Gay** (ideia de Jalam e Diegão), **Lugar do NGB News**, **Zoológico do Orangotango** e **Praia da Termodinâmica**. Todas têm arte, pisos e detalhes animados próprios. A seleção tem três páginas; os 17 mapas também participam do sorteio da abertura e das salas online.
+O motor continua em **60 Hz**, independente da frequência da tela. Os **1.098 quadros visuais distintos por lutador**, em nove ciclos, somam **19.764 poses catalogadas** para os 18 personagens, além de golpes, reações, cutscenes e transformações. São poses articuladas amostradas e interpoladas pelo jogo, não 19.764 ilustrações desenhadas à mão. Aumentar a resolução ou o número de poses não muda startup, ativos, recovery ou o tamanho lógico da arena.
 
-## Resolução e nitidez
+Cenas e combate renderizam de **1080p até 4K**, com menus nativos, retratos e mapas adaptados a DPR/Retina. Veja [resolução e nitidez](docs/resolution.md).
 
-O jogo, as aberturas e a seleção renderizam em **Full HD (1920×1080) ou mais**, adaptando a resolução interna até **4K (3840×2160)** à área exibida e à densidade de pixels da tela. Textos de menu são pintados pelo navegador no tamanho final; retratos, miniaturas e a galeria de animações também respeitam a densidade de pixels. Os 17 cenários têm suas camadas redesenhadas na resolução necessária.
+## Controles
 
-Redimensionar a janela, mudar de monitor/DPI ou girar o celular atualiza a imagem sem reiniciar a partida. A geometria do combate continua usando suas coordenadas lógicas originais, e a simulação continua a 60 Hz. Não há mudança de alcance, hitboxes, controles ou protocolo online. [Implementação e verificações](docs/resolution.md).
-
-## Velocidade consistente
-
-A luta usa 60 ticks de simulação por segundo, e abertura, seleção, cenários e galeria usam o tempo decorrido. Monitores de alta frequência não aceleram os movimentos. A renderização interpola poses entre ticks, mantendo ataques ativos, defesa, viradas, hitstop e giros próprios imediatos. Ao trocar de aba, a luta offline pausa; ao retomar não há uma rajada para compensar o tempo ausente. Detalhes e resultados em [docs/timing.md](docs/timing.md).
-
-## Arte e animação
-
-Cada um dos 13 lutadores tem **1.098 quadros de animação distintos** em nove ciclos, totalizando **14.274 quadros**, além dos golpes e das cinematográficas. Inspecione-os em **TREINAMENTO → FRAME DATA → ANIMAÇÕES** ou gere o catálogo com `npm run animation:audit`. Os lutadores têm acabamento vetorial inspirado nos pôsteres, sombras de volume e movimentos contínuos. Golpes usam oito etapas visuais sem alterar o frame data; caminhada, salto, defesa, reações, Ultimates e finishers têm novas transições. Impactos leves, fortes e bloqueados recebem sons e efeitos distintos. O convidado online tem suavização visual entre snapshots. Em Configurações, **DICAS DE COMBATE** orienta iniciantes e **REDUZIR FLASHES** atenua os efeitos; as opções também estão no celular. Detalhes e validação em [docs/animation.md](docs/animation.md).
-
-## Tubarão Fiscal: Beijo e Quando terá Live?
-
-**O / Num 6 / ESP 3** agora executa **Beijo do Fiscalizador**, no lugar da Cabeçada de Barbatana. O Beijo causa 64 de dano, é bloqueável em pé e agachado, tem alcance curto e não concede armadura ou invulnerabilidade. A antiga versão como ULT causava 290. Há preparação, recuperação e abertura maior ao errar.
-
-A ULT **Quando terá Live?** transforma o lutador num tubarão de corpo aquático e rosto humanoide: três lambidas precedem uma rabada que arremessa o rival para longe. A animação tem transformação, giro de preparação, impacto, voo e retorno à forma humanoide. O dano total continua 290 (12 + 12 + 12 + 254), sujeito à escala de combos e ao custo/contrajogo das ULTs. O arremesso percorre até 700 unidades, respeitando as bordas da arena. Mordida, Engole, Cabeçada universal e o finisher Maré da Malha Fina continuam disponíveis. [Valores e testes](docs/tubarao.md).
-
-## Rickzera: novo visual e Soco Inglês
-
-Rick usa camiseta preta de manga curta, braços expostos, calça cargo bege, tênis preto e **soco inglês dourado na mão esquerda**. **I / ESP 2** substitui Linhas do Pix por um soco descendente com **energia verde**, derrubada e cratera no contato com o chão. É um golpe de perto, bloqueável em pé, sem armadura ou invulnerabilidade e com recuperação maior ao errar. A cratera é visual e não causa dano adicional.
-
-**U / ESP 1** lança três notas suíças em sequência, contando como um uso no limite de ataques à distância. Cada nota causa 24 de dano antes da redução progressiva de combo; a preparação e o compromisso da rajada foram preservados. Double Jump, Wise 6x e o finisher continuam disponíveis. Valores antes/depois e validação em [docs/rickzera.md](docs/rickzera.md).
-
-## Cabeçada e novos controles
-
-**P1: E defende, L dá Cabeçada.** P2 mantém Num 3 / barra para defender e ganha Num 9 / `[` para Cabeçada. O celular tem um botão CABEÇADA separado, e os controles podem ser reconfigurados. Q/E continuam trocando categorias nos menus.
-
-Os 13 lutadores têm uma cabeçada de perto, com animação própria, dano proporcional à força dos seus normais, 14f de preparação, três ativos, 24f de recuperação e mais 12f no erro. É bloqueável em pé e agachado, sem chip, armadura, invulnerabilidade, lançamento ou cancelamento de saída. Pode entrar após um normal confirmado, dentro da janela já existente; não repete automaticamente ao segurar. Veja [regras, migração e testes](docs/headbutt.md).
-
-## Combate e estilos
-
-A troca simultânea de golpes resolve os dois contatos; um double KO empata o round. Comandos de combo permanecem disponíveis durante a pausa de impacto, ataques de chão não interrompem a gravidade no ar, e a defesa responde já no primeiro instante após o hitstun. Há aceleração curta de caminhada e controle limitado da direção no salto. Caixas de ataque usam o golpe e a direção capturados no contato, incluindo espelhamento e projéteis; o modo de colisões continua disponível nas configurações.
-
-O buffer de comandos é de **9 frames a 60 Hz** (cerca de 150 ms, incluindo o frame da entrada). Um ataque registrado nos últimos oito frames da recuperação executa no primeiro frame permitido. Teclado e toque preservam apertos rápidos mesmo se o botão for solto entre duas atualizações; segurar um ataque não gera repetição automática. Hitstop, pausa e os frames sem simulação da câmera lenta não gastam a janela. Uma habilidade em cooldown só consome o comando quando puder começar, dentro dessa mesma janela.
-
-Cancelamentos têm **seis frames de confirmação após o contato**, congelados durante o hitstop. Normais progridem estritamente de fraco para médio e forte; num acerto limpo podem passar para um especial e, com 100 de barra, ULT. Um bloqueio permite apenas a progressão dos normais. Erros não permitem cancelar; Dedilho → Chute da Conspiração de Caetano exige acerto. Lançadores confirmados permitem um salto de perseguição, e soco aéreo pode conectar em chute aéreo contra um rival lançado. Não há cadeia aérea reversa nem cancelamento aéreo para especial/ULT. A moto e o salto giratório de Jane mantêm seu compromisso. O limite de quatro impactos no juggle permanece.
-
-Normais fracos de chão iniciam um frame mais cedo, com mínimo de três; os fortes mantêm seu compromisso. Os ajustes individuais dos agarrões estão na auditoria de balanceamento abaixo. A defesa e os ataques em buffer respondem também no término do hitstun, blockstun e atraso de aterrissagem. Dashes avançam no frame da ativação e aceitam defesa/ataque após quatro frames de compromisso; precisam de dois novos toques. Caminhada acelera e desacelera em poucos frames, e a direção no ar continua limitada à velocidade de salto, inclusive durante ataques aéreos.
-
-Animação e hitbox usam o mesmo frame de ataque. A pose retorna gradualmente ao neutro durante toda a recuperação, com interpolação das articulações pelo caminho angular mais curto. Acertos leves têm som e partículas curtos; impactos fortes recebem graves, partículas maiores e um flash breve. Bloqueios usam som de defesa e efeitos azuis. O painel de treino mostra **ACERTO**, **BLOQUEADO** ou **ERRO**, incluindo projéteis tardios. Combos básicos usam ciano, avançados lilás e punições laranja, sem bônus oculto de dano. O convidado online recebe orientação manual, pose, defesa, escala, classificação e resumo do combo pelo protocolo `dw-online-10`; ambos devem usar a versão atual do jogo.
-
-**Virada manual:** P1 usa **Q**, P2 usa **N**, e o celular tem **VIRAR** acima do direcional. Um aperto inverte a orientação atual imediatamente no chão, em neutro, inclusive agachado ou em guarda. A escolha não tem timeout: caminhada, saltos, ataques normais e cruzamentos mantêm a orientação. Outro aperto inverte novamente. Sofrer um acerto, entrar num agarrão, Clash ou ULT encerra a orientação manual; bloqueios comuns não encerram. Jane preserva a virada automática de seu chute após deslizar; os giros de Caetano e Cristyan mantêm sua coreografia. As hitboxes e os novos projéteis usam a direção escolhida; projéteis já lançados conservam sua trajetória, incluindo retornos/quiques próprios.
-
-Virar não cancela ataque, hitstun, blockstun, dash, atraso de aterrissagem, agarrão ou cinematográfica. Nesses estados o comando usa o buffer normal de 9 frames e só executa ao ficar legal; entradas antigas expiram. A virada não altera invulnerabilidade, velocidade, dano, barra ou tempos dos golpes. Q/E continuam trocando categorias na seleção. Controles antigos são preservados: se Q já for agarrão ou outro comando, Virar recebe uma tecla livre. A configuração mostra conflitos e recusa novas atribuições que apagariam outro comando. A tecla de virada também pode ser remapeada com teclado conectado no menu móvel.
-
-**Defesa:** segure **E** para altos e médios, **S + E** para baixos e médios. Ataques que exigem defesa em pé vencem a guarda agachada; agarrões continuam ignorando a defesa. Pode manter o botão durante hitstun: a guarda responde no primeiro frame livre, sem interromper combos verdadeiros ou a recuperação de seus ataques. A defesa não cobre os frames vulneráveis de aterrissagem. A orientação manual não exige um comando adicional para defender.
-
-A **defesa perfeita universal** aceita um novo aperto nos três frames antes do contato (idades 0, 1 e 2). Ela reduz o blockstun para 60%, arredondado para cima, com mínimo de quatro frames, e produz anel ciano e som próprio. Cada aperto só pode gerar uma perfeita; manter o botão, recuperar o controle ou congelar o buffer no hitstop não renova essa janela. Não concede invulnerabilidade. **Karatê Caetano** tem uma janela especial de cinco frames: Leitura zera o chip, deixa quatro frames de blockstun e carrega Precisão por dois segundos, com recarga de 24 frames. Durante a recarga ele ainda pode usar a perfeita universal, sem renovar Precisão. O HUD diferencia guarda/bloqueio alto, baixo e perfeito e mostra **LIVRE PARA RESPONDER** quando o blockstun termina; iniciar outro ataque apaga esse indicador. No celular, uma faixa legível acima dos controles repete a defesa e o momento de responder.
-
-Normais causam **zero chip**. Especiais bloqueáveis usam porcentagens individuais de dano abaixo; a perfeita universal mantém esse chip reduzido, e a Leitura de Caetano o anula. O chip dos especiais não finaliza o adversário.
-
-| Lutador | ESP 1 | ESP 2 | ESP 3 |
+| Ação | P1 padrão | P2 padrão | Celular |
 | --- | --- | --- | --- |
-| Caetano | 4% | 8% | 6% |
-| Orango | 6% | 0% | 0% |
-| Tubarão | 5% | 0% | 2,5% |
-| Rickzera | 2,5% | 1,5% | 2,5% |
-| Bieu | 6% | 3% | 1,5% |
-| Nomad | 3% | 1% | 2% |
-| Renngotti | 0% | 4% | 4% |
-| Aneninha | 4% | 1,5% | 3,5% |
-| 1SANT0X | 3,5% | 4% | 0% |
-| JaoDoPikles | 0% | 2,5% | 3,5% |
-| Jane | 1,5% | 1,5% | 3,5% |
-| Cristyan | 3,5% | 5% | 4% |
-| Enéas | 4% | 3,5% | 2,5% |
+| Mover / saltar / agachar | A/D, W, S | Setas | Direcional |
+| Soco / chute | J / K | Num1 / Num2 | SOCO / CHUTE |
+| Defesa | E | Num3 | DEFESA |
+| Cabeçada | L | Num9 | CABEÇADA |
+| Especiais | U / I / O | Num4 / Num5 / Num6 | ESP 1 / 2 / 3 |
+| Ultimate | H | Num0 | ULT |
+| Agarrão | G | Num7 | AGARRAR |
+| Virada manual | Q | N | VIRAR |
+| Transformação | F | Num8 | FORMA |
+| Carregar energia (Rick) | Segurar C | Segurar M | Segurar CARREGAR |
 
-Agarrões e habilidades sem dano não usam a tabela de bloqueio. Rajadas e zonas aplicam a taxa em cada contato, mantendo seus limites existentes.
+Os comandos são configuráveis e têm alternativas para teclado sem numpad. A migração conserva teclas antigas e procura teclas livres para FORMA/CARREGAR, sem roubar bindings personalizados. Q/E e Tab continuam trocando categorias nos menus. ESC/P pausa; no treino, R reinicia posições e T troca o dummy.
 
-**Batalha de Ultimates:** quando dois avanços de ULT ativos se chocam de frente, a luta entra numa disputa de até 2,5 segundos. Cada jogador deve apertar seu próprio botão de **ULT** repetidamente: H para P1 e Num 0 / Shift direito para P2 por padrão; no online ambos usam sua configuração de P1. No celular, o botão ULT fica destacado e a faixa acima dos controles mostra a disputa e seus toques. Soco não pontua nessa batalha. Segurar o botão ou a repetição automática do teclado não gera toques extras; os comandos que ativaram as Ultimates também não contam. No online, cada toque tem identificação própria e é ligado à batalha atual: toques que chegam juntos são contados individualmente, sem duplicar reenvios.
+## Recursos e decisões
 
-Nos modos locais, dez toques de vantagem após pelo menos 50 frames podem encerrar a disputa mais cedo. No online há um segundo de preparação, a janela completa de 2,5 segundos para apertar e até 1,5 segundo para conferir toques em trânsito; apertos feitos fora da janela não pontuam. Ao terminar, quem tiver mais toques executa sua própria Ultimate, com a animação e o dano normais, sem multiplicador. As duas barras já foram gastas na ativação. Um empate afasta os dois sem dano e mantém o custo das duas ULTs. A IA usa a mesma taxa de disputa de sua dificuldade. Ativações simultâneas preservam as duas cinematográficas e não deixam um lutador travado. Um rival livre, com barra completa, também pode responder com ULT durante a cinematográfica; hitstun, blockstun, ataques e recuperações comprometidas não podem ser cancelados assim. Ults que não se encontram ainda podem errar e ser punidas. O choque original de Dedilhos continua usando **soco**. O vencedor ainda pode levar a partida ao finisher.
+Todos os HP máximos anteriores foram **dobrados**, preservando suas diferenças. Os novos lutadores também usam essa escala. O dano base não foi dobrado. Exemplos: Caetano 1.000 → 2.000; Rick 940 → 1.880; Jane 860 → 1.720; Cristyan 1.060 → 2.120.
 
-- **Karatê Caetano — técnico:** uma defesa nos primeiros cinco frames carrega Precisão por dois segundos, sem dano de chip. O próximo Dedilho causa 73 em vez de 55 e pode ser confirmado em Chute da Conspiração num acerto limpo. O Dedilho recebeu impacto, som e efeitos mais fortes.
-- **Orango Tango — pressão:** acertos acumulam até três níveis de Ímpeto, cada um com +3% de dano e mais avanço. Tomar dano ou ficar três segundos sem pressionar encerra o bônus. Seus agarrões continuam próprios.
-- **Renngotti — alcance:** microfones que passam pelo rival se tornam armadilhas baixas por tempo limitado. Grito ressoa nessas zonas, ampliando sua área de efeito. A armadilha pode ser saltada ou defendida.
-- **Aneninha — improviso:** baixo + ESP 1 usa Rasteira de Osasco. Frente + ESP 2 posiciona o muro atrás de um adversário próximo; fora desse alcance mantém o posicionamento normal. As variantes são controladas pelo jogador.
+A barra armazena **200 ULT**, em dois estoques. Uma Ultimate custa **100** e não apaga o estoque restante. A transformação custa **200**, exige estado neutro no chão, recursos próprios e pelo menos 30 de fôlego. Ela é independente da Ultimate. Há 36 frames de preparação interrompível e 72 de compromisso; ativar não concede invulnerabilidade. Ser interrompido na preparação perde o custo.
 
-Todos têm um agarrão curto com **G / Num7** ou o botão **AGARRAR**. Pressionar agarrão no mesmo momento permite escapar de um agarrão comum; os agarrões especiais exigem esquiva ou salto. Ataques em recuperação podem ser punidos, mas o rival não pode ser agarrado durante hitstun, blockstun, salto ou proteção de recuperação. Armadura recebe dano reduzido e absorve a interrupção; não é invulnerabilidade.
+A **stamina** é separada de HP, ULT e recursos exclusivos. O ajuste experimental inicial usa máximo 120, normais de 3/5/8, especiais de 6/10 e agarrões de 12; saltos custam 5 e dashes 7. Bloquear custa 3, ou 5 contra fortes. Descansar recupera após 32 ticks sem gasto. Exaustão limita especiais, fortes, dash e saltos, mas mantém golpes leves e defesa. Recuperação e exaustão não quebram hitstun nem combos verdadeiros.
 
-## Viewers e equilíbrio
+**Custos, duração, regeneração e multiplicadores são parâmetros experimentais**, centralizados em `src/game/resources.ts`. Não representam uma conclusão de balanceamento com jogadores humanos. As decisões confirmadas e a tradução de cada ficha estão em [War of Champions: implementação e validação](docs/war-of-champions.md).
 
-**1SANT0X** tem 950 HP e normais com dano em ×0,9. O Soco Elástico alcança 370 unidades, causa 52 de dano, prepara em 20 quadros e recupera em 30 (+12 ao errar); é bloqueável e entra no limite de distância. Chute do Coelho causa 68, salta e exige defesa alta, com 12 quadros vulneráveis ao aterrissar. Quarta Parede não causa dano: tem oito quadros de preparação, **18 quadros (0,3 s) de invulnerabilidade**, 28 de recuperação vulnerável e recarga de **oito segundos**, mostrada no HUD. O rosto vira para a câmera em um close com sorriso; a luta continua. Abstração só captura em alcance finito, causa 240 em quatro impactos e tem arte própria. Seu finisher é **Fora do Roteiro**.
+## Rickzera: energia independente
 
-**JaoDoPikles** (JP na referência) tem 990 HP e normais em ×0,95. O Tabuleiro não causa dano: fica à frente por até **três segundos**, com largura de 220 e **35% de lentidão no chão**. Só um tabuleiro por jogador; saltar ou sair da zona permite escapar, e acertar/agarrar Jao desfaz o controle. Símbolos da Matemática é um projétil reto de 44, sem perseguição. Arremesso Absoluto usa uma bola de 62 que atordoa, empurra e quica uma vez, com recuperação longa. Os três especiais compartilham o cooldown de distância. Chess is Life une peças, fórmulas e uma enterrada em quatro impactos de 260 no total; seu finisher é **Xeque-Mate Absoluto**.
+Rick usa cabelo loiro curto, olhos verdes, camiseta preta e cargo bege. A Energia Acumulada tem limite 100 e começa em 40. Segurar CARREGAR em neutro treina e gera energia; receber dano também gera energia. Ficar parado carregando é vulnerável.
 
-Ambos têm os modos locais, IA, treino, online, controles de toque, falas, perfil/histórico e finalização do restante do elenco. O desafio Arsenal completo reconhece uma esquiva real com a Quarta Parede e um rival em movimento afetado pelo Tabuleiro; o simples uso dessas habilidades não conclui o objetivo.
+- **Projetos de Transferências:** três orbes verdes, custo 16 de energia, uma ativação de distância por rajada.
+- **Soco de Energia:** projeção de punho verde, 72 de dano base, custo 22; bloqueável e sem rastreamento.
+- **Salto de Energia:** impulso elevado, custo 18; segundo impulso aéreo também tem custo.
+- **Combo Wise:** seis contatos, Ultimate separada da transformação.
+- **Cruz de Energia:** consome toda a energia e 200 ULT. Dano e movimento físicos ×2 e dano recebido ×0,5; não duplica HP máximo, capacidade de ULT ou stamina. O alcance recebe ajuste próprio, não uma duplicação universal da arena/hitboxes. **Não acumula energia durante a forma por nenhum desses meios**, inclusive ferramentas de recarga do treino. Ao terminar, fica em zero e precisa carregar ou receber dano novamente.
 
-## Jane, Cristyan e Doutor Enéas
+## Formas e novos estilos
 
-**Jane (Viewer)** é uma mulher adulta de baixa estatura: cabelo loiro em bob com franja reta, jaqueta branca, corpo pequeno de cerca de 60% da altura de Caetano. Tem 860 HP, normais de alcance curto e dano em ×0,78. Seus comandos Java saem do laptop em uma dupla de 18+18 brutos (34,2 quando os dois contatos formam combo); a dupla conta como um uso à distância.
+Todas as 18 fichas têm uma transformação própria, aparência e custo. Duração máxima de 10–15 segundos também é limitada pelo fôlego e pelo recurso do personagem.
 
-Para **Dando Grau de Moto**, segure **I / Num5 / ESP 2**. Jane fica parada girando a moto por até cinco segundos. O giro permite **seis contatos**, separados por meio segundo, com dano de 11 a 15. Soltar a tempo inicia **MOTO SEM CONTROLE**: arrancada rápida na direção capturada, preparação 3f, 16f ativos, até um contato de 18 e recuperação 24f (+8 no erro). Giro e arrancada compartilham os seis contatos. Há um mínimo de 12 ticks antes da arrancada, sem armadura, invulnerabilidade ou cancelamento livre. **Ultrapassar cinco segundos derruba a moto e deixa Jane tonta e vulnerável por um segundo, inclusive se soltar no tick 301.** Soltar, cair ou ser interrompida inicia a **recarga de três segundos**. A pausa congela esses tempos; um novo round os reinicia.
+Patrick combina Escudo de Casco, Investida Blindada e Punho Couraçado; Rei Tatu reduz dano e tem três contatos de armadura, vencidos por agarrões/ULTs. Gabrielzin lança Beijinho/Piscadinha, aproxima com Abraço de Cupido e veste Gatito, com patas e alcance maior. O tema de Gatito usa um motivo original sintetizado e voz, sem adicionar uma gravação externa à rádio.
 
-O terceiro especial desliza por baixo do rival, vira e **salta no frame 18**, anunciando um **chute giratório aéreo no frame 30** por 58 de dano. Defesa em pé funciona e baixos interrompem a passagem. Não concede invulnerabilidade; mantém a recuperação 25f e mais 10f no erro. **AreiaZord** cria um robô branco e amarelo com ampulheta e um laser de cinco pulsos, 250 no total. Finisher: **Deploy do AreiaZord**.
+Ulisses usa membros distorcidos, Presas Sugadoras e Manipulação de Sangue. Presas capturam até três estoques; Regeneração Imediata consome um a cada cinco segundos para curar até 100 HP, sem ultrapassar o máximo. Felipence usa guitarra, Riff, Pulso e Lamento; Sinfonia do Caos amplia pressão sonora. H?D?SH controla o chão com Go, dispara tendência e marca o airdrop 30 frames antes da queda. Sua Ultimate é Full Box 200.
 
-**Cristyan (Viewer)** tem 1060 HP e normais em ×0,99. Teep causa 62 e empurra; Soco Poderoso causa 90 e arremessa, mas tem 21 quadros de preparação e recuperação longa; Pirueta causa 74 em um único acerto. Nenhum desses golpes dá armadura ou invulnerabilidade. **Rede Baiana** põe o rival para dormir numa rede, seguida de salto e impacto que quebra a rede; 260 no total. Finisher: **Sentença da Rede**.
+Caetano veste calça branca/faixa preta e usa Karatê Prime. Bieu tem forma BuggyBatman e Ultimate Crias do Capão Redondo. Aneninha usa jaqueta rosa/cargo preta, lança baratas e chama Crias de Osasco. Nomad veste verde/galaxy, troca a rajada por Soco Gigante e paga 10% do HP máximo para sortear força, velocidade ou tamanho em Jogatina. Renngotti tem Berserker ×2, seguido de 15 segundos de força/mobilidade reduzidas pela metade.
 
-**Doutor Enéas (Especiais)** tem 1080 HP e mobilidade mais lenta. Seu grito causa 60 em médio alcance e atordoa brevemente; o ECG causa 46 e mostra **CASO GRAVE!**. **56 na Testa!** lança com o 5 (28) e derruba com o 6 (34): ambos podem ser defendidos e a dupla conta como um uso. Seus três especiais compartilham o limite geral de distância. **Bomba Atômica Brasileira** é uma cinemática cartunesca com óculos, discurso rápido, botão vermelho, míssil 56 e explosão verde/amarela; causa 275 no total e termina com “MEU NOME É ENÉAS!”. Finisher: **56 no Placar**.
+Jane é adulta de baixa estatura, com franja loira, jaqueta branca e cargo preta. Moto e passagem → salto → chute mantêm suas regras; EVA amplia também a hurtbox, usa bateria e lasers nas mãos. Jao tem Falso Gênio, e H?D?SH tem Overclock: a predição sinalizada só auxilia uma guarda alta em neutro a cada segundo, sem evitar agarrões, baixos ou hitstun. Santox é humano na base e vira o coelho glitch Jax. Cristyan usa Joelhada do Garuda e Muayfimeu. Dr. Acreano rasga o paletó e revela tatuagens do Brasil. Orango assume Albino 00, com pelagem branca e efeitos psíquicos. Tubarão vira Megalodonte, depois filhote e cresce ao longo de dois minutos, ou até reiniciar o round.
 
-Os três têm IA, normais, defesa, agarrão, desafios, ULT, finisher, falas e suporte completo a partidas locais, celular, online e histórico. As Ultimates precisam capturar em alcance finito e podem errar. O restante do elenco mantém seus atributos.
+## Combate, treino e multiplayer
 
-## Finishers e apresentação
+O input buffer de nove frames, cancelamentos confirmados, defesa perfeita de três frames, Precisão exclusiva de Caetano, rasteiras, virada manual, quatro contatos de juggle, escala de combo e recovery punível permanecem. Normais não causam chip; agarrões exigem aproximação e não escapam de combos verdadeiros. Três usos à distância impõem cinco segundos de cooldown; rajadas contam uma vez. Especiais fortes não ganham cancelamento gratuito.
 
-Após o KO do round decisivo, o vencedor tem quatro segundos para pressionar **ULT** (H, Num0 ou botão de toque) e executar seu finisher. A janela expira para a vitória normal; o finisher não gasta barra e só o vencedor pode ativá-lo. Cada um dos 13 personagens tem uma sequência própria de preparação, impacto e resultado, com props e efeitos de sua identidade. O finisher também é sincronizado no online e aparece no histórico.
+ULTs preservam a preparação de captura, erro punível e batalha de ULTs: quando se chocam, cada jogador aperta seu comando de ULT. Finishers continuam disponíveis após o KO decisivo. Novas cinematográficas usam timelines com os mesmos frames de contato que causam o dano real; preparação, expressão, ataque, impacto e retorno são separados do motor.
 
-Os confrontos têm provocações específicas entre Caetano, Orango, Renngotti e Aneninha. O narrador, os títulos de vitória e os efeitos de impacto acompanham os personagens. A trilha original usa seis variações de ritmo/escala conforme a arena, preservando a rádio e os sete raps completos.
+O treino tem **18 desafios**, incluindo transformação, fôlego e carga de energia, e **72 rotas verificadas — quatro por personagem**. FRAME DATA mostra alcance, startup, recovery, defesa, acertos e retorno ao controle. RECURSOS E FORMAS permite inspecionar custos e abastecer recursos no treino offline; ANIMAÇÕES permite observar todos os lutadores e suas formas. A barra de ULT é abastecida automaticamente no treino; a regra de não recarregar energia durante Cruz de Energia continua sendo respeitada.
 
-## Golpes
+O online usa host autoritativo, WebRTC com relay HTTP de fallback e protocolo **`dw-online-11`**. Stamina, estoques, energia, sangue, bateria, transformação, efeitos e recuperação são sincronizados. Os dois jogadores precisam carregar a versão atual. Contas usam usuário e senha, sem email; estatísticas, histórico, XP e ranking persistem no D1. Nenhum cadastro é necessário para jogar offline.
 
-| Personagem | Especial U | Especial I | Especial O | ULT H |
-| --- | --- | --- | --- | --- |
-| Karatê Caetano | Chute da Conspiração | Dedilho Perfurante | Soco Pego | Conspiração Absoluta |
-| Orango Tango Bitencourt | Dedilho Supremo | Puxão de Camisa | Mordida na Perna | Instinto Primordial |
-| Tubarão Fiscal | Mordida | Engole | Beijo do Fiscalizador | Quando terá Live? |
-| Rickzera | Arremesso do Franco Suíço (3 notas) | Soco Inglês | Double Jump | Wise 6x |
-| Bieubatman | Chave de Fenda | Jogar Rato | Pichação | Prestígio |
-| Nomad Lobby | Mario Burger | Rajada de Glock | Boomerang | Arena |
-| Renngotti | Joga pra Lua | Jogar Microfone | Grito Alto | TILT |
-| Aneninha | Soco de Osasco | Pichar Muro para representar Osasco | Grito Alto | Yo Soy de Bolivia. |
-| 1SANT0X | Soco elástico a longa distância | Chute do Coelho | Quebrar a Quarta Parede | Abstração |
-| JaoDoPikles | Tabuleiro de Xadrez | Símbolos da Matemática | Arremesso Absoluto | Chess is Life |
-| Jane | Fingindo que tá Trabalhando | Dando Grau de Moto | Por baixo, depois chute | AreiaZord |
-| Cristyan | Chute Teep Empurrando | Soco Poderoso | Pirueta com Chute | Rede Baiana |
-| Doutor Enéas | Meu Nome é Enéas! | Diagnóstico Fatal | 56 na Testa! | Bomba Atômica Brasileira |
+## Cenários, áudio e apresentação
 
-Renngotti arremessa o oponente para o alto e permite continuar com um combo aéreo. O microfone é um projétil em arco; o grito tem alcance frontal e empurrão, mas pode ser defendido. TILT usa uma mesa em uma sequência cinematográfica.
+Os 17 cenários e as sete músicas continuam disponíveis. A abertura sorteia um fundo e exibe demonstração de luta. Rádio Música fica na abertura, seleção e pausa; trilha original sintetizada e raps mantêm autoria “Orangotango Esfolador Rapper” nas faixas anteriormente atribuídas a Ulisses. Há controle de volume, efeitos, vozes e opções para reduzir flashes/tremor.
 
-Aneninha avança com o Soco de Osasco e lança o adversário para continuar combos. A pichação deixa um muro marcado com OSASCO que causa até três acertos, podendo ser defendido ou saltado. Seu grito é uma onda frontal que interrompe e empurra. Na ULT, ela grita e dança com uma horda de dez dançarinas de roupas coloridas e bandeiras bolivianas, numa sequência de seis acertos. Ela também aparece na demonstração da abertura.
+## Desenvolver e verificar
 
-Todos possuem golpes fracos/médios/fortes, ataques agachados e aéreos, defesa alta/baixa, dash, combos, barra de ULT, retratos, animações de reação e vitória, IA e treinamento. Os ganhos de ULT estão em metade do valor original; o custo continua em 100 e o treinamento mantém a barra livre.
-
-## Online e contas
-
-Abra **ONLINE**, registre um **usuário** (3–24 letras, números ou _) e uma **senha** (8–128 caracteres). O cadastro não solicita nem armazena e-mail. A conta fica no banco do jogo e pode ser usada em outro dispositivo; a sessão dura até sete dias ou até sair da conta.
-
-1. Um jogador cria uma sala e compartilha seu código de oito caracteres.
-2. O amigo entra na própria conta e informa esse código.
-3. Cada um escolhe seu lutador e confirma **PRONTO**. O criador escolhe a arena e clica em **LUTAR!**.
-4. Após o resultado, ambos voltam à sala e confirmam novamente para uma revanche ou outro confronto.
-
-Cada jogador usa seus controles de P1, incluindo os botões de toque no celular. O criador simula a partida e envia o estado ao convidado. A conexão WebRTC transmite diretamente quando possível; uma retransmissão HTTP no próprio servidor mantém a partida disponível em redes que bloqueiam P2P. O indicador mostra a conexão e o atraso estimado. Não há pausa no online; o menu permite sair. Uma interrupção prolongada bloqueia o avanço da partida enquanto a conexão é restabelecida.
-
-O servidor valida sessões, participação, confirmação dos jogadores e a sequência de cada partida. Senhas usam PBKDF2-SHA256 com salt individual; apenas hashes de sessão são guardados no banco. Cookies de produção são HttpOnly, Secure e SameSite=Strict. Operações de escrita verificam a origem, e cadastro/login têm limites de tentativas. Os dados ficam no D1 do site; não há credenciais de conta no código distribuído.
-
-## Perfil, histórico e ranking
-
-**PERFIL E RANKING** mostra partidas, vitórias, derrotas, finishers, XP, nível, título e histórico. As contas e sessões existentes são preservadas. Os níveis liberam títulos de progressão sem alterar atributos do combate.
-
-Cada partida online cria um registro no servidor antes de começar. Para conceder pontos, os dois participantes precisam enviar o mesmo vencedor, placar e finisher. Vitória dá **3 pontos e 100 XP**, derrota dá **40 XP**, e um finisher dá **+20 XP** ao vencedor. Reenvios e confirmações concorrentes concedem a recompensa apenas uma vez. Resultados divergentes ou sem a confirmação do rival ficam fora do ranking; partidas com menos de dez segundos também não pontuam. O ranking público ordena pontos, vitórias, derrotas e nome de usuário e tem páginas de vinte jogadores.
-
-Os modos offline continuam sem cadastro. Resultados do P1 têm histórico e totais próprios neste dispositivo, separados do ranking online. O histórico recente conserva até quarenta registros; os totais de progressão continuam acumulando. Na conta, o perfil mostra as trinta partidas mais recentes.
-
-## Celular e tablet
-
-Os menus têm botões e formulários em tamanho nativo. Durante a luta aparece um direcional de toque com diagonais, salto e agachamento, além de soco, chute, cabeçada, defesa, três especiais e ULT. Vários dedos podem ser usados juntos; toques rápidos são registrados. O botão MENU abre a pausa local ou a saída da partida online.
-
-É possível jogar na vertical, com a arena em 16:9 acima dos controles, ou na horizontal. A mudança de orientação preserva a partida. Música, configurações e desafios também têm telas adaptadas. Os botões de toque controlam o P1 no versus local; o segundo jogador pode usar um teclado conectado.
-
-## Desafios de treinamento
-
-O botão **COMBOS** abre um treinador com **52 rotas — quatro por personagem**: básico de dois golpes, básico de três, normais → especial e perseguição aérea. Mostra teclas configuradas ou botões de toque e só aprova contatos reais sem recuperação intermediária. O rival mantém guarda depois do primeiro acerto; erros, bloqueios e golpes diferentes falham a tentativa. **S + K** (ou baixo + CHUTE) faz a rasteira dos 13 lutadores.
-
-Ative **Exibir inputs, dano, acertos e recuperação na luta** para manter o monitor. Histórico mostra comandos, direções e ticks; o treino indica o frame real em que o rival fica livre, incluindo o levantamento após um lançamento. R ou **REPETIR ROTA** reinicia a tentativa perto do alvo. O histórico e o monitor não consomem o buffer. [Rotas, regras e novos golpes da Jane](docs/combos.md), com danos reproduzíveis por `npm run combos:audit`.
-
-Só três encaixes recebem crédito específico de 8f de preparação: Orango ESP 1, Jao ESP 2 e Enéas ESP 2, após o segundo médio confirmado. Uso isolado, bloqueio, erro, recovery, dano e recargas ficam intactos. Isso permite as rotas sem liberar todos os especiais como cancelamentos gratuitos.
-
-Entre em **TREINAMENTO** e toque/clique em **DESAFIOS**. Há 15 objetivos com progresso real: cinco acertos, três ataques baixos, dois aéreos, cinco saltos, três dashes, três segundos agachado, três bloqueios contra IA, combo de três acertos, os três especiais diferentes, 500 de dano acumulado, acertar uma ULT, completar um cooldown de distância, três viradas manuais, três defesas perfeitas e três bloqueios baixos. O cooldown exige um personagem com golpes à distância; os três desafios defensivos ativam a IA.
-
-Selecionar um desafio reinicia as posições; o desafio de defesa ativa a IA. Conquistas concluídas são lembradas neste navegador. Você pode repetir qualquer desafio ou voltar ao treinamento livre. Na pausa também é possível trocar o comportamento do oponente sem teclado.
-
-## Balanceamento e limite de distância
-
-O [relatório da auditoria original](docs/balance-changes.md) contém o diagnóstico dos 13 lutadores, as fichas por golpe, a tabela **ANTES / DEPOIS**, razões de cada ajuste e limites dos resultados. A busca determinística percorre **19.110 rotas por versão**; seu maior dano observado caiu de **527,43 para 396,90**, sem mudar os totais das ULTs isoladas. Isso não é uma prova do máximo absoluto nem aprovação por jogadores humanos; não usamos winrate de IA para declarar equilíbrio.
-
-A escala de combo agora é **100%, 90%, 80%, 70%, 60%, 50%, 40%, 30%, piso 20%**. Sequências cinematográficas herdam a escala na entrada e conservam o dano da abertura no contador. Captura de ULT exatamente no frame de recuperação também conserva a escala; após um frame inteiramente livre, uma nova abertura volta a 100%.
-
-ULTs têm **12f de preparação vulnerável depois do anúncio**, captura até altura 100 e armadura somente no avanço ativo. Um oponente livre pode saltar ao terminar o anúncio ou interromper a preparação; o erro mantém **34f de recuperação vulnerável**. Custo e animações continuam próprios. Engole agora tem **18f / alcance 96 / dano 125**; Puxão do Orango **16f / 105 / 140**; Mordida prepara em 18f e avança menos; Lua de Renngotti tem **16f / 100 / 90**. Renngotti mantém no máximo **dois microfones** por dono; o terceiro substitui o mais antigo. A IA reconhece as armadilhas estacionárias.
-
-No treinamento, **FRAME DATA** abre comparação entre quaisquer dois lutadores, com golpes independentes, atributos reais, startup/ativos/recovery/whiff, stun, alcance, chip e notas de contrajogo. A vantagem teórica aparece apenas quando a fórmula se aplica; outros casos mostram “Variável”. Há observação de estado/contato/escala, **AVANÇAR 1 FRAME**, preparação de golpe do P1, hitboxes e monitor durante a luta. Essas ferramentas só executam ações no treino offline pausado. `npm run balance:audit` regenera as medições e as fichas atuais.
-
-Após três usos de golpes à distância, o lutador passa cinco segundos sem poder iniciar outro golpe à distância. O contador é compartilhado entre seus especiais: uma rajada inteira conta como um uso, independentemente de acertar. Corpo a corpo, defesa, movimento e ULT continuam disponíveis. O HUD mostra usos e tempo restante. A pausa local congela o relógio; um novo round reinicia o limite. A regra vale para humanos, IA, treinamento e online.
-
-Entram no limite os projéteis, as pichações, os gritos, o Dedilho Supremo do Orangotango, o Soco Elástico, os comandos Java de Jane e os três especiais de JaoDoPikles e Enéas. Caetano e Tubarão mantêm seus especiais de contato. Os ganhos de ULT continuam em ×0,5.
-
-Bieubatman recebeu redução de aproximadamente 9% nos normais, Chave de Fenda 88→80, Rato 46→42, Pichação 18→16 e Prestígio 300→275. Nomad tem normais em ×1, Burger 58→52, cada tiro 23→20, Boomerang 42→38 e Arena 310→285. Alguns especiais também recuperam mais lentamente, mantendo seus movimentos e identidades.
-
-## Controles padrão
-
-| Ação | P1 | P2 |
-| --- | --- | --- |
-| Mover | A / D | Setas esquerda / direita |
-| Pular / agachar | W / S | Setas cima / baixo |
-| Soco / chute | J / K | Num 1 / Num 2 |
-| Defesa | E | Num 3 ou / |
-| Cabeçada | L | Num 9 ou [ |
-| Virar | Q | N |
-| Especiais | U / I / O | Num 4 / Num 5 / Num 6 |
-| ULT / Finisher | H | Num 0 |
-| Agarrar | G | Num 7 ou B |
-| Pausar | Esc ou P | Esc ou P |
-
-Sem numpad, P2 também usa vírgula, ponto e barra para soco/chute/defesa; ponto e vírgula, apóstrofo e Enter para especiais; Shift direito para ULT. Ative Num Lock. As teclas podem ser alteradas em Controles. O antigo preset intacto migra de L para E na defesa e passa L para Cabeçada; configurações personalizadas são preservadas, e a nova ação recebe uma tecla livre.
-
-Segure baixo para agachar e reduzir a caixa de colisão. Baixo + Defesa bloqueia golpes rasteiros; ataques aéreos altos exigem defesa em pé. Soco/chute agachado usa os ataques baixos do personagem. No treino, R reinicia posições e T troca o comportamento do oponente.
-
-## Música
-
-O botão **Música**, com mini equalizador, fica no canto inferior direito do menu principal e à esquerda da confirmação nas seleções de lutadores e mapas. A pausa também dá acesso à rádio. A escolha de faixa continua ao fechar o painel e ao mudar de tela; o volume é compartilhado com Música em Configurações. A rádio tem pausa, próxima/anterior, controle de posição e sequência automática.
-
-A playlist tem a trilha original dinâmica e sete músicas completas. Os antigos créditos de Ulisses aparecem como **Orangotango Esfolador Rapper**. **Sequência Let’s Gay 1** mantém o crédito **Dornelles**. As três faixas mais recentes são Diário de um Viadão (Gaystavão), Sequência Let’s Gay 1 e Rap do Renngotti Cria de Exu Traficante de Anões Cubanos.
-
-Os MP3 enviados estão incluídos em 96 kbps estéreo, completos, para reduzir o download. Estação e pausa são lembradas pelo navegador; o áudio começa a partir de uma interação do jogador.
-
-## Continuar o desenvolvimento
-
-Instale Node.js 22.13+ ou 24 LTS. Dentro desta pasta:
+Use Node.js 22.19+ ou 24 LTS e execute:
 
 ```sh
 npm ci
+npm run typecheck
+npm test
+npm run build
 npm run dev
 ```
 
-O comando compila o jogo, aplica as migrações apenas no banco local e abre o servidor em http://127.0.0.1:8787. A primeira instalação precisa de internet.
+`npm run combos:audit` exporta rotas reais contra defesa mantida. `npm run animation:audit` verifica poses distintas. `python3 scripts/package.py` monta o ZIP offline com código, documentação, testes e sete MP3, a partir do build atual. O servidor de produção é o Worker em `dist/server/index.js`, com `.openai/hosting.json` e migrações em `drizzle/`.
 
-```sh
-npm run typecheck
-npm run build
-npm run db:local
-npm test
-npm run preview
-```
-
-O build produz `dist/server/index.js` (API), `dist/server/wrangler.json` (configuração local), `dist/.openai/hosting.json` e `dist/client/` (jogo e MP3s). Pare o servidor de preview antes de recompilar. `npm run dev:client` abre apenas o cliente Vite; as contas e salas precisam do servidor completo.
-
-`npm test` inclui **151 casos de temporização** em `tests/timing.test.ts`, **434 casos de animação/apresentação** em `tests/animation.test.ts`, **734 casos de combos/Jane** em `tests/combos.test.ts` e **322 casos de balanceamento** em `tests/balance.test.ts`, além de 196 casos de responsividade em `tests/responsiveness.test.ts`, 262 de virada/defesa em `tests/turn-defense.test.ts` e 225 casos de batalha de ULT em `tests/ultimate-clash.test.ts`. A batalha cobre os 169 confrontos entre os 13 lutadores, os dois vencedores, dano normal das Ultimates, empates, custo, comandos de teclado/toque/online, cinematográficas simultâneas, snapshots, IA, erros e finisher. As outras suítes verificam buffer, dois jogadores/lados/cruzamentos, controles antigos, giros próprios, projéteis, hitboxes, defesa perfeita, chip individual, recuperação, os 15 desafios, Ultimates, finishers, moto de Jane e API. A suíte de API abre um servidor apenas em loopback para o banco de testes; o ambiente de execução deve permitir essa conexão local.
-
-O esquema está em `db/schema.ts`. Após alterações, rode `npm run db:generate` e revise os novos SQLs em `drizzle/`. Migrações já aplicadas são preservadas. `npm run db:local` aplica apenas as pendentes no preview; o Sites aplica as hospedadas durante a publicação. O manifesto mantém a identidade do site e declara o binding lógico DB.
-
-Para gerar o ZIP offline e a página de download após o build, use `python3 scripts/package.py`. O pacote inclui código, servidor, migrações, testes e JOGAR.html com uma única cópia das sete músicas em src/assets/radio. O online usa o site hospedado; os modos locais, desafios e controles móveis continuam disponíveis no HTML extraído.
-
-## Organização e créditos
-
-- src/ui/: menus, perfil/ranking, seleções de personagem/mapa, rádio, finalizações e tela de partida.
-- src/game/data.ts, engine.ts e ai.ts: personagens, regras, golpes e IA.
-- src/game/rig.ts e render.ts: desenhos articulados e efeitos.
-- src/game/stage.ts e stage-scenes.ts: cenários.
-- src/game/audio.ts e radio.ts: síntese original e playlist.
-- src/assets/radio/: faixas incluídas.
-- worker/: contas, salas e confirmação de resultados; db/schema.ts e drizzle/: esquema e migrações.
-- tests/: regressões de combate, desafios, finishers, contas, histórico e recompensas sem duplicação.
-
-Caetano usa o novo visual sem camisa, porte atlético, calça laranja e faixa roxa. Seu afro permanece maior que o de Bieu. Renngotti usa moletom/cargo brancos, óculos escuros e fones. Aneninha usa capuz amarelo bordado, cachos castanhos, saia rosa em camadas, pompons e botas decoradas, no mesmo estilo desenhado dos demais lutadores.
-
-A fonte Russo One é de Jovanny Lemonad e usa SIL Open Font License 1.1. A licença integral está em src/assets/Russo-One-LICENSE.txt e incorporada ao HTML distribuído.
+Relatórios históricos de balanceamento descrevem versões anteriores. Para esta reformulação, use o código atual, os multiplicadores no laboratório e o relatório de War of Champions; resultados automatizados não substituem testes de equilíbrio com jogadores humanos.

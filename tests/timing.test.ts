@@ -83,4 +83,4 @@ test('local subframe rendering is read-only; turning, guarding, attacking and im
   f.serial++;assert.equal(localPresentation(f,p,.5,false),f);f.serial--;f.move=CHARS.caetano.moves.s1;assert(f.move.turn);assert.equal(localPresentation(f,p,.5,false),f);
  }finally{g.destroy()}
 });
-console.log(`Timing: ${count} cases passed (5–360 Hz, 59.94 Hz, jitter, timestamp zero, invalid clocks, pause/background gaps, all 13 fighters/ULTs, fixed-duration dense animation and read-only subframe presentation).`);
+console.log(`Timing: ${count} cases passed (5–360 Hz, 59.94 Hz, jitter, timestamp zero, invalid clocks, pause/background gaps, all 18 fighters/ULTs, fixed-duration dense animation and read-only subframe presentation).`);

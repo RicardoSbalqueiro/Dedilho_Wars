@@ -47,5 +47,5 @@ for(const id of ['perfect','blockLow'] as const){
  }
  assert(g.challenge?.done,id+' requires three actual blocks');keyboard.down.clear();g.destroy();
 }
-assert.equal(TRAINING_CHALLENGES.length,15);assert.equal(challengeAvailable('range','caetano'),false);assert.equal(challengeAvailable('range','nomad'),true);
+assert.equal(TRAINING_CHALLENGES.length,18);assert.equal(challengeAvailable('range','caetano'),false);assert.equal(challengeAvailable('range','nomad'),true);
 console.log('All15 training challenges completed by actual hits, blocks/perfect/low blocks, turns, movement, combo, super or cooldown. No false defense reward.');

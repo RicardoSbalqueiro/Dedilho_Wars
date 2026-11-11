@@ -4,7 +4,7 @@ export const SUPER_CAPTURE_HEIGHT = 100;
 export const MICROPHONE_LIMIT = 2;
 // These three slow ranged attacks need a dedicated, confirmed medium link.
 // The standalone move, blocked hits, throws, utility and ULTs get no discount.
-export const CONFIRMED_SPECIAL_LINKS = {orango:'s1',jao:'s2',eneas:'s2'} as const;
+export const CONFIRMED_SPECIAL_LINKS = {orango:'s1',jao:'s2',eneas:'s2',ulisses:'s1',felipence:'s1',patrick:'s1',hdsh:'s2',gabrielzin:'s1'} as const;
 export const LINK_STARTUP_CREDIT = 8;
 
 // priorHits counts actual contacts in the same uninterrupted combo.

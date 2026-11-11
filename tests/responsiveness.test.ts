@@ -236,4 +236,4 @@ game('Eneas six accessory stops with the active phase, not after recovery',g=>{
   g.step();assert.equal(f.poseOverride,null);assert.equal(f.poseName,'idle');assert.equal(f.state,'attack');
 },'eneas');
 
-console.log(`Responsiveness: ${cases} regression cases passed (9-frame input, recovery/guard, keyboard/touch/online, hitstop, cooldowns, dash/air control, bounded cancels, whiffs, feedback and all 13 rigs).`);
+console.log(`Responsiveness: ${cases} regression cases passed (9-frame input, recovery/guard, keyboard/touch/online, hitstop, cooldowns, dash/air control, bounded cancels, whiffs, feedback and all 18 rigs).`);

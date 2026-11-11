@@ -50,8 +50,8 @@ function runRoute(g:Game,route:ComboRoute,mode:'keyboard'|'touch'|'online',mirro
  return {stage,hits,max,free,damage:d.maxHp-d.hp};
 }
 
-check('all thirteen fighters have four routes, including real low kicks, normals/specials and launch follow-ups',()=>{
- assert.equal(COMBO_ROUTES.length,52);assert.equal(new Set(COMBO_ROUTES.map(r=>r.id)).size,52);
+check('all eighteen fighters have four routes, including real low kicks, normals/specials and launch follow-ups',()=>{
+ assert.equal(COMBO_ROUTES.length,72);assert.equal(new Set(COMBO_ROUTES.map(r=>r.id)).size,72);
  for(const ch of CHAR_IDS){const routes=comboRoutes(ch);assert.equal(routes.length,4);assert(routes.some(r=>r.level==='Intermediário'&&r.steps.some(s=>/^s[123]$/.test(s.move))));assert(routes.some(r=>r.level==='Aéreo'&&r.steps[0].move==='cK'));}
 });
 for(const route of COMBO_ROUTES)for(const mode of ['keyboard','touch','online'] as const)for(const mirror of [false,true])game(`${route.id} via ${mode}, mirror=${mirror}: true chain and predictable recovery`,g=>{

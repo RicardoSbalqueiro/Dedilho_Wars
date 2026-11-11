@@ -1,3 +1,6 @@
+import {NEW_FIGHTERS} from './woc-data';
+import type {NewFighter} from './woc-data';
+import {drawWocUltimate} from './woc-art';
 // Finalizações em quadrinhos: apenas apresentação, sem alterar o estado do combate.
 import { CHARS } from './data';
 import type { CharId } from './data';
@@ -8,20 +11,21 @@ import { settings } from './visual-settings';
 import { cinematicAnimation } from './animation';
 
 export const FINISHER_NAMES: Record<CharId, string> = {
+  patrick:'COROA DO REI TATU',gabrielzin:'KAWAI SEM LIMITES',ulisses:'NOITE DE RAKUYO',felipence:'ÚLTIMO ACORDE',hdsh:'BOX FINAL 200',
   caetano: 'MIL DEDILHOS DO DESTINO',
   orango: 'IMPACTO DO REI DA SELVA',
   tubarao: 'MARÉ DA MALHA FINA',
   rickzera: 'TRANSFERÊNCIA FINAL',
-  bieu: 'PRESTÍGIO SEM FREIO',
+  bieu:'APOTEOSE DO CAPÃO',
   nomad: 'LOBBY FECHADO',
   renngotti: 'RESSONÂNCIA LUNAR',
-  aneninha: 'APOTEOSE BOLIVIANA',
+  aneninha:'APOTEOSE DE OSASCO',
   santox:'FORA DO ROTEIRO',
   jao:'XEQUE-MATE ABSOLUTO',
   jane:'DEPLOY DO AREIAZORD',cristyan:'SENTENÇA DA REDE',eneas:'56 NO PLACAR',
 };
 
-type ClassicChar = Exclude<CharId, 'santox' | 'jao' | 'jane' | 'cristyan' | 'eneas'>;
+type ClassicChar = Exclude<CharId, NewFighter | 'santox' | 'jao' | 'jane' | 'cristyan' | 'eneas'>;
 const CAPTIONS: Record<ClassicChar, [string, string, string]> = {
   caetano: ['Um dedo. Precisão absoluta.', 'Uma rajada de pontos de pressão!', 'Cada dedilho encontrou seu destino.'],
   orango: ['A arena sente o chamado da selva.', 'Força primal! O chão vira um tambor.', 'O rei da selva fez a arena tremer.'],
@@ -256,7 +260,8 @@ function aneninha(ctx: CanvasRenderingContext2D, loser: CharId, t: number) {
 const SCENES: Record<ClassicChar, (ctx: CanvasRenderingContext2D, loser: CharId, time: number) => void> = { caetano, orango, tubarao, rickzera, bieu, nomad, renngotti, aneninha };
 
 /** Cena em coordenadas de tela 960×540; t e duration são ticks do motor. */
-export function drawFinisherArt(ctx: CanvasRenderingContext2D, winner: CharId, loser: CharId, t: number, duration: number): void {
+export function drawFinisherArt(ctx:CanvasRenderingContext2D,winner:CharId,loser:CharId,t:number,duration:number):void {
+  if(NEW_FIGHTERS.includes(winner as NewFighter)||winner==='bieu'||winner==='aneninha'){drawWocUltimate(ctx,winner,loser,t/duration*180,180,false,true);return;}
   if(winner==='jane'||winner==='cristyan'||winner==='eneas'){drawTrioFinisher(ctx,winner,loser,t,duration);return;}
   if(winner==='santox'||winner==='jao'){drawViewerFinisher(ctx,winner,loser,t,duration);return;}
   const time = clamp(t / Math.max(1, duration)) * 210;
@@ -267,16 +272,15 @@ export function drawFinisherArt(ctx: CanvasRenderingContext2D, winner: CharId, l
   background(ctx, winner, time);
   ctx.save();
   if (phase === 1) { const shake = Math.max(0, 1 - Math.abs(time - 113) / 24)*settings.shake; ctx.translate(Math.sin(time * 2.7) * shake * 4, Math.cos(time * 2.3) * shake * 3); }
-  if (phase < 2) SCENES[winner](ctx, loser, time);
+  if (phase < 2) SCENES[winner as ClassicChar](ctx,loser,time);
   else {
     const p = smooth((time - 157) / 32);
-    if (winner === 'aneninha') for (let i = 0; i < 4; i++) drawBolivianDancer(ctx, 80 + i * 245, 448, 1.06, time + i * 5, i % 2 === 1, i);
     glow(ctx, 330, 315, 210, def.color, .28);
     actor(ctx, winner, 310 - p * 25, FLOOR, time, 'win', 1.75 + p * .1);
     actor(ctx, loser, 770, FLOOR + 1, time, 'down', 1.3, true); stars(ctx, 765, 376, time, '#ffdf8e');
     text(ctx, 'FINISH!', 660, 225, 78 + p * 8, def.glow, 470);
     text(ctx, `${def.short} VENCEU`, 660, 297, 27, '#fff5da', 465);
-    confetti(ctx, time, [def.color, def.glow, '#ffe6a3'], winner === 'aneninha' ? 80 : 30);
+    confetti(ctx, time, [def.color, def.glow, '#ffe6a3'], 30);
   }
   ctx.restore();
   // Moldura de quadrinhos e legendas estáveis, separadas do movimento da câmera.
@@ -285,7 +289,7 @@ export function drawFinisherArt(ctx: CanvasRenderingContext2D, winner: CharId, l
   line(ctx, [{ x: 0, y: 474 }, { x: W, y: 474 }], def.glow, 2);
   text(ctx, 'FINALIZAÇÃO', W / 2, 17, 12, '#f4d793', 650);
   text(ctx, FINISHER_NAMES[winner], W / 2, 49, 28, def.glow, 880);
-  text(ctx, CAPTIONS[winner][phase], W / 2, 499, 17, '#fff6e5', 880);
+  text(ctx, CAPTIONS[winner as ClassicChar][phase], W / 2, 499, 17, '#fff6e5', 880);
   text(ctx, phase === 0 ? 'PREPARE-SE' : phase === 1 ? 'GOLPE FINAL' : 'ESTILO ABSOLUTO', W / 2, 526, 10, '#9fa9be', 880);
   ctx.strokeStyle = '#080910'; ctx.lineWidth = 8; ctx.strokeRect(3, 3, W - 6, H - 6);
   ctx.restore();

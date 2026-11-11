@@ -1,4 +1,4 @@
-// Jane, Cristyan e Doutor Enéas: somente desenho. Dano e duração pertencem ao motor.
+// Jane, Cristyan e Doutor Acreano: somente desenho. Dano e duração pertencem ao motor.
 import type { CharId } from './data';
 import { drawFullBody, drawPortrait } from './rig';
 import { settings } from './visual-settings';
@@ -207,7 +207,7 @@ function eneasScene(ctx:CanvasRenderingContext2D,loser:CharId,t:number,u:number,
   const alpha=1-clear*.88;ctx.save();ctx.globalAlpha=alpha;mushroom(ctx,723,450,.2+boom*1.28,t);glow(ctx,722,317,130+boom*90,'#d8ee79',(1-boom)*.8);if(boom<.9)burst(ctx,722,378,65+boom*140,'#fff3b4aa',t*.02);ctx.restore();
   if(u>.79)actor(ctx,loser,804,FLOOR,t,'down',1.32,true);
   if(u>.83){
-   confetti(ctx,t,['#f4d75a','#a0cf66','#f0f6d7'],40);const close=ease((u-.83)/.1);ctx.save();ctx.globalAlpha=close;ctx.fillStyle='#102819dd';ctx.fillRect(354,185,182,224);ctx.strokeStyle='#d5ed8b';ctx.lineWidth=2;ctx.strokeRect(354,185,182,224);drawPortrait(ctx,'eneas',443,250,45+close*15,{time:t,expr:'shout',poseName:'shout_a'});text(ctx,'AO VIVO',444,395,11,'#e2f5a5',150);ctx.restore();text(ctx,'MEU NOME É ENÉAS!',603,154,35,'#e8f69c',644);
+   confetti(ctx,t,['#f4d75a','#a0cf66','#f0f6d7'],40);const close=ease((u-.83)/.1);ctx.save();ctx.globalAlpha=close;ctx.fillStyle='#102819dd';ctx.fillRect(354,185,182,224);ctx.strokeStyle='#d5ed8b';ctx.lineWidth=2;ctx.strokeRect(354,185,182,224);drawPortrait(ctx,'eneas',443,250,45+close*15,{time:t,expr:'shout',poseName:'shout_a'});text(ctx,'AO VIVO',444,395,11,'#e2f5a5',150);ctx.restore();text(ctx,'MEU NOME É ACREANO!',603,154,35,'#e8f69c',644);
   }
  }
  if(finisher&&u>.9){text(ctx,'56',649,313,88,'#ffe371',150);text(ctx,'NO PLACAR!',660,390,27,'#e3f8bc',340)}

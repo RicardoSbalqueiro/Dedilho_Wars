@@ -249,7 +249,7 @@ export function FighterPortrait({ ch, size = 32, className = '' }: { ch: CharId;
   const ref = useRef<HTMLCanvasElement>(null);
   useEffect(()=>{
     const width=(size+6)*2,height=(size+8)*2,surface=new CanvasSurface(ref.current!,width,height),ctx=surface.ctx;
-    const draw=()=>{surface.prepare();ctx.clearRect(0,0,width,height);drawPortrait(ctx,ch,size+6,ch==='santox'?size*1.45+8:ch==='eneas'?size*.75+8:size+8,ch==='santox'?size*.58:ch==='eneas'?size*.7:size,{time:0})};
+    const draw=()=>{surface.prepare();ctx.clearRect(0,0,width,height);drawPortrait(ctx,ch,size+6,size+8,size,{time:0})};
     const stop=surface.observe(draw);draw();return stop;
   },[ch,size]);
   return <canvas aria-hidden="true" ref={ref} width={(size + 6) * 2} height={(size + 8) * 2} className={className} />;

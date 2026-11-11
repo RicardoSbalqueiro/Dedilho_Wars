@@ -1,8 +1,8 @@
 import { touchInput } from './touch';
-export type Action = 'left' | 'right' | 'up' | 'down' | 'p' | 'k' | 'block' | 's1' | 's2' | 's3' | 'super' | 'grab' | 'turn' | 'headbutt';
+export type Action = 'left' | 'right' | 'up' | 'down' | 'p' | 'k' | 'block' | 's1' | 's2' | 's3' | 'super' | 'grab' | 'turn' | 'headbutt' | 'transform' | 'charge';
 
 // Append actions to preserve the bit positions of saved/online commands.
-export const ACTIONS: Action[] = ['left', 'right', 'up', 'down', 'p', 'k', 'block', 's1', 's2', 's3', 'super', 'grab', 'turn', 'headbutt'];
+export const ACTIONS: Action[] = ['left', 'right', 'up', 'down', 'p', 'k', 'block', 's1', 's2', 's3', 'super', 'grab', 'turn', 'headbutt', 'transform', 'charge'];
 export const MAX_INPUT_MASK = (1 << ACTIONS.length) - 1;
 // Includes the press frame: ages 0 through 8 remain executable.
 export const INPUT_BUFFER_FRAMES = 9;
@@ -23,6 +23,8 @@ export const ACTION_LABELS: Record<Action, string> = {
   grab: 'Agarrão',
   turn: 'Virar',
   headbutt: 'Cabeçada',
+  transform:'Transformação',
+  charge:'Carregar energia',
 };
 
 export type Bindings = Record<Action, [string, string]>;
@@ -43,6 +45,8 @@ export const DEFAULT_BINDINGS: [Bindings, Bindings] = [
     grab: ['KeyG', ''],
     turn: ['KeyQ', ''],
     headbutt: ['KeyL', ''],
+    transform:['KeyF',''],
+    charge:['KeyC',''],
   },
   {
     left: ['ArrowLeft', ''],
@@ -59,6 +63,8 @@ export const DEFAULT_BINDINGS: [Bindings, Bindings] = [
     grab: ['Numpad7', 'KeyB'],
     turn: ['KeyN', ''],
     headbutt: ['Numpad9', 'BracketLeft'],
+    transform:['Numpad8','BracketRight'],
+    charge:['KeyM',''],
   },
 ];
 
@@ -73,24 +79,30 @@ export function loadBindings(): [Bindings, Bindings] {
       const valid=(v:unknown):v is [string,string]=>Array.isArray(v)&&v.length===2&&v.every(c=>typeof c==='string');
       for (let i = 0; i < 2; i++) for (const a of ACTIONS) if (valid(parsed?.[i]?.[a])) out[i][a] = [parsed[i][a][0],parsed[i][a][1]];
       // Only migrate the old untouched P1 preset. Preserve personalized layouts.
-      const oldPreset=ACTIONS.filter(a=>a!=='headbutt').every(a=>JSON.stringify(parsed?.[0]?.[a])===JSON.stringify(a==='block'?['KeyL','']:DEFAULT_BINDINGS[0][a]));
+      const oldPreset=ACTIONS.filter(a=>!['headbutt','transform','charge'].includes(a)).every(a=>JSON.stringify(parsed?.[0]?.[a])===JSON.stringify(a==='block'?['KeyL','']:DEFAULT_BINDINGS[0][a]));
       if(!valid(parsed?.[0]?.headbutt)&&oldPreset&&!Object.values(out[1]).some(keys=>keys.includes('KeyE')))out[0].block=['KeyE',''];
       // Reserve existing commands first. A legacy Q grab must never be stolen by turn.
       for(let i=0;i<2;i++)if(!parsed?.[i]?.grab){
-        const used=new Set(ACTIONS.filter(a=>a!=='grab'&&a!=='turn'&&(a!=='headbutt'||valid(parsed?.[i]?.headbutt))).flatMap(a=>out[i][a]));
+        const used=new Set(ACTIONS.filter(a=>(!['transform','charge'].includes(a)||valid(parsed?.[i]?.[a]))&&a!=='grab'&&a!=='turn'&&(a!=='headbutt'||valid(parsed?.[i]?.headbutt))).flatMap(a=>out[i][a]));
         const options=i===0?['KeyG','KeyF','KeyV','KeyQ']:['Numpad7','KeyB','Numpad8','KeyN'];
         out[i].grab=[options.find(c=>!used.has(c))||'',''];
       }
       for(let i=0;i<2;i++)if(!valid(parsed?.[i]?.turn)){
-        const used=new Set(out.flatMap((b,p)=>ACTIONS.filter(a=>(a!=='turn'||p<i||p!==i&&valid(parsed?.[p]?.turn))&&(a!=='headbutt'||valid(parsed?.[p]?.headbutt))).flatMap(a=>b[a])));
-        const options=i===0?['KeyQ','KeyF','KeyV','KeyC','KeyZ']:['KeyN','Numpad8','KeyM','BracketRight'];
+        const used=new Set(out.flatMap((b,p)=>ACTIONS.filter(a=>(!['transform','charge'].includes(a)||valid(parsed?.[p]?.[a]))&&(a!=='turn'||p<i||p!==i&&valid(parsed?.[p]?.turn))&&(a!=='headbutt'||valid(parsed?.[p]?.headbutt))).flatMap(a=>b[a])));
+        const options=i===0?['KeyQ','KeyF','KeyV','KeyC','KeyZ']:['KeyN','Numpad8','KeyM','BracketRight','Backslash','NumpadDecimal'];
         out[i].turn=[options.find(c=>!used.has(c))||'',''];
       }
       for(let i=0;i<2;i++)if(!valid(parsed?.[i]?.headbutt)){
-        const used=new Set(out.flatMap((b,p)=>ACTIONS.filter(a=>a!=='headbutt'||p<i||p!==i&&valid(parsed?.[p]?.headbutt)).flatMap(a=>b[a])));
+        const used=new Set(out.flatMap((b,p)=>ACTIONS.filter(a=>(!['transform','charge'].includes(a)||valid(parsed?.[p]?.[a]))&&(a!=='headbutt'||p<i||p!==i&&valid(parsed?.[p]?.headbutt))).flatMap(a=>b[a])));
         const options=i===0?['KeyL','KeyF','KeyV','KeyC','KeyZ']:['Numpad9','BracketLeft','Backslash','KeyM'];
         const primary=options.find(c=>!used.has(c))||'';
         out[i].headbutt=[primary,i===1&&primary!=='BracketLeft'&&!used.has('BracketLeft')?'BracketLeft':''];
+      }
+      const added=['transform','charge'] as const;
+      for(let i=0;i<2;i++)for(const action of added)if(!valid(parsed?.[i]?.[action])){
+        const used=new Set(out.flatMap((b,p)=>ACTIONS.filter(a=>!added.includes(a as typeof added[number])||valid(parsed?.[p]?.[a])||p<i||p===i&&a==='transform'&&action==='charge').flatMap(a=>b[a])));
+        const options=action==='transform'?(i===0?['KeyF','KeyV','KeyZ','KeyX']:['Numpad8','BracketRight','Backslash']):(i===0?['KeyC','KeyV','KeyX','KeyZ']:['KeyM','Backslash','Equal']);
+        out[i][action]=[options.find(c=>!used.has(c))||'',''];
       }
       return out;
     }

@@ -1,3 +1,4 @@
+import {transformationAudio} from '../game/transformation-audio';
 import {CanvasSurface,stageDensity,canvasFontRevision} from '../game/canvas';
 import { FinisherPrompt } from './FinisherPrompt';
 import { FINISHER_NAMES } from '../game/finishers-art';
@@ -32,15 +33,16 @@ export function OnlineGame({room,user,onLobby,onLeave}:{room:Room;user:User;onLo
  const host=room.host.id===user.id;
  useEffect(()=>{
   const surface=new CanvasSurface(canvas.current!,W,H,'scene'),ctx=surface.ctx,bindings=loadBindings();surface.prepare();
-  const game=new Game({mode:'versus',online:true,p1:room.host.char,p2:room.guest!.char,stage:room.stage,difficulty:'normal',bindings},()=>{});
+  const game=new Game({mode:'versus',online:true,p1:room.host.char,p2:room.guest!.char,stage:room.stage,difficulty:'normal',bindings:[bindings[0],bindings[0]]},()=>{});
   gameRef.current=game;
   (window as unknown as {__game?:Game}).__game=game;
   let otherInput=0,done=false,lastSend=0,raf=0,stopped=false,lastMask=0,eventId=0,lastEvent=0,physicalPressed=0,lastCinematic=false;
   let pending:{id:number;mask:number;clash?:number;clashFrame?:number}[]=[];
   const link=new FightConnection(room,user,{
-   state:s=>{const hp=game.f.map(f=>f.hp),previous=game.f.map(f=>f.impact),cine=game.cine?.f.idx,clash=game.clash;if(applyState(game,s)){
+   state:s=>{const hp=game.f.map(f=>f.hp),previous=game.f.map(f=>f.impact),cine=game.cine?.f.idx,clash=game.clash,forms=game.f.map(f=>f.formStartup>0||f.formT>0);if(applyState(game,s)){
     pending=pending.filter(e=>e.id>(s.inputAck||0));
     game.f.forEach((f,i)=>{const impact=f.impact;if(impact&&(impact.serial!==previous[i]?.serial||impact.tick!==previous[i]?.tick)){if(impact.kind==='perfect'||impact.kind==='precision')audio.perfectBlock(impact.kind==='precision');else if(impact.kind==='block')audio.block();else audio.hit(impact.strength)}else if(f.hp<hp[i])audio.hit(1)});
+    game.f.forEach((f,i)=>{if(!forms[i]&&(f.formStartup>0||f.formT>0))transformationAudio(f.ch)});
     if(game.cine&&game.cine.f.idx!==cine){audio.boom(.8);audio.say(game.cine.f.def.superName)}
     if(game.clash&&(!clash||Math.floor(game.clash.t/12)>Math.floor(clash.t/12)))audio.clash();
    }},

@@ -1,7 +1,8 @@
+import {createWocFighters} from './woc-data';
 import {SHARK_KISS_DAMAGE} from './shark-choreography';
 // Dados dos personagens: atributos, golpes (frame data) e poses do esqueleto.
 
-export const CHAR_IDS = ['caetano', 'orango', 'tubarao', 'rickzera', 'bieu', 'nomad', 'renngotti', 'aneninha', 'santox', 'jao', 'jane', 'cristyan', 'eneas'] as const;
+export const CHAR_IDS = ['caetano', 'orango', 'tubarao', 'rickzera', 'bieu', 'nomad', 'renngotti', 'aneninha', 'santox', 'jao', 'jane', 'cristyan', 'eneas', 'patrick', 'gabrielzin', 'ulisses', 'felipence', 'hdsh'] as const;
 export type CharId = (typeof CHAR_IDS)[number];
 
 // Três usos compartilham o mesmo limite por lutador; rajadas contam como um uso.
@@ -10,14 +11,14 @@ export const RANGED_MOVES: Record<CharId, readonly string[]> = {
   bieu: ['s2', 's3'], nomad: ['s1', 's2', 's3'],
   renngotti: ['s2', 's3'], aneninha: ['s2', 's3'],
   santox: ['s1'], jao: ['s1', 's2', 's3'],
-  jane:['s1'],cristyan:[],eneas:['s1','s2','s3'],
+  jane:['s1'],cristyan:[],eneas:['s1','s2','s3'],patrick:[],gabrielzin:['s1','s3'],ulisses:['s3'],felipence:['s3'],hdsh:['s1','s2','s3'],
 };
 
 
 export const CHAR_CATEGORIES = {
   Streamers: ['rickzera', 'caetano', 'nomad', 'bieu', 'renngotti', 'aneninha'],
   Especiais: ['tubarao', 'orango', 'eneas'],
-  Viewers: ['santox', 'jao', 'jane', 'cristyan'],
+  Viewers: ['santox', 'jao', 'jane', 'cristyan', 'patrick', 'gabrielzin', 'ulisses', 'felipence', 'hdsh'],
 } as const satisfies Record<string, readonly CharId[]>;
 export type CharCategory = keyof typeof CHAR_CATEGORIES;
 
@@ -60,7 +61,7 @@ export interface Move {
   power: number;
   poses: [string, string];
   advance?: [number, number, number];
-  grab?: 'puxao' | 'mordida' | 'engole' | 'moon' | 'super' | 'throw';
+  grab?: 'puxao' | 'mordida' | 'engole' | 'moon' | 'super' | 'throw' | 'vampire' | 'cupid';
   dedilho?: boolean;
   pierce?: number;
   chip?: number; // Individual blocked damage ratio; normals always deal zero chip.
@@ -73,6 +74,8 @@ export interface Move {
   spike?: boolean;
   recoveryPose?: string;
   sound?: 'purple' | 'red';
+  resourcePower?:number;
+  rangeScale?:number;
 }
 
 export interface CharDef {
@@ -768,14 +771,37 @@ export const CHARS: Record<CharId, CharDef> = {
     superName:'BOMBA ATÔMICA BRASILEIRA',quote:'MEU NOME É ENÉAS!',
     bio:'Médio alcance com voz, ECG e números. Preparação e recuperação lentas exigem controlar a distância e respeitar a recarga.',
   },
+  ...createWocFighters(copyNormals,caetanoPoses),
 };
+
+// Preserve the legacy eneas key for stored profiles, rooms and match history.
+// The replacement is Dr. Acreano everywhere visible to players.
+export const BASE_HP=Object.fromEntries(CHAR_IDS.map(id=>[id,CHARS[id].hp])) as Record<CharId,number>;
+for(const def of Object.values(CHARS))def.hp*=2;
+CHARS.eneas.name='DR. ACREANO';CHARS.eneas.short='ACREANO';CHARS.eneas.quote='MEU NOME É ACREANO!';
+CHARS.eneas.moves.s1.label='MEU NOME É ACREANO!';CHARS.eneas.specials[0].name='MEU NOME É ACREANO!';
+CHARS.caetano.superName='SEQUÊNCIA DE GOLPES KARATEKA';CHARS.caetano.moves.s1.label='CHUTE SENBUKAN';CHARS.caetano.moves.s1.sound=undefined;
+CHARS.caetano.specials[0]={key:'U',name:'CHUTE SENBUKAN',desc:'Chute giratório com energia laranja. Preparação, defesa e punição preservadas.'};
+CHARS.orango.superName='INSTINTO DESCONTROLADO';CHARS.tubarao.name='TUBARÃO FISCALIZADOR';
+CHARS.rickzera.superName='COMBO WISE';CHARS.rickzera.bio='Mercenário atlético. Segure CARREGAR em neutro ou receba dano para acumular energia. Especiais consomem energia, separada da stamina e da ULT.';
+CHARS.rickzera.specials=[{key:'U',name:'PROJETOS DE TRANSFERÊNCIAS',desc:'Converte 16 de energia em três orbes verdes. Uma rajada conta como um uso de distância.'},{key:'I',name:'SOCO DE ENERGIA',desc:'Gasta 22 de energia em uma projeção de punho verde, bloqueável e sem rastreamento.'},{key:'O',name:'SALTO DE ENERGIA',desc:'Gasta 18 de energia para um salto elevado. O segundo impulso no ar também tem custo.'}];
+for(const [i,k]of ['s1','s2','s3'].entries())CHARS.rickzera.moves[k].label=CHARS.rickzera.specials[i].name;
+Object.assign(CHARS.rickzera.moves.s2,{dmg:72,startup:18,active:3,recovery:28,whiff:10,launch:0,spike:false,kb:8,advance:undefined,poses:['pH_s','pH_a']});
+RANGED_MOVES.rickzera=['s1','s2'];
+CHARS.bieu.color='#22b8ef';CHARS.bieu.glow='#a5e9ff';CHARS.bieu.superName='CRIAS DO CAPÃO REDONDO';
+CHARS.nomad.color='#9ae042';CHARS.nomad.color2='#4b1689';CHARS.nomad.glow='#d7b4ff';CHARS.nomad.specials[0].name='BURGER CÓSMICO';CHARS.nomad.specials[1]={key:'I',name:'SOCO GIGANTE',desc:'Punho cósmico de alcance médio, preparação visível e recuperação longa. Pode ser defendido.'};CHARS.nomad.specials[2].name='BOOMERANG NÔMADE';
+Object.assign(CHARS.nomad.moves.s2,{startup:20,active:4,recovery:30,whiff:12,dmg:72,hb:[15,180,55,155],poses:['pH_s','pH_a'],label:'SOCO GIGANTE',level:'mid',kb:9});RANGED_MOVES.nomad=['s1','s3'];
+CHARS.aneninha.superName='CRIAS DE OSASCO';CHARS.aneninha.specials[2]={key:'O',name:'LANÇAR BARATAS',desc:'Barata rasteira de um acerto. Salte ou use defesa agachada.'};Object.assign(CHARS.aneninha.moves.s3,{dmg:38,level:'low',launch:0,label:'LANÇAR BARATAS'});
+CHARS.santox.title='A LOUCURA CÔMICA';CHARS.jao.color='#9333ea';CHARS.jao.glow='#d8b4fe';
+CHARS.jane.hurtH=96;CHARS.jane.crouchH=60;
+CHARS.cristyan.color='#eab308';CHARS.cristyan.glow='#fef08a';CHARS.cristyan.specials[2]={key:'O',name:'JOELHADA DO GARUDA',desc:'Joelhada giratória anunciada. Um acerto, sem invulnerabilidade e com recuperação punível.'};CHARS.cristyan.moves.s3.label='JOELHADA DO GARUDA';
 
 // Multi-hit projectiles/zones cost less chip per contact than committed single hits.
 export const SPECIAL_CHIP:Record<CharId,readonly [number,number,number]>={
   caetano:[.04,.08,.06],orango:[.06,0,0],tubarao:[.05,0,.025],
   rickzera:[.025,.015,.025],bieu:[.06,.03,.015],nomad:[.03,.01,.02],
   renngotti:[0,.04,.04],aneninha:[.04,.015,.035],santox:[.035,.04,0],
-  jao:[0,.025,.035],jane:[.015,.015,.035],cristyan:[.035,.05,.04],eneas:[.04,.035,.025],
+  jao:[0,.025,.035],jane:[.015,.015,.035],cristyan:[.035,.05,.04],eneas:[.04,.035,.025],patrick:[.03,.035,.06],gabrielzin:[.02,0,.02],ulisses:[.03,0,.025],felipence:[.035,.03,.04],hdsh:[0,.025,.03],
 };
 for(const id of CHAR_IDS)for(const [i,key] of ['s1','s2','s3'].entries())CHARS[id].moves[key].chip=SPECIAL_CHIP[id][i];
 

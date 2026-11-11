@@ -1,3 +1,4 @@
+import {FORMS} from '../game/resources';
 import { FIGHTER_STYLE } from '../game/presentation';
 import { useEffect, useRef, useState } from 'react';
 import { CHARS, CHAR_CATEGORIES } from '../game/data';
@@ -242,7 +243,7 @@ export function CharSelect({ mode, difficulty, initialP1 = 'caetano', initialP2 
       if (roster.length) {
         if (e.code === 'ArrowLeft' || e.code === 'KeyA') select(roster[(index + roster.length - 1) % roster.length]);
         if (e.code === 'ArrowRight' || e.code === 'KeyD') select(roster[(index + 1) % roster.length]);
-        const rowStep = roster.length > 2 ? 2 : 1;
+        const rowStep=roster.length>6?3:roster.length>2?2:1;
         if (['ArrowUp', 'KeyW'].includes(e.code)) select(roster[(index - rowStep + roster.length) % roster.length]);
         if (['ArrowDown', 'KeyS'].includes(e.code)) select(roster[(index + rowStep) % roster.length]);
       }
@@ -276,7 +277,7 @@ export function CharSelect({ mode, difficulty, initialP1 = 'caetano', initialP2 
             style={{ background: category === tab ? '#8b5cf6' : '#130b22dd', borderColor: category === tab ? '#ddd6fe' : '#ffffff33', color: category === tab ? '#fff' : '#b9accd' }}>{tab.toUpperCase()}</button>)}
         </div>
         <div className="text-[9px] tracking-[.2em] text-white/60 mb-2">{phase === 0 ? '01 / SEU LUTADOR' : `02 / ${opponentLabel}`}</div>
-        <div className="grid grid-cols-2 gap-[8px]">
+        <div className="grid gap-[8px]" style={{gridTemplateColumns:`repeat(${roster.length>6?3:2},minmax(0,1fr))`}}>
           {roster.map((ch, i) => {
             const c = CHARS[ch];
             const active = sel === ch;
@@ -284,11 +285,11 @@ export function CharSelect({ mode, difficulty, initialP1 = 'caetano', initialP2 
               <button key={ch} type="button" data-char={ch} aria-label={`Selecionar ${c.name}`} aria-pressed={active} disabled={locked}
                 onClick={() => select(ch)}
                 className="relative text-left border-2 overflow-hidden transition-all cursor-pointer"
-                style={{ height: roster.length > 4 ? 70 : 100, borderColor: active ? c.glow : '#ffffff33', background: `linear-gradient(135deg,${c.color}${active ? '88' : '33'},#090511)`, boxShadow: active ? `0 0 18px ${c.color}77` : 'none', transform: active ? 'translateY(-2px)' : undefined }}>
+                style={{ height:roster.length>4?70:100, borderColor: active ? c.glow : '#ffffff33', background: `linear-gradient(135deg,${c.color}${active ? '88' : '33'},#090511)`, boxShadow: active ? `0 0 18px ${c.color}77` : 'none', transform: active ? 'translateY(-2px)' : undefined }}>
                 <div className="absolute top-2 left-2 text-[9px] text-white/40">0{i + 1}</div>
                 <FighterPortrait ch={ch} size={roster.length > 4 ? 22 : 29} className={roster.length > 4 ? "absolute top-0 left-[49px]" : "absolute top-0 left-[41px]"} />
-                <div className="absolute bottom-2 left-2 right-1 title-main text-[13px] leading-4" style={{ color: active ? '#fff' : c.glow }}>{c.name}</div>
-                {(ch === 'jane' || ch === 'cristyan' || ch === 'eneas') ? <div className="absolute right-1 top-1 text-[7px] bg-white text-black px-1">NOVO</div> : null}
+                <div className="absolute bottom-2 left-2 right-1 title-main text-[13px] leading-4" style={{color:active?'#fff':c.glow,fontSize:roster.length>6?10:13}}>{c.name}</div>
+                {['patrick','gabrielzin','ulisses','felipence','hdsh','eneas'].includes(ch) ? <div className="absolute right-1 top-1 text-[7px] bg-white text-black px-1">NOVO</div> : null}
               </button>
             );
           })}
@@ -335,7 +336,7 @@ function FighterDetails({ ch, bindings }: { ch: CharId; bindings: Bindings }) {
       ))}
       <div className="px-2 py-1 border-l-2 mt-2" style={{ borderColor: d.glow, background: `${d.color}33` }}>
         <div className="text-[8px] tracking-widest text-white/60">SUPER ESPECIAL · {keyLabel(bindings.super[0])}</div>
-        <div className="title-main text-[14px] leading-4 mt-1" style={{ color: d.glow }}>{d.superName}</div>
+        <div className="title-main text-[14px] leading-4 mt-1" style={{color:d.glow}}>{d.superName}</div><div className="mt-2 text-[10px] text-emerald-200">FORMA · {keyLabel(bindings.transform[0])} · 200 ULT: {FORMS[d.id].name}</div>
       </div>
     </div>
   );
@@ -474,7 +475,7 @@ export function Controls({ onBack }: { onBack: () => void }) {
         <div className="title-main text-xl px-3 py-1 mb-1" style={{ background: `linear-gradient(90deg, ${d.color}, transparent)` }}>
           JOGADOR {p + 1} — <span className="text-white/90 text-base">qualquer lutador</span>
         </div>
-        <div className="grid" style={{ gridTemplateColumns: '1fr 120px 120px', gap: 2 }}>
+        <div className="grid" style={{ gridTemplateColumns:'1fr 120px 120px',gap:2,maxHeight:282,overflowY:'auto' }}>
           <div className="text-[10px] text-white/50">AÇÃO</div>
           <div className="text-[10px] text-white/50 text-center">TECLA</div>
           <div className="text-[10px] text-white/50 text-center">ALTERNATIVA</div>
@@ -517,8 +518,8 @@ export function Controls({ onBack }: { onBack: () => void }) {
       <div className="absolute left-4 right-4 text-[10px] leading-[13px] text-white/80" role="region" aria-label="Ajuda dos controles" tabIndex={0} style={{ top: 405,maxHeight:82,overflowY:'auto',paddingRight:4 }}>
         <b className="text-yellow-300">GOLPES NORMAIS:</b> soco/chute parado = <b>fraco</b> · <b>→ + botão</b> = <b>médio</b> · <b>← + botão</b> = <b>forte</b> · <b>↓ + botão</b> = agachado · no ar = golpe aéreo. <b className="text-yellow-300">CABEÇADA:</b> L / Num9, golpe de perto com recuperação. <b className="text-yellow-300">COMBOS:</b> aperte o botão em sequência
         (fraco → médio → forte) e cancele em um especial ou super quando acertar. <b className="text-yellow-300">DEFESA:</b> E / Num3 (padrão), segure para altos/médios; ↓ + Defesa para baixos/médios. Pode manter durante hitstun. Aperte até 3 frames antes do contato para defesa perfeita; Caetano tem Leitura de 5 frames e Precisão. Normais não causam chip. Agarrões ignoram defesa: G / Num7 de perto. Agarrar junto escapa. <b className="text-yellow-300">VIRAR:</b> Q / N (padrão) no chão, sem interromper golpes. Mantém direção manual até sofrer golpe, agarrão, ULT ou rotação própria. Q/E continuam trocando categorias nos menus. <b className="text-yellow-300">DASH:</b> toque duas vezes ← ou →.{' '}
-        <b className="text-yellow-300">CHOQUES:</b> Dedilho × Dedilho → SOCO repetidamente; ULT × ULT → seu botão de ULT! <b className="text-yellow-300">PAUSA:</b> ESC ou P. <b className="text-yellow-300">TREINO:</b> R reinicia posições, T troca o dummy. Teclado sem numpad? O Jogador 2 também usa , . / ; &apos; Enter e Shift direito
-        (clique em qualquer tecla acima para reconfigurar). FINISHER: use ULT após o KO decisivo.
+        <b className="text-yellow-300">RECURSOS:</b> Stamina gasta em ataques e mobilidade; repousar recupera. Exausto limita especiais/dash/saltos, mas mantém soco, chute leve e defesa. Transformar tem preparação vulnerável. <b className="text-yellow-300">CHOQUES:</b> Dedilho × Dedilho → SOCO repetidamente; ULT × ULT → seu botão de ULT! <b className="text-yellow-300">PAUSA:</b> ESC ou P. <b className="text-yellow-300">TREINO:</b> R reinicia posições, T troca o dummy. Teclado sem numpad? O Jogador 2 também usa , . / ; &apos; Enter e Shift direito
+        (clique em qualquer tecla acima para reconfigurar). FINISHER: use ULT após o KO decisivo. ULT custa 100, a barra guarda 200. FORMA: F / Num8 com 200 e fôlego. CARREGAR ENERGIA (Rick): segure C / M em neutro; não recarrega transformado.
       </div>
       <div className="absolute bottom-3 w-full flex justify-center gap-4">
         <SkewBtn small onClick={reset} color="#f59e0b">

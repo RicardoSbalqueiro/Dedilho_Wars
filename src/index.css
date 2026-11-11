@@ -254,7 +254,7 @@ input[type='range'] {
 /* Native-size training inspector, independent of the scaled game canvas. */
 .creator-credit{font:italic 800 17px/1.45 var(--font-fight);letter-spacing:.12em;color:#b6ff63;margin-top:1px;text-transform:none;transform:skewX(-8deg);-webkit-text-stroke:.35px #267a23;text-shadow:0 0 8px #39ff6f88,0 0 20px #22c55e66,2px 2px 0 #062c13;}
 .creator-credit::before,.creator-credit::after{content:'✦';font-size:12px;vertical-align:middle;color:#75ff89;}.creator-credit::before{margin-right:10px;}.creator-credit::after{margin-left:10px;}
-.frame-widget{position:absolute;left:16px;top:103px;z-index:11;}
+.frame-widget{position:absolute;left:16px;top:155px;z-index:11;}
 .frame-widget>button{padding:10px 14px;background:#0b1429e8;border:1px solid #67e8f9;border-radius:7px;color:#cffafe;font-size:11px;cursor:pointer;}
 .frame-widget>button+button{margin-left:6px;border-color:#c4b5fd;color:#e9d5ff;}
 .combo-lab-tabs,.combo-display-options{display:flex;gap:12px;flex-wrap:wrap;margin:18px 0;align-items:center;}
