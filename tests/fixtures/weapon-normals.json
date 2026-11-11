@@ -1,0 +1,1378 @@
+{
+  "ulisses": {
+    "pL": {
+      "id": "pL",
+      "kind": "normal",
+      "rank": 1,
+      "startup": 3,
+      "active": 3,
+      "recovery": 8,
+      "whiff": 0,
+      "dmg": 21,
+      "hitstun": 13,
+      "blockstun": 8,
+      "kb": 2.5,
+      "kbBlock": 2,
+      "hb": [
+        20,
+        119,
+        105,
+        140
+      ],
+      "level": "mid",
+      "launch": 0,
+      "launchVx": 0,
+      "hitstop": 5,
+      "shake": 2,
+      "power": 0.6,
+      "poses": [
+        "pL_s",
+        "pL_a"
+      ],
+      "trail": "fw"
+    },
+    "pM": {
+      "id": "pM",
+      "kind": "normal",
+      "rank": 2,
+      "startup": 6,
+      "active": 4,
+      "recovery": 13,
+      "whiff": 0,
+      "dmg": 38,
+      "hitstun": 17,
+      "blockstun": 11,
+      "kb": 4,
+      "kbBlock": 2,
+      "hb": [
+        20,
+        139,
+        100,
+        142
+      ],
+      "level": "mid",
+      "launch": 0,
+      "launchVx": 0,
+      "hitstop": 7,
+      "shake": 2,
+      "power": 0.9,
+      "poses": [
+        "pM_s",
+        "pM_a"
+      ],
+      "trail": "bw"
+    },
+    "pH": {
+      "id": "pH",
+      "kind": "normal",
+      "rank": 3,
+      "startup": 9,
+      "active": 4,
+      "recovery": 19,
+      "whiff": 0,
+      "dmg": 62,
+      "hitstun": 22,
+      "blockstun": 14,
+      "kb": 7,
+      "kbBlock": 4,
+      "hb": [
+        20,
+        154,
+        95,
+        145
+      ],
+      "level": "mid",
+      "launch": 6,
+      "launchVx": 5,
+      "hitstop": 9,
+      "shake": 5,
+      "power": 1.2,
+      "poses": [
+        "pH_s",
+        "pH_a"
+      ],
+      "trail": "bw"
+    },
+    "kL": {
+      "id": "kL",
+      "kind": "normal",
+      "rank": 1,
+      "startup": 4,
+      "active": 3,
+      "recovery": 10,
+      "whiff": 0,
+      "dmg": 23,
+      "hitstun": 13,
+      "blockstun": 8,
+      "kb": 2.5,
+      "kbBlock": 2,
+      "hb": [
+        15,
+        124,
+        50,
+        100
+      ],
+      "level": "mid",
+      "launch": 0,
+      "launchVx": 0,
+      "hitstop": 5,
+      "shake": 2,
+      "power": 0.6,
+      "poses": [
+        "kL_s",
+        "kL_a"
+      ],
+      "trail": "fa"
+    },
+    "kM": {
+      "id": "kM",
+      "kind": "normal",
+      "rank": 2,
+      "startup": 7,
+      "active": 4,
+      "recovery": 14,
+      "whiff": 0,
+      "dmg": 43,
+      "hitstun": 18,
+      "blockstun": 12,
+      "kb": 5,
+      "kbBlock": 2,
+      "hb": [
+        20,
+        142,
+        80,
+        140
+      ],
+      "level": "mid",
+      "launch": 0,
+      "launchVx": 0,
+      "hitstop": 7,
+      "shake": 2,
+      "power": 0.9,
+      "poses": [
+        "kM_s",
+        "kM_a"
+      ],
+      "trail": "fa"
+    },
+    "kH": {
+      "id": "kH",
+      "kind": "normal",
+      "rank": 3,
+      "startup": 10,
+      "active": 5,
+      "recovery": 21,
+      "whiff": 0,
+      "dmg": 67,
+      "hitstun": 23,
+      "blockstun": 15,
+      "kb": 8,
+      "kbBlock": 5,
+      "hb": [
+        20,
+        149,
+        70,
+        165
+      ],
+      "level": "mid",
+      "launch": 6,
+      "launchVx": 6,
+      "hitstop": 9,
+      "shake": 5,
+      "power": 1.2,
+      "poses": [
+        "kH_s",
+        "kH_a"
+      ],
+      "trail": "fa"
+    },
+    "cP": {
+      "id": "cP",
+      "kind": "normal",
+      "rank": 1,
+      "startup": 4,
+      "active": 3,
+      "recovery": 9,
+      "whiff": 0,
+      "dmg": 24,
+      "hitstun": 13,
+      "blockstun": 8,
+      "kb": 2,
+      "kbBlock": 2,
+      "hb": [
+        20,
+        124,
+        50,
+        95
+      ],
+      "level": "mid",
+      "launch": 0,
+      "launchVx": 0,
+      "hitstop": 5,
+      "shake": 2,
+      "power": 0.6,
+      "poses": [
+        "cP_s",
+        "cP_a"
+      ],
+      "trail": "fw"
+    },
+    "cK": {
+      "id": "cK",
+      "kind": "normal",
+      "rank": 2,
+      "startup": 8,
+      "active": 4,
+      "recovery": 22,
+      "whiff": 0,
+      "dmg": 48,
+      "hitstun": 22,
+      "blockstun": 12,
+      "kb": 6,
+      "kbBlock": 2,
+      "hb": [
+        10,
+        159,
+        0,
+        35
+      ],
+      "level": "low",
+      "launch": 5,
+      "launchVx": 4,
+      "hitstop": 8,
+      "shake": 2,
+      "power": 1,
+      "poses": [
+        "cK_s",
+        "cK_a"
+      ],
+      "trail": "fa"
+    },
+    "jP": {
+      "id": "jP",
+      "kind": "normal",
+      "rank": 2,
+      "startup": 5,
+      "active": 10,
+      "recovery": 0,
+      "whiff": 0,
+      "dmg": 48,
+      "hitstun": 18,
+      "blockstun": 12,
+      "kb": 4,
+      "kbBlock": 2,
+      "hb": [
+        10,
+        119,
+        20,
+        125
+      ],
+      "level": "high",
+      "launch": 0,
+      "launchVx": 0,
+      "hitstop": 7,
+      "shake": 2,
+      "power": 0.9,
+      "poses": [
+        "jP_s",
+        "jP_a"
+      ],
+      "air": true,
+      "trail": "fw"
+    },
+    "jK": {
+      "id": "jK",
+      "kind": "normal",
+      "rank": 2,
+      "startup": 6,
+      "active": 10,
+      "recovery": 0,
+      "whiff": 0,
+      "dmg": 52,
+      "hitstun": 19,
+      "blockstun": 12,
+      "kb": 5,
+      "kbBlock": 2,
+      "hb": [
+        5,
+        124,
+        -10,
+        85
+      ],
+      "level": "high",
+      "launch": 0,
+      "launchVx": 0,
+      "hitstop": 7,
+      "shake": 2,
+      "power": 1,
+      "poses": [
+        "jK_s",
+        "jK_a"
+      ],
+      "air": true,
+      "trail": "fa"
+    },
+    "headbutt": {
+      "id": "headbutt",
+      "kind": "normal",
+      "rank": 3,
+      "startup": 14,
+      "active": 3,
+      "recovery": 24,
+      "whiff": 12,
+      "dmg": 40,
+      "hitstun": 20,
+      "blockstun": 12,
+      "kb": 5,
+      "kbBlock": 3,
+      "hb": [
+        15,
+        86,
+        80,
+        167
+      ],
+      "level": "mid",
+      "launch": 0,
+      "launchVx": 0,
+      "hitstop": 8,
+      "shake": 5,
+      "power": 1.2,
+      "poses": [
+        "headbutt_s",
+        "headbutt_a"
+      ]
+    }
+  },
+  "felipence": {
+    "pL": {
+      "id": "pL",
+      "kind": "normal",
+      "rank": 1,
+      "startup": 3,
+      "active": 3,
+      "recovery": 8,
+      "whiff": 0,
+      "dmg": 21,
+      "hitstun": 13,
+      "blockstun": 8,
+      "kb": 2.5,
+      "kbBlock": 2,
+      "hb": [
+        20,
+        111,
+        105,
+        140
+      ],
+      "level": "mid",
+      "launch": 0,
+      "launchVx": 0,
+      "hitstop": 5,
+      "shake": 2,
+      "power": 0.6,
+      "poses": [
+        "pL_s",
+        "pL_a"
+      ],
+      "trail": "fw"
+    },
+    "pM": {
+      "id": "pM",
+      "kind": "normal",
+      "rank": 2,
+      "startup": 6,
+      "active": 4,
+      "recovery": 13,
+      "whiff": 0,
+      "dmg": 38,
+      "hitstun": 17,
+      "blockstun": 11,
+      "kb": 4,
+      "kbBlock": 2,
+      "hb": [
+        20,
+        131,
+        100,
+        142
+      ],
+      "level": "mid",
+      "launch": 0,
+      "launchVx": 0,
+      "hitstop": 7,
+      "shake": 2,
+      "power": 0.9,
+      "poses": [
+        "pM_s",
+        "pM_a"
+      ],
+      "trail": "bw"
+    },
+    "pH": {
+      "id": "pH",
+      "kind": "normal",
+      "rank": 3,
+      "startup": 9,
+      "active": 4,
+      "recovery": 19,
+      "whiff": 0,
+      "dmg": 62,
+      "hitstun": 22,
+      "blockstun": 14,
+      "kb": 7,
+      "kbBlock": 4,
+      "hb": [
+        20,
+        146,
+        95,
+        145
+      ],
+      "level": "mid",
+      "launch": 6,
+      "launchVx": 5,
+      "hitstop": 9,
+      "shake": 5,
+      "power": 1.2,
+      "poses": [
+        "pH_s",
+        "pH_a"
+      ],
+      "trail": "bw"
+    },
+    "kL": {
+      "id": "kL",
+      "kind": "normal",
+      "rank": 1,
+      "startup": 4,
+      "active": 3,
+      "recovery": 10,
+      "whiff": 0,
+      "dmg": 23,
+      "hitstun": 13,
+      "blockstun": 8,
+      "kb": 2.5,
+      "kbBlock": 2,
+      "hb": [
+        15,
+        116,
+        50,
+        100
+      ],
+      "level": "mid",
+      "launch": 0,
+      "launchVx": 0,
+      "hitstop": 5,
+      "shake": 2,
+      "power": 0.6,
+      "poses": [
+        "kL_s",
+        "kL_a"
+      ],
+      "trail": "fa"
+    },
+    "kM": {
+      "id": "kM",
+      "kind": "normal",
+      "rank": 2,
+      "startup": 7,
+      "active": 4,
+      "recovery": 14,
+      "whiff": 0,
+      "dmg": 43,
+      "hitstun": 18,
+      "blockstun": 12,
+      "kb": 5,
+      "kbBlock": 2,
+      "hb": [
+        20,
+        134,
+        80,
+        140
+      ],
+      "level": "mid",
+      "launch": 0,
+      "launchVx": 0,
+      "hitstop": 7,
+      "shake": 2,
+      "power": 0.9,
+      "poses": [
+        "kM_s",
+        "kM_a"
+      ],
+      "trail": "fa"
+    },
+    "kH": {
+      "id": "kH",
+      "kind": "normal",
+      "rank": 3,
+      "startup": 10,
+      "active": 5,
+      "recovery": 21,
+      "whiff": 0,
+      "dmg": 67,
+      "hitstun": 23,
+      "blockstun": 15,
+      "kb": 8,
+      "kbBlock": 5,
+      "hb": [
+        20,
+        141,
+        70,
+        165
+      ],
+      "level": "mid",
+      "launch": 6,
+      "launchVx": 6,
+      "hitstop": 9,
+      "shake": 5,
+      "power": 1.2,
+      "poses": [
+        "kH_s",
+        "kH_a"
+      ],
+      "trail": "fa"
+    },
+    "cP": {
+      "id": "cP",
+      "kind": "normal",
+      "rank": 1,
+      "startup": 4,
+      "active": 3,
+      "recovery": 9,
+      "whiff": 0,
+      "dmg": 24,
+      "hitstun": 13,
+      "blockstun": 8,
+      "kb": 2,
+      "kbBlock": 2,
+      "hb": [
+        20,
+        116,
+        50,
+        95
+      ],
+      "level": "mid",
+      "launch": 0,
+      "launchVx": 0,
+      "hitstop": 5,
+      "shake": 2,
+      "power": 0.6,
+      "poses": [
+        "cP_s",
+        "cP_a"
+      ],
+      "trail": "fw"
+    },
+    "cK": {
+      "id": "cK",
+      "kind": "normal",
+      "rank": 2,
+      "startup": 8,
+      "active": 4,
+      "recovery": 22,
+      "whiff": 0,
+      "dmg": 48,
+      "hitstun": 22,
+      "blockstun": 12,
+      "kb": 6,
+      "kbBlock": 2,
+      "hb": [
+        10,
+        151,
+        0,
+        35
+      ],
+      "level": "low",
+      "launch": 5,
+      "launchVx": 4,
+      "hitstop": 8,
+      "shake": 2,
+      "power": 1,
+      "poses": [
+        "cK_s",
+        "cK_a"
+      ],
+      "trail": "fa"
+    },
+    "jP": {
+      "id": "jP",
+      "kind": "normal",
+      "rank": 2,
+      "startup": 5,
+      "active": 10,
+      "recovery": 0,
+      "whiff": 0,
+      "dmg": 48,
+      "hitstun": 18,
+      "blockstun": 12,
+      "kb": 4,
+      "kbBlock": 2,
+      "hb": [
+        10,
+        111,
+        20,
+        125
+      ],
+      "level": "high",
+      "launch": 0,
+      "launchVx": 0,
+      "hitstop": 7,
+      "shake": 2,
+      "power": 0.9,
+      "poses": [
+        "jP_s",
+        "jP_a"
+      ],
+      "air": true,
+      "trail": "fw"
+    },
+    "jK": {
+      "id": "jK",
+      "kind": "normal",
+      "rank": 2,
+      "startup": 6,
+      "active": 10,
+      "recovery": 0,
+      "whiff": 0,
+      "dmg": 52,
+      "hitstun": 19,
+      "blockstun": 12,
+      "kb": 5,
+      "kbBlock": 2,
+      "hb": [
+        5,
+        116,
+        -10,
+        85
+      ],
+      "level": "high",
+      "launch": 0,
+      "launchVx": 0,
+      "hitstop": 7,
+      "shake": 2,
+      "power": 1,
+      "poses": [
+        "jK_s",
+        "jK_a"
+      ],
+      "air": true,
+      "trail": "fa"
+    },
+    "headbutt": {
+      "id": "headbutt",
+      "kind": "normal",
+      "rank": 3,
+      "startup": 14,
+      "active": 3,
+      "recovery": 24,
+      "whiff": 12,
+      "dmg": 40,
+      "hitstun": 20,
+      "blockstun": 12,
+      "kb": 5,
+      "kbBlock": 3,
+      "hb": [
+        15,
+        86,
+        80,
+        167
+      ],
+      "level": "mid",
+      "launch": 0,
+      "launchVx": 0,
+      "hitstop": 8,
+      "shake": 5,
+      "power": 1.2,
+      "poses": [
+        "headbutt_s",
+        "headbutt_a"
+      ]
+    }
+  },
+  "bieu": {
+    "pL": {
+      "id": "pL",
+      "kind": "normal",
+      "rank": 1,
+      "startup": 4,
+      "active": 3,
+      "recovery": 8,
+      "whiff": 0,
+      "dmg": 23,
+      "hitstun": 13,
+      "blockstun": 8,
+      "kb": 2.5,
+      "kbBlock": 2,
+      "hb": [
+        20,
+        103,
+        105,
+        140
+      ],
+      "level": "mid",
+      "launch": 0,
+      "launchVx": 0,
+      "hitstop": 5,
+      "shake": 2,
+      "power": 0.6,
+      "poses": [
+        "pL_s",
+        "pL_a"
+      ],
+      "trail": "fw"
+    },
+    "pM": {
+      "id": "pM",
+      "kind": "normal",
+      "rank": 2,
+      "startup": 7,
+      "active": 4,
+      "recovery": 13,
+      "whiff": 0,
+      "dmg": 42,
+      "hitstun": 17,
+      "blockstun": 11,
+      "kb": 4,
+      "kbBlock": 2,
+      "hb": [
+        20,
+        123,
+        100,
+        142
+      ],
+      "level": "mid",
+      "launch": 0,
+      "launchVx": 0,
+      "hitstop": 7,
+      "shake": 2,
+      "power": 0.9,
+      "poses": [
+        "pM_s",
+        "pM_a"
+      ],
+      "trail": "bw"
+    },
+    "pH": {
+      "id": "pH",
+      "kind": "normal",
+      "rank": 3,
+      "startup": 10,
+      "active": 4,
+      "recovery": 19,
+      "whiff": 0,
+      "dmg": 68,
+      "hitstun": 22,
+      "blockstun": 14,
+      "kb": 7,
+      "kbBlock": 4,
+      "hb": [
+        20,
+        138,
+        95,
+        145
+      ],
+      "level": "mid",
+      "launch": 6,
+      "launchVx": 5,
+      "hitstop": 9,
+      "shake": 5,
+      "power": 1.2,
+      "poses": [
+        "pH_s",
+        "pH_a"
+      ],
+      "trail": "bw"
+    },
+    "kL": {
+      "id": "kL",
+      "kind": "normal",
+      "rank": 1,
+      "startup": 5,
+      "active": 3,
+      "recovery": 10,
+      "whiff": 0,
+      "dmg": 25,
+      "hitstun": 13,
+      "blockstun": 8,
+      "kb": 2.5,
+      "kbBlock": 2,
+      "hb": [
+        15,
+        108,
+        50,
+        100
+      ],
+      "level": "mid",
+      "launch": 0,
+      "launchVx": 0,
+      "hitstop": 5,
+      "shake": 2,
+      "power": 0.6,
+      "poses": [
+        "kL_s",
+        "kL_a"
+      ],
+      "trail": "fa"
+    },
+    "kM": {
+      "id": "kM",
+      "kind": "normal",
+      "rank": 2,
+      "startup": 8,
+      "active": 4,
+      "recovery": 14,
+      "whiff": 0,
+      "dmg": 47,
+      "hitstun": 18,
+      "blockstun": 12,
+      "kb": 5,
+      "kbBlock": 2,
+      "hb": [
+        20,
+        126,
+        80,
+        140
+      ],
+      "level": "mid",
+      "launch": 0,
+      "launchVx": 0,
+      "hitstop": 7,
+      "shake": 2,
+      "power": 0.9,
+      "poses": [
+        "kM_s",
+        "kM_a"
+      ],
+      "trail": "fa"
+    },
+    "kH": {
+      "id": "kH",
+      "kind": "normal",
+      "rank": 3,
+      "startup": 11,
+      "active": 5,
+      "recovery": 21,
+      "whiff": 0,
+      "dmg": 74,
+      "hitstun": 23,
+      "blockstun": 15,
+      "kb": 8,
+      "kbBlock": 5,
+      "hb": [
+        20,
+        133,
+        70,
+        165
+      ],
+      "level": "mid",
+      "launch": 6,
+      "launchVx": 6,
+      "hitstop": 9,
+      "shake": 5,
+      "power": 1.2,
+      "poses": [
+        "kH_s",
+        "kH_a"
+      ],
+      "trail": "fa"
+    },
+    "cP": {
+      "id": "cP",
+      "kind": "normal",
+      "rank": 1,
+      "startup": 5,
+      "active": 3,
+      "recovery": 9,
+      "whiff": 0,
+      "dmg": 26,
+      "hitstun": 13,
+      "blockstun": 8,
+      "kb": 2,
+      "kbBlock": 2,
+      "hb": [
+        20,
+        108,
+        50,
+        95
+      ],
+      "level": "mid",
+      "launch": 0,
+      "launchVx": 0,
+      "hitstop": 5,
+      "shake": 2,
+      "power": 0.6,
+      "poses": [
+        "cP_s",
+        "cP_a"
+      ],
+      "trail": "fw"
+    },
+    "cK": {
+      "id": "cK",
+      "kind": "normal",
+      "rank": 2,
+      "startup": 9,
+      "active": 4,
+      "recovery": 22,
+      "whiff": 0,
+      "dmg": 53,
+      "hitstun": 22,
+      "blockstun": 12,
+      "kb": 6,
+      "kbBlock": 2,
+      "hb": [
+        10,
+        143,
+        0,
+        35
+      ],
+      "level": "low",
+      "launch": 5,
+      "launchVx": 4,
+      "hitstop": 8,
+      "shake": 2,
+      "power": 1,
+      "poses": [
+        "cK_s",
+        "cK_a"
+      ],
+      "trail": "fa"
+    },
+    "jP": {
+      "id": "jP",
+      "kind": "normal",
+      "rank": 2,
+      "startup": 6,
+      "active": 10,
+      "recovery": 0,
+      "whiff": 0,
+      "dmg": 53,
+      "hitstun": 18,
+      "blockstun": 12,
+      "kb": 4,
+      "kbBlock": 2,
+      "hb": [
+        10,
+        103,
+        20,
+        125
+      ],
+      "level": "high",
+      "launch": 0,
+      "launchVx": 0,
+      "hitstop": 7,
+      "shake": 2,
+      "power": 0.9,
+      "poses": [
+        "jP_s",
+        "jP_a"
+      ],
+      "air": true,
+      "trail": "fw"
+    },
+    "jK": {
+      "id": "jK",
+      "kind": "normal",
+      "rank": 2,
+      "startup": 7,
+      "active": 10,
+      "recovery": 0,
+      "whiff": 0,
+      "dmg": 58,
+      "hitstun": 19,
+      "blockstun": 12,
+      "kb": 5,
+      "kbBlock": 2,
+      "hb": [
+        5,
+        108,
+        -10,
+        85
+      ],
+      "level": "high",
+      "launch": 0,
+      "launchVx": 0,
+      "hitstop": 7,
+      "shake": 2,
+      "power": 1,
+      "poses": [
+        "jK_s",
+        "jK_a"
+      ],
+      "air": true,
+      "trail": "fa"
+    },
+    "headbutt": {
+      "id": "headbutt",
+      "kind": "normal",
+      "rank": 3,
+      "startup": 14,
+      "active": 3,
+      "recovery": 24,
+      "whiff": 12,
+      "dmg": 44,
+      "hitstun": 20,
+      "blockstun": 12,
+      "kb": 5,
+      "kbBlock": 3,
+      "hb": [
+        15,
+        86,
+        80,
+        167
+      ],
+      "level": "mid",
+      "launch": 0,
+      "launchVx": 0,
+      "hitstop": 8,
+      "shake": 5,
+      "power": 1.2,
+      "poses": [
+        "headbutt_s",
+        "headbutt_a"
+      ]
+    }
+  },
+  "aneninha": {
+    "pL": {
+      "id": "pL",
+      "kind": "normal",
+      "rank": 1,
+      "startup": 3,
+      "active": 3,
+      "recovery": 8,
+      "whiff": 0,
+      "dmg": 22,
+      "hitstun": 13,
+      "blockstun": 8,
+      "kb": 2.5,
+      "kbBlock": 2,
+      "hb": [
+        20,
+        95,
+        105,
+        140
+      ],
+      "level": "mid",
+      "launch": 0,
+      "launchVx": 0,
+      "hitstop": 5,
+      "shake": 2,
+      "power": 0.6,
+      "poses": [
+        "pL_s",
+        "pL_a"
+      ],
+      "trail": "fw"
+    },
+    "pM": {
+      "id": "pM",
+      "kind": "normal",
+      "rank": 2,
+      "startup": 6,
+      "active": 4,
+      "recovery": 13,
+      "whiff": 0,
+      "dmg": 39,
+      "hitstun": 17,
+      "blockstun": 11,
+      "kb": 4,
+      "kbBlock": 2,
+      "hb": [
+        20,
+        115,
+        100,
+        142
+      ],
+      "level": "mid",
+      "launch": 0,
+      "launchVx": 0,
+      "hitstop": 7,
+      "shake": 2,
+      "power": 0.9,
+      "poses": [
+        "pM_s",
+        "pM_a"
+      ],
+      "trail": "bw"
+    },
+    "pH": {
+      "id": "pH",
+      "kind": "normal",
+      "rank": 3,
+      "startup": 9,
+      "active": 4,
+      "recovery": 19,
+      "whiff": 0,
+      "dmg": 64,
+      "hitstun": 22,
+      "blockstun": 14,
+      "kb": 7,
+      "kbBlock": 4,
+      "hb": [
+        20,
+        130,
+        95,
+        145
+      ],
+      "level": "mid",
+      "launch": 6,
+      "launchVx": 5,
+      "hitstop": 9,
+      "shake": 5,
+      "power": 1.2,
+      "poses": [
+        "pH_s",
+        "pH_a"
+      ],
+      "trail": "bw"
+    },
+    "kL": {
+      "id": "kL",
+      "kind": "normal",
+      "rank": 1,
+      "startup": 4,
+      "active": 3,
+      "recovery": 10,
+      "whiff": 0,
+      "dmg": 24,
+      "hitstun": 13,
+      "blockstun": 8,
+      "kb": 2.5,
+      "kbBlock": 2,
+      "hb": [
+        15,
+        100,
+        50,
+        100
+      ],
+      "level": "mid",
+      "launch": 0,
+      "launchVx": 0,
+      "hitstop": 5,
+      "shake": 2,
+      "power": 0.6,
+      "poses": [
+        "kL_s",
+        "kL_a"
+      ],
+      "trail": "fa"
+    },
+    "kM": {
+      "id": "kM",
+      "kind": "normal",
+      "rank": 2,
+      "startup": 7,
+      "active": 4,
+      "recovery": 14,
+      "whiff": 0,
+      "dmg": 44,
+      "hitstun": 18,
+      "blockstun": 12,
+      "kb": 5,
+      "kbBlock": 2,
+      "hb": [
+        20,
+        118,
+        80,
+        140
+      ],
+      "level": "mid",
+      "launch": 0,
+      "launchVx": 0,
+      "hitstop": 7,
+      "shake": 2,
+      "power": 0.9,
+      "poses": [
+        "kM_s",
+        "kM_a"
+      ],
+      "trail": "fa"
+    },
+    "kH": {
+      "id": "kH",
+      "kind": "normal",
+      "rank": 3,
+      "startup": 10,
+      "active": 5,
+      "recovery": 21,
+      "whiff": 0,
+      "dmg": 69,
+      "hitstun": 23,
+      "blockstun": 15,
+      "kb": 8,
+      "kbBlock": 5,
+      "hb": [
+        20,
+        125,
+        70,
+        165
+      ],
+      "level": "mid",
+      "launch": 6,
+      "launchVx": 6,
+      "hitstop": 9,
+      "shake": 5,
+      "power": 1.2,
+      "poses": [
+        "kH_s",
+        "kH_a"
+      ],
+      "trail": "fa"
+    },
+    "cP": {
+      "id": "cP",
+      "kind": "normal",
+      "rank": 1,
+      "startup": 4,
+      "active": 3,
+      "recovery": 9,
+      "whiff": 0,
+      "dmg": 25,
+      "hitstun": 13,
+      "blockstun": 8,
+      "kb": 2,
+      "kbBlock": 2,
+      "hb": [
+        20,
+        100,
+        50,
+        95
+      ],
+      "level": "mid",
+      "launch": 0,
+      "launchVx": 0,
+      "hitstop": 5,
+      "shake": 2,
+      "power": 0.6,
+      "poses": [
+        "cP_s",
+        "cP_a"
+      ],
+      "trail": "fw"
+    },
+    "cK": {
+      "id": "cK",
+      "kind": "normal",
+      "rank": 2,
+      "startup": 8,
+      "active": 4,
+      "recovery": 22,
+      "whiff": 0,
+      "dmg": 49,
+      "hitstun": 22,
+      "blockstun": 12,
+      "kb": 6,
+      "kbBlock": 2,
+      "hb": [
+        10,
+        135,
+        0,
+        35
+      ],
+      "level": "low",
+      "launch": 5,
+      "launchVx": 4,
+      "hitstop": 8,
+      "shake": 2,
+      "power": 1,
+      "poses": [
+        "cK_s",
+        "cK_a"
+      ],
+      "trail": "fa"
+    },
+    "jP": {
+      "id": "jP",
+      "kind": "normal",
+      "rank": 2,
+      "startup": 5,
+      "active": 10,
+      "recovery": 0,
+      "whiff": 0,
+      "dmg": 49,
+      "hitstun": 18,
+      "blockstun": 12,
+      "kb": 4,
+      "kbBlock": 2,
+      "hb": [
+        10,
+        95,
+        20,
+        125
+      ],
+      "level": "high",
+      "launch": 0,
+      "launchVx": 0,
+      "hitstop": 7,
+      "shake": 2,
+      "power": 0.9,
+      "poses": [
+        "jP_s",
+        "jP_a"
+      ],
+      "air": true,
+      "trail": "fw"
+    },
+    "jK": {
+      "id": "jK",
+      "kind": "normal",
+      "rank": 2,
+      "startup": 6,
+      "active": 10,
+      "recovery": 0,
+      "whiff": 0,
+      "dmg": 54,
+      "hitstun": 19,
+      "blockstun": 12,
+      "kb": 5,
+      "kbBlock": 2,
+      "hb": [
+        5,
+        100,
+        -10,
+        85
+      ],
+      "level": "high",
+      "launch": 0,
+      "launchVx": 0,
+      "hitstop": 7,
+      "shake": 2,
+      "power": 1,
+      "poses": [
+        "jK_s",
+        "jK_a"
+      ],
+      "air": true,
+      "trail": "fa"
+    },
+    "headbutt": {
+      "id": "headbutt",
+      "kind": "normal",
+      "rank": 3,
+      "startup": 14,
+      "active": 3,
+      "recovery": 24,
+      "whiff": 12,
+      "dmg": 41,
+      "hitstun": 20,
+      "blockstun": 12,
+      "kb": 5,
+      "kbBlock": 3,
+      "hb": [
+        15,
+        82,
+        76,
+        159
+      ],
+      "level": "mid",
+      "launch": 0,
+      "launchVx": 0,
+      "hitstop": 8,
+      "shake": 5,
+      "power": 1.2,
+      "poses": [
+        "headbutt_s",
+        "headbutt_a"
+      ]
+    }
+  }
+}

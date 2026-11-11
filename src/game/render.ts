@@ -1,3 +1,5 @@
+import {drawAccessoryNormal} from './accessories';
+import {animeMotion} from './anime-motion';
 import {formStats} from './resources';
 import {WOC_ULTIMATES} from './woc-choreography';
 import {drawWocUltimate,drawWocProjectile,drawFormAura,drawTransformCutin,drawResourcesHud} from './woc-art';
@@ -351,7 +353,9 @@ function drawFighter(ctx: CanvasRenderingContext2D, g: Game, f: Fighter, time: n
   const phase=m?movePhase(m,frame,f.connected):null;
   const accessoryPose=f.poseOverride||(m&&phase?.phase==='recovery'&&phase.progress<.35?m.recoveryPose||m.poses[1]:f.poseName);
   if(!reflect)drawMotionInk(ctx,f,settings.reducedFlash);
-  drawRig(ctx, f.ch, f.rig, f.pose, { time:f.animT, expr: f.expr, glow: f.glow, glowColor: f.def.glow, stretch,transformation:f.formT>0,formVariant:f.formVariant,formTime:f.formElapsed,poseName:accessoryPose });
+  drawRig(ctx, f.ch, f.rig, f.pose, { time:f.animT, expr: f.expr, glow: f.glow, glowColor: f.def.glow, stretch,transformation:f.formT>0,formVariant:f.formVariant,formTime:f.formElapsed,poseName:accessoryPose,
+    ...animeMotion(f) });
+  if(!reflect&&m)drawAccessoryNormal(ctx,m,frame);
   if(!reflect)drawGuardInk(ctx,f,g.tick,settings.reducedFlash);
   if (!reflect) drawFx(ctx, g, f, time);
   if(!reflect&&m&&(f.ch==='jane'||f.ch==='cristyan'||f.ch==='eneas')&&/^s[123]$/.test(m.id)&&frame>=m.startup-3&&frame<m.startup+Math.min(m.active,30)+8)drawTrioMoveFx(ctx,f.ch,m.id,frame-m.startup);

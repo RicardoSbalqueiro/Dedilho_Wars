@@ -249,6 +249,10 @@ class AudioEngine {
     const kick=/^(k|cK|jK)/.test(m.id)||m.trail==='fa'||m.trail==='ba';
     this.noise(kick?.09:.05,.07+p*.025,kick?720:1200,'bandpass',0,kick?2400:3600);
     if(m.id==='headbutt')this.tone(150,.09,'sine',.1,65);
+    if(m.accessory==='katana'){this.noise(.09,.08,3300,'highpass',0,7000);this.tone(1450,.065,'triangle',.045,650);}
+    else if(m.accessory==='guitar'){for(const [i,n]of [110,164.81,220].entries())this.tone(n,.13,'sawtooth',.035,n*.96,i*.018);}
+    else if(m.accessory==='screwdriver')this.tone(1900,.04,'triangle',.04,880);
+    else if(m.accessory==='spray')this.noise(.075,.06,3800,'highpass');
     // Identifiable material accents. Nothing plays twice for a held input.
     if(m.kind==='special') {
       if(ch==='tubarao')this.noise(.16,.12,3200,'highpass',0,650);

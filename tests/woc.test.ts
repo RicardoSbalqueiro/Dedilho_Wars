@@ -18,7 +18,7 @@ function ready(f:Fighter){f.meter=200;f.stamina=120;f.energy=100;f.blood=3;f.bat
 function finishActivation(g:Game){step(g,75);assert.equal(g.f[0].state,'ground');assert(g.f[0].formT>0);}
 check('18 model-sheet fighters, categories, replacement and exact HP doubling',()=>{
  assert.equal(CHAR_IDS.length,18);assert.equal(CHAR_CATEGORIES.Viewers.length,9);assert(CHAR_CATEGORIES.Especiais.includes('eneas'));assert.equal(CHARS.eneas.name,'DR. ACREANO');
- for(const ch of CHAR_IDS){assert.equal(CHARS[ch].hp,BASE_HP[ch]*2);assert(FORMS[ch].duration>0);assert(CHARS[ch].specials.every(s=>s.desc.length>10));}
+ for(const ch of CHAR_IDS){assert.equal(CHARS[ch].hp,BASE_HP[ch]*2);assert.equal(FORMS[ch].duration,600);assert(CHARS[ch].specials.every(s=>s.desc.length>10));}
  assert(CHARS.jane.hp<CHARS.cristyan.hp);assert(CHARS.jane.hurtH<CHARS.cristyan.hurtH);
 });
 check('new commands append bits and preserve custom legacy F/C bindings',()=>{
@@ -29,7 +29,16 @@ check('new commands append bits and preserve custom legacy F/C bindings',()=>{
  finally{delete (globalThis as any).localStorage;}
 });
 for(const ch of CHAR_IDS){
- check(`${ch}: transformation commits 200, activates with own duration, and syncs all resources`,()=>{
+ check(`${ch}: ten active seconds survive resource depletion and pause freezes the timer`,()=>{
+  const g=make(ch);try{const f=g.f[0];ready(f);tap(g,'transform');
+   while(f.formT===0)step(g);
+   assert.equal(f.formT,600);f.stamina=f.battery=f.blood=0;
+   g.paused=true;step(g,120);assert.equal(f.formT,600);g.paused=false;
+   step(g,599);assert.equal(f.formT,1);assert.equal(f.formElapsed,599);
+   step(g);assert.equal(f.formT,0);assert.equal(f.formElapsed,600);assert.equal(f.aftermathT,FORMS[ch].aftermath);
+  }finally{g.destroy();}
+ });
+ check(`${ch}: transformation commits 200, activates for ten seconds, and syncs all resources`,()=>{
   const g=make(ch),guest=make(ch);try{const f=g.f[0];ready(f);assert(canTransform(f));tap(g,'transform');assert.equal(f.state,'transform');assert.equal(f.meter,0);assert.equal(f.formT,0);assert(!f.invuln&&!f.armor);finishActivation(g);
    assert(f.formT<=FORMS[ch].duration&&f.formT>FORMS[ch].duration-80);const state=JSON.parse(JSON.stringify(captureState(g)));assert.equal(state.v,'dw-online-11');assert(applyState(guest,state));
    for(const k of ['stamina','exhaustT','energy','blood','battery','formT','formStartup','formElapsed','formVariant','aftermathT'] as const)assert.equal(guest.f[0][k],f[k]);assert(JSON.stringify(state).length<64000);
@@ -55,8 +64,8 @@ check('Rick charge is stationary, vulnerable and disabled throughout Cruz de Ene
 check('Rick cannot spend unavailable energy and finish leaves no free specials',()=>{const g=make();try{const f=g.f[0];f.energy=0;const before=f.stamina;for(const id of ['s1','s2','s3'])assert(!g.startMove(f,f.def.moves[id]));assert.equal(f.stamina,before);assert.equal(f.rangedUses,0);assert.equal(f.serial,0);}finally{g.destroy();}});
 check('Nomad pays 10% maximum HP and cannot activate a suicidal Jogatina',()=>{const g=make('nomad');try{const f=g.f[0];ready(f);f.hp=f.maxHp*.1;assert(!canTransform(f));f.hp=f.maxHp;tap(g,'transform');assert.equal(f.hp,f.maxHp*.9);assert([0,1,2].includes(f.formVariant));}finally{g.destroy();}});
 check('Renngotti has real 15-second aftermath with half strength and speed',()=>{const g=make('renngotti');try{const f=g.f[0];ready(f);tap(g,'transform');finishActivation(g);assert.equal(formStats(f).damage,2);f.formT=1;step(g);assert.equal(f.aftermathT,900);assert.equal(formStats(f).damage,.5);assert.equal(formStats(f).speed,.5);assert(!canTransform(f));}finally{g.destroy();}});
-check('Ulisses spends finite captured blood, heals within HP cap and ends when it runs out',()=>{const g=make('ulisses');try{const f=g.f[0];ready(f);f.blood=1;f.hp=f.maxHp-150;tap(g,'transform');finishActivation(g);f.stamina=120;f.formElapsed=299;step(g);assert.equal(f.blood,0);assert.equal(f.hp,f.maxHp-50);assert.equal(f.formT,0);}finally{g.destroy();}});
-check('Jane EVA exposes a matching larger hurtbox and spends finite battery on lasers',()=>{const g=make('jane');try{const f=g.f[0],small=g.hurtBox(f);ready(f);tap(g,'transform');finishActivation(g);const big=g.hurtBox(f);assert(big.y1-big.y0>(small.y1-small.y0)*2);assert(g.startMove(f,f.def.moves.s1));assert(f.battery<88);step(g,30);assert(g.projectiles.some(p=>p.kind==='laser')||g.f[1].hp<g.f[1].maxHp);f.battery=0;step(g);assert.equal(f.formT,0);}finally{g.destroy();}});
+check('Ulisses spends finite captured blood and stops healing without shortening the form',()=>{const g=make('ulisses');try{const f=g.f[0];ready(f);f.blood=1;f.hp=f.maxHp-150;tap(g,'transform');finishActivation(g);f.stamina=120;f.formElapsed=299;step(g);assert.equal(f.blood,0);assert.equal(f.hp,f.maxHp-50);assert(f.formT>0);f.formElapsed=599;step(g);assert.equal(f.hp,f.maxHp-50);assert(f.formT>0);}finally{g.destroy();}});
+check('Jane EVA exposes a matching larger hurtbox and spends finite battery on lasers',()=>{const g=make('jane');try{const f=g.f[0],small=g.hurtBox(f);ready(f);tap(g,'transform');finishActivation(g);const big=g.hurtBox(f);assert(big.y1-big.y0>(small.y1-small.y0)*2);assert(g.startMove(f,f.def.moves.s1));assert(f.battery<88);step(g,30);assert(g.projectiles.some(p=>p.kind==='laser')||g.f[1].hp<g.f[1].maxHp);f.battery=0;step(g);assert(f.formT>0);assert(!g.startMove(f,f.def.moves.s1));}finally{g.destroy();}});
 for(const side of [0,1] as const)check(`Megalodon has a mirrored aquatic hurtbox, P${side+1}`,()=>{const g=make('tubarao','tubarao');try{const f=g.f[side];f.formT=100;f.facing=side===0?1:-1;const box=g.hurtBox(f);assert(Math.abs((side===0?box.x1-f.x:f.x-box.x0)-105*1.22)<1e-6);assert.equal(box.y0,-155*1.22);f.formT=1;step(g);assert.equal(f.aftermathT,7200);assert(formStats(f).scale<1);}finally{g.destroy();}});
 for(const ch of ['jao','hdsh'] as const)check(`${ch}: prediction cannot block grabs, lows or escape hitstun`,()=>{const g=make(ch);try{const [f,o]=g.f;f.formT=200;f.state='hit';f.hitstun=12;g.startMove(o,o.def.moves.pL);step(g);assert.equal(f.state,'hit');assert(!f.guard);f.state='ground';f.hitstun=0;f.predictionCooldown=0;g.startMove(o,o.def.moves.cK);step(g);assert(!f.guard);}finally{g.destroy();}});
 for(const [ch,track]of Object.entries(WOC_ULTIMATES))check(`${ch}: cinematic timeline damage is real, finite and synchronized`,()=>{const g=make(ch as CharId);try{const [a,d]=g.f;a.x=600;d.x=710;a.meter=100;tap(g,'super');let saw=false;for(let i=0;i<650;i++){g.step();saw||=!!g.seq;if(saw&&!g.seq)break;}assert(saw);assert.equal(d.maxHp-d.hp,track.beats.reduce((n,b)=>n+b.damage,0));assert.equal(g.seq,null);assert.equal(a.state,'ground');assert(d.hp>0);}finally{g.destroy();}});

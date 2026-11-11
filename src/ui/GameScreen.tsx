@@ -1,3 +1,4 @@
+import {preloadAnimeSprites} from '../game/anime-sprite';
 import {CanvasSurface,stageDensity,canvasFontRevision} from '../game/canvas';
 import { FIGHTER_STYLE } from '../game/presentation';
 import { FINISHER_NAMES } from '../game/finishers-art';
@@ -29,6 +30,7 @@ export function GameScreen({ cfg, onExit, onSelect, onMap, onRadio, inputSuspend
   const overlayRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    void preloadAnimeSprites([cfg.p1,cfg.p2],true);
     const canvas = ref.current!;
     const surface=new CanvasSurface(canvas,W,H,'scene'),ctx=surface.ctx;surface.prepare();
     let stage=getStage(cfg.stage??'dojo',surface.scale);

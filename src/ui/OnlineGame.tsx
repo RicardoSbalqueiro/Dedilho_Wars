@@ -1,3 +1,4 @@
+import {preloadAnimeSprites} from '../game/anime-sprite';
 import {transformationAudio} from '../game/transformation-audio';
 import {CanvasSurface,stageDensity,canvasFontRevision} from '../game/canvas';
 import { FinisherPrompt } from './FinisherPrompt';
@@ -33,6 +34,7 @@ export function OnlineGame({room,user,onLobby,onLeave}:{room:Room;user:User;onLo
  const host=room.host.id===user.id;
  useEffect(()=>{
   const surface=new CanvasSurface(canvas.current!,W,H,'scene'),ctx=surface.ctx,bindings=loadBindings();surface.prepare();
+  void preloadAnimeSprites([room.host.char,room.guest!.char],true);
   const game=new Game({mode:'versus',online:true,p1:room.host.char,p2:room.guest!.char,stage:room.stage,difficulty:'normal',bindings:[bindings[0],bindings[0]]},()=>{});
   gameRef.current=game;
   (window as unknown as {__game?:Game}).__game=game;

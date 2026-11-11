@@ -13,6 +13,6 @@ const fighters=CHAR_IDS.map(id=>{
  if(uniquePoses<=1000)throw Error(`${id}: fewer than 1001 distinct animation frames`);
  return {id,name:CHARS[id].name,frameCount:clips.reduce((n,c)=>n+c.count,0),distinctPoses:uniquePoses,clips};
 });
-const report={format:'dedilho-animation-frames-v2',poseSampleRate:ANIMATION_FPS,simulationHz:60,framesPerFighter:ANIMATION_FRAMES_PER_FIGHTER,totalFrames:fighters.reduce((n,f)=>n+f.frameCount,0),note:'Frames vetoriais articulados. Mais amostras por segundo visual, com a mesma duração em segundos. A simulação continua a 60 Hz; os golpes, Ultimates e finishers são adicionais.',fighters};
+const report={format:'dedilho-animation-frames-v2',poseSampleRate:ANIMATION_FPS,simulationHz:60,framesPerFighter:ANIMATION_FRAMES_PER_FIGHTER,totalFrames:fighters.reduce((n,f)=>n+f.frameCount,0),note:'Amostras internas de tempo e âncoras de contato. A arte usa 432 poses ilustradas em 36 atlas, selecionadas por estado e fase. A simulação continua a 60 Hz; cada amostra não representa uma ilustração diferente.',fighters};
 writeFileSync(process.argv[2]||'docs/animation-frames.json',JSON.stringify(report));
 console.log(JSON.stringify({fighters:fighters.map(({id,frameCount,distinctPoses})=>({id,frameCount,distinctPoses})),totalFrames:report.totalFrames}));

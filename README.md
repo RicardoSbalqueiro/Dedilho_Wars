@@ -2,7 +2,7 @@
 
 By Rickzera. Jogo de luta anime 2D para navegador, com **18 lutadores**, **17 arenas**, rádio, contas por usuário/senha, versus, IA, multiplayer por salas, treinamento e finishers.
 
-Jogue em https://dedilho-wars-luta.pithyblimp1.chatgpt.site. O download completo fica em [/baixar/](https://dedilho-wars-luta.pithyblimp1.chatgpt.site/baixar/). Extraia o ZIP e abra **JOGAR.html** com um navegador atualizado. Mantenha a pasta `src/assets/radio`: contém os sete MP3 locais. O `index.html` da raiz é a entrada de desenvolvimento do Vite. Modos locais e treinamento funcionam sem conta e offline; contas, ranking e salas usam o site.
+Jogue em https://dedilho-wars-luta.pithyblimp1.chatgpt.site. O download completo fica em [/baixar/](https://dedilho-wars-luta.pithyblimp1.chatgpt.site/baixar/). Extraia o ZIP e abra **JOGAR.html** com um navegador atualizado. Mantenha a pasta `src/assets`: contém as ilustrações e os sete MP3 locais. O `index.html` da raiz é a entrada de desenvolvimento do Vite. Modos locais e treinamento funcionam sem conta e offline; contas, ranking e salas usam o site.
 
 ## Elenco e identidade
 
@@ -12,9 +12,9 @@ Jogue em https://dedilho-wars-luta.pithyblimp1.chatgpt.site. O download completo
 
 Os cinco novos personagens são Viewers. Dr. Acreano ocupa o lugar de Dr. Enéas. O identificador técnico antigo `eneas` é conservado para não invalidar histórico, perfis e salas; toda apresentação usa Dr. Acreano.
 
-A arte foi redesenhada a partir das fichas fornecidas de War of Champions: proporções humanas estilizadas, novos contornos anatômicos, faces, íris, pupilas, cabelos, roupas, mãos e silhuetas. `anime-art.ts` desenha as partes articuladas e as aparências de transformação; retratos, luta, galeria e cinematográficas usam a mesma arte. Não depende de filtros aplicados aos desenhos anteriores ou de um PNG de corpo inteiro.
+Os personagens usam **ilustrações de anime japonês** inspiradas nas fichas de War of Champions: rostos, cabelos, roupas, acessórios e silhuetas próprios. São **36 atlas e 432 poses ilustradas**: 12 poses na base e 12 na transformação de cada lutador. Retratos, luta, seleção, galeria e cinematográficas usam essa arte. Veja [arte anime e armas nos normais](docs/anime-sprites.md).
 
-O motor continua em **60 Hz**, independente da frequência da tela. Os **1.098 quadros visuais distintos por lutador**, em nove ciclos, somam **19.764 poses catalogadas** para os 18 personagens, além de golpes, reações, cutscenes e transformações. São poses articuladas amostradas e interpoladas pelo jogo, não 19.764 ilustrações desenhadas à mão. Aumentar a resolução ou o número de poses não muda startup, ativos, recovery ou o tamanho lógico da arena.
+O motor continua em **60 Hz**, independente da tela. Os nove ciclos mantêm 1.098 amostras de tempo por personagem para cadência, transições e contatos; as ilustrações são selecionadas conforme estado e fase do golpe. Essas amostras não correspondem a desenhos diferentes. Startup, ativos, recovery e tamanho lógico da arena continuam separados da arte.
 
 Cenas e combate renderizam de **1080p até 4K**, com menus nativos, retratos e mapas adaptados a DPR/Retina. Veja [resolução e nitidez](docs/resolution.md).
 
@@ -57,11 +57,11 @@ Rick usa cabelo loiro curto, olhos verdes, camiseta preta e cargo bege. A Energi
 
 ## Formas e novos estilos
 
-Todas as 18 fichas têm uma transformação própria, aparência e custo. Duração máxima de 10–15 segundos também é limitada pelo fôlego e pelo recurso do personagem.
+Todas as 18 transformações duram **10 segundos ativos (600 ticks)**, contados desde a manifestação da forma. Pausar congela o contador. Fôlego e bateria continuam sendo gastos e limitam ataques ao esgotar; sangue limita a cura de Ulisses. Esses recursos não encerram mais a forma antes dos 10 segundos. Preparação interrompível, custos e recuperação posterior continuam valendo.
 
 Patrick combina Escudo de Casco, Investida Blindada e Punho Couraçado; Rei Tatu reduz dano e tem três contatos de armadura, vencidos por agarrões/ULTs. Gabrielzin lança Beijinho/Piscadinha, aproxima com Abraço de Cupido e veste Gatito, com patas e alcance maior. O tema de Gatito usa um motivo original sintetizado e voz, sem adicionar uma gravação externa à rádio.
 
-Ulisses usa membros distorcidos, Presas Sugadoras e Manipulação de Sangue. Presas capturam até três estoques; Regeneração Imediata consome um a cada cinco segundos para curar até 100 HP, sem ultrapassar o máximo. Felipence usa guitarra, Riff, Pulso e Lamento; Sinfonia do Caos amplia pressão sonora. H?D?SH controla o chão com Go, dispara tendência e marca o airdrop 30 frames antes da queda. Sua Ultimate é Full Box 200.
+Ulisses ataca com a katana nos golpes normais e usa membros distorcidos, Presas Sugadoras e Manipulação de Sangue. Presas capturam até três estoques; Regeneração Imediata consome um a cada cinco segundos para curar até 100 HP, sem ultrapassar o máximo. Felipence bate com a guitarra nos golpes normais e usa Riff, Pulso e Lamento; Sinfonia do Caos amplia pressão sonora. H?D?SH controla o chão com Go, dispara tendência e marca o airdrop 30 frames antes da queda. Sua Ultimate é Full Box 200.
 
 Caetano veste calça branca/faixa preta e usa Karatê Prime. Bieu tem forma BuggyBatman e Ultimate Crias do Capão Redondo. Aneninha usa jaqueta rosa/cargo preta, lança baratas e chama Crias de Osasco. Nomad veste verde/galaxy, troca a rajada por Soco Gigante e paga 10% do HP máximo para sortear força, velocidade ou tamanho em Jogatina. Renngotti tem Berserker ×2, seguido de 15 segundos de força/mobilidade reduzidas pela metade.
 
@@ -93,6 +93,6 @@ npm run build
 npm run dev
 ```
 
-`npm run combos:audit` exporta rotas reais contra defesa mantida. `npm run animation:audit` verifica poses distintas. `python3 scripts/package.py` monta o ZIP offline com código, documentação, testes e sete MP3, a partir do build atual. O servidor de produção é o Worker em `dist/server/index.js`, com `.openai/hosting.json` e migrações em `drizzle/`.
+`npm run combos:audit` exporta rotas reais contra defesa mantida. `npm run animation:audit` verifica as amostras de tempo e os contatos internos. `python3 scripts/package.py` monta o ZIP offline com código, documentação, testes, 36 atlas e sete MP3; a página de download entrega um único ZIP validado por SHA-256, a partir do build atual. O servidor de produção é o Worker em `dist/server/index.js`, com `.openai/hosting.json` e migrações em `drizzle/`.
 
 Relatórios históricos de balanceamento descrevem versões anteriores. Para esta reformulação, use o código atual, os multiplicadores no laboratório e o relatório de War of Champions; resultados automatizados não substituem testes de equilíbrio com jogadores humanos.

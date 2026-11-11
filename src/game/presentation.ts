@@ -2,8 +2,8 @@ import type { CharId } from './data';
 export const FIGHTER_STYLE:Record<CharId,{name:string;help:string;victory:string}>={
  patrick:{name:'COURAÇA E CONTRA-ATAQUE',help:'Escudo tem armadura só na janela ativa. Investida e Punho cobram preparação; agarrões vencem a proteção.',victory:'O REI TATU SEGUE EM PÉ'},
  gabrielzin:{name:'CHARME E CAPTURA',help:'Projéteis rosas criam espaço para o Abraço. Captura exige curta distância e recuperação do rival.',victory:'O CHARME TOMOU A ARENA'},
- ulisses:{name:'SANGUE E ALCANCE',help:'Distorça membros, capture sangue com Presas e guarde estoques para a regeneração.',victory:'A NOITE PERTENCE AO NEFASTO'},
- felipence:{name:'PRESSÃO SONORA',help:'Riff empurra, Pulso afasta dos dois lados e Lamento lança uma nota. Respeite a distância e o fôlego.',victory:'O ÚLTIMO ACORDE É DELE'},
+ ulisses:{name:'SANGUE E ALCANCE',help:'Ataque com a katana nos normais, capture sangue com Presas e guarde estoques para a regeneração.',victory:'A NOITE PERTENCE AO NEFASTO'},
+ felipence:{name:'PRESSÃO SONORA',help:'Normais golpeiam com a guitarra. Riff empurra e Pulso afasta e Lamento lança uma nota. Respeite a distância e o fôlego.',victory:'O ÚLTIMO ACORDE É DELE'},
  hdsh:{name:'ANÁLISE E TERRITÓRIO',help:'Controle o chão com Go, intercepte com setas e anuncie o airdrop. Salto e acertos desfazem sua zona.',victory:'A ANÁLISE FECHOU O BOX'},
  caetano:{name:'TÉCNICO',help:'Defenda no último instante para carregar a Precisão. Ela fortalece o próximo Dedilho. Confirme Dedilho em Chute para continuar o combo.',victory:'A TÉCNICA VENCEU A TEORIA'},
  orango:{name:'PRESSÃO',help:'Acertos seguidos acumulam até 3 de Ímpeto: mais dano e avanço. Ser atingido ou recuar por muito tempo encerra a pressão.',victory:'A SELVA TEM UM CAMPEÃO'},

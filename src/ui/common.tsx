@@ -4,9 +4,10 @@ import type { ReactNode } from 'react';
 import { Stage, STAGE_IDS, W, H, FLOOR_Y } from '../game/stage';
 import { drawFullBody, drawPortrait } from '../game/rig';
 import { attackAnimation } from '../game/animation';
+import {modelSheetPose} from '../game/model-sheet';
 import type { Move } from '../game/data';
 import { FrameTimer } from '../game/timing';
-import { CHARS, CHAR_IDS } from '../game/data';
+import { CHARS, CHAR_IDS, movePhase } from '../game/data';
 import type { CharId } from '../game/data';
 import type { StageId } from '../game/stage';
 import { audio } from '../game/audio';
@@ -116,19 +117,19 @@ export function ArtCanvas({ variant, selected }: { variant: ArtVariant; selected
         const ch = sel;
         glowBehind(ctx, 488, CHARS[ch].color, t, .95);
         // Preview full movements, not a held active frame for two seconds.
-        const cycle=t%140,ids=['pM','kH','s1','s2','s3','cK'];
-        const move=CHARS[ch].moves[ids[Math.floor(t/140)%ids.length]];
-        const attacking=cycle>=32&&cycle<116;
-        const frame=attacking?(cycle-32)/84*(move.startup+move.active+move.recovery):0;
+        const cycle=t%220,ids=['pM','kH','s1','s2','s3','cK'];
+        const move=CHARS[ch].moves[ids[Math.floor(t/220)%ids.length]];
+        const attacking=cycle>=90&&cycle<194;
+        const frame=attacking?(cycle-90)/104*(move.startup+move.active+move.recovery):0;
         const name=attacking?move.poses[frame<move.startup?0:1]:'idle';
-        const pose=attacking?attackAnimation(ch,move,frame,true):undefined;
+        const pose=attacking?attackAnimation(ch,move,frame,true):modelSheetPose(ch,t);
         ctx.save();ctx.translate(488,422);ctx.scale(1.48,1.48);
         if(attacking&&move.turn&&frame>=move.turn[0]&&frame<=move.turn[1]){
           const turn=Math.cos((frame-move.turn[0])/(move.turn[1]-move.turn[0])*Math.PI*2);
           ctx.scale(Math.sign(turn)*Math.max(.18,Math.abs(turn)),1);
         }
         const hop=ch==='jane'&&move.id==='s3'&&frame>18&&frame<38?-Math.sin((frame-18)/20*Math.PI)*35:0;
-        drawFullBody(ctx,ch,0,hop,1,t,name,false,pose);ctx.restore();
+        drawFullBody(ctx,ch,0,hop,1,t,name,false,pose,{poseName:attacking?name:'model',spriteState:attacking?'attack':'idle',spritePhase:attacking?movePhase(move,frame,true).phase:undefined,spriteProgress:attacking?movePhase(move,frame,true).progress:0,spriteKind:move.kind==='normal'?/^(k|cK|jK)/.test(move.id)?'kick':'punch':move.kind==='super'?'super':'special',spriteRank:move.rank,spriteAir:move.air,normalAccessory:move.accessory});ctx.restore();
       }
       // folhas
       for (const l of leaves) {
@@ -193,14 +194,11 @@ function drawDemoPair(ctx: CanvasRenderingContext2D, left: CharId, right: CharId
   ctx.fillStyle = '#000';
   ctx.beginPath(); ctx.ellipse(lx, y + 2, 34 * scale, 8 * scale, 0, 0, Math.PI * 2); ctx.ellipse(rx, y + 2, 34 * scale, 8 * scale, 0, 0, Math.PI * 2); ctx.fill();
   ctx.restore();
-  const choreograph=(ch:CharId,m:Move,p:number)=>{
-    const u=p/43;
-    const frame=u<.46?u/.46*m.startup:u<.6?m.startup+(u-.46)/.14*m.active:
-      m.startup+m.active+(u-.6)/.4*m.recovery;
-    return attackAnimation(ch,m,frame,true);
-  };
-  drawFullBody(ctx, left, lx, y - (leftAttack && leftMove.id.startsWith('k') ? leftLunge * .35 : 0), scale, t, leftPose,false,leftAttack?choreograph(left,leftMove,phase-24):undefined);
-  drawFullBody(ctx, right, rx, y - (rightAttack && rightMove.id.startsWith('k') ? rightLunge * .35 : 0), scale, t + 20, rightPose, true,rightAttack?choreograph(right,rightMove,phase-118):undefined);
+  const demoFrame=(m:Move,p:number)=>{const u=p/43;return u<.46?u/.46*m.startup:u<.6?m.startup+(u-.46)/.14*m.active:m.startup+m.active+(u-.6)/.4*m.recovery};
+  const choreograph=(ch:CharId,m:Move,p:number)=>attackAnimation(ch,m,demoFrame(m,p),true);
+  const plate=(m:Move,p:number)=>{const phase=movePhase(m,demoFrame(m,p),true);return {spriteState:'attack' as const,spritePhase:phase.phase,spriteProgress:phase.progress,spriteKind:m.kind==='normal'?/^(k|cK|jK)/.test(m.id)?'kick' as const:'punch' as const:m.kind==='super'?'super' as const:'special' as const,spriteRank:m.rank,spriteAir:m.air,normalAccessory:m.accessory}};
+  drawFullBody(ctx, left, lx, y - (leftAttack && leftMove.id.startsWith('k') ? leftLunge * .35 : 0), scale, t, leftPose,false,leftAttack?choreograph(left,leftMove,phase-24):undefined,leftAttack?plate(leftMove,phase-24):undefined);
+  drawFullBody(ctx, right, rx, y - (rightAttack && rightMove.id.startsWith('k') ? rightLunge * .35 : 0), scale, t + 20, rightPose, true,rightAttack?choreograph(right,rightMove,phase-118):undefined,rightAttack?plate(rightMove,phase-118):undefined);
   const strike = (ch: CharId, from: number, to: number, p: number, special: boolean, dir: number) => {
     const level = y - 102 * scale;
     if (p >= 34 && p < 44) {

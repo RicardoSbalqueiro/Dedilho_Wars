@@ -203,7 +203,8 @@ check('doubled legacy HP, explicit Jane stature and otherwise preserved asymmetr
  const before=JSON.parse(readFileSync('docs/balance-before.json','utf8')).characters;
  for(const ch of CHAR_IDS.filter(ch=>before[ch])){
   for(const key of ['hp','walk','walkBack','jumpVy','jumpVx','dashVx','dashDur','pushW','hurtH','crouchH'] as const)assert.equal(CHARS[ch][key],key==='hp'?before[ch][key]*2:ch==='jane'&&key==='hurtH'?96:ch==='jane'&&key==='crouchH'?60:before[ch][key]);
-  for(const m of Object.values<{kind:string;id:string}>(before[ch].moves).filter(m=>m.kind==='normal'))assert.deepEqual(CHARS[ch].moves[m.id],m);
+  const combatData=(m:object)=>Object.fromEntries(Object.entries(m).filter(([key])=>!['label','accessory'].includes(key)));
+  for(const m of Object.values<{kind:string;id:string}>(before[ch].moves).filter(m=>m.kind==='normal'))assert.deepEqual(combatData(CHARS[ch].moves[m.id]),combatData(m));
  }
  assert(frameData('santox','s2').variable&&frameData('jao','s2').variable&&frameData('renngotti','s1').variable,'conditional advantage is never presented as guaranteed');
 });

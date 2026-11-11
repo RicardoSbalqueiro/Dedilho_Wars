@@ -1,6 +1,7 @@
+import {applyAccessoryNormals} from './accessories';
 import {createWocFighters} from './woc-data';
 import {SHARK_KISS_DAMAGE} from './shark-choreography';
-// Dados dos personagens: atributos, golpes (frame data) e poses do esqueleto.
+// Combat attributes, frame data and invisible contact/presentation anchors.
 
 export const CHAR_IDS = ['caetano', 'orango', 'tubarao', 'rickzera', 'bieu', 'nomad', 'renngotti', 'aneninha', 'santox', 'jao', 'jane', 'cristyan', 'eneas', 'patrick', 'gabrielzin', 'ulisses', 'felipence', 'hdsh'] as const;
 export type CharId = (typeof CHAR_IDS)[number];
@@ -74,6 +75,7 @@ export interface Move {
   spike?: boolean;
   recoveryPose?: string;
   sound?: 'purple' | 'red';
+  accessory?:'katana'|'guitar'|'screwdriver'|'spray';
   resourcePower?:number;
   rangeScale?:number;
 }
@@ -819,6 +821,8 @@ for(const def of Object.values(CHARS)){
     hb:[15,Math.round(def.hurtH*.34+25),Math.round(def.hurtH*.45),Math.round(def.hurtH*.94)],
     poses:['headbutt_s','headbutt_a'],hitstop:8,shake:5,power:1.2,label:'CABEÇADA'})[1];
 }
+
+for(const ch of CHAR_IDS)applyAccessoryNormals(ch,CHARS[ch].moves);
 
 export function movePhase(move:Move,frame:number,connected:boolean){
   if(frame<move.startup)return {phase:'startup' as const,progress:0};

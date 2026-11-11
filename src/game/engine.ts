@@ -843,9 +843,11 @@ export class Game {
     if(f.staminaDelay>0)f.staminaDelay--;
     if(f.formT>0){
       f.formElapsed++;f.formT--;payStamina(f,FORMS[f.ch].drain);
-      if(f.ch==='jane'){f.battery=Math.max(0,f.battery-.1);if(f.battery===0)f.formT=0;}
-      if(f.ch==='ulisses'&&f.formElapsed%300===0){if(f.blood>0){f.blood--;f.hp=Math.min(f.maxHp,f.hp+100);this.text(f.x,FLOOR_Y-205,'REGENERAÇÃO +100',f.def.glow,20);if(f.blood===0)f.formT=0;}else f.formT=0;}
-      if(f.formT===0||f.stamina===0)this.endTransformation(f);
+      if(f.ch==='jane')f.battery=Math.max(0,f.battery-.1);
+      if(f.ch==='ulisses'&&f.formElapsed%300===0&&f.blood>0){f.blood--;f.hp=Math.min(f.maxHp,f.hp+100);this.text(f.x,FLOOR_Y-205,'REGENERAÇÃO +100',f.def.glow,20);}
+      // The active form lasts ten seconds. Depleted resources limit attacks or
+      // healing while the shared timer continues, rather than ending it early.
+      if(f.formT===0)this.endTransformation(f);
     }else if(f.formStartup===0){
       if(f.staminaDelay===0&&['ground','jump','getup','down'].includes(f.state)){const before=f.stamina;f.stamina=Math.min(RESOURCE_RULES.staminaMax,f.stamina+(f.state==='ground'&&Math.abs(f.vx)<.2?RESOURCE_RULES.regenIdle:RESOURCE_RULES.regenMoving));if(f.idx===0)this.challengeEvent('stamina',f.stamina-before);}
       if(f.ch==='jane')f.battery=Math.min(100,f.battery+.06);

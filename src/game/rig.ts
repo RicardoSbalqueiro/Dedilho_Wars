@@ -1,8 +1,9 @@
-// Esqueletos articulados e desenho vetorial de todos os lutadores.
+// Invisible combat contact anchors and illustrated sprite drawing entry points.
+// Character appearance comes exclusively from the authored anime atlases.
 import type { CharId, Pose } from './data';
 import { CHARS } from './data';
 import { menuAnimation } from './animation';
-import {animeHead,animeRig} from './anime-art';
+import {drawAnimeSprite,drawAnimeSpriteHead} from './anime-sprite';
 
 export interface P2 {
   x: number;
@@ -13,10 +14,18 @@ export interface Rig {
 }
 export interface DrawOpts {
   time: number;
+  spriteState?:'idle'|'walk'|'crouch'|'jump'|'guard'|'hit'|'attack'|'charge'|'victory';
+  spritePhase?:'startup'|'active'|'recovery';
+  spriteKind?:'punch'|'kick'|'special'|'super';
+  spriteProgress?:number;
+  spriteRank?:number;
+  spriteAir?:boolean;
+  normalAccessory?:'katana'|'guitar'|'screwdriver'|'spray';
+
   expr?: 'n' | 'hit' | 'shout';
   glow?: number; // 0..1 olhos brilhando
   glowColor?: string;
-  poseName?: string; // nome da pose para acessórios articulados
+  poseName?: string; // authored sprite/cinematic action
   costume?: number;
   transformation?:boolean;
   formVariant?:number;
@@ -100,8 +109,8 @@ export function computeRig(ch: CharId, pose: Pose): Rig {
 
 // Public painting boundaries share the same War of Champions artwork in gameplay,
 // portraits, the animation library and cinematic actors. Poses remain simulation-owned.
-export function drawHead(ctx:CanvasRenderingContext2D,ch:CharId,r:number,o:DrawOpts){animeHead(ctx,ch,r,o)}
-export function drawRig(ctx:CanvasRenderingContext2D,ch:CharId,rig:Rig,pose:Pose,o:DrawOpts){animeRig(ctx,ch,rig,pose,o)}
+export function drawHead(ctx:CanvasRenderingContext2D,ch:CharId,r:number,o:DrawOpts){drawAnimeSpriteHead(ctx,ch,r,o)}
+export function drawRig(ctx:CanvasRenderingContext2D,ch:CharId,_rig:Rig,pose:Pose,o:DrawOpts){drawAnimeSprite(ctx,ch,pose,o)}
 export function drawBolivianDancer(ctx:CanvasRenderingContext2D,x:number,y:number,scale:number,time:number,flip=false,costume=0){
   const pose={...CHARS.aneninha.poses.idle,lean:Math.sin(time*.15)*8,fa1:-40+Math.sin(time*.19)*25,fa2:-80,ba1:160,ba2:100,fl1:60+Math.sin(time*.16)*22,bl1:115-Math.sin(time*.16)*20};
   const rig=computeRig('aneninha',pose);ctx.save();ctx.translate(x,y);ctx.scale(flip?-scale:scale,scale);drawRig(ctx,'aneninha',rig,pose,{time,costume});ctx.restore();
