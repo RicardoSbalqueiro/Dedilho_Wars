@@ -29,7 +29,7 @@ export const FORMS:Record<CharId,FormDefinition>={
  eneas:form('Quando Debate não Resolve',2,1.05,.33,'Dr. Acreano rasga o paletó e revela as tatuagens do Brasil. Dobra a força física, com alto desgaste.'),
  patrick:form('Rei Tatu',1.5,.9,.32,'Couraça vermelha reduz dano. Três contatos têm armadura, mas agarrões/ULTs vencem a proteção.',{defense:.6,cost:'200 ULT + alto desgaste',aftermath:180}),
  gabrielzin:form('Gatito',1.3,1.1,.25,'Fantasia de gato bege: patas, força e alcance ampliados. A melodia é sintetizada pelo jogo.',{reach:1.2}),
- ulisses:form('Regeneração Imediata',1.15,1.08,.22,'Consome um estoque de sangue a cada 5 s para curar 100 HP. Sem estoque, deixa de curar; a forma continua por 10 s. HP nunca excede o máximo.',{cost:'200 ULT + sangue capturado'}),
+ ulisses:form('Regeneração Imediata',1.15,1.08,.22,'Luta com braços e garras. Consome um estoque de sangue a cada 5 s para curar 100 HP. Sem estoque, deixa de curar; a forma continua por 10 s.',{cost:'200 ULT + sangue capturado'}),
  felipence:form('Sinfonia do Caos',1.3,1.08,.27,'Sobrecarga sonora laranja amplia o alcance. Ondas continuam bloqueáveis e limitadas.',{reach:1.18}),
  hdsh:form('Overclock Analítico',1.2,1.2,.25,'Predição sinalizada ajuda a guarda em neutro, com intervalo. Exaustão mental após a forma.',{aftermath:180}),
 };

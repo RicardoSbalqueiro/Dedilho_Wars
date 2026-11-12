@@ -1,8 +1,8 @@
 {
   "version": 1,
   "filename": "Dedilho-Wars-completo.zip",
-  "bytes": 54222818,
-  "sha256": "b86c11cbe1573d0801059e101bbd70fcd4c1ea68a4ee03b1684dacc8af4ddeec",
+  "bytes": 154774099,
+  "sha256": "d5c6afb78260e5a62fe27e89ccf6eaa22ebdb6e821536f211201ff895fec01a1",
   "parts": [
     {
       "name": "Dedilho-Wars-projeto.part1.bin",
@@ -14,7 +14,27 @@
     },
     {
       "name": "Dedilho-Wars-projeto.part3.bin",
-      "bytes": 12279778
+      "bytes": 20971520
+    },
+    {
+      "name": "Dedilho-Wars-projeto.part4.bin",
+      "bytes": 20971520
+    },
+    {
+      "name": "Dedilho-Wars-projeto.part5.bin",
+      "bytes": 20971520
+    },
+    {
+      "name": "Dedilho-Wars-projeto.part6.bin",
+      "bytes": 20971520
+    },
+    {
+      "name": "Dedilho-Wars-projeto.part7.bin",
+      "bytes": 20971520
+    },
+    {
+      "name": "Dedilho-Wars-projeto.part8.bin",
+      "bytes": 7973459
     }
   ]
 }

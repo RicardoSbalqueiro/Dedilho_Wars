@@ -1,0 +1,33 @@
+{
+  "date": "2026-11-12",
+  "actionAtlases": 152,
+  "actionDrawings": 3636,
+  "totalCharacterAndEffectDrawings": 4500,
+  "commandsPerCharacterAndForm": 15,
+  "drawingsPerCommand": 4,
+  "ultimateVariants": 36,
+  "drawingsPerUltimate": 24,
+  "reactionsPerForm": 12,
+  "illustratedEffectSequences": 42,
+  "drawingsPerEffect": 4,
+  "sportsBikeDrawings": 12,
+  "checks": {
+    "typecheck": "passed",
+    "npmTest": "passed including API and progression",
+    "newIllustrationRegressions": 93,
+    "actualVsVisualUltimateContacts": "all 18 match",
+    "canvasBodyDrawings": 3456,
+    "canvasEffectsAndBikeDrawings": 180,
+    "cinematicSamples": 512,
+    "browserErrors": [],
+    "desktopTrainingAndGallery": "passed",
+    "mobileEmulatedCampaignAndTouch": "passed",
+    "mobileCacheAfterJaneAndUlisses": {
+      "images": 21,
+      "pixels": 15122502,
+      "loading": 0,
+      "queued": 0
+    },
+    "physicalMobileDevice": "not tested"
+  }
+}

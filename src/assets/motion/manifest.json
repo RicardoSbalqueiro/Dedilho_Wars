@@ -2780,345 +2780,345 @@
       "ch": "jane",
       "geometryVersion": 3,
       "src": "motion-jane.webp",
-      "width": 1084,
-      "height": 1722,
+      "width": 1120,
+      "height": 1788,
       "columns": 4,
       "rows": 6,
       "referenceHeights": [
-        256,
-        261
+        271,
+        250
       ],
       "rowReferenceHeights": [
-        256,
-        246.8085106382979,
-        244.89795918367346,
-        261,
-        264.8936170212766,
-        252.0408163265306
+        271,
+        262.7659574468085,
+        255.10204081632654,
+        250,
+        265.95744680851067,
+        231.6326530612245
       ],
       "frames": [
         {
           "rect": [
-            47,
-            15,
-            177,
-            262
+            31,
+            10,
+            218,
+            278
           ],
-          "anchorX": 93.0,
-          "baseline": 257,
-          "height": 254,
-          "visiblePixels": 22650
+          "anchorX": 101.5,
+          "baseline": 274,
+          "height": 271,
+          "visiblePixels": 26655
         },
         {
           "rect": [
-            335,
-            34,
-            142,
-            243
-          ],
-          "anchorX": 72.5,
-          "baseline": 239,
-          "height": 235,
-          "visiblePixels": 20551
-        },
-        {
-          "rect": [
-            599,
-            14,
-            156,
-            263
-          ],
-          "anchorX": 98.5,
-          "baseline": 259,
-          "height": 256,
-          "visiblePixels": 21667
-        },
-        {
-          "rect": [
-            878,
-            42,
-            141,
-            235
-          ],
-          "anchorX": 84.5,
-          "baseline": 231,
-          "height": 227,
-          "visiblePixels": 20956
-        },
-        {
-          "rect": [
-            36,
-            324,
-            198,
-            240
-          ],
-          "anchorX": 100.0,
-          "baseline": 236,
-          "height": 232,
-          "visiblePixels": 24201
-        },
-        {
-          "rect": [
-            310,
-            329,
-            193,
-            235
-          ],
-          "anchorX": 95.5,
-          "baseline": 232,
-          "height": 228,
-          "visiblePixels": 22794
-        },
-        {
-          "rect": [
-            570,
-            328,
-            215,
-            236
-          ],
-          "anchorX": 86.5,
-          "baseline": 233,
-          "height": 229,
-          "visiblePixels": 23923
-        },
-        {
-          "rect": [
-            856,
-            327,
-            184,
-            237
+            332,
+            29,
+            175,
+            259
           ],
           "anchorX": 91.5,
-          "baseline": 233,
-          "height": 230,
-          "visiblePixels": 22270
+          "baseline": 256,
+          "height": 253,
+          "visiblePixels": 25732
         },
         {
           "rect": [
-            58,
-            604,
-            155,
-            247
-          ],
-          "anchorX": 59.5,
-          "baseline": 244,
-          "height": 240,
-          "visiblePixels": 18731
-        },
-        {
-          "rect": [
-            281,
-            611,
-            250,
-            240
-          ],
-          "anchorX": 60.5,
-          "baseline": 237,
-          "height": 234,
-          "visiblePixels": 22381
-        },
-        {
-          "rect": [
-            599,
-            606,
-            156,
-            245
-          ],
-          "anchorX": 90.5,
-          "baseline": 241,
-          "height": 237,
-          "visiblePixels": 19212
-        },
-        {
-          "rect": [
-            842,
-            673,
-            213,
-            178
-          ],
-          "anchorX": 71.0,
-          "baseline": 173,
-          "height": 169,
-          "visiblePixels": 19875
-        },
-        {
-          "rect": [
-            44,
-            871,
-            183,
-            267
+            590,
+            16,
+            219,
+            272
           ],
           "anchorX": 102.5,
-          "baseline": 264,
-          "height": 261,
-          "visiblePixels": 23370
+          "baseline": 269,
+          "height": 266,
+          "visiblePixels": 26661
         },
         {
           "rect": [
-            328,
-            886,
-            156,
-            252
+            890,
+            44,
+            180,
+            244
           ],
-          "anchorX": 95.5,
-          "baseline": 249,
-          "height": 246,
-          "visiblePixels": 22564
+          "anchorX": 82.5,
+          "baseline": 240,
+          "height": 237,
+          "visiblePixels": 25252
         },
         {
           "rect": [
-            600,
-            875,
-            155,
-            263
+            26,
+            333,
+            227,
+            253
           ],
-          "anchorX": 105.0,
-          "baseline": 260,
-          "height": 257,
-          "visiblePixels": 21851
+          "anchorX": 102.5,
+          "baseline": 250,
+          "height": 247,
+          "visiblePixels": 25445
         },
         {
           "rect": [
-            867,
-            888,
-            163,
-            250
+            312,
+            346,
+            215,
+            240
           ],
-          "anchorX": 79.5,
-          "baseline": 246,
-          "height": 242,
-          "visiblePixels": 22319
+          "anchorX": 107.0,
+          "baseline": 236,
+          "height": 233,
+          "visiblePixels": 24112
         },
         {
           "rect": [
-            24,
-            1167,
-            223,
-            258
+            584,
+            341,
+            231,
+            245
           ],
-          "anchorX": 112.0,
-          "baseline": 253,
-          "height": 249,
-          "visiblePixels": 26282
+          "anchorX": 113.0,
+          "baseline": 242,
+          "height": 239,
+          "visiblePixels": 24981
         },
         {
           "rect": [
-            299,
-            1171,
-            214,
-            254
+            872,
+            344,
+            216,
+            242
           ],
           "anchorX": 108.0,
-          "baseline": 249,
-          "height": 246,
-          "visiblePixels": 25402
+          "baseline": 239,
+          "height": 235,
+          "visiblePixels": 23835
         },
         {
           "rect": [
-            564,
-            1170,
-            226,
+            65,
+            628,
+            150,
+            256
+          ],
+          "anchorX": 56.0,
+          "baseline": 253,
+          "height": 250,
+          "visiblePixels": 18833
+        },
+        {
+          "rect": [
+            305,
+            633,
+            229,
+            251
+          ],
+          "anchorX": 87.5,
+          "baseline": 247,
+          "height": 243,
+          "visiblePixels": 22241
+        },
+        {
+          "rect": [
+            602,
+            631,
+            196,
+            253
+          ],
+          "anchorX": 71.5,
+          "baseline": 249,
+          "height": 245,
+          "visiblePixels": 23164
+        },
+        {
+          "rect": [
+            882,
+            676,
+            195,
+            208
+          ],
+          "anchorX": 67.5,
+          "baseline": 204,
+          "height": 200,
+          "visiblePixels": 24470
+        },
+        {
+          "rect": [
+            34,
+            927,
+            211,
             255
           ],
           "anchorX": 93.5,
-          "baseline": 251,
-          "height": 247,
-          "visiblePixels": 25440
+          "baseline": 252,
+          "height": 249,
+          "visiblePixels": 30686
         },
         {
           "rect": [
-            847,
-            1175,
-            203,
-            250
+            312,
+            944,
+            216,
+            238
           ],
-          "anchorX": 101.5,
+          "anchorX": 94.0,
+          "baseline": 235,
+          "height": 231,
+          "visiblePixels": 32596
+        },
+        {
+          "rect": [
+            581,
+            926,
+            238,
+            256
+          ],
+          "anchorX": 105.5,
+          "baseline": 253,
+          "height": 250,
+          "visiblePixels": 28403
+        },
+        {
+          "rect": [
+            869,
+            946,
+            221,
+            236
+          ],
+          "anchorX": 110.5,
+          "baseline": 233,
+          "height": 230,
+          "visiblePixels": 31421
+        },
+        {
+          "rect": [
+            30,
+            1223,
+            220,
+            257
+          ],
+          "anchorX": 109.5,
+          "baseline": 254,
+          "height": 250,
+          "visiblePixels": 34390
+        },
+        {
+          "rect": [
+            296,
+            1232,
+            247,
+            248
+          ],
+          "anchorX": 115.0,
           "baseline": 245,
           "height": 242,
-          "visiblePixels": 24809
+          "visiblePixels": 34683
         },
         {
           "rect": [
-            54,
-            1461,
-            163,
-            251
+            582,
+            1226,
+            236,
+            254
           ],
-          "anchorX": 64.0,
+          "anchorX": 62.5,
           "baseline": 250,
-          "height": 247,
-          "visiblePixels": 20305
+          "height": 246,
+          "visiblePixels": 26215
         },
         {
           "rect": [
-            281,
-            1469,
-            251,
-            243
+            866,
+            1233,
+            228,
+            247
           ],
-          "anchorX": 52.5,
-          "baseline": 243,
+          "anchorX": 114.0,
+          "baseline": 244,
           "height": 240,
-          "visiblePixels": 21985
+          "visiblePixels": 35887
         },
         {
           "rect": [
-            595,
-            1461,
-            165,
-            251
+            42,
+            1545,
+            195,
+            233
           ],
-          "anchorX": 94.5,
-          "baseline": 251,
-          "height": 247,
-          "visiblePixels": 20969
+          "anchorX": 61.0,
+          "baseline": 230,
+          "height": 227,
+          "visiblePixels": 24405
         },
         {
           "rect": [
-            839,
-            1522,
-            219,
-            190
+            302,
+            1543,
+            235,
+            235
           ],
-          "anchorX": 70.5,
-          "baseline": 190,
-          "height": 186,
-          "visiblePixels": 22757
+          "anchorX": 45.5,
+          "baseline": 231,
+          "height": 227,
+          "visiblePixels": 26825
+        },
+        {
+          "rect": [
+            594,
+            1549,
+            212,
+            229
+          ],
+          "anchorX": 79.5,
+          "baseline": 226,
+          "height": 223,
+          "visiblePixels": 26559
+        },
+        {
+          "rect": [
+            850,
+            1560,
+            260,
+            218
+          ],
+          "anchorX": 132.0,
+          "baseline": 214,
+          "height": 211,
+          "visiblePixels": 34046
         }
       ],
       "packing": {
         "method": "alpha128-largest24-nearest-seed",
-        "sourceVisiblePixels": 537264,
-        "packedVisiblePixels": 537264,
+        "sourceVisiblePixels": 657497,
+        "packedVisiblePixels": 657497,
         "sourceSeedAreas": [
-          21932,
-          19936,
-          20992,
-          20344,
-          23493,
-          22049,
-          23110,
-          21557,
-          18148,
-          21656,
-          18639,
-          19202,
-          22541,
-          21830,
-          21065,
-          21578,
-          25345,
-          24447,
-          24422,
-          24000,
-          19624,
-          21199,
-          20275,
-          22075
+          25906,
+          24956,
+          25907,
+          24509,
+          24699,
+          23404,
+          24223,
+          23141,
+          18277,
+          21560,
+          22469,
+          23869,
+          30074,
+          32055,
+          27803,
+          30854,
+          33725,
+          34035,
+          25736,
+          35340,
+          23995,
+          26371,
+          25982,
+          33482
         ]
       },
-      "sourceSha256": "1afb3fbb46766207b199bd70289ad0a6e78e0a339450cc4d8ebc9785eb732f97",
-      "encodedSha256": "34047c02b00fe31bbd46630113ad418a9a40798ae0855c66b300e98ccc11428e",
+      "sourceSha256": "e7fbc81ce69892ddbfafb6ed2135b4867384dc5082045378020e4a7d1dd34235",
+      "encodedSha256": "33b9dd3a277491331746609cc2eecb5b7afdfddef2568cb7ed1947fd672cf8b5",
       "sourceDrawings": 24
     },
     "jao": {
@@ -5885,345 +5885,345 @@
       "ch": "ulisses",
       "geometryVersion": 3,
       "src": "motion-ulisses.webp",
-      "width": 1156,
-      "height": 1626,
+      "width": 1344,
+      "height": 1812,
       "columns": 4,
       "rows": 6,
       "referenceHeights": [
-        241,
+        276,
         241
       ],
       "rowReferenceHeights": [
+        276,
+        267.0212765957447,
+        276.53061224489795,
         241,
-        248.93617021276597,
-        248.9795918367347,
-        241,
-        248.93617021276597,
-        247.9591836734694
+        243.61702127659575,
+        221.42857142857144
       ],
       "frames": [
         {
           "rect": [
-            51,
-            14,
-            187,
-            247
+            56,
+            11,
+            223,
+            281
           ],
-          "anchorX": 111.0,
-          "baseline": 244,
-          "height": 240,
-          "visiblePixels": 21223
+          "anchorX": 93.0,
+          "baseline": 278,
+          "height": 275,
+          "visiblePixels": 28447
         },
         {
           "rect": [
-            339,
-            46,
-            188,
-            215
-          ],
-          "anchorX": 106.0,
-          "baseline": 212,
-          "height": 209,
-          "visiblePixels": 21235
-        },
-        {
-          "rect": [
-            630,
-            13,
-            185,
-            248
-          ],
-          "anchorX": 88.5,
-          "baseline": 244,
-          "height": 241,
-          "visiblePixels": 19003
-        },
-        {
-          "rect": [
-            919,
-            48,
-            184,
-            213
-          ],
-          "anchorX": 101.0,
-          "baseline": 209,
-          "height": 206,
-          "visiblePixels": 21135
-        },
-        {
-          "rect": [
-            46,
-            291,
-            196,
-            241
-          ],
-          "anchorX": 108.0,
-          "baseline": 237,
-          "height": 234,
-          "visiblePixels": 23131
-        },
-        {
-          "rect": [
-            309,
-            312,
-            249,
-            220
-          ],
-          "anchorX": 106.5,
-          "baseline": 217,
-          "height": 213,
-          "visiblePixels": 21444
-        },
-        {
-          "rect": [
-            593,
-            309,
-            259,
-            223
-          ],
-          "anchorX": 116.5,
-          "baseline": 220,
-          "height": 216,
-          "visiblePixels": 21798
-        },
-        {
-          "rect": [
-            893,
-            305,
-            237,
-            227
-          ],
-          "anchorX": 123.0,
-          "baseline": 224,
-          "height": 221,
-          "visiblePixels": 22245
-        },
-        {
-          "rect": [
-            35,
-            557,
-            219,
-            246
+            392,
+            24,
+            223,
+            268
           ],
           "anchorX": 123.5,
-          "baseline": 242,
-          "height": 239,
-          "visiblePixels": 23537
+          "baseline": 265,
+          "height": 262,
+          "visiblePixels": 30456
         },
         {
           "rect": [
-            324,
-            553,
-            218,
-            250
+            722,
+            10,
+            235,
+            282
           ],
-          "anchorX": 126.5,
-          "baseline": 247,
-          "height": 244,
-          "visiblePixels": 23378
+          "anchorX": 102.0,
+          "baseline": 279,
+          "height": 276,
+          "visiblePixels": 26613
         },
         {
           "rect": [
-            594,
-            594,
-            256,
-            209
+            1055,
+            32,
+            241,
+            260
           ],
-          "anchorX": 142.0,
-          "baseline": 206,
-          "height": 202,
-          "visiblePixels": 21649
+          "anchorX": 121.0,
+          "baseline": 257,
+          "height": 253,
+          "visiblePixels": 29071
         },
         {
           "rect": [
-            888,
-            630,
-            246,
-            173
+            61,
+            336,
+            213,
+            258
           ],
-          "anchorX": 97.5,
-          "baseline": 169,
-          "height": 166,
-          "visiblePixels": 21233
+          "anchorX": 107.0,
+          "baseline": 254,
+          "height": 251,
+          "visiblePixels": 28687
         },
         {
           "rect": [
-            47,
-            827,
-            195,
-            247
-          ],
-          "anchorX": 117.0,
-          "baseline": 244,
-          "height": 241,
-          "visiblePixels": 21421
-        },
-        {
-          "rect": [
-            338,
-            859,
-            190,
-            215
-          ],
-          "anchorX": 107.5,
-          "baseline": 212,
-          "height": 209,
-          "visiblePixels": 21754
-        },
-        {
-          "rect": [
-            627,
-            827,
-            190,
-            247
-          ],
-          "anchorX": 93.5,
-          "baseline": 244,
-          "height": 240,
-          "visiblePixels": 19334
-        },
-        {
-          "rect": [
-            916,
-            865,
-            190,
-            209
-          ],
-          "anchorX": 103.5,
-          "baseline": 206,
-          "height": 203,
-          "visiblePixels": 21855
-        },
-        {
-          "rect": [
-            34,
-            1104,
-            220,
+            346,
+            353,
+            316,
             241
           ],
-          "anchorX": 115.5,
-          "baseline": 237,
-          "height": 234,
-          "visiblePixels": 23978
+          "anchorX": 130.0,
+          "baseline": 238,
+          "height": 235,
+          "visiblePixels": 30468
         },
         {
           "rect": [
-            304,
-            1126,
-            259,
-            219
+            716,
+            333,
+            248,
+            261
           ],
-          "anchorX": 117.5,
-          "baseline": 215,
-          "height": 212,
-          "visiblePixels": 22899
+          "anchorX": 139.5,
+          "baseline": 258,
+          "height": 255,
+          "visiblePixels": 33280
         },
         {
           "rect": [
-            588,
-            1122,
-            269,
-            223
+            1054,
+            393,
+            244,
+            201
           ],
-          "anchorX": 125.5,
-          "baseline": 220,
-          "height": 216,
-          "visiblePixels": 23226
+          "anchorX": 115.0,
+          "baseline": 198,
+          "height": 194,
+          "visiblePixels": 27093
         },
         {
           "rect": [
-            897,
-            1120,
-            229,
-            225
+            59,
+            619,
+            218,
+            277
           ],
-          "anchorX": 116.0,
-          "baseline": 222,
-          "height": 219,
-          "visiblePixels": 22391
+          "anchorX": 94.0,
+          "baseline": 274,
+          "height": 271,
+          "visiblePixels": 30204
         },
         {
           "rect": [
-            34,
-            1367,
+            396,
+            619,
+            216,
+            277
+          ],
+          "anchorX": 113.0,
+          "baseline": 273,
+          "height": 269,
+          "visiblePixels": 28989
+        },
+        {
+          "rect": [
+            713,
+            642,
+            254,
+            254
+          ],
+          "anchorX": 109.0,
+          "baseline": 251,
+          "height": 247,
+          "visiblePixels": 34391
+        },
+        {
+          "rect": [
+            1066,
+            620,
             220,
+            276
+          ],
+          "anchorX": 116.5,
+          "baseline": 272,
+          "height": 269,
+          "visiblePixels": 34301
+        },
+        {
+          "rect": [
+            62,
+            949,
+            211,
             249
           ],
-          "anchorX": 124.0,
+          "anchorX": 36.5,
           "baseline": 245,
           "height": 241,
-          "visiblePixels": 23819
+          "visiblePixels": 27146
         },
         {
           "rect": [
-            321,
-            1365,
-            224,
+            400,
+            954,
+            208,
+            244
+          ],
+          "anchorX": 109.5,
+          "baseline": 241,
+          "height": 237,
+          "visiblePixels": 28344
+        },
+        {
+          "rect": [
+            732,
+            954,
+            215,
+            244
+          ],
+          "anchorX": 109.0,
+          "baseline": 241,
+          "height": 238,
+          "visiblePixels": 24521
+        },
+        {
+          "rect": [
+            1071,
+            965,
+            210,
+            233
+          ],
+          "anchorX": 114.5,
+          "baseline": 229,
+          "height": 226,
+          "visiblePixels": 25339
+        },
+        {
+          "rect": [
+            62,
+            1265,
+            211,
+            235
+          ],
+          "anchorX": 110.0,
+          "baseline": 232,
+          "height": 229,
+          "visiblePixels": 29121
+        },
+        {
+          "rect": [
+            372,
+            1280,
+            264,
+            220
+          ],
+          "anchorX": 126.0,
+          "baseline": 216,
+          "height": 213,
+          "visiblePixels": 28169
+        },
+        {
+          "rect": [
+            723,
+            1249,
+            234,
             251
           ],
-          "anchorX": 131.5,
+          "anchorX": 128.0,
           "baseline": 247,
-          "height": 243,
-          "visiblePixels": 23527
+          "height": 244,
+          "visiblePixels": 31021
         },
         {
           "rect": [
-            592,
-            1408,
-            261,
-            208
+            1049,
+            1310,
+            254,
+            190
           ],
-          "anchorX": 146.5,
-          "baseline": 205,
-          "height": 202,
-          "visiblePixels": 21540
+          "anchorX": 125.0,
+          "baseline": 187,
+          "height": 184,
+          "visiblePixels": 27139
         },
         {
           "rect": [
-            886,
-            1442,
-            250,
-            174
+            69,
+            1579,
+            197,
+            223
           ],
-          "anchorX": 99.5,
-          "baseline": 171,
-          "height": 167,
-          "visiblePixels": 21146
+          "anchorX": 115.5,
+          "baseline": 220,
+          "height": 217,
+          "visiblePixels": 23828
+        },
+        {
+          "rect": [
+            397,
+            1593,
+            213,
+            209
+          ],
+          "anchorX": 104.0,
+          "baseline": 206,
+          "height": 203,
+          "visiblePixels": 25252
+        },
+        {
+          "rect": [
+            729,
+            1601,
+            222,
+            201
+          ],
+          "anchorX": 111.5,
+          "baseline": 198,
+          "height": 195,
+          "visiblePixels": 25162
+        },
+        {
+          "rect": [
+            1038,
+            1615,
+            276,
+            187
+          ],
+          "anchorX": 153.5,
+          "baseline": 184,
+          "height": 181,
+          "visiblePixels": 28102
         }
       ],
       "packing": {
         "method": "alpha128-largest24-nearest-seed",
-        "sourceVisiblePixels": 527901,
-        "packedVisiblePixels": 527901,
+        "sourceVisiblePixels": 685144,
+        "packedVisiblePixels": 685144,
         "sourceSeedAreas": [
-          20568,
-          20643,
-          18376,
-          20618,
-          22460,
-          20744,
-          21009,
-          21597,
-          22859,
-          22591,
-          20957,
-          20714,
-          20474,
-          20865,
-          18357,
-          21001,
-          22976,
-          21786,
-          22099,
-          21303,
-          22743,
-          22414,
-          20601,
-          20265
+          27736,
+          29874,
+          25843,
+          28394,
+          28076,
+          29699,
+          32585,
+          26573,
+          29538,
+          28257,
+          33667,
+          33642,
+          26129,
+          27526,
+          23538,
+          24386,
+          27964,
+          27072,
+          29753,
+          26132,
+          22774,
+          24159,
+          24218,
+          26880
         ]
       },
-      "sourceSha256": "0f244c26345433da82d06a4d25c752b0c5407a9325ee73e53ff6250042060bc7",
-      "encodedSha256": "9f2a1ae25025c090cba45b0f42553f1b4f92f31bdf30ec3acdf51eb5a1457dcc",
+      "sourceSha256": "030e532de18b636a3f9d9b8231befd9472e15de88277ba1e543e5a2c75ec2692",
+      "encodedSha256": "07d36304c769331782ae229976c3eb292a2742d9969700355ffe636e1a8c4a83",
       "sourceDrawings": 24
     }
   }

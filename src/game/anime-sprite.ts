@@ -7,6 +7,7 @@ import type {DrawOpts} from './rig';
 import rawManifest from '../assets/sprites/manifest.json';
 import {loadedMotionAtlas,preloadMotionSprites} from './motion-atlas';
 import {sampleDrawnFrame} from './sprite-timeline';
+import {drawActionSprite,preloadActionSprites} from './action-atlas';
 
 export type AnimeSpriteRect=readonly [number,number,number,number];
 export interface AnimeSpriteAtlas {
@@ -91,7 +92,7 @@ function loadedAtlas(ch:CharId,form:boolean){
  * loaded on demand so mobile browsers do not decode 36 large sheets at once. */
 export function preloadAnimeSprites(ids:readonly CharId[]=CHAR_IDS,includeForms=false):Promise<void>{
  const pending:Promise<void>[]=[];
- if(includeForms&&ids.length<=4)pending.push(preloadMotionSprites(ids));
+ if(includeForms&&ids.length<=4)pending.push(preloadMotionSprites(ids),preloadActionSprites(ids));
  for(const ch of ids){
   const base=atlasFor(ch);if(base){const entry=imageFor(base.key,base.atlas);if(entry)pending.push(entry.promise)}
   if(includeForms&&manifest.atlases[ch+'-form']){const form=atlasFor(ch,true)!;const entry=imageFor(form.key,form.atlas);if(entry)pending.push(entry.promise)}
@@ -175,6 +176,7 @@ function bodyHeight(ch:CharId,form:boolean):number{
 }
 
 export function drawAnimeSprite(c:CanvasRenderingContext2D,ch:CharId,pose:Pose,o:DrawOpts):boolean{
+ if(drawActionSprite(c,ch,o,bodyHeight(ch,!!o.transformation),finite(pose.rot)))return true;
  const data=loadedAtlas(ch,!!o.transformation);if(!data)return false;
  const {atlas}=data,legacy=selectAnimeSpriteFrame(pose,o),sample=sampleDrawnFrame(legacy,o);
  const motion=sample.bank==='motion'?loadedMotionAtlas(ch):undefined;
