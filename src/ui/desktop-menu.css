@@ -1,0 +1,77 @@
+/* Arcade presentation is opt-in for a fine primary pointer. Touch pages retain
+   their accepted layout, metrics and styling in menus.css. */
+.dw-pc-home{--pc-accent:#be94ff;background:#0c0711}
+.dw-pc-home .dw-backdrop>canvas{object-fit:cover;object-position:center bottom}
+.dw-pc-home:before{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(90deg,#090510f5 0%,#090510e8 25%,#090510aa 43%,#09051015 70%),linear-gradient(180deg,#09051099 0%,#09051000 55%,#09051030 75%,#090510dd 100%)}
+.dw-pc-home:after{content:'';position:fixed;inset:0;pointer-events:none;z-index:-1;background:radial-gradient(ellipse at 75% 25%,color-mix(in srgb,var(--pc-accent) 12%,transparent),transparent 57%);transition:background .3s}
+.dw-pc-home>.dw-content{width:min(1720px,100%);min-height:100dvh;display:grid;grid-template-rows:auto 1fr auto;gap:clamp(12px,2vh,24px);padding:clamp(16px,3vh,40px) clamp(24px,4vw,70px)}
+.dw-pc-home .menu-atmosphere{opacity:.7}
+.pc-topbar{position:relative;z-index:3;display:flex;align-items:center;justify-content:space-between;gap:20px;min-height:36px}
+.dw-pc-home .pc-topbar>p{font-size:11px;font-weight:750;letter-spacing:.16em;line-height:1.5;color:#e6d3ff}
+.pc-topbar>p>span{color:#93879e;letter-spacing:.1em;margin-left:8px}
+.dw-pc-home .pc-topbar .music-mini{border-radius:2px;min-height:38px;background:#0d0814c9;font-size:13px;border-color:#d9c2f755}
+.pc-main{display:grid;grid-template-columns:clamp(330px,34vw,530px) minmax(0,1fr);gap:24px;align-items:center;min-width:0;position:relative;z-index:2}
+.pc-navigation{padding:4px 18px 8px 8px}
+.pc-logo{margin-bottom:clamp(16px,2.6vh,30px);padding-left:7px}
+.dw-pc-home .pc-logo h1{font-family:var(--font-fight);font-size:clamp(44px,7.2vh,84px);font-weight:400;font-style:italic;letter-spacing:-.035em;line-height:.93;color:#faf7ff;text-shadow:3px 4px 0 #4e267c,0 0 36px #ae62ed55;transform:rotate(-2deg);text-wrap:nowrap}
+.pc-logo h1>span{display:block;margin-left:32px;color:var(--pc-accent);-webkit-text-stroke:1px #f0dfff;transition:color .2s}
+.dw-pc-home .pc-logo>p{font-family:var(--font-fight);font-size:14px;letter-spacing:.1em;font-style:italic;color:#b6ff63;line-height:1.4;margin:10px 0 0 10px;text-shadow:0 0 15px #83e84c33}
+.pc-options{display:flex;flex-direction:column;gap:clamp(3px,.45vh,6px)}
+.dw-pc-home .pc-option{position:relative;width:100%;min-height:42px;height:clamp(42px,5.4vh,60px);padding:0 14px;border:1px solid #c4a4ff24;border-left:3px solid #cbb6dd55;border-radius:0;background:linear-gradient(90deg,#170d21d9,#170d21a6 80%,#170d2155);color:#e2dae9;text-align:left;transform:skewX(-7deg);transition:transform .15s,border-color .15s,background .15s,color .15s;outline-offset:4px}
+.pc-option-content{display:flex;align-items:center;gap:16px;height:100%;transform:skewX(7deg)}
+.pc-option-number{color:#baa7cc;font:11px/1 ui-monospace,monospace;flex-shrink:0;letter-spacing:.08em}
+.dw-pc-home .pc-option strong{font-family:var(--font-fight);font-size:clamp(17px,2.55vh,28px);font-weight:400;font-style:italic;line-height:1.1;letter-spacing:.015em;white-space:nowrap;transition:color .15s;text-shadow:1px 2px 0 #0008}
+.pc-option-arrow{margin-left:auto;flex-shrink:0;opacity:0;transform:translateX(-6px);transition:opacity .15s,transform .15s}
+.dw-pc-home .pc-option[data-active='1']{border-color:var(--pc-accent);border-left-color:#fff;background:linear-gradient(100deg,color-mix(in srgb,var(--pc-accent) 55%,#2b103d),#24102fe8 70%,#24102fbb);color:#fff;transform:skewX(-7deg) translateX(8px);box-shadow:0 0 26px color-mix(in srgb,var(--pc-accent) 15%,transparent)}
+.pc-option[data-active='1'] .pc-option-number{color:#fff9}
+.pc-option[data-active='1'] .pc-option-arrow{opacity:1;transform:none;color:var(--pc-accent)}
+.pc-option:focus-visible{outline:2px solid #eee3ff!important;outline-offset:3px!important}
+.dw-pc-home .pc-arena-interaction{display:block;position:relative;align-self:stretch;min-height:160px;min-width:0;width:100%;border:0;background:transparent;cursor:crosshair;padding:0;overflow:hidden;border-radius:0;color:var(--pc-accent)}
+.pc-arena-word{position:absolute;top:20%;left:4%;font-family:var(--font-fight);font-size:clamp(100px,16vw,260px);font-style:italic;line-height:1;letter-spacing:-.05em;color:transparent;-webkit-text-stroke:1px #e4d3ff33;transform:rotate(-10deg);pointer-events:none;opacity:.65;transition:opacity .2s}
+.pc-arena-interaction:hover .pc-arena-word{opacity:1}
+.pc-scene-hint{position:absolute;right:8px;bottom:3%;display:flex;align-items:center;justify-content:flex-end;gap:10px;max-width:100%;font:11px/1.6 system-ui,sans-serif;letter-spacing:.06em;color:#f4ecffb3;text-shadow:0 1px 5px #000,0 0 15px #000;pointer-events:none;transition:color .2s}
+.pc-scene-hint>svg{flex-shrink:0;opacity:.7}
+.pc-arena-interaction:hover .pc-scene-hint{color:#fff}
+.pc-scene-spark{position:absolute;left:55%;top:60%;width:12px;height:12px;border:1px solid var(--pc-accent);border-radius:50%;opacity:0;pointer-events:none}
+.pc-scene-spark[data-visible='1']{animation:pc-rally-wave .7s ease-out both}
+@keyframes pc-rally-wave{0%{transform:scale(1);opacity:.8}100%{transform:scale(28);opacity:0}}
+.pc-speed-lines{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+.pc-speed-lines>i{position:absolute;right:-40%;top:22%;width:120%;height:1px;transform:rotate(-24deg);background:linear-gradient(90deg,transparent 30%,color-mix(in srgb,var(--pc-accent) 25%,transparent),transparent 85%);animation:pc-speed-sweep 13s ease-in-out infinite;opacity:0}
+.pc-speed-lines>i:nth-child(2){top:34%;animation-delay:-5s}.pc-speed-lines>i:nth-child(3){top:61%;animation-delay:-9s}
+@keyframes pc-speed-sweep{0%,15%{opacity:0;translate:8% 0}40%{opacity:.7}65%,100%{opacity:0;translate:-12% 0}}
+.pc-bottom-bar{position:relative;z-index:3;display:flex;align-items:center;justify-content:space-between;gap:28px;border-top:1px solid #c8afdf3d;padding-top:14px;min-height:62px}
+.pc-description{max-width:650px;min-width:0}
+.dw-pc-home .pc-description>p{font:12px/1.5 var(--font-fight);letter-spacing:.08em;color:var(--pc-accent);margin:0 0 4px}
+.pc-description>span{display:block;font-size:14px;line-height:1.5;color:#d1c4dd;overflow-wrap:anywhere}
+.pc-commands{display:flex;align-items:center;justify-content:flex-end;gap:18px;flex-wrap:wrap;flex-shrink:0}
+.pc-commands>span{display:flex;align-items:center;gap:7px;font:10px/1.5 system-ui,sans-serif;font-weight:700;letter-spacing:.04em;color:#b4a5c3;white-space:nowrap}
+.pc-commands kbd{font:10px/1.5 system-ui,sans-serif;min-width:22px;padding:4px 6px;text-align:center;border:1px solid #e2ccfc50;color:#f7efff;background:#0b0614a8;border-radius:2px}
+/* Give secondary desktop screens the same fighting-game vocabulary, keeping
+   native text, wrapping and scroll behavior from the corrected layouts. */
+.dw-pc-shell:not(.dw-pc-home){background:linear-gradient(115deg,#0b0712ee 0%,#21102a80 70%,#39214845),repeating-linear-gradient(125deg,transparent 0 130px,#b58ada08 131px 132px,transparent 133px 260px),#0c0813}
+.dw-pc-shell .dw-heading h1{font-family:var(--font-fight);font-weight:400;font-style:italic;letter-spacing:.015em;text-transform:uppercase;font-size:clamp(27px,2.5vw,38px);text-shadow:3px 3px 0 #38204e;line-height:1.2}
+.dw-pc-shell .dw-header-top{background:#0d0815f5;backdrop-filter:none;border-color:#bd91eb3b}
+.dw-pc-shell .dw-card{border-radius:3px;background:linear-gradient(115deg,#1b1125f5,#0e0a16f5);border-color:#bc9fda38;box-shadow:0 4px 20px #0003}
+.dw-pc-shell .dw-button,.dw-pc-shell .dw-profile-button,.dw-pc-shell .dw-tabs>button{border-radius:2px;font-family:var(--font-fight);font-weight:400!important;font-size:13px!important;letter-spacing:.025em;text-transform:uppercase}
+.dw-pc-shell .dw-primary{background:linear-gradient(110deg,#b68aeb,#e4ccff);border-color:#e6d0ff;color:#1b0c2b}
+.dw-pc-shell .dw-primary:hover{background:#eadbff;box-shadow:0 0 24px #cfa6ff33}
+.dw-pc-shell .dw-footer{border-radius:3px;border-color:#ad7dd657;border-top:2px solid #c1a0e8;background:#130b20f5;backdrop-filter:none}
+.dw-pc-shell .dw-difficulty-card h2,.dw-pc-shell .dw-fighter-description h2{font-family:var(--font-fight);font-weight:400;font-style:italic;letter-spacing:.02em}
+.dw-pc-shell .dw-difficulty-card{border-top:3px solid var(--accent);transition:transform .15s,border-color .15s}
+.dw-pc-shell .dw-difficulty-card:hover{transform:translateY(-4px)}
+.dw-pc-shell .dw-pick{border-radius:3px;border-left-width:4px;background:#110b1bed}
+.dw-pc-shell .dw-pick strong{font-family:var(--font-fight);font-weight:400;font-size:18px;letter-spacing:.015em}
+.dw-pc-shell .dw-fighter{border-radius:2px;background:#0a0612}
+.dw-pc-shell .dw-fighter[aria-pressed=true]{box-shadow:inset 0 -3px var(--accent),0 0 18px color-mix(in srgb,var(--accent) 20%,transparent)}
+.dw-pc-shell .dw-stage-caption>strong{font-family:var(--font-fight);font-weight:400;font-size:16px;line-height:1.35}
+.dw-pc-shell .dw-story-card{border-radius:3px}
+.dw-pc-shell.dw-splash .dw-brand h1{font-size:clamp(48px,6.8vw,108px);font-style:italic;letter-spacing:-.035em;transform:rotate(-3deg);line-height:1.1}
+.dw-pc-shell.dw-splash .dw-start{min-height:54px;font-size:16px!important;padding:16px 26px}
+@media(pointer:fine){.dw-radio{border-radius:4px}.dw-radio-header h1{font-family:var(--font-fight);font-weight:400;font-style:italic}.dw-radio-track,.dw-radio-player{border-radius:3px}}
+@media(min-aspect-ratio:2/1){.dw-pc-home .dw-backdrop>canvas{object-position:center bottom}.pc-arena-word{top:15%}}
+@media(max-width:1100px){.dw-pc-home .pc-logo h1{font-size:clamp(44px,6.2vw,66px)}.pc-main{grid-template-columns:340px minmax(0,1fr);gap:14px}.dw-pc-home .pc-option strong{font-size:clamp(17px,1.9vw,21px)}.pc-option-number{display:none}.pc-bottom-bar{gap:16px;align-items:flex-start}.pc-commands{gap:10px;max-width:260px}.pc-description{max-width:540px}.pc-topbar>p>span{display:none}.pc-arena-word{font-size:clamp(100px,15vw,180px);top:27%;left:0}}
+@media(max-height:700px){.dw-pc-home>.dw-content{padding-top:16px;padding-bottom:16px;gap:10px}.pc-topbar{min-height:30px}.dw-pc-home .pc-topbar .music-mini{min-height:34px;padding:6px 12px;font-size:12px}.pc-logo{margin-bottom:12px}.dw-pc-home .pc-logo h1{font-size:clamp(36px,7vh,49px)}.dw-pc-home .pc-logo>p{font-size:12px;margin-top:8px}.dw-pc-home .pc-option{min-height:38px;height:clamp(38px,5.8vh,42px)}.pc-options{gap:3px}.dw-pc-home .pc-option strong{font-size:18px}.pc-bottom-bar{padding-top:10px;min-height:48px}.pc-description>span{font-size:13px}.dw-pc-home .pc-description>p{font-size:11px}.pc-commands{gap:12px}.pc-commands>span{font-size:9px}}
+@media(max-height:560px){.dw-pc-home>.dw-content{padding:12px 28px;gap:8px}.pc-main{grid-template-columns:350px minmax(0,1fr)}.pc-navigation{padding-top:0;padding-bottom:0}.dw-pc-home .pc-logo h1{font-size:36px;line-height:1}.pc-logo h1>span{display:inline;margin-left:0;-webkit-text-stroke:0}.dw-pc-home .pc-logo>p{margin-top:6px;margin-left:0;font-size:11px}.pc-logo{margin-bottom:10px}.dw-pc-home .pc-option{height:34px;min-height:34px}.pc-options{gap:2px}.dw-pc-home .pc-option strong{font-size:16px}.pc-option-content{gap:12px}.pc-option-number{font-size:10px}.pc-bottom-bar{min-height:40px;padding-top:8px}.pc-description>span{font-size:12px}.dw-pc-home .pc-description>p{display:none}.pc-commands kbd{font-size:9px;padding:3px 5px}.pc-scene-hint{font-size:10px}.pc-arena-word{font-size:clamp(100px,16vw,190px)}}
+@media(max-width:780px){.dw-pc-home>.dw-content{padding-left:20px;padding-right:20px}.pc-main{grid-template-columns:minmax(280px,340px) minmax(0,1fr);gap:8px}.pc-commands{max-width:200px}.pc-commands>span{font-size:9px}.pc-scene-hint{font-size:10px;letter-spacing:0;text-align:right}.pc-arena-word{font-size:110px}.dw-pc-home .pc-option strong{font-size:17px}.pc-option-content{gap:10px}}
+@media(max-width:600px){.pc-main{grid-template-columns:1fr}.pc-arena-interaction{display:none!important}.pc-navigation{max-width:440px;width:100%;margin:auto}.pc-bottom-bar{flex-wrap:wrap;gap:10px}.pc-commands{max-width:none;justify-content:flex-start}.pc-topbar p{font-size:10px!important}}
+@media(prefers-reduced-motion:reduce){.dw-pc-home *{animation:none!important;transition:none!important}.pc-scene-spark{display:none}.pc-speed-lines{display:none}}

@@ -2,7 +2,7 @@
 
 By Rickzera. Jogo de luta anime 2D para navegador, com **18 lutadores**, **17 arenas**, rádio, contas por usuário/senha, versus, IA, multiplayer por salas, treinamento e finishers.
 
-Jogue em https://dedilho-wars-luta.pithyblimp1.chatgpt.site. O download completo fica em [/baixar/](https://dedilho-wars-luta.pithyblimp1.chatgpt.site/baixar/). Extraia o ZIP e abra **JOGAR.html** com um navegador atualizado. Mantenha a pasta `src/assets`: contém as ilustrações e os sete MP3 locais. O `index.html` da raiz é a entrada de desenvolvimento do Vite. Modos locais e treinamento funcionam sem conta e offline; contas, ranking e salas usam o site.
+Jogue em https://dedilho-wars-luta.pithyblimp1.chatgpt.site. O download completo fica em [/baixar/](https://dedilho-wars-luta.pithyblimp1.chatgpt.site/baixar/). Extraia o ZIP e abra **JOGAR.html** com um navegador atualizado. Mantenha a pasta `src/assets`: contém as ilustrações e os oito MP3 locais. O `index.html` da raiz é a entrada de desenvolvimento do Vite. Modos locais e treinamento funcionam sem conta e offline; contas, ranking e salas usam o site.
 
 ## Elenco e identidade
 
@@ -20,7 +20,7 @@ No computador, cenas e combate renderizam de **1080p até 4K**. No celular, a qu
 
 ## Menus vivos e campanhas
 
-O menu inicial reúne os **18 lutadores numa pancadaria geral**, com rivais que mudam, ataques normais e transformações. Todos ficam no chão. Clique na arena ou em **MAIS CAOS** para agitar a luta e levantar partículas; essa demonstração não usa Ultimates e não altera o combate das partidas.
+O menu inicial reúne os **18 lutadores numa pancadaria geral**, com rivais que mudam, ataques normais e transformações. Todos ficam no chão. No PC, clique no cenário para agitar a luta e levantar partículas; essa demonstração não usa Ultimates e não altera o combate das partidas.
 
 A nova aba **Wars of Champions** abre uma galeria com quatro campanhas **Em breve**: **Senbukan** (Karatê Caetano), **Resenha** (Rickzera), **Got** (Renngotti) e **Campeões** (Bieubatman). Um quinto quadro avisa que mais campanhas estão vindo. Cada um tem uma ilustração de costas com um gesto próprio. Clique, toque ou navegue com as setas para destacar os quadros; Escape ou MENU INICIAL retorna. As campanhas ainda não iniciam partidas.
 
@@ -88,6 +88,8 @@ O treino tem **18 desafios**, incluindo transformação, fôlego e carga de ener
 O online usa host autoritativo, WebRTC com relay HTTP de fallback e protocolo **`dw-online-11`**. Stamina, estoques, energia, sangue, bateria, transformação, efeitos e recuperação são sincronizados. Os dois jogadores precisam carregar a versão atual. Contas usam usuário e senha, sem email; estatísticas, histórico, XP e ranking persistem no D1. Nenhum cadastro é necessário para jogar offline.
 
 ## Menus responsivos
+
+O PC tem uma apresentação de jogo de luta: menu vertical em faixas, seleção animada/sonora, comandos por teclado e cenário interativo. O celular mantém a grade e os controles aceitos. Veja [menu arcade no PC](docs/desktop-menu.md).
 
 O quadro Arena Viva foi removido. Início, seleção de lutadores/mapas, campanhas, configurações, controles, rádio, perfil e online compartilham uma interface em tamanho nativo. Apenas a arena usa o frame escalável de 960×540. Os menus têm tipografia limitada, grades responsivas, rolagem própria, retorno acessível e ações de confirmação fixadas durante a rolagem. Pausa e resultados também usam diálogos nativos, com foco e navegação por teclado. Veja [a estrutura dos menus](docs/menu-layout.md).
 

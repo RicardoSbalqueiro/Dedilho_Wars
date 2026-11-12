@@ -16,6 +16,7 @@ import { ArtCanvas, FighterPortrait, MusicButton, StagePreview } from './common'
 import { MenuPage, MenuHeader, MenuFooter, useMenuBack } from './MenuLayout';
 import { MobileOptions } from './MobileOptions';
 import { useMobile } from './TouchControls';
+import { DesktopMainMenu } from './DesktopMenu';
 
 const accent = (color: string) => ({ '--accent': color } as CSSProperties);
 const isNativeControl = (target: EventTarget | null) => target instanceof Element && !!target.closest('button,input,select,textarea,summary,a');
@@ -52,7 +53,12 @@ const MENU_ITEMS: { id: MenuChoice; label: string; detail: string; color: string
   { id: 'controls', label: 'CONTROLES', detail: 'Aprenda e personalize', color: '#93c5fd' },
   { id: 'settings', label: 'CONFIGURAÇÕES', detail: 'Som, imagem e conforto', color: '#c4b5fd' },
 ];
-export function MainMenu({ onChoose, onRadio, suspended = false }: { onChoose: (c: MenuChoice) => void; onRadio: () => void; suspended?: boolean }) {
+export function MainMenu(props: { onChoose: (c: MenuChoice) => void; onRadio: () => void; suspended?: boolean }) {
+  const mobile = useMobile();
+  return mobile ? <MobileMainMenu {...props} /> : <DesktopMainMenu {...props} />;
+}
+
+function MobileMainMenu({ onChoose, onRadio, suspended = false }: { onChoose: (c: MenuChoice) => void; onRadio: () => void; suspended?: boolean }) {
   const buttons = useRef<(HTMLButtonElement | null)[]>([]);
   const [selected, setSelected] = useState(0);
   useEffect(() => { audio.music('menu'); }, []);

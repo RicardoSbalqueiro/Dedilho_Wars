@@ -1,6 +1,7 @@
 import type { CSSProperties, ReactNode } from 'react';
 import { useEffect } from 'react';
 import { MenuAtmosphere } from './MenuAtmosphere';
+import { useMobile } from './TouchControls';
 import './menus.css';
 
 export function useMenuBack(onBack: () => void, suspended = false) {
@@ -20,7 +21,8 @@ export function useMenuBack(onBack: () => void, suspended = false) {
 export function MenuPage({ children, className = '', label, background, style }: {
   children: ReactNode; className?: string; label?: string; background?: ReactNode; style?: CSSProperties;
 }) {
-  return <main className={`dw-menu ${className}`} aria-label={label} style={style}>
+  const mobile = useMobile();
+  return <main className={`dw-menu ${className}${mobile ? '' : ' dw-pc-shell'}`} aria-label={label} style={style}>
     {background && <div className="dw-backdrop">{background}</div>}
     <MenuAtmosphere />
     <div className="dw-content">{children}</div>

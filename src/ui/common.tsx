@@ -103,7 +103,7 @@ export function ArtCanvas({ variant, selected,paused=false }: { variant: ArtVari
     let raf = 0;
     const clock=new FrameTimer(),rebase=()=>clock.rebase();
     const brawl=variant==='menu'||variant==='splash'?new MenuBrawlArt(matchMedia('(pointer:coarse)').matches):undefined;
-    const cadence=matchMedia('(pointer:coarse)').matches?new PaintCadence(30):null;
+    const cadence=new PaintCadence(matchMedia('(pointer:coarse)').matches?30:60);
     let inView=true,lastPaintFrame=0;const observer=typeof IntersectionObserver!=='undefined'?new IntersectionObserver(entries=>{inView=entries[0]?.isIntersecting??true;clock.rebase()}):undefined;observer?.observe(canvas);
     const rally=(event:Event)=>brawl?.rally(clock.frames,(event as CustomEvent<{x?:number}>).detail?.x);
     window.addEventListener('dedilho-menu-rally',rally);

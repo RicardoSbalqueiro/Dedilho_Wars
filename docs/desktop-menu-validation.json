@@ -1,0 +1,747 @@
+{
+  "date": "2026-11-12",
+  "browser": "Chromium, desktop and emulated touch",
+  "desktopFlows": [
+    {
+      "viewport": [
+        960,
+        540
+      ],
+      "screens": [
+        {
+          "screen": "home",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "fighters",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "viewers",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "stages",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "more-stages",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "difficulty",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "settings",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "controls",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "profile",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "online",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "campaigns",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        }
+      ],
+      "keyboardHoverEnter": "pass",
+      "backgroundInteraction": "pass",
+      "animationPausedByRadio": "pass",
+      "matchPause": "pass",
+      "errors": []
+    },
+    {
+      "viewport": [
+        1280,
+        720
+      ],
+      "screens": [
+        {
+          "screen": "home",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "fighters",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "viewers",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "stages",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "more-stages",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "difficulty",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "settings",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "controls",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "profile",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "online",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "campaigns",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        }
+      ],
+      "keyboardHoverEnter": "pass",
+      "backgroundInteraction": "pass",
+      "animationPausedByRadio": "pass",
+      "matchPause": "pass",
+      "errors": []
+    },
+    {
+      "viewport": [
+        1366,
+        768
+      ],
+      "screens": [
+        {
+          "screen": "home",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "fighters",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "viewers",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "stages",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "more-stages",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "difficulty",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "settings",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "controls",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "profile",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "online",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "campaigns",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        }
+      ],
+      "keyboardHoverEnter": "pass",
+      "backgroundInteraction": "pass",
+      "animationPausedByRadio": "pass",
+      "matchPause": "pass",
+      "errors": []
+    },
+    {
+      "viewport": [
+        1920,
+        1080
+      ],
+      "screens": [
+        {
+          "screen": "home",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "fighters",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "viewers",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "stages",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "more-stages",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "difficulty",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "settings",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "controls",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "profile",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "online",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "campaigns",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        }
+      ],
+      "keyboardHoverEnter": "pass",
+      "backgroundInteraction": "pass",
+      "animationPausedByRadio": "pass",
+      "matchPause": "pass",
+      "errors": []
+    },
+    {
+      "viewport": [
+        2560,
+        1440
+      ],
+      "screens": [
+        {
+          "screen": "home",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "fighters",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "viewers",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "stages",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "more-stages",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "difficulty",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "settings",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "controls",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "profile",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "online",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "campaigns",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        }
+      ],
+      "keyboardHoverEnter": "pass",
+      "backgroundInteraction": "pass",
+      "animationPausedByRadio": "pass",
+      "matchPause": "pass",
+      "errors": []
+    },
+    {
+      "viewport": [
+        967,
+        855
+      ],
+      "screens": [
+        {
+          "screen": "home",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "fighters",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "viewers",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "stages",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "more-stages",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "difficulty",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "settings",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "controls",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "profile",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "online",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "campaigns",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        }
+      ],
+      "keyboardHoverEnter": "pass",
+      "backgroundInteraction": "pass",
+      "animationPausedByRadio": "pass",
+      "matchPause": "pass",
+      "errors": []
+    },
+    {
+      "viewport": [
+        1024,
+        1366
+      ],
+      "screens": [
+        {
+          "screen": "home",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "fighters",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "viewers",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "stages",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "more-stages",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "difficulty",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "settings",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "controls",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "profile",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "online",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "campaigns",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        }
+      ],
+      "keyboardHoverEnter": "pass",
+      "backgroundInteraction": "pass",
+      "animationPausedByRadio": "pass",
+      "matchPause": "pass",
+      "errors": []
+    },
+    {
+      "viewport": [
+        800,
+        450
+      ],
+      "screens": [
+        {
+          "screen": "home",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "fighters",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "viewers",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "stages",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "more-stages",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "difficulty",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "settings",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "controls",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "profile",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "online",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "campaigns",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        }
+      ],
+      "keyboardHoverEnter": "pass",
+      "backgroundInteraction": "pass",
+      "animationPausedByRadio": "pass",
+      "matchPause": "pass",
+      "errors": []
+    }
+  ],
+  "desktopHomeGeometry": [
+    {
+      "viewport": [
+        960,
+        540
+      ],
+      "textClipping": false,
+      "horizontalOverflow": false,
+      "scrollHeight": 540
+    },
+    {
+      "viewport": [
+        1280,
+        720
+      ],
+      "textClipping": false,
+      "horizontalOverflow": false,
+      "scrollHeight": 720
+    },
+    {
+      "viewport": [
+        1366,
+        768
+      ],
+      "textClipping": false,
+      "horizontalOverflow": false,
+      "scrollHeight": 768
+    },
+    {
+      "viewport": [
+        1920,
+        1080
+      ],
+      "textClipping": false,
+      "horizontalOverflow": false,
+      "scrollHeight": 1080
+    },
+    {
+      "viewport": [
+        2560,
+        1440
+      ],
+      "textClipping": false,
+      "horizontalOverflow": false,
+      "scrollHeight": 1440
+    },
+    {
+      "viewport": [
+        967,
+        855
+      ],
+      "textClipping": false,
+      "horizontalOverflow": false,
+      "scrollHeight": 855
+    },
+    {
+      "viewport": [
+        1024,
+        1366
+      ],
+      "textClipping": false,
+      "horizontalOverflow": false,
+      "scrollHeight": 1366
+    },
+    {
+      "viewport": [
+        800,
+        450
+      ],
+      "textClipping": false,
+      "horizontalOverflow": false,
+      "scrollHeight": 491
+    },
+    {
+      "viewport": [
+        3440,
+        1440
+      ],
+      "textClipping": false,
+      "horizontalOverflow": false,
+      "scrollHeight": 1440
+    },
+    {
+      "viewport": [
+        3840,
+        1080
+      ],
+      "textClipping": false,
+      "horizontalOverflow": false,
+      "scrollHeight": 1080
+    }
+  ],
+  "mobileBaselineCommit": "5e74f45660dfe14216eb5b00c1a2d5086981deeb",
+  "mobileHomeGeometryAndStylesUnchanged": [
+    [
+      320,
+      568
+    ],
+    [
+      390,
+      844
+    ],
+    [
+      844,
+      390
+    ]
+  ],
+  "typecheckBuild": "passed",
+  "gameAudioMobileApiSuites": "passed"
+}
