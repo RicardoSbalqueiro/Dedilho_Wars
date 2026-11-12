@@ -8,6 +8,7 @@ import type { MenuChoice } from './ui/Screens';
 import { Online } from './ui/Online';
 import { GameScreen } from './ui/GameScreen';
 import { RadioPanel } from './ui/Radio';
+import {CampaignMenu} from './ui/CampaignMenu';
 import { audio } from './game/audio';
 import { loadBindings } from './game/input';
 import { applyPrefs, loadPrefs } from './game/prefs';
@@ -15,7 +16,7 @@ import type { CharId } from './game/data';
 import type { Difficulty, GameConfig, Mode } from './game/engine';
 import type { StageId } from './game/stage';
 
-type Screen = 'splash' | 'menu' | 'diff' | 'select' | 'controls' | 'settings' | 'stage' | 'game' | 'online' | 'profile';
+type Screen = 'splash' | 'menu' | 'campaigns' | 'diff' | 'select' | 'controls' | 'settings' | 'stage' | 'game' | 'online' | 'profile';
 
 export default function App() {
   const mobile = useMobile();
@@ -27,7 +28,7 @@ export default function App() {
   const [gameKey, setGameKey] = useState(0);
   const [stageId, setStageId] = useState<StageId>('dojo');
   const [radioOpen, setRadioOpen] = useState(false);
-  const openRadio = useCallback(() => setRadioOpen(true), []);
+  const openRadio = useCallback(() => {if(screen!=='campaigns')setRadioOpen(true)}, [screen]);
   const closeRadio = useCallback(() => setRadioOpen(false), []);
 
   useEffect(() => {
@@ -58,7 +59,8 @@ export default function App() {
     } else if (c === 'training') {
       setMode('training');
       setScreen('select');
-    } else if (c === 'online') setScreen('online');
+    } else if(c==='campaigns'){setRadioOpen(false);audio.startCampaignMusic();setScreen('campaigns');}
+    else if (c === 'online') setScreen('online');
     else if (c === 'profile') setScreen('profile');
     else if (c === 'radio') setRadioOpen(true);
     else if (c === 'controls') setScreen('controls');
@@ -71,8 +73,9 @@ export default function App() {
     [mode, char, opponent, stageId, difficulty, gameKey],
   );
 
+  if(mobile&&screen==='campaigns')return <CampaignMenu mobile onBack={toMenu}/>;
   if (mobile && screen !== 'game' && screen !== 'online' && screen !== 'profile') return <>
-    <MobileMenu key={screen} screen={screen} mode={mode} p1={char} p2={opponent} stage={stageId} onStart={start} onChoose={choose} onRadio={openRadio}
+    <MobileMenu key={screen} screen={screen} mode={mode} p1={char} p2={opponent} stage={stageId} onStart={start} onChoose={choose} onRadio={openRadio} suspended={radioOpen}
       onBack={() => screen === 'stage' ? toSelect() : screen === 'select' && mode === 'ai' ? setScreen('diff') : toMenu()}
       onDifficulty={d=>{setDifficulty(d);setScreen('select')}}
       onPick={(c,other)=>{setChar(c);setOpponent(other);setScreen('stage')}}
@@ -84,6 +87,7 @@ export default function App() {
     <Frame game={screen === 'game'}>
       {screen === 'splash' && <Splash onStart={start} />}
       {screen === 'menu' && <MainMenu onChoose={choose} onRadio={openRadio} suspended={radioOpen} />}
+      {screen==='campaigns'&&<CampaignMenu onBack={toMenu}/>}
       {screen === 'profile' && <Profile onBack={toMenu} onLogin={()=>setScreen('online')}/>}
       {screen === 'online' && <Online onBack={toMenu}/>}
       {screen === 'diff' && (

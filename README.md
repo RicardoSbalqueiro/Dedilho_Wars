@@ -16,7 +16,15 @@ Os personagens usam **ilustrações de anime japonês** inspiradas nas fichas de
 
 O motor continua em **60 Hz**, independente da tela. Os nove ciclos mantêm 1.098 amostras de tempo por personagem para cadência, transições e contatos; as ilustrações são selecionadas conforme estado e fase do golpe. Essas amostras não correspondem a desenhos diferentes. Startup, ativos, recovery e tamanho lógico da arena continuam separados da arte.
 
-Cenas e combate renderizam de **1080p até 4K**, com menus nativos, retratos e mapas adaptados a DPR/Retina. Veja [resolução e nitidez](docs/resolution.md).
+No computador, cenas e combate renderizam de **1080p até 4K**. No celular, a qualidade automática acompanha os pixels da tela e prioriza resposta e bateria; a opção Alta oferece mais nitidez. Menus, retratos e mapas se adaptam ao DPR/Retina. Veja [resolução e nitidez](docs/resolution.md).
+
+## Menus vivos e campanhas
+
+O menu inicial reúne os **18 lutadores numa pancadaria geral**, com rivais que mudam, ataques normais e transformações. Todos ficam no chão. Clique na arena ou em **MAIS CAOS** para agitar a luta e levantar partículas; essa demonstração não usa Ultimates e não altera o combate das partidas.
+
+A nova aba **Wars of Champions** abre uma galeria com quatro campanhas **Em breve**: **Senbukan** (Karatê Caetano), **Resenha** (Rickzera), **Got** (Renngotti) e **Campeões** (Bieubatman). Um quinto quadro avisa que mais campanhas estão vindo. Cada um tem uma ilustração de costas com um gesto próprio. Clique, toque ou navegue com as setas para destacar os quadros; Escape ou MENU INICIAL retorna. As campanhas ainda não iniciam partidas.
+
+A faixa enviada, **Ada’s Theme — Resident Evil 2**, toca em loop somente nesse menu. A troca de música fica bloqueada ali; o volume permanece ajustável. Sair restaura a estação, posição e estado de pausa anteriores da rádio. São sete raps na rádio e uma faixa exclusiva de campanha, incluída também no ZIP offline. Veja [menus e campanha](docs/living-menus.md).
 
 ## Controles
 
@@ -32,6 +40,8 @@ Cenas e combate renderizam de **1080p até 4K**, com menus nativos, retratos e m
 | Virada manual | Q | N | VIRAR |
 | Transformação | F | Num8 | FORMA |
 | Carregar energia (Rick) | Segurar C | Segurar M | Segurar CARREGAR |
+
+O celular tem um painel de 12 ações, direcional com diagonais, botão de tela cheia quando disponível e indicadores de ULT/forma. Em CONFIGURAÇÕES, escolha a posição do direcional, botões maiores, vibração opcional e qualidade gráfica. O painel se reorganiza na horizontal, mantém áreas de toque de pelo menos 44 px e libera os comandos ao cancelar um toque ou girar o aparelho. Veja [otimização mobile](docs/mobile.md).
 
 Os comandos são configuráveis e têm alternativas para teclado sem numpad. A migração conserva teclas antigas e procura teclas livres para FORMA/CARREGAR, sem roubar bindings personalizados. Q/E e Tab continuam trocando categorias nos menus. ESC/P pausa; no treino, R reinicia posições e T troca o dummy.
 
@@ -93,6 +103,6 @@ npm run build
 npm run dev
 ```
 
-`npm run combos:audit` exporta rotas reais contra defesa mantida. `npm run animation:audit` verifica as amostras de tempo e os contatos internos. `python3 scripts/package.py` monta o ZIP offline com código, documentação, testes, 36 atlas e sete MP3; a página de download entrega um único ZIP validado por SHA-256, a partir do build atual. O servidor de produção é o Worker em `dist/server/index.js`, com `.openai/hosting.json` e migrações em `drizzle/`.
+`npm run combos:audit` exporta rotas reais contra defesa mantida. `npm run animation:audit` verifica as amostras de tempo e os contatos internos. `python3 scripts/package.py` monta o ZIP offline com código, documentação, testes, 36 atlas, quatro cartazes de campanha e oito MP3; a página de download entrega um único ZIP validado por SHA-256, a partir do build atual. O servidor de produção é o Worker em `dist/server/index.js`, com `.openai/hosting.json` e migrações em `drizzle/`.
 
 Relatórios históricos de balanceamento descrevem versões anteriores. Para esta reformulação, use o código atual, os multiplicadores no laboratório e o relatório de War of Champions; resultados automatizados não substituem testes de equilíbrio com jogadores humanos.

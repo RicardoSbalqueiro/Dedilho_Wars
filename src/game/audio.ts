@@ -5,6 +5,8 @@ import type { CharId, Move } from './data';
 
 type MusicMode = 'menu' | 'fight' | 'victory' | null;
 const RADIO_STORE = 'dedilho-wars-radio-v1';
+const CAMPAIGN_THEME=new URL('../assets/music/campaign-theme.mp3',import.meta.url).href;
+export interface CampaignMusicSnapshot {active:boolean;playing:boolean;loading:boolean;error:string|null}
 
 export interface AudioSettings {
   music: number;
@@ -14,7 +16,7 @@ export interface AudioSettings {
 
 type Wave = OscillatorType;
 
-class AudioEngine {
+export class AudioEngine {
   ctx: AudioContext | null = null;
   master!: GainNode;
   sfxGain!: GainNode;
@@ -32,6 +34,10 @@ class AudioEngine {
   private radioListeners = new Set<() => void>();
   private radioPaused = false;
   private radioRequest = 0;
+  private campaignElement:HTMLAudioElement|null=null;
+  private campaignRequest=0;
+  private campaignListeners=new Set<()=>void>();
+  private campaignState:CampaignMusicSnapshot={active:false,playing:false,loading:false,error:null};
   private radioState: RadioSnapshot = {
     station: 'original', playing: false, loading: false, error: null,
     currentTime: 0, duration: 0, volume: this.settings.music,
@@ -46,6 +52,32 @@ class AudioEngine {
   }
 
   getRadioSnapshot = () => this.radioState;
+  getCampaignMusicSnapshot=()=>this.campaignState;
+  subscribeCampaignMusic=(listener:()=>void)=>{this.campaignListeners.add(listener);return ()=>{this.campaignListeners.delete(listener)}};
+  private publishCampaign(update:Partial<CampaignMusicSnapshot>){this.campaignState={...this.campaignState,...update};this.campaignListeners.forEach(fn=>fn())}
+  startCampaignMusic(){
+    if(this.campaignState.active&&(this.campaignState.playing||this.campaignState.loading))return;
+    const entering=!this.campaignState.active;
+    this.publishCampaign({active:true,playing:false,loading:true,error:null});
+    this.radioRequest++;this.radioElement?.pause();this.publishRadio({playing:false,loading:false});this.synthMusic(null);
+    if(!this.campaignElement){
+      const element=new Audio(CAMPAIGN_THEME);element.preload='metadata';element.loop=true;
+      element.addEventListener('playing',()=>{if(!this.campaignState.active){element.pause();return}this.publishCampaign({playing:true,loading:false,error:null})});
+      element.addEventListener('pause',()=>this.publishCampaign({playing:false}));
+      element.addEventListener('error',()=>{if(this.campaignState.active)this.publishCampaign({playing:false,loading:false,error:'Não foi possível tocar a trilha. Toque para tentar novamente.'})});
+      this.campaignElement=element;
+    }
+    const element=this.campaignElement,request=++this.campaignRequest;
+    element.volume=this.settings.music;if(entering)element.currentTime=0;
+    void element.play().then(()=>{if(request!==this.campaignRequest||!this.campaignState.active)return;this.publishCampaign({playing:true,loading:false,error:null})}).catch(()=>{
+      if(request===this.campaignRequest&&this.campaignState.active)this.publishCampaign({playing:false,loading:false,error:'Toque para liberar a trilha no navegador.'});
+    });
+  }
+  stopCampaignMusic(){
+    if(!this.campaignState.active)return;
+    this.campaignRequest++;this.publishCampaign({active:false,playing:false,loading:false,error:null});this.campaignElement?.pause();
+    this.music(this.requestedMode||'menu');
+  }
   subscribeRadio = (listener: () => void) => {
     this.radioListeners.add(listener);
     return () => { this.radioListeners.delete(listener); };
@@ -68,13 +100,13 @@ class AudioEngine {
     element.volume = this.settings.music;
     element.addEventListener('timeupdate', () => this.publishRadio({ currentTime: element.currentTime }));
     element.addEventListener('loadedmetadata', () => this.publishRadio({ duration: Number.isFinite(element.duration) ? element.duration : 0 }));
-    element.addEventListener('playing', () => this.publishRadio({ playing: true, loading: false, error: null }));
+    element.addEventListener('playing', () => {if(this.campaignState.active){element.pause();return}this.publishRadio({ playing: true, loading: false, error: null })});
     element.addEventListener('pause', () => this.publishRadio({ playing: false }));
     element.addEventListener('waiting', () => {
-      if (!this.radioPaused) this.publishRadio({ loading: true });
+      if (!this.radioPaused&&!this.campaignState.active) this.publishRadio({ loading: true });
     });
     element.addEventListener('ended', () => {
-      if (this.radioPaused || this.radioState.station === 'original') return;
+      if (this.campaignState.active||this.radioPaused || this.radioState.station === 'original') return;
       // A estação original é infinita; a sequência automática percorre os quatro raps.
       const i = RADIO_TRACKS.findIndex((track) => track.id === this.radioState.station);
       this.selectRadio(RADIO_TRACKS[i >= RADIO_TRACKS.length - 1 ? 1 : i + 1].id);
@@ -85,6 +117,7 @@ class AudioEngine {
   }
 
   private async playRadioElement() {
+    if(this.campaignState.active)return;
     const station = RADIO_TRACKS.find((track) => track.id === this.radioState.station)!;
     if (!station.url || this.radioPaused) return;
     const request = ++this.radioRequest;
@@ -105,6 +138,7 @@ class AudioEngine {
   }
 
   selectRadio(station: RadioStation) {
+    if(this.campaignState.active)return;
     if (!isRadioStation(station)) return;
     this.radioRequest++;
     this.radioElement?.pause();
@@ -124,6 +158,7 @@ class AudioEngine {
   }
 
   toggleRadio() {
+    if(this.campaignState.active)return;
     this.radioPaused = this.radioState.playing || this.radioState.loading;
     this.radioRequest++;
     this.saveRadio();
@@ -138,11 +173,13 @@ class AudioEngine {
   }
 
   nextRadio(direction: 1 | -1 = 1) {
+    if(this.campaignState.active)return;
     const i = RADIO_TRACKS.findIndex((track) => track.id === this.radioState.station);
     this.selectRadio(RADIO_TRACKS[(i + direction + RADIO_TRACKS.length) % RADIO_TRACKS.length].id);
   }
 
   seekRadio(time: number) {
+    if(this.campaignState.active)return;
     if (!this.radioElement || !Number.isFinite(time)) return;
     const duration = this.radioElement.duration;
     if (!Number.isFinite(duration) || duration <= 0) return;
@@ -177,7 +214,7 @@ class AudioEngine {
     this.noiseBuf = c.createBuffer(1, len, c.sampleRate);
     const d = this.noiseBuf.getChannelData(0);
     for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
-    if (!this.radioPaused && this.radioState.station === 'original' && this.requestedMode) {
+    if (!this.campaignState.active&&!this.radioPaused && this.radioState.station === 'original' && this.requestedMode) {
       this.synthMusic(this.requestedMode);
     }
   }
@@ -189,9 +226,10 @@ class AudioEngine {
 
   private applySettings() {
     if (this.radioElement) this.radioElement.volume = this.settings.music;
+    if(this.campaignElement)this.campaignElement.volume=this.settings.music;
     if (this.ctx) {
       this.sfxGain.gain.value = this.settings.sfx;
-      this.musicGain.gain.value = this.mode && this.radioState.station === 'original' && !this.radioPaused ? this.settings.music * 0.55 : 0;
+      this.musicGain.gain.value = !this.campaignState.active&&this.mode && this.radioState.station === 'original' && !this.radioPaused ? this.settings.music * 0.55 : 0;
     }
     this.publishRadio();
   }
@@ -388,6 +426,7 @@ class AudioEngine {
 
   music(kind: MusicMode) {
     this.requestedMode = kind;
+    if(this.campaignState.active)return;
     if (this.radioState.station !== 'original') {
       this.synthMusic(null);
       if (!this.radioPaused && !this.radioState.playing && !this.radioState.loading && kind) void this.playRadioElement();

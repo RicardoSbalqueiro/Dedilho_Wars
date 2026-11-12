@@ -15,6 +15,7 @@ import { W, H } from '../game/stage';
 import { keyLabel } from '../game/input';
 import { CHARS } from '../game/data';
 import { audio } from '../game/audio';
+import {PaintCadence} from '../game/mobile-settings';
 import { getStage, SkewBtn } from './common';
 
 export function GameScreen({ cfg, onExit, onSelect, onMap, onRadio, inputSuspended = false }: { cfg: GameConfig; onExit: () => void; onSelect: () => void; onMap: () => void; onRadio: () => void; inputSuspended?: boolean }) {
@@ -26,6 +27,7 @@ export function GameScreen({ cfg, onExit, onSelect, onMap, onRadio, inputSuspend
   const [sel, setSel] = useState(0);
   const [dummy, setDummy] = useState(0);
   const [frameLabOpen,setFrameLabOpen]=useState(false);
+  const displayBlocked=useRef(false);displayBlocked.current=inputSuspended||frameLabOpen;
   const resultTimerRef = useRef<number | undefined>(undefined);
   const overlayRef = useRef<HTMLDivElement>(null);
 
@@ -46,13 +48,13 @@ export function GameScreen({ cfg, onExit, onSelect, onMap, onRadio, inputSuspend
     const visibility=()=>{game.resetClock();if(document.hidden&&!game.paused)game.togglePause(true)};
     document.addEventListener('visibilitychange',visibility);
     (window as unknown as { __game?: Game }).__game = game;
-    let raf = 0,lastCinematic=false;
+    let raf = 0,lastCinematic=false;const cadence=matchMedia('(pointer:coarse)').matches?new PaintCadence(60):null,pausedCadence=new PaintCadence(10);
     const loop = (now: number) => {
       game.advance(now);
       if((game.phase==='finisher'||!!game.seq?.kind.startsWith('super'))!==lastCinematic){lastCinematic=game.phase==='finisher'||!!game.seq?.kind.startsWith('super');setCinematic(lastCinematic);}
-      surface.prepare();const density=stageDensity(surface.scale);
+      if(!document.hidden&&!displayBlocked.current&&(!cadence||(game.paused?pausedCadence:cadence).due(now))){surface.prepare();const density=stageDensity(surface.scale);
       if(stage.density!==density||stage.fontRevision!==canvasFontRevision())stage=getStage(cfg.stage??'dojo',density);
-      render(ctx, game, stage, game.tick);
+      render(ctx, game, stage, game.tick,undefined,!!cadence);}
       raf = requestAnimationFrame(loop);
     };
     raf = requestAnimationFrame(loop);

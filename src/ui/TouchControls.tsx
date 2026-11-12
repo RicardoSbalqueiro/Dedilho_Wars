@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState,useSyncExternalStore } from 'react';
 import type { RefObject } from 'react';
 import { createPortal } from 'react-dom';
 import type { Action } from '../game/input';
 import type { Game } from '../game/engine';
+import {getMobileSettings,subscribeMobileSettings,touchHaptic} from '../game/mobile-settings';
 import { touchInput } from '../game/touch';
 export function useMobile() {
  const [mobile,setMobile]=useState(()=>typeof window!=='undefined'&&matchMedia('(pointer: coarse)').matches);
@@ -28,21 +29,29 @@ function TouchFeedback({gameRef,side}:{gameRef:RefObject<Game|null>;side:0|1}){
  return text?<div className="touch-feedback" data-clash-action={clashAction} role="status" aria-live="polite">{text}</div>:null;
 }
 export function TouchControls({onMenu,gameRef,side=0}:{onMenu:()=>void;gameRef?:RefObject<Game|null>;side?:0|1}) {
- const mobile=useMobile();const stick=useRef<HTMLDivElement>(null);const [point,setPoint]=useState({x:0,y:0});
- useEffect(()=>{const clear=()=>{touchInput.clear();setPoint({x:0,y:0})};window.addEventListener('blur',clear);window.addEventListener('pagehide',clear);document.addEventListener('visibilitychange',clear);return()=>{clear();window.removeEventListener('blur',clear);window.removeEventListener('pagehide',clear);document.removeEventListener('visibilitychange',clear)}},[]);
+ const mobile=useMobile(),prefs=useSyncExternalStore(subscribeMobileSettings,getMobileSettings);
+ const root=useRef<HTMLElement>(null),stick=useRef<HTMLDivElement>(null),thumb=useRef<HTMLDivElement>(null),stickPointer=useRef<number|null>(null);
+ const [status,setStatus]=useState({rick:false,meter:0,form:0,lastDmg:-1,hits:0});
+ const clear=()=>{touchInput.clear();stickPointer.current=null;if(thumb.current)thumb.current.style.transform='translate(0,0)';root.current?.querySelectorAll('[data-held]').forEach(el=>el.removeAttribute('data-held'))};
+ useEffect(()=>{if(!mobile)return;const reset=()=>clear();window.addEventListener('blur',reset);window.addEventListener('pagehide',reset);window.addEventListener('resize',reset);document.addEventListener('visibilitychange',reset);return()=>{clear();window.removeEventListener('blur',reset);window.removeEventListener('pagehide',reset);window.removeEventListener('resize',reset);document.removeEventListener('visibilitychange',reset)}},[mobile]);
+ useEffect(()=>{if(!mobile||!root.current)return;const update=()=>{const height=Math.ceil(root.current?.getBoundingClientRect().height||310);document.documentElement.style.setProperty('--dw-controls-height',height+'px');window.dispatchEvent(new Event('dedilho-controls-change'))};const ro=new ResizeObserver(update);ro.observe(root.current);update();return()=>ro.disconnect()},[mobile]);
+ useEffect(()=>{if(!mobile||!gameRef)return;const update=()=>{const g=gameRef.current,f=g?.f[side];if(!f||!g)return;const next={rick:f.ch==='rickzera',meter:Math.floor(f.meter),form:Math.ceil(f.formT/60),lastDmg:g.training?Math.round(g.train.lastDmg):-1,hits:g.train.combo};setStatus(old=>old.rick===next.rick&&old.meter===next.meter&&old.form===next.form&&old.lastDmg===next.lastDmg&&old.hits===next.hits?old:next)};update();const id=window.setInterval(update,120);return()=>clearInterval(id)},[mobile,gameRef,side]);
  if(!mobile)return null;
  const move=(e:React.PointerEvent)=>{
-  e.preventDefault();if(e.type==='pointermove'&&e.buttons===0)return;
+  if(stickPointer.current!==e.pointerId)return;e.preventDefault();
   const r=stick.current!.getBoundingClientRect(),x=e.clientX-r.left-r.width/2,y=e.clientY-r.top-r.height/2;
-  const max=r.width*.35,len=Math.max(1,Math.hypot(x,y)),f=Math.min(1,max/len);setPoint({x:x*f,y:y*f});
+  const max=r.width*.31,len=Math.max(1,Math.hypot(x,y)),factor=Math.min(1,max/len);
+  if(thumb.current)thumb.current.style.transform=`translate(${x*factor}px,${y*factor}px)`;
   const actions:Action[]=[];if(x<-r.width*.12)actions.push('left');if(x>r.width*.12)actions.push('right');if(y<-r.height*.18)actions.push('up');if(y>r.height*.18)actions.push('down');touchInput.set(e.pointerId,actions);
  };
- const release=(e:React.PointerEvent)=>{touchInput.set(e.pointerId,[]);setPoint({x:0,y:0})};
- const buttons:[Action,string,string][]=[['s1','ESP 1','#a855f7'],['s2','ESP 2','#a855f7'],['s3','ESP 3','#a855f7'],['p','SOCO','#22d3ee'],['k','CHUTE','#22d3ee'],['headbutt','CABEÇADA','#fb923c'],['block','DEFESA','#38bdf8'],['super','ULT','#facc15'],['grab','AGARRAR','#fb923c'],['transform','FORMA','#4ade80'],['charge','CARREGAR','#86efac']];
- const actionButton=(action:Action,label:string,color:string,className?:string)=><button key={action} className={className} type="button" data-touch-action={action} aria-label={label} style={{borderColor:color,color}} onPointerDown={e=>{e.preventDefault();e.currentTarget.setPointerCapture(e.pointerId);touchInput.set(e.pointerId,[action]);e.currentTarget.dataset.held='1'}} onPointerUp={e=>{touchInput.set(e.pointerId,[]);delete e.currentTarget.dataset.held}} onPointerCancel={e=>{touchInput.set(e.pointerId,[]);delete e.currentTarget.dataset.held}} onLostPointerCapture={e=>{touchInput.set(e.pointerId,[]);delete e.currentTarget.dataset.held}}>{label}</button>;
- return createPortal(<div className="touch-controls" onContextMenu={e=>e.preventDefault()}>
+ const release=(e:React.PointerEvent)=>{if(stickPointer.current!==e.pointerId)return;touchInput.set(e.pointerId,[]);stickPointer.current=null;if(thumb.current)thumb.current.style.transform='translate(0,0)'};
+ const buttons:[Action,string,string][]=[['s1','ESP 1','#c291ff'],['s2','ESP 2','#c291ff'],['s3','ESP 3','#c291ff'],['p','SOCO','#65e7fa'],['k','CHUTE','#65e7fa'],['block','DEFESA','#71cfff'],['headbutt','CABEÇADA','#ffc28c'],['grab','AGARRAR','#ffc28c'],['turn','VIRAR','#dbd5f2'],['transform','FORMA','#88efa9'],['super','ULT','#ffde76'],['charge','CARREGAR','#a9edbc']];
+ const actionButton=(action:Action,label:string,color:string,index:number)=><button key={action} type="button" data-touch-action={action} data-ready={action==='super'&&status.meter>=100||action==='transform'&&status.meter>=200?'1':'0'} aria-label={label} title={action==='charge'?'Carregar energia do Rickzera':label} disabled={action==='charge'&&!status.rick} style={{'--button-color':color} as React.CSSProperties} onPointerDown={e=>{e.preventDefault();e.currentTarget.setPointerCapture(e.pointerId);touchInput.set(e.pointerId,[action]);e.currentTarget.dataset.held='1';touchHaptic()}} onPointerUp={e=>{touchInput.set(e.pointerId,[]);delete e.currentTarget.dataset.held}} onPointerCancel={e=>{touchInput.set(e.pointerId,[]);delete e.currentTarget.dataset.held}} onLostPointerCapture={e=>{touchInput.set(e.pointerId,[]);delete e.currentTarget.dataset.held}} onClick={e=>{if(e.detail===0){touchInput.set(-200-index,[action]);touchInput.set(-200-index,[])}}}><span>{label}</span>{action==='charge'&&!status.rick&&<small>RICK</small>}{action==='super'&&<small>{Math.floor(status.meter/100)}/2</small>}{action==='transform'&&status.form>0&&<small>{status.form}s</small>}</button>;
+ const fullscreen=()=>{if(document.fullscreenElement)void document.exitFullscreen().catch(()=>{});else void document.documentElement.requestFullscreen().catch(()=>{})};
+ return createPortal(<section ref={root} className="touch-controls" data-hand={prefs.hand} data-size={prefs.largeButtons?'large':'standard'} aria-label="Controles de combate" onContextMenu={e=>e.preventDefault()}>
   {gameRef&&<TouchFeedback gameRef={gameRef} side={side}/>}
-  <div className="touch-left">{actionButton('turn','VIRAR','#ddd6fe','touch-turn')}<div className="touch-stick" ref={stick} role="group" aria-label="Direcional: mover, pular e agachar" onPointerDown={e=>{e.currentTarget.setPointerCapture(e.pointerId);move(e)}} onPointerMove={move} onPointerUp={release} onPointerCancel={release} onLostPointerCapture={release}><span className="stick-up">PULAR</span><span className="stick-down">AGACHAR</span><span className="stick-left">◀</span><span className="stick-right">▶</span><div className="stick-thumb" style={{transform:`translate(${point.x}px,${point.y}px)`}}/></div></div>
-  <div className="touch-buttons">{buttons.map(([action,label,color])=>actionButton(action,label,color))}<button type="button" className="touch-menu" onClick={()=>{touchInput.clear();onMenu()}}>MENU</button></div>
- </div>,document.body);
+  <div className="touch-utility"><span>P{side+1}<small>{status.lastDmg>=0?`DANO ${status.lastDmg} · ${status.hits} HIT`:'TOQUE E SEGURE'}</small></span><div>{document.fullscreenEnabled&&<button type="button" onClick={fullscreen} aria-label="Alternar tela cheia">⛶ <span>TELA</span></button>}<button type="button" onClick={()=>{clear();onMenu()}}>Ⅱ MENU</button></div></div>
+  <div className="touch-deck"><div className="touch-left"><div className="touch-stick" ref={stick} role="group" aria-label="Direcional: mover, pular e agachar" onPointerDown={e=>{if(stickPointer.current!==null)return;stickPointer.current=e.pointerId;e.currentTarget.setPointerCapture(e.pointerId);move(e)}} onPointerMove={move} onPointerUp={release} onPointerCancel={release} onLostPointerCapture={release}><span className="stick-up">PULAR</span><span className="stick-down">AGACHAR</span><span className="stick-left" aria-hidden="true">‹</span><span className="stick-right" aria-hidden="true">›</span><div className="stick-cross" aria-hidden="true"/><div className="stick-thumb" ref={thumb}/></div></div>
+  <div className="touch-buttons">{buttons.map(([action,label,color],i)=>actionButton(action,label,color,i))}</div></div>
+ </section>,document.body);
 }

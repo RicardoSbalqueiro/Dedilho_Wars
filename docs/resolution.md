@@ -51,3 +51,7 @@ As resoluções e o toque foram emulados no navegador. Esses resultados não sã
 - `tests/resolution.test.ts`, `scripts/test.mjs`: 55 novas regressões integradas à suíte.
 - `README.md`, `docs/resolution.md`: explicação e resultados.
 - `dist/client/index.html`, `dist/client/baixar/Dedilho-Wars-projeto.zip`: build e download offline atualizados.
+
+## Celulares: política atual
+
+A otimização mobile usa resolução automática próxima aos pixels físicos exibidos, com limite de Full HD e mínimo lógico de 960×540 para cenas. A opção Alta mantém supersampling maior. O piso obrigatório de Full HD dos relatórios históricos agora se aplica ao computador; em celulares, evitar pixels excedentes reduz trabalho e memória. A arena continua em 960×540 e a simulação/inputs/rede mantêm suas regras. Veja [mobile](mobile.md).

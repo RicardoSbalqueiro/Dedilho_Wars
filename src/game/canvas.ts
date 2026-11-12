@@ -1,12 +1,14 @@
 // Presentation resolution only. World coordinates and simulation stay unchanged.
+import {mobileGraphics} from './mobile-settings';
 export type CanvasKind='scene'|'detail';
 export const MAX_SCENE_PIXELS=3840*2160;
 export const MAX_DETAIL_PIXELS=2048*2048;
 const positive=(n:number,fallback:number)=>Number.isFinite(n)&&n>0?n:fallback;
-export function canvasSize(width:number,height:number,cssWidth:number,cssHeight:number,dpr:number,kind:CanvasKind='detail'){
+export function canvasSize(width:number,height:number,cssWidth:number,cssHeight:number,dpr:number,kind:CanvasKind='detail',mobileQuality?:'auto'|'sharp'){
   const w=positive(width,1),h=positive(height,1),pixelRatio=positive(dpr,1);
   const requested=Math.max(positive(cssWidth,w)/w,positive(cssHeight,h)/h)*pixelRatio;
-  const minimum=kind==='scene'?2:.25,maximum=kind==='scene'?4:8,budget=kind==='scene'?MAX_SCENE_PIXELS:MAX_DETAIL_PIXELS;
+  const scene=kind==='scene',auto=scene&&mobileQuality==='auto';
+  const minimum=scene?(auto?1:2):.25,maximum=scene?(auto?2:mobileQuality==='sharp'?3:4):8,budget=scene?(auto?1920*1080:MAX_SCENE_PIXELS):MAX_DETAIL_PIXELS;
   const density=Math.min(maximum,Math.sqrt(budget/(w*h)),Math.max(minimum,requested));
   const pixelWidth=Math.max(1,Math.floor(w*density+1e-7)),pixelHeight=Math.max(1,Math.floor(h*density+1e-7));
   return {width:pixelWidth,height:pixelHeight,scaleX:pixelWidth/w,scaleY:pixelHeight/h};
@@ -34,7 +36,7 @@ export class CanvasSurface {
   }
   prepare(){
     const rect=this.canvas.getBoundingClientRect();
-    const size=canvasSize(this.width,this.height,rect.width,rect.height,typeof window==='undefined'?1:window.devicePixelRatio,this.kind);
+    const size=canvasSize(this.width,this.height,rect.width,rect.height,typeof window==='undefined'?1:window.devicePixelRatio,this.kind,mobileGraphics());
     const changed=this.canvas.width!==size.width||this.canvas.height!==size.height;
     if(changed){this.canvas.width=size.width;this.canvas.height=size.height;this.canvas.dataset.resolution=`${size.width}x${size.height}`;}
     this.scale=Math.max(size.scaleX,size.scaleY);

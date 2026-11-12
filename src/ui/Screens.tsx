@@ -12,6 +12,7 @@ import type { Action, Bindings } from '../game/input';
 import { applyPrefs, loadPrefs, savePrefs } from '../game/prefs';
 import type { Prefs } from '../game/prefs';
 import { ArtCanvas, FighterPortrait, MusicButton, StagePreview, SkewBtn } from './common';
+import {MenuAtmosphere} from './MenuAtmosphere';
 
 // ------------------------------------------------------------------ SPLASH
 export function Splash({ onStart }: { onStart: () => void }) {
@@ -48,12 +49,13 @@ function Title({ big }: { big?: boolean }) {
 }
 
 // ------------------------------------------------------------------ MENU PRINCIPAL
-export type MenuChoice = 'play' | 'versus' | 'training' | 'controls' | 'settings' | 'radio' | 'online' | 'profile';
+export type MenuChoice = 'play' | 'versus' | 'training' | 'controls' | 'settings' | 'radio' | 'online' | 'profile' | 'campaigns';
 
 export function MainMenu({ onChoose, onRadio, suspended = false }: { onChoose: (c: MenuChoice) => void; onRadio: () => void; suspended?: boolean }) {
   const items: [MenuChoice, string, string][] = [
     ['play', 'JOGAR', '#a855f7'],
     ['online', 'ONLINE', '#22d3ee'],
+    ['campaigns','WARS OF CHAMPIONS','#ffcb82'],
     ['versus', 'VERSUS LOCAL', '#f59e0b'],
     ['training', 'TREINAMENTO', '#22c55e'],
     ['profile', 'PERFIL E RANKING', '#facc15'],
@@ -64,17 +66,18 @@ export function MainMenu({ onChoose, onRadio, suspended = false }: { onChoose: (
   useEffect(() => { audio.music('menu'); }, []);
   useEffect(() => {
     const k = (e: KeyboardEvent) => {
-      if (suspended || !['ArrowDown', 'ArrowUp', 'KeyS', 'KeyW', 'Enter', 'Space'].includes(e.code)) return;
+      if (suspended || !['ArrowDown', 'ArrowUp','ArrowLeft','ArrowRight', 'KeyS', 'KeyW', 'Enter', 'Space'].includes(e.code)) return;
+      if(['Enter','Space'].includes(e.code)&&e.target instanceof Element&&e.target.closest('button')&&!e.target.closest('.main-menu-actions'))return;
       e.preventDefault();
       if (e.repeat) return;
+      const moveFocus=(delta:number)=>{const n=(sel+delta+items.length)%items.length;setSel(n);document.querySelectorAll<HTMLButtonElement>('.main-menu-actions button')[n]?.focus();audio.select()};
       if (e.code === 'ArrowDown' || e.code === 'KeyS') {
-        setSel((s) => (s + 1) % items.length);
-        audio.select();
+        moveFocus(2);
       }
       if (e.code === 'ArrowUp' || e.code === 'KeyW') {
-        setSel((s) => (s + items.length - 1) % items.length);
-        audio.select();
+        moveFocus(-2);
       }
+      if(e.code==='ArrowLeft'||e.code==='ArrowRight'){moveFocus(e.code==='ArrowLeft'?-1:1);}
       if (e.code === 'Enter' || e.code === 'Space') {
         audio.confirm();
         onChoose(items[sel][0]);
@@ -85,13 +88,14 @@ export function MainMenu({ onChoose, onRadio, suspended = false }: { onChoose: (
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sel, onChoose, suspended]);
   return (
-    <div className="absolute inset-0">
-      <ArtCanvas variant="menu" />
-      <div className="absolute inset-0" style={{ background: 'linear-gradient(90deg, rgba(5,2,12,0.88) 0%, rgba(5,2,12,0.5) 45%, transparent 75%)' }} />
-      <div className="absolute left-8 top-10">
+    <div className="absolute inset-0 main-menu">
+      <ArtCanvas variant="menu" paused={suspended}/>
+      <div className="main-menu-shade"/>
+      <MenuAtmosphere/>
+      <div className="absolute left-8 top-6">
         <Title />
       </div>
-      <div className="absolute left-8 top-[132px] flex flex-col gap-[3px]">
+      <nav className="main-menu-actions" aria-label="Modos de jogo">
         {items.map(([k, label, color], i) => (
           <SkewBtn
             key={k}
@@ -107,8 +111,9 @@ export function MainMenu({ onChoose, onRadio, suspended = false }: { onChoose: (
             {label}
           </SkewBtn>
         ))}
-      </div>
-      <div className="absolute bottom-3 left-8 text-[10px] tracking-widest text-white/60">↑ ↓ NAVEGAR · ENTER CONFIRMAR · P1: WASD + JKL / UIO / H · P2: SETAS + NUMPAD</div>
+      </nav>
+      <aside className="main-menu-callout"><span className="crowd-live"><i/> ARENA VIVA</span><h2>PANCADARIA<br/>GERAL</h2><p>18 lutadores.<br/>Todo mundo contra todo mundo.</p><small>PÉ NO CHÃO · SEM ULTIMATES</small><button type="button" onClick={()=>{audio.select();window.dispatchEvent(new CustomEvent('dedilho-menu-rally',{detail:{x:720}}))}}>MAIS CAOS <span>↗</span></button></aside>
+      <div className="absolute bottom-3 left-8 text-[9px] tracking-widest text-white/60 pointer-events-none">← ↑ ↓ → NAVEGAR · ENTER CONFIRMAR · CLIQUE NA ARENA PARA AGITAR</div>
       <div className="absolute right-6 bottom-5"><MusicButton onClick={onRadio} /></div>
     </div>
   );

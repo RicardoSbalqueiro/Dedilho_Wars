@@ -18,6 +18,7 @@ import { api } from '../online/api';
 import type { Room, User } from '../online/api';
 import { FightConnection } from '../online/connection';
 import { getStage, SkewBtn } from './common';
+import {PaintCadence} from '../game/mobile-settings';
 
 export function OnlineGame({room,user,onLobby,onLeave}:{room:Room;user:User;onLobby:()=>void;onLeave:()=>void}) {
  const canvas=useRef<HTMLCanvasElement>(null);
@@ -59,7 +60,7 @@ export function OnlineGame({room,user,onLobby,onLeave}:{room:Room;user:User;onLo
   const blur=()=>{keyboard.down.clear();physicalPressed=0};
   const visibility=()=>{game.resetClock();if(document.hidden){blur();touchInput.clear();}};
   document.addEventListener('visibilitychange',visibility);window.addEventListener('blur',blur);window.addEventListener('keydown',keydown);
-  let stage=getStage(room.stage,surface.scale);
+  let stage=getStage(room.stage,surface.scale);const cadence=matchMedia('(pointer:coarse)').matches?new PaintCadence(60):null;
   const loop=(now:number)=>{
    const mask=blocked.current?0:ACTIONS.reduce((m,a,i)=>m|((bindings[0][a].some(k=>k&&keyboard.down.has(k))||touchInput.held.has(a))?1<<i:0),0);
    const touchPressed=touchInput.consume().reduce((m,a)=>m|(1<<ACTIONS.indexOf(a)),0),pressed=(mask&~lastMask)|touchPressed|physicalPressed;physicalPressed=0;
@@ -67,9 +68,9 @@ export function OnlineGame({room,user,onLobby,onLeave}:{room:Room;user:User;onLo
    if(host){game.onlinePressed[0]|=pressed;game.onlineInputs=[mask,link.inputStale()?0:otherInput];game.paused=link.stale();game.advance(now)}
    if(now-lastSend>=50||mask!==lastMask||pressed){if(host){const s=captureState(game);s.inputAck=lastEvent;link.sendState(s)}else link.sendInput({mask,events:pending});lastSend=now}lastMask=mask;
    if((game.phase==='finisher'||!!game.seq?.kind.startsWith('super'))!==lastCinematic){lastCinematic=game.phase==='finisher'||!!game.seq?.kind.startsWith('super');setCinematic(lastCinematic);}
-   surface.prepare();const density=stageDensity(surface.scale);
+   if(!document.hidden&&!blocked.current&&(!cadence||cadence.due(now))){surface.prepare();const density=stageDensity(surface.scale);
    if(stage.density!==density||stage.fontRevision!==canvasFontRevision())stage=getStage(room.stage,density);
-   render(ctx,game,stage,game.tick,host?undefined:now);
+   render(ctx,game,stage,game.tick,host?undefined:now,!!cadence);}
    if(game.phase==='matchEnd'&&!done){
     done=true;setResult(game.winner);setFinishName(game.finishedBy!==null?FINISHER_NAMES[game.f[game.finishedBy].ch]:'');
     const report={winner:game.winner,hostScore:game.f[0].wins,guestScore:game.f[1].wins,finisher:game.finishedBy??-1};

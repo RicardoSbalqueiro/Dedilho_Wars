@@ -5,9 +5,10 @@ import { Stage, STAGE_IDS, W, H, FLOOR_Y } from '../game/stage';
 import { drawFullBody, drawPortrait } from '../game/rig';
 import { attackAnimation } from '../game/animation';
 import {modelSheetPose} from '../game/model-sheet';
-import type { Move } from '../game/data';
+import {MenuBrawlArt} from '../game/menu-brawl-art';
+import {PaintCadence} from '../game/mobile-settings';
 import { FrameTimer } from '../game/timing';
-import { CHARS, CHAR_IDS, movePhase } from '../game/data';
+import { CHARS, movePhase } from '../game/data';
 import type { CharId } from '../game/data';
 import type { StageId } from '../game/stage';
 import { audio } from '../game/audio';
@@ -66,10 +67,10 @@ export function MusicButton({ onClick }: { onClick: () => void }) {
 export function Frame({ children, game = false }: { children: ReactNode; game?: boolean }) {
   const [s, setS] = useState(1);
   useLayoutEffect(() => {
-    const f = () => { const portrait = matchMedia('(pointer: coarse)').matches && window.innerHeight > window.innerWidth; setS(Math.min(Math.max(1,window.innerWidth)/W,Math.max(1,window.innerHeight-(game&&portrait?190:0))/H)); };
+    const f = () => {const vh=window.visualViewport?.height||window.innerHeight,vw=window.visualViewport?.width||window.innerWidth;const portrait=matchMedia('(pointer: coarse)').matches&&vh>vw,deck=parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--dw-controls-height'))||310;setS(Math.min(Math.max(1,vw)/W,Math.max(1,vh-(game&&portrait?deck+56:0))/H));};
     f();
-    window.addEventListener('resize',f);window.visualViewport?.addEventListener('resize',f);
-    return()=>{window.removeEventListener('resize',f);window.visualViewport?.removeEventListener('resize',f)};
+    window.addEventListener('resize',f);window.addEventListener('dedilho-controls-change',f);window.visualViewport?.addEventListener('resize',f);
+    return()=>{window.removeEventListener('resize',f);window.removeEventListener('dedilho-controls-change',f);window.visualViewport?.removeEventListener('resize',f)};
   }, [game]);
   useLayoutEffect(()=>{window.dispatchEvent(new Event('dedilho-display-change'))},[s]);
   return (
@@ -90,10 +91,10 @@ interface Leaf {
   s: number;
 }
 
-export function ArtCanvas({ variant, selected }: { variant: ArtVariant; selected?: CharId }) {
+export function ArtCanvas({ variant, selected,paused=false }: { variant: ArtVariant; selected?: CharId;paused?:boolean }) {
   const ref = useRef<HTMLCanvasElement>(null);
-  const propsRef = useRef({ variant, selected });
-  propsRef.current = { variant, selected };
+  const propsRef = useRef({ variant, selected,paused });
+  propsRef.current = { variant, selected,paused };
   useEffect(() => {
     const canvas = ref.current!;
     const surface=new CanvasSurface(canvas,W,H,'scene'),ctx=surface.ctx;
@@ -101,9 +102,17 @@ export function ArtCanvas({ variant, selected }: { variant: ArtVariant; selected
     surface.prepare();let stage=getStage(stageId,surface.scale);
     let raf = 0;
     const clock=new FrameTimer(),rebase=()=>clock.rebase();
+    const brawl=variant==='menu'||variant==='splash'?new MenuBrawlArt(matchMedia('(pointer:coarse)').matches):undefined;
+    const cadence=matchMedia('(pointer:coarse)').matches?new PaintCadence(30):null;
+    let inView=true,lastPaintFrame=0;const observer=typeof IntersectionObserver!=='undefined'?new IntersectionObserver(entries=>{inView=entries[0]?.isIntersecting??true;clock.rebase()}):undefined;observer?.observe(canvas);
+    const rally=(event:Event)=>brawl?.rally(clock.frames,(event as CustomEvent<{x?:number}>).detail?.x);
+    window.addEventListener('dedilho-menu-rally',rally);
     const leaves: Leaf[] = Array.from({ length: 24 }, () => ({ x: Math.random() * W, y: Math.random() * H, vx: -1 - Math.random() * 1.5, vy: 0.5 + Math.random(), r: Math.random() * 6, s: 3 + Math.random() * 5 }));
     const loop = (now:number) => {
-      clock.sample(now,!document.hidden);const t=clock.frames,dt=clock.deltaFrames;
+      if(document.hidden||!inView||propsRef.current.paused){clock.rebase();raf=requestAnimationFrame(loop);return;}
+      clock.sample(now,true);const t=clock.frames;
+      if(cadence&&!cadence.due(now)){raf=requestAnimationFrame(loop);return;}
+      const dt=t-lastPaintFrame;lastPaintFrame=t;
       canvas.dataset.animationFrame=t.toFixed(4);
       surface.prepare();const density=stageDensity(surface.scale);
       if(stage.density!==density||stage.fontRevision!==canvasFontRevision())stage=getStage(stageId,density);
@@ -112,7 +121,7 @@ export function ArtCanvas({ variant, selected }: { variant: ArtVariant; selected
       stage.hype = 0.15;
       drawStageScene(ctx, stage, t, camX);
       if (v === 'menu' || v === 'splash') {
-        drawDemoBrawl(ctx, t, v === 'splash');
+        brawl?.draw(ctx,t);canvas.dataset.brawlCount='18';canvas.dataset.brawlGround='470';canvas.dataset.brawlLoaded=String(brawl?.loaded??0);
       } else if (sel) {
         const ch = sel;
         glowBehind(ctx, 488, CHARS[ch].color, t, .95);
@@ -157,78 +166,9 @@ export function ArtCanvas({ variant, selected }: { variant: ArtVariant; selected
       raf = requestAnimationFrame(loop);
     };
     document.addEventListener('visibilitychange',rebase);raf = requestAnimationFrame(loop);
-    return () => {cancelAnimationFrame(raf);document.removeEventListener('visibilitychange',rebase)};
+    return () => {cancelAnimationFrame(raf);observer?.disconnect();document.removeEventListener('visibilitychange',rebase);window.removeEventListener('dedilho-menu-rally',rally);brawl?.dispose()};
   }, []);
-  return <canvas ref={ref} width={W} height={H} className="absolute inset-0 w-full h-full" />;
-}
-
-// Demonstração coreografada sem controles, áudio ou instâncias do motor de partida.
-// Cada dupla alterna ataques, acertos e recuos. As duplas alternam o elenco completo.
-function drawDemoBrawl(ctx: CanvasRenderingContext2D, t: number, splash: boolean) {
-  const rotation = Math.floor(t / 560) % CHAR_IDS.length;
-  const chars = CHAR_IDS.map((_, i) => CHAR_IDS[(i + rotation) % CHAR_IDS.length]);
-  const groups = splash
-    ? [{x:80,y:480,s:.52},{x:215,y:450,s:.52},{x:350,y:480,s:.52},{x:485,y:450,s:.52},{x:620,y:480,s:.52},{x:755,y:450,s:.52},{x:890,y:480,s:.52}]
-    : [{x:420,y:340,s:.5},{x:570,y:478,s:.65},{x:735,y:330,s:.5},{x:865,y:480,s:.62},{x:570,y:320,s:.5},{x:875,y:335,s:.5},{x:735,y:480,s:.58}];
-  groups.forEach((g,i)=>drawDemoPair(ctx,chars[i*2%chars.length],chars[(i*2+1)%chars.length],g.x,g.y,g.s,t+i*47,false));
-}
-
-function drawDemoPair(ctx: CanvasRenderingContext2D, left: CharId, right: CharId, x: number, y: number, scale: number, t: number, extraHit: boolean) {
-  const phase = t % 196;
-  const moves = ['pM', 's1', 'kH', 's2'];
-  const leftMove = CHARS[left].moves[moves[Math.floor(t / 196) % moves.length]] || CHARS[left].moves.pM;
-  const rightMove = CHARS[right].moves[moves[(Math.floor(t / 196) + 1) % moves.length]] || CHARS[right].moves.pM;
-  const leftAttack = phase >= 24 && phase < 67;
-  const rightAttack = phase >= 118 && phase < 161;
-  const rightHit = (phase >= 44 && phase < 76) || extraHit;
-  const leftHit = phase >= 138 && phase < 170;
-  const pulse = (v: number) => Math.sin(Math.max(0, Math.min(1, v)) * Math.PI);
-  const leftLunge = leftAttack ? pulse((phase - 24) / 43) * 28 : 0;
-  const rightLunge = rightAttack ? pulse((phase - 118) / 43) * 28 : 0;
-  const lx = x - 51 * scale + (leftLunge - (leftHit ? pulse((phase - 138) / 32) * 31 : 0)) * scale;
-  const rx = x + 51 * scale - (rightLunge - (rightHit ? 24 : 0)) * scale;
-  const leftPose = leftHit ? 'hit' : leftAttack ? leftMove.poses[phase < 37 ? 0 : 1] : 'idle';
-  const rightPose = rightHit ? 'hit' : rightAttack ? rightMove.poses[phase < 131 ? 0 : 1] : 'idle';
-  ctx.save();
-  ctx.globalAlpha = .22;
-  ctx.fillStyle = '#000';
-  ctx.beginPath(); ctx.ellipse(lx, y + 2, 34 * scale, 8 * scale, 0, 0, Math.PI * 2); ctx.ellipse(rx, y + 2, 34 * scale, 8 * scale, 0, 0, Math.PI * 2); ctx.fill();
-  ctx.restore();
-  const demoFrame=(m:Move,p:number)=>{const u=p/43;return u<.46?u/.46*m.startup:u<.6?m.startup+(u-.46)/.14*m.active:m.startup+m.active+(u-.6)/.4*m.recovery};
-  const choreograph=(ch:CharId,m:Move,p:number)=>attackAnimation(ch,m,demoFrame(m,p),true);
-  const plate=(m:Move,p:number)=>{const phase=movePhase(m,demoFrame(m,p),true);return {spriteState:'attack' as const,spritePhase:phase.phase,spriteProgress:phase.progress,spriteKind:m.kind==='normal'?/^(k|cK|jK)/.test(m.id)?'kick' as const:'punch' as const:m.kind==='super'?'super' as const:'special' as const,spriteRank:m.rank,spriteAir:m.air,normalAccessory:m.accessory}};
-  drawFullBody(ctx, left, lx, y - (leftAttack && leftMove.id.startsWith('k') ? leftLunge * .35 : 0), scale, t, leftPose,false,leftAttack?choreograph(left,leftMove,phase-24):undefined,leftAttack?plate(leftMove,phase-24):undefined);
-  drawFullBody(ctx, right, rx, y - (rightAttack && rightMove.id.startsWith('k') ? rightLunge * .35 : 0), scale, t + 20, rightPose, true,rightAttack?choreograph(right,rightMove,phase-118):undefined,rightAttack?plate(rightMove,phase-118):undefined);
-  const strike = (ch: CharId, from: number, to: number, p: number, special: boolean, dir: number) => {
-    const level = y - 102 * scale;
-    if (p >= 34 && p < 44) {
-      const u = (p - 34) / 10;
-      if (special) drawDemoProjectile(ctx, ch, from + (to - from) * u, level, dir, t, scale);
-      else {
-        ctx.save(); ctx.globalAlpha = .8; ctx.strokeStyle = CHARS[ch].glow; ctx.lineWidth = 4 * scale;
-        ctx.shadowBlur = 10; ctx.shadowColor = CHARS[ch].color; ctx.beginPath(); ctx.moveTo(from, level - 22 * scale); ctx.quadraticCurveTo((from + to) / 2, level - 45 * scale, to, level + 14 * scale); ctx.stroke(); ctx.restore();
-      }
-    }
-    if (p >= 44 && p < 65) drawDemoImpact(ctx, to, level, CHARS[ch].glow, p - 44, scale);
-  };
-  strike(left, lx + 24 * scale, rx - 17 * scale, phase, leftMove.kind === 'special', 1);
-  strike(right, rx - 24 * scale, lx + 17 * scale, phase - 94, rightMove.kind === 'special', -1);
-}
-
-function drawDemoProjectile(ctx: CanvasRenderingContext2D, ch: CharId, x: number, y: number, dir: number, t: number, scale: number) {
-  ctx.save(); ctx.translate(x, y); ctx.scale(dir * scale, scale);
-  ctx.shadowColor = CHARS[ch].color; ctx.shadowBlur = 14; ctx.fillStyle = CHARS[ch].glow; ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5;
-  if (ch === 'rickzera') { ctx.rotate(Math.sin(t * .15) * .2); ctx.fillRect(-14, -8, 28, 16); ctx.strokeRect(-14, -8, 28, 16); ctx.fillStyle = '#075a37'; ctx.font = 'bold 9px sans-serif'; ctx.fillText('100', -9, 3); }
-  else { ctx.beginPath(); ctx.ellipse(0, 0, 15, 6, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke(); }
-  ctx.globalAlpha = .5; ctx.strokeStyle = CHARS[ch].color; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(-18, -5); ctx.lineTo(-44, -5); ctx.moveTo(-16, 4); ctx.lineTo(-36, 4); ctx.stroke(); ctx.restore();
-}
-
-function drawDemoImpact(ctx: CanvasRenderingContext2D, x: number, y: number, color: string, age: number, scale: number) {
-  ctx.save(); ctx.translate(x, y); ctx.globalAlpha = Math.max(0, 1 - age / 21);
-  ctx.strokeStyle = color; ctx.shadowBlur = 16; ctx.shadowColor = color; ctx.lineWidth = 2 * scale;
-  ctx.beginPath(); ctx.arc(0, 0, (7 + age * 2) * scale, 0, Math.PI * 2); ctx.stroke();
-  for (let i = 0; i < 10; i++) { const a = i * Math.PI / 5 + age * .03; const r = (10 + age * 1.8) * scale; ctx.beginPath(); ctx.moveTo(Math.cos(a) * r * .4, Math.sin(a) * r * .4); ctx.lineTo(Math.cos(a) * r, Math.sin(a) * r); ctx.stroke(); }
-  ctx.fillStyle = '#fff8cc'; ctx.beginPath(); ctx.arc(0, 0, Math.max(1, 7 - age * .3) * scale, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+  return <canvas ref={ref} width={W} height={H} className="absolute inset-0 w-full h-full" aria-label={variant==='select'?'Prévia do lutador':'Pancadaria geral: 18 lutadores no chão, sem Ultimates'} onPointerDown={e=>{if(variant==='select')return;const r=e.currentTarget.getBoundingClientRect();window.dispatchEvent(new CustomEvent('dedilho-menu-rally',{detail:{x:(e.clientX-r.left)/r.width*W}}))}} />;
 }
 
 function glowBehind(ctx: CanvasRenderingContext2D, x: number, col: string, t: number, k = 1) {
@@ -268,6 +208,7 @@ export function SkewBtn({ children, onClick, active, onHover, color = '#a855f7',
       disabled={disabled}
       onClick={onClick}
       onMouseEnter={onHover}
+      onFocus={onHover}
       className="fight-btn"
       style={{
         ['--c' as string]: color,

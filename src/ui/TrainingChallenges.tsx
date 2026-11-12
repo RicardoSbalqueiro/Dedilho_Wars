@@ -14,7 +14,7 @@ export function TrainingChallenges({gameRef}:{gameRef:RefObject<Game|null>}) {
  const def=progress?challengeDefinition(progress.id):null;
  const current=progress?.id==='crouch'?((progress.current||0)/60).toFixed(1):Math.floor(progress?.current||0);
  const goal=def?.id==='crouch'?'3 s':`${def?.target||0} ${def?.unit||''}`;
- const widget=<div className={mobile?'training-touch-widget':'training-widget absolute right-4 top-[155px] w-[218px] z-10'}>
+ const widget=<div data-challenge-active={progress?'1':'0'} className={mobile?'training-touch-widget':'training-widget absolute right-4 top-[155px] w-[218px] z-10'}>
   <div className="training-status"><strong>{progress?.done?'✓ DESAFIO CONCLUÍDO':def?.title||'TREINAMENTO LIVRE'}</strong><p>{def?`${current} / ${goal}`:`${TRAINING_CHALLENGES.length} desafios para dominar a luta`}</p>{def&&<div className="training-progress"><i style={{width:`${Math.min(100,100*(progress?.current||0)/def.target)}%`}}/></div>}</div>
   <button type="button" onClick={show}>DESAFIOS</button>
  </div>;

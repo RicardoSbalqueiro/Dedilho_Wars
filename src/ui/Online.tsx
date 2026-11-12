@@ -41,7 +41,7 @@ export function Online({onBack,mobile=false}:{onBack:()=>void;mobile?:boolean}) 
  if(match&&user){const fight=<OnlineGame room={match} user={user} onLobby={()=>setMatch(null)} onLeave={leave}/>;return mobile?<Frame game>{fight}</Frame>:fight;}
  const host=room?.host.id===user?.id,me=host?room?.host:room?.guest,opponent=host?room?.guest:room?.host;
  return <div className={"online-screen absolute inset-0"+(mobile?" online-mobile":"")}>
-  <ArtCanvas variant="menu"/><div className="absolute inset-0 bg-[#080312]/90"/>
+  {!mobile&&<ArtCanvas variant="menu"/>}<div className="absolute inset-0 bg-[#080312]/90"/>
   <div className="online-header absolute left-7 top-5 right-7 flex items-center justify-between"><div><h1 className="title-main text-[31px] text-cyan-200">DEDILHO ONLINE</h1><p className="text-[10px] text-white/55">CONTAS POR USUÁRIO · SALAS PARA DOIS LUTADORES</p></div>{user&&<div className="text-right text-xs"><div className="text-cyan-200 mb-1">{user.username}</div>{!room&&<button disabled={busy} className="text-white/60 hover:text-white underline cursor-pointer" onClick={()=>run(async()=>{await api('/auth/logout',{});setUser(null);setPassword('')})}>Sair da conta</button>}</div>}</div>
   <div className="online-body absolute left-7 right-7 top-[83px] bottom-[67px]">
    {loading?<div className="text-center mt-24 text-white/70">Conectando ao serviço online…</div>:!user?<div className="online-auth flex gap-12 items-center h-full px-16">

@@ -730,7 +730,7 @@ function drawMeter(ctx:CanvasRenderingContext2D,g:Game,f:Fighter,side:0|1){
  ctx.restore();
 }
 
-function drawHUD(ctx: CanvasRenderingContext2D, g: Game) {
+function drawHUD(ctx: CanvasRenderingContext2D, g: Game, compact=false) {
   const [a, b] = g.f;
   drawBar(ctx, g, a, 0);
   drawBar(ctx, g, b, 1);
@@ -836,7 +836,7 @@ function drawHUD(ctx: CanvasRenderingContext2D, g: Game) {
   }
 
   // treino
-  if (g.training && !g.cine && !g.seq) {
+  if (!compact&&g.training && !g.cine && !g.seq) {
     const names = ['PARADO', 'IA', 'DEFENDENDO', 'JOGADOR 2'];
     ctx.save();
     ctx.fillStyle = 'rgba(8,4,16,0.7)';
@@ -996,7 +996,7 @@ function drawCine(ctx: CanvasRenderingContext2D, g: Game) {
 }
 
 // ------------------------------------------------------------------ render principal
-export function render(ctx: CanvasRenderingContext2D, g: Game, stage: Stage, time: number, remoteNow?:number) {
+export function render(ctx: CanvasRenderingContext2D, g: Game, stage: Stage, time: number, remoteNow?:number,compact=false) {
   ctx.save();
   if(g.finisher){drawFinisherArt(ctx,g.f[g.finisher.winner].ch,g.f[1-g.finisher.winner].ch,g.finisher.t,g.finisher.dur);ctx.restore();return;}
   if(g.seq?.kind.startsWith('super')&&WOC_ULTIMATES[g.seq.a.ch]){drawWocUltimate(ctx,g.seq.a.ch,g.seq.d.ch,g.seq.t,g.seq.dur,g.seq.a.formT>0);ctx.restore();return;}
@@ -1138,7 +1138,7 @@ export function render(ctx: CanvasRenderingContext2D, g: Game, stage: Stage, tim
     ctx.globalAlpha = 1;
   }
   drawCine(ctx,g);drawTransformCutin(ctx,g);
-  drawHUD(ctx,g);drawResourcesHud(ctx,g);
+  drawHUD(ctx,g,compact);drawResourcesHud(ctx,g);
   for(const f of g.f)if(f.ch==='santox'&&f.move?.id==='s3'&&movePhase(f.move,Math.max(0,f.moveT-1),f.connected).phase==='active')drawFourthWall(ctx,f.moveT-1-f.move.startup,f.move.active);
   drawClashUI(ctx, g);
   drawAnn(ctx, g);
