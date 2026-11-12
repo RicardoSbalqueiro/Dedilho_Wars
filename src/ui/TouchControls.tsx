@@ -10,7 +10,21 @@ export function useMobile() {
  useEffect(()=>{const m=matchMedia('(pointer: coarse)');const update=()=>setMobile(m.matches);m.addEventListener('change',update);return()=>m.removeEventListener('change',update)},[]);return mobile;
 }
 export function GameOverlay({children,layer=70}:{children:React.ReactNode;layer?:number}) {
- const mobile=useMobile();return mobile?createPortal(<div className="mobile-game-overlay" style={{zIndex:layer}}>{children}</div>,document.body):children;
+ const root=useRef<HTMLDivElement>(null);
+ useEffect(()=>{
+  const previous=document.activeElement as HTMLElement|null;
+  root.current?.querySelector<HTMLButtonElement>('button:not(:disabled)')?.focus({preventScroll:true});
+  const trap=(e:KeyboardEvent)=>{
+   if(e.code!=='Tab'||document.querySelector('[data-radio-panel]'))return;
+   const controls=[...(root.current?.querySelectorAll<HTMLElement>('button:not(:disabled), input:not(:disabled), select:not(:disabled), a[href]')||[])];
+   if(!controls.length)return;e.preventDefault();
+   const index=controls.indexOf(document.activeElement as HTMLElement);
+   controls[(index+(e.shiftKey?-1:1)+controls.length)%controls.length].focus();
+  };
+  window.addEventListener('keydown',trap);
+  return()=>{window.removeEventListener('keydown',trap);if(previous?.isConnected)previous.focus({preventScroll:true})};
+ },[]);
+ return createPortal(<div ref={root} className="dw-game-overlay" role="dialog" aria-modal="true" aria-label="Menu da partida" style={{zIndex:layer}}>{children}</div>,document.body);
 }
 function TouchFeedback({gameRef,side}:{gameRef:RefObject<Game|null>;side:0|1}){
  const [text,setText]=useState('');

@@ -1,0 +1,230 @@
+{
+  "date": "2026-11-12",
+  "browser": "Chromium, emulated desktop/touch viewports",
+  "layoutChecks": 140,
+  "viewports": [
+    {
+      "viewport": [
+        967,
+        855
+      ],
+      "screens": 14,
+      "pause": "pass",
+      "errors": []
+    },
+    {
+      "viewport": [
+        1280,
+        720
+      ],
+      "screens": 14,
+      "pause": "pass",
+      "errors": []
+    },
+    {
+      "viewport": [
+        1920,
+        1080
+      ],
+      "screens": 14,
+      "pause": "pass",
+      "errors": []
+    },
+    {
+      "viewport": [
+        320,
+        568
+      ],
+      "screens": 14,
+      "pause": "pass",
+      "errors": []
+    },
+    {
+      "viewport": [
+        360,
+        800
+      ],
+      "screens": 14,
+      "pause": "pass",
+      "errors": []
+    },
+    {
+      "viewport": [
+        390,
+        844
+      ],
+      "screens": 14,
+      "pause": "pass",
+      "errors": []
+    },
+    {
+      "viewport": [
+        430,
+        932
+      ],
+      "screens": 14,
+      "pause": "pass",
+      "errors": []
+    },
+    {
+      "viewport": [
+        568,
+        320
+      ],
+      "screens": 14,
+      "pause": "pass",
+      "errors": []
+    },
+    {
+      "viewport": [
+        844,
+        390
+      ],
+      "screens": 14,
+      "pause": "pass",
+      "errors": []
+    },
+    {
+      "viewport": [
+        768,
+        1024
+      ],
+      "screens": 14,
+      "pause": "pass",
+      "errors": []
+    }
+  ],
+  "campaignFocusScrollReturn": [
+    [
+      967,
+      855
+    ],
+    [
+      1280,
+      720
+    ],
+    [
+      1920,
+      1080
+    ],
+    [
+      320,
+      568
+    ],
+    [
+      360,
+      800
+    ],
+    [
+      390,
+      844
+    ],
+    [
+      430,
+      932
+    ],
+    [
+      568,
+      320
+    ],
+    [
+      844,
+      390
+    ],
+    [
+      768,
+      1024
+    ]
+  ],
+  "touchRotationMultitouch": [
+    {
+      "viewport": [
+        320,
+        568
+      ],
+      "buttons": 12,
+      "minHit": 48,
+      "leftHanded": true,
+      "multitouch": "pass",
+      "rotation": "pass"
+    },
+    {
+      "viewport": [
+        360,
+        800
+      ],
+      "buttons": 12,
+      "minHit": 54,
+      "leftHanded": true,
+      "multitouch": "pass",
+      "rotation": "pass"
+    },
+    {
+      "viewport": [
+        390,
+        844
+      ],
+      "buttons": 12,
+      "minHit": 58.5,
+      "leftHanded": true,
+      "multitouch": "pass",
+      "rotation": "pass"
+    },
+    {
+      "viewport": [
+        430,
+        932
+      ],
+      "buttons": 12,
+      "minHit": 62,
+      "leftHanded": true,
+      "multitouch": "pass",
+      "rotation": "pass"
+    },
+    {
+      "viewport": [
+        568,
+        320
+      ],
+      "buttons": 12,
+      "minHit": 44,
+      "leftHanded": true,
+      "multitouch": "pass",
+      "rotation": "pass"
+    },
+    {
+      "viewport": [
+        844,
+        390
+      ],
+      "buttons": 12,
+      "minHit": 50,
+      "leftHanded": true,
+      "multitouch": "pass",
+      "rotation": "pass"
+    },
+    {
+      "viewport": [
+        768,
+        1024
+      ],
+      "buttons": 12,
+      "minHit": 62,
+      "leftHanded": true,
+      "multitouch": "pass",
+      "rotation": "pass"
+    }
+  ],
+  "online": {
+    "mobileAndDesktopLogin": "pass",
+    "smallKeyboard": "pass",
+    "roomsAndLobby": "pass",
+    "twoPlayerMatch": "pass",
+    "nativeLeaveDialogs": "pass",
+    "errors": []
+  },
+  "keyboardPauseResults": "passed",
+  "savedPreferencesAndRebinding": "passed",
+  "typecheckBuild": "passed",
+  "gameAudioMobileAndApiSuites": "passed"
+}

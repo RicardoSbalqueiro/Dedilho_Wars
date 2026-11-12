@@ -94,13 +94,13 @@ export function OnlineGame({room,user,onLobby,onLeave}:{room:Room;user:User;onLo
   <button className="absolute right-3 bottom-0 text-[9px] text-white/70 hover:text-white bg-black/60 px-2 py-1 cursor-pointer" onClick={()=>setLeaving(true)}>SAIR DA PARTIDA</button>
   {!cinematic && result===null && <div className="absolute bottom-0 left-3 text-[8px] text-white/60 pointer-events-none">SEUS CONTROLES: WASD · J/K · {keyLabel(loadBindings()[0].headbutt[0])} CABEÇADA · {keyLabel(loadBindings()[0].block[0])} DEFESA · U/I/O · {keyLabel(loadBindings()[0].turn[0])} VIRAR · H · SEM PAUSA NO ONLINE</div>}
   {(lost||network==='RECONECTANDO'||network==='CONECTANDO')&&result===null&&<div className="absolute bottom-12 left-1/2 -translate-x-1/2 bg-black/85 border border-cyan-300/40 px-5 py-3 text-center text-xs"><div>{lost||'Aguardando conexão com o adversário…'}</div>{lost&&<button className="text-cyan-300 underline mt-2 cursor-pointer" onClick={onLobby}>VOLTAR À SALA</button>}</div>}
-  {result!==null&&winner&&<GameOverlay><div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-black/75 fade-in">
+  {result!==null&&winner&&<GameOverlay><div className="dw-online-result absolute inset-0 flex flex-col items-center justify-center gap-4 bg-black/75 fade-in">
    <div className="title-main text-xl text-white/80">{(host?0:1)===result?'VOCÊ VENCEU!':'FIM DA PARTIDA'}</div>
    <div className="title-main text-5xl" style={{color:CHARS[winner.char].glow}}>{winner.username}</div>
    <div className="text-sm">{CHARS[winner.char].name}</div><div className="text-xs text-white/70 text-center px-5">{FIGHTER_STYLE[winner.char].victory}</div>{finishName&&<div className="text-amber-300 text-sm">FINISHER · {finishName}</div>}<div className="text-xs text-cyan-200 text-center px-5">{reward}</div>
    <SkewBtn onClick={onLobby} color="#22d3ee">VOLTAR À SALA</SkewBtn>
    <p className="text-xs text-white/60">Para a revanche, os dois confirmam PRONTO novamente.</p>
   </div></GameOverlay>}
-  {leaving&&<GameOverlay><div className="absolute inset-0 bg-black/90 flex flex-col items-center justify-center gap-5"><div className="title-main text-3xl">SAIR DA PARTIDA?</div><p className="text-sm text-white/70">A partida continua enquanto você decide.</p><SkewBtn onClick={()=>setLeaving(false)}>CONTINUAR LUTANDO</SkewBtn><SkewBtn onClick={onLeave} color="#fb7185">SAIR DA SALA</SkewBtn></div></GameOverlay>}
+  {leaving&&<GameOverlay><div className="dw-online-leave absolute inset-0 bg-black/90 flex flex-col items-center justify-center gap-5"><div className="title-main text-3xl">SAIR DA PARTIDA?</div><p className="text-sm text-white/70">A partida continua enquanto você decide.</p><SkewBtn onClick={()=>setLeaving(false)}>CONTINUAR LUTANDO</SkewBtn><SkewBtn onClick={onLeave} color="#fb7185">SAIR DA SALA</SkewBtn></div></GameOverlay>}
  </div>;
 }

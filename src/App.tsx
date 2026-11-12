@@ -1,7 +1,5 @@
 import { Profile } from './ui/Profile';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { MobileMenu, MobileRadio, MobileShell } from './ui/MobileMenu';
-import { useMobile } from './ui/TouchControls';
 import { Frame } from './ui/common';
 import { CharSelect, Controls, DifficultySelect, MainMenu, Settings, Splash, StageSelect } from './ui/Screens';
 import type { MenuChoice } from './ui/Screens';
@@ -19,7 +17,6 @@ import type { StageId } from './game/stage';
 type Screen = 'splash' | 'menu' | 'campaigns' | 'diff' | 'select' | 'controls' | 'settings' | 'stage' | 'game' | 'online' | 'profile';
 
 export default function App() {
-  const mobile = useMobile();
   const [screen, setScreen] = useState<Screen>('splash');
   const [mode, setMode] = useState<Mode>('ai');
   const [difficulty, setDifficulty] = useState<Difficulty>(loadPrefs().difficulty);
@@ -73,18 +70,8 @@ export default function App() {
     [mode, char, opponent, stageId, difficulty, gameKey],
   );
 
-  if(mobile&&screen==='campaigns')return <CampaignMenu mobile onBack={toMenu}/>;
-  if (mobile && screen !== 'game' && screen !== 'online' && screen !== 'profile') return <>
-    <MobileMenu key={screen} screen={screen} mode={mode} p1={char} p2={opponent} stage={stageId} onStart={start} onChoose={choose} onRadio={openRadio} suspended={radioOpen}
-      onBack={() => screen === 'stage' ? toSelect() : screen === 'select' && mode === 'ai' ? setScreen('diff') : toMenu()}
-      onDifficulty={d=>{setDifficulty(d);setScreen('select')}}
-      onPick={(c,other)=>{setChar(c);setOpponent(other);setScreen('stage')}}
-      onStage={id=>{setStageId(id);setGameKey(k=>k+1);audio.music('fight');setScreen('game')}}/>
-    {radioOpen && <MobileRadio onBack={closeRadio}/>}</>;
-  if(mobile&&screen==='profile')return <MobileShell><Profile mobile onBack={toMenu} onLogin={()=>setScreen('online')}/></MobileShell>;
-  if (mobile && screen === 'online') return <MobileShell><Online mobile onBack={toMenu}/></MobileShell>;
   return (
-    <Frame game={screen === 'game'}>
+    <>
       {screen === 'splash' && <Splash onStart={start} />}
       {screen === 'menu' && <MainMenu onChoose={choose} onRadio={openRadio} suspended={radioOpen} />}
       {screen==='campaigns'&&<CampaignMenu onBack={toMenu}/>}
@@ -119,8 +106,8 @@ export default function App() {
       {screen === 'stage' && <StageSelect p1={char} p2={opponent} initialStage={stageId} suspended={radioOpen} onRadio={openRadio} onBack={toSelect} onPick={(id) => { setStageId(id); setGameKey((k) => k + 1); audio.music('fight'); setScreen('game'); }} />}
       {screen === 'controls' && <Controls onBack={toMenu} />}
       {screen === 'settings' && <Settings onBack={toMenu} />}
-      {screen === 'game' && <GameScreen key={gameKey} cfg={cfg} onExit={toMenu} onSelect={toSelect} onMap={toStage} onRadio={openRadio} inputSuspended={radioOpen} />}
-      {radioOpen && (mobile ? <MobileRadio onBack={closeRadio}/> : <RadioPanel onBack={closeRadio} />)}
-    </Frame>
+      {screen === 'game' && <Frame game><GameScreen key={gameKey} cfg={cfg} onExit={toMenu} onSelect={toSelect} onMap={toStage} onRadio={openRadio} inputSuspended={radioOpen} /></Frame>}
+      {radioOpen && <RadioPanel onBack={closeRadio} />}
+    </>
   );
 }

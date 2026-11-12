@@ -29,3 +29,5 @@ A multidão do início usa cópias compactas das 36 folhas e não substitui os a
 - Perfil/ranking, login com altura de teclado reduzida, laboratório de recursos/combos e desafios em 320/390 px, com a mesma instância de partida ao abrir/fechar ferramentas e sem erros de JavaScript.
 
 Os testes de navegador usam emulação de tela/toque. Medições de autonomia e desempenho em hardware físico não foram feitas neste ambiente.
+
+A reformulação dos menus também se aplica ao computador. Veja [Menus responsivos](menu-layout.md) para a estrutura e os controles de navegação.

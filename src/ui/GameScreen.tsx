@@ -74,14 +74,19 @@ export function GameScreen({ cfg, onExit, onSelect, onMap, onRadio, inputSuspend
     if (inputSuspended || frameLabOpen || (!paused && result === null)) return;
     const onKey = (e: KeyboardEvent) => {
       if (!['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight', 'KeyS', 'KeyW', 'Enter', 'Space'].includes(e.code)) return;
+      if (['Enter', 'Space'].includes(e.code) && e.target instanceof Element && e.target.closest('button') && !e.target.closest('[data-menu-idx]')) return;
       e.preventDefault();
       if (e.repeat) return;
       const n = paused ? (cfg.mode === 'training' ? 7 : 6) : 4;
-      if (e.code === 'ArrowDown' || e.code === 'KeyS' || (!paused && e.code === 'ArrowRight')) setSel((s) => (s + 1) % n);
-      if (e.code === 'ArrowUp' || e.code === 'KeyW' || (!paused && e.code === 'ArrowLeft')) setSel((s) => (s + n - 1) % n);
+      const direction = e.code === 'ArrowDown' || e.code === 'KeyS' || (!paused && e.code === 'ArrowRight') ? 1 : e.code === 'ArrowUp' || e.code === 'KeyW' || (!paused && e.code === 'ArrowLeft') ? -1 : 0;
+      if (direction) {
+        const next = (sel + direction + n) % n;
+        setSel(next);
+        document.querySelector<HTMLButtonElement>(`.dw-game-overlay [data-menu-idx="${next}"] button`)?.focus();
+      }
       if (e.code === 'Enter' || e.code === 'Space') {
         e.preventDefault();
-        const b = overlayRef.current?.querySelector<HTMLButtonElement>(`[data-menu-idx="${sel}"] button`);
+        const b = document.querySelector<HTMLButtonElement>(`.dw-game-overlay [data-menu-idx="${sel}"] button`);
         b?.click();
       }
     };

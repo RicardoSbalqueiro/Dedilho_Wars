@@ -87,6 +87,10 @@ O treino tem **18 desafios**, incluindo transformação, fôlego e carga de ener
 
 O online usa host autoritativo, WebRTC com relay HTTP de fallback e protocolo **`dw-online-11`**. Stamina, estoques, energia, sangue, bateria, transformação, efeitos e recuperação são sincronizados. Os dois jogadores precisam carregar a versão atual. Contas usam usuário e senha, sem email; estatísticas, histórico, XP e ranking persistem no D1. Nenhum cadastro é necessário para jogar offline.
 
+## Menus responsivos
+
+O quadro Arena Viva foi removido. Início, seleção de lutadores/mapas, campanhas, configurações, controles, rádio, perfil e online compartilham uma interface em tamanho nativo. Apenas a arena usa o frame escalável de 960×540. Os menus têm tipografia limitada, grades responsivas, rolagem própria, retorno acessível e ações de confirmação fixadas durante a rolagem. Pausa e resultados também usam diálogos nativos, com foco e navegação por teclado. Veja [a estrutura dos menus](docs/menu-layout.md).
+
 ## Cenários, áudio e apresentação
 
 Os 17 cenários e as sete músicas continuam disponíveis. A abertura sorteia um fundo e exibe demonstração de luta. Rádio Música fica na abertura, seleção e pausa; trilha original sintetizada e raps mantêm autoria “Orangotango Esfolador Rapper” nas faixas anteriormente atribuídas a Ulisses. Há controle de volume, efeitos, vozes e opções para reduzir flashes/tremor.
