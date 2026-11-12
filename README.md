@@ -20,7 +20,7 @@ No computador, cenas e combate renderizam de **1080p até 4K**. No celular, a qu
 
 ## Menus vivos e campanhas
 
-O menu inicial reúne os **18 lutadores numa pancadaria geral**, com rivais que mudam, ataques normais e transformações. Todos ficam no chão. No PC, clique no cenário para agitar a luta e levantar partículas; essa demonstração não usa Ultimates e não altera o combate das partidas.
+O menu inicial reúne os **18 lutadores numa pancadaria geral**, com rivais que mudam, ataques normais e transformações. Todos ficam no chão. No PC, use Agitar a luta ao fundo para provocar uma reação coletiva; essa demonstração não usa Ultimates e não altera o combate das partidas.
 
 A nova aba **Wars of Champions** abre uma galeria com quatro campanhas **Em breve**: **Senbukan** (Karatê Caetano), **Resenha** (Rickzera), **Got** (Renngotti) e **Campeões** (Bieubatman). Um quinto quadro avisa que mais campanhas estão vindo. Cada um tem uma ilustração de costas com um gesto próprio. Clique, toque ou navegue com as setas para destacar os quadros; Escape ou MENU INICIAL retorna. As campanhas ainda não iniciam partidas.
 
@@ -89,7 +89,7 @@ O online usa host autoritativo, WebRTC com relay HTTP de fallback e protocolo **
 
 ## Menus responsivos
 
-O PC tem uma apresentação de jogo de luta: menu vertical em faixas, seleção animada/sonora, comandos por teclado e cenário interativo. O celular mantém a grade e os controles aceitos. Veja [menu arcade no PC](docs/desktop-menu.md).
+O PC tem um menu ilustrado com composição de mangá, cinco painéis de modos sem numeração, opções na faixa superior e um lutador interativo. Percorra os 18 personagens, clique para ver golpes normais e acione suas transformações por dez segundos. Mouse e teclado compartilham o destaque; a pancadaria ao fundo reage à interação. O celular mantém a grade e os controles aceitos. Veja [menu ilustrado no PC](docs/desktop-menu.md).
 
 O quadro Arena Viva foi removido. Início, seleção de lutadores/mapas, campanhas, configurações, controles, rádio, perfil e online compartilham uma interface em tamanho nativo. Apenas a arena usa o frame escalável de 960×540. Os menus têm tipografia limitada, grades responsivas, rolagem própria, retorno acessível e ações de confirmação fixadas durante a rolagem. Pausa e resultados também usam diálogos nativos, com foco e navegação por teclado. Veja [a estrutura dos menus](docs/menu-layout.md).
 

@@ -1,7 +1,14 @@
 {
-  "date": "2026-11-12",
-  "browser": "Chromium, desktop and emulated touch",
-  "desktopFlows": [
+  "version": 2,
+  "presentation": "Illustrated desktop menus with direct mode names, no numeric badges or extra campaign labels",
+  "checks": {
+    "typecheck": "passed",
+    "productionBuild": "passed",
+    "existingRegressionSuites": "passed",
+    "desktopScreenChecks": 110,
+    "homeModeGeometryChecks": 50
+  },
+  "desktop": [
     {
       "viewport": [
         960,
@@ -633,115 +640,665 @@
       "animationPausedByRadio": "pass",
       "matchPause": "pass",
       "errors": []
-    }
-  ],
-  "desktopHomeGeometry": [
-    {
-      "viewport": [
-        960,
-        540
-      ],
-      "textClipping": false,
-      "horizontalOverflow": false,
-      "scrollHeight": 540
-    },
-    {
-      "viewport": [
-        1280,
-        720
-      ],
-      "textClipping": false,
-      "horizontalOverflow": false,
-      "scrollHeight": 720
-    },
-    {
-      "viewport": [
-        1366,
-        768
-      ],
-      "textClipping": false,
-      "horizontalOverflow": false,
-      "scrollHeight": 768
-    },
-    {
-      "viewport": [
-        1920,
-        1080
-      ],
-      "textClipping": false,
-      "horizontalOverflow": false,
-      "scrollHeight": 1080
-    },
-    {
-      "viewport": [
-        2560,
-        1440
-      ],
-      "textClipping": false,
-      "horizontalOverflow": false,
-      "scrollHeight": 1440
-    },
-    {
-      "viewport": [
-        967,
-        855
-      ],
-      "textClipping": false,
-      "horizontalOverflow": false,
-      "scrollHeight": 855
-    },
-    {
-      "viewport": [
-        1024,
-        1366
-      ],
-      "textClipping": false,
-      "horizontalOverflow": false,
-      "scrollHeight": 1366
-    },
-    {
-      "viewport": [
-        800,
-        450
-      ],
-      "textClipping": false,
-      "horizontalOverflow": false,
-      "scrollHeight": 491
     },
     {
       "viewport": [
         3440,
         1440
       ],
-      "textClipping": false,
-      "horizontalOverflow": false,
-      "scrollHeight": 1440
+      "screens": [
+        {
+          "screen": "home",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "fighters",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "viewers",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "stages",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "more-stages",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "difficulty",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "settings",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "controls",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "profile",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "online",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "campaigns",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        }
+      ],
+      "keyboardHoverEnter": "pass",
+      "backgroundInteraction": "pass",
+      "animationPausedByRadio": "pass",
+      "matchPause": "pass",
+      "errors": []
     },
     {
       "viewport": [
         3840,
         1080
       ],
-      "textClipping": false,
-      "horizontalOverflow": false,
-      "scrollHeight": 1080
+      "screens": [
+        {
+          "screen": "home",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "fighters",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "viewers",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "stages",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "more-stages",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "difficulty",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "settings",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "controls",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "profile",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "online",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        },
+        {
+          "screen": "campaigns",
+          "overflow": false,
+          "clippedText": false,
+          "nativeZoom": true
+        }
+      ],
+      "keyboardHoverEnter": "pass",
+      "backgroundInteraction": "pass",
+      "animationPausedByRadio": "pass",
+      "matchPause": "pass",
+      "errors": []
     }
   ],
-  "mobileBaselineCommit": "5e74f45660dfe14216eb5b00c1a2d5086981deeb",
-  "mobileHomeGeometryAndStylesUnchanged": [
-    [
-      320,
-      568
-    ],
-    [
-      390,
-      844
-    ],
-    [
-      844,
-      390
-    ]
+  "homeModeGeometry": [
+    {
+      "viewport": [
+        960,
+        540
+      ],
+      "mode": "play",
+      "noOverflow": true,
+      "noClippedText": true
+    },
+    {
+      "viewport": [
+        960,
+        540
+      ],
+      "mode": "versus",
+      "noOverflow": true,
+      "noClippedText": true
+    },
+    {
+      "viewport": [
+        960,
+        540
+      ],
+      "mode": "online",
+      "noOverflow": true,
+      "noClippedText": true
+    },
+    {
+      "viewport": [
+        960,
+        540
+      ],
+      "mode": "training",
+      "noOverflow": true,
+      "noClippedText": true
+    },
+    {
+      "viewport": [
+        960,
+        540
+      ],
+      "mode": "campaigns",
+      "noOverflow": true,
+      "noClippedText": true
+    },
+    {
+      "viewport": [
+        1280,
+        720
+      ],
+      "mode": "play",
+      "noOverflow": true,
+      "noClippedText": true
+    },
+    {
+      "viewport": [
+        1280,
+        720
+      ],
+      "mode": "versus",
+      "noOverflow": true,
+      "noClippedText": true
+    },
+    {
+      "viewport": [
+        1280,
+        720
+      ],
+      "mode": "online",
+      "noOverflow": true,
+      "noClippedText": true
+    },
+    {
+      "viewport": [
+        1280,
+        720
+      ],
+      "mode": "training",
+      "noOverflow": true,
+      "noClippedText": true
+    },
+    {
+      "viewport": [
+        1280,
+        720
+      ],
+      "mode": "campaigns",
+      "noOverflow": true,
+      "noClippedText": true
+    },
+    {
+      "viewport": [
+        1366,
+        768
+      ],
+      "mode": "play",
+      "noOverflow": true,
+      "noClippedText": true
+    },
+    {
+      "viewport": [
+        1366,
+        768
+      ],
+      "mode": "versus",
+      "noOverflow": true,
+      "noClippedText": true
+    },
+    {
+      "viewport": [
+        1366,
+        768
+      ],
+      "mode": "online",
+      "noOverflow": true,
+      "noClippedText": true
+    },
+    {
+      "viewport": [
+        1366,
+        768
+      ],
+      "mode": "training",
+      "noOverflow": true,
+      "noClippedText": true
+    },
+    {
+      "viewport": [
+        1366,
+        768
+      ],
+      "mode": "campaigns",
+      "noOverflow": true,
+      "noClippedText": true
+    },
+    {
+      "viewport": [
+        1920,
+        1080
+      ],
+      "mode": "play",
+      "noOverflow": true,
+      "noClippedText": true
+    },
+    {
+      "viewport": [
+        1920,
+        1080
+      ],
+      "mode": "versus",
+      "noOverflow": true,
+      "noClippedText": true
+    },
+    {
+      "viewport": [
+        1920,
+        1080
+      ],
+      "mode": "online",
+      "noOverflow": true,
+      "noClippedText": true
+    },
+    {
+      "viewport": [
+        1920,
+        1080
+      ],
+      "mode": "training",
+      "noOverflow": true,
+      "noClippedText": true
+    },
+    {
+      "viewport": [
+        1920,
+        1080
+      ],
+      "mode": "campaigns",
+      "noOverflow": true,
+      "noClippedText": true
+    },
+    {
+      "viewport": [
+        2560,
+        1440
+      ],
+      "mode": "play",
+      "noOverflow": true,
+      "noClippedText": true
+    },
+    {
+      "viewport": [
+        2560,
+        1440
+      ],
+      "mode": "versus",
+      "noOverflow": true,
+      "noClippedText": true
+    },
+    {
+      "viewport": [
+        2560,
+        1440
+      ],
+      "mode": "online",
+      "noOverflow": true,
+      "noClippedText": true
+    },
+    {
+      "viewport": [
+        2560,
+        1440
+      ],
+      "mode": "training",
+      "noOverflow": true,
+      "noClippedText": true
+    },
+    {
+      "viewport": [
+        2560,
+        1440
+      ],
+      "mode": "campaigns",
+      "noOverflow": true,
+      "noClippedText": true
+    },
+    {
+      "viewport": [
+        967,
+        855
+      ],
+      "mode": "play",
+      "noOverflow": true,
+      "noClippedText": true
+    },
+    {
+      "viewport": [
+        967,
+        855
+      ],
+      "mode": "versus",
+      "noOverflow": true,
+      "noClippedText": true
+    },
+    {
+      "viewport": [
+        967,
+        855
+      ],
+      "mode": "online",
+      "noOverflow": true,
+      "noClippedText": true
+    },
+    {
+      "viewport": [
+        967,
+        855
+      ],
+      "mode": "training",
+      "noOverflow": true,
+      "noClippedText": true
+    },
+    {
+      "viewport": [
+        967,
+        855
+      ],
+      "mode": "campaigns",
+      "noOverflow": true,
+      "noClippedText": true
+    },
+    {
+      "viewport": [
+        1024,
+        1366
+      ],
+      "mode": "play",
+      "noOverflow": true,
+      "noClippedText": true
+    },
+    {
+      "viewport": [
+        1024,
+        1366
+      ],
+      "mode": "versus",
+      "noOverflow": true,
+      "noClippedText": true
+    },
+    {
+      "viewport": [
+        1024,
+        1366
+      ],
+      "mode": "online",
+      "noOverflow": true,
+      "noClippedText": true
+    },
+    {
+      "viewport": [
+        1024,
+        1366
+      ],
+      "mode": "training",
+      "noOverflow": true,
+      "noClippedText": true
+    },
+    {
+      "viewport": [
+        1024,
+        1366
+      ],
+      "mode": "campaigns",
+      "noOverflow": true,
+      "noClippedText": true
+    },
+    {
+      "viewport": [
+        800,
+        450
+      ],
+      "mode": "play",
+      "noOverflow": true,
+      "noClippedText": true
+    },
+    {
+      "viewport": [
+        800,
+        450
+      ],
+      "mode": "versus",
+      "noOverflow": true,
+      "noClippedText": true
+    },
+    {
+      "viewport": [
+        800,
+        450
+      ],
+      "mode": "online",
+      "noOverflow": true,
+      "noClippedText": true
+    },
+    {
+      "viewport": [
+        800,
+        450
+      ],
+      "mode": "training",
+      "noOverflow": true,
+      "noClippedText": true
+    },
+    {
+      "viewport": [
+        800,
+        450
+      ],
+      "mode": "campaigns",
+      "noOverflow": true,
+      "noClippedText": true
+    },
+    {
+      "viewport": [
+        3440,
+        1440
+      ],
+      "mode": "play",
+      "noOverflow": true,
+      "noClippedText": true
+    },
+    {
+      "viewport": [
+        3440,
+        1440
+      ],
+      "mode": "versus",
+      "noOverflow": true,
+      "noClippedText": true
+    },
+    {
+      "viewport": [
+        3440,
+        1440
+      ],
+      "mode": "online",
+      "noOverflow": true,
+      "noClippedText": true
+    },
+    {
+      "viewport": [
+        3440,
+        1440
+      ],
+      "mode": "training",
+      "noOverflow": true,
+      "noClippedText": true
+    },
+    {
+      "viewport": [
+        3440,
+        1440
+      ],
+      "mode": "campaigns",
+      "noOverflow": true,
+      "noClippedText": true
+    },
+    {
+      "viewport": [
+        3840,
+        1080
+      ],
+      "mode": "play",
+      "noOverflow": true,
+      "noClippedText": true
+    },
+    {
+      "viewport": [
+        3840,
+        1080
+      ],
+      "mode": "versus",
+      "noOverflow": true,
+      "noClippedText": true
+    },
+    {
+      "viewport": [
+        3840,
+        1080
+      ],
+      "mode": "online",
+      "noOverflow": true,
+      "noClippedText": true
+    },
+    {
+      "viewport": [
+        3840,
+        1080
+      ],
+      "mode": "training",
+      "noOverflow": true,
+      "noClippedText": true
+    },
+    {
+      "viewport": [
+        3840,
+        1080
+      ],
+      "mode": "campaigns",
+      "noOverflow": true,
+      "noClippedText": true
+    }
   ],
-  "typecheckBuild": "passed",
-  "gameAudioMobileApiSuites": "passed"
+  "fighterInteractions": {
+    "normalAttack": "pass",
+    "radioPausesBothCanvasesAndTransformation": "pass",
+    "transformationExpires": "pass",
+    "transformationSeconds": 10.08,
+    "allBaseAndTransformedFighters": [
+      "caetano",
+      "orango",
+      "tubarao",
+      "rickzera",
+      "bieu",
+      "nomad",
+      "renngotti",
+      "aneninha",
+      "santox",
+      "jao",
+      "jane",
+      "cristyan",
+      "eneas",
+      "patrick",
+      "gabrielzin",
+      "ulisses",
+      "felipence",
+      "hdsh"
+    ],
+    "carouselWrapsBothDirections": "pass",
+    "groundedBrawlInteraction": "pass",
+    "errors": [],
+    "reducedMotion": "pass"
+  },
+  "mobileHome": {
+    "comparedWith": "Approved mobile home before this redesign",
+    "viewports": [
+      [
+        320,
+        568
+      ],
+      [
+        390,
+        844
+      ],
+      [
+        844,
+        390
+      ]
+    ],
+    "identicalGeometryFontsColorsAndContent": true
+  },
+  "browser": "Chromium with emulated viewports and primary pointer; physical-device performance was not measured"
 }

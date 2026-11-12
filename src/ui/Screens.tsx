@@ -89,6 +89,7 @@ function MobileMainMenu({ onChoose, onRadio, suspended = false }: { onChoose: (c
 }
 
 export function DifficultySelect({ onPick, onBack }: { onPick: (d: Difficulty) => void; onBack: () => void }) {
+  const mobile = useMobile();
   const items: [Difficulty, string, string, string][] = [
     ['easy', 'FÁCIL', '#86efac', 'Uma luta mais tranquila para aprender os golpes e explorar a arena.'],
     ['normal', 'NORMAL', '#fcd34d', 'Um desafio equilibrado, com defesas, combos e especiais.'],
@@ -109,7 +110,7 @@ export function DifficultySelect({ onPick, onBack }: { onPick: (d: Difficulty) =
   });
   return <MenuPage label="Dificuldade"><MenuHeader title="Dificuldade" eyebrow="PARTIDA CONTRA O COMPUTADOR" description="Escolha o ritmo da sua próxima luta." onBack={onBack} />
     <section className="dw-difficulty">{items.map(([id, label, color, description], i) => <button key={id} ref={el => { buttons.current[i] = el; }} className="dw-card dw-difficulty-card" style={accent(color)} onFocus={() => setSelected(i)} onClick={() => onPick(id)}>
-      <span className="dw-card-number">0{i + 1}</span><h2>{label}</h2><p>{description}</p><span className="dw-card-link">Escolher <span aria-hidden="true">→</span></span>
+      {!mobile && <div className="dw-difficulty-portrait"><FighterPortrait ch={(['jane', 'caetano', 'renngotti'] as CharId[])[i]} size={76} /></div>}<h2>{label}</h2><p>{description}</p><span className="dw-card-link">Escolher <span aria-hidden="true">→</span></span>
     </button>)}</section>
   </MenuPage>;
 }
