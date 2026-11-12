@@ -25,6 +25,7 @@ FX={
 }
 EXPECTED={ch+'-'+page for ch in CHARS for page in [*GROUPS,'ult','ult-form','reactions']}|{'jane-bike'}|{'fx-'+key for key in FX}
 VERSION=1
+WEBP_QUALITY=80
 
 def complete_figures(rgba,count,columns):
  alpha=rgba[:,:,3];labels,n=ndi.label(alpha>128,np.ones((3,3),bool));areas=np.bincount(labels.ravel())
@@ -83,11 +84,11 @@ def encode(path,out):
   for f in frames:f['referenceHeight']=ref
  source_visible=int(np.count_nonzero(alpha>48));packed_alpha=np.asarray(packed)[:,:,3];packed_visible=int(np.count_nonzero(packed_alpha>48))
  if source_visible!=packed_visible:raise ValueError('Packing changed source visible pixels')
- target=out/('action-'+stem+'.webp');packed.save(target,'WEBP',quality=94,method=4,exact=True,alpha_quality=100)
+ target=out/('action-'+stem+'.webp');packed.save(target,'WEBP',quality=WEBP_QUALITY,method=4,exact=True,alpha_quality=100)
  with Image.open(target) as check:
   if check.convert('RGBA').getchannel('A').tobytes()!=packed.getchannel('A').tobytes():raise ValueError('Encoding changed source alpha')
  kind='effects' if is_fx else 'ultimate' if page.startswith('ult') else 'prop' if page=='bike' else 'reactions' if page=='reactions' else 'moves'
- return {'ch':ch if ch in CHARS else None,'page':page,'kind':kind,'src':target.name,'width':packed.width,'height':packed.height,'columns':4,'rows':rows,'frames':frames,'sourceDrawings':count,'geometryVersion':VERSION,'sourceSha256':hashlib.sha256(path.read_bytes()).hexdigest(),'encodedSha256':hashlib.sha256(target.read_bytes()).hexdigest(),'sourceStamp':[path.stat().st_mtime_ns,path.stat().st_size],'packing':{'method':'transparent-fixed-cells' if is_fx else 'alpha128-largest-nearest-seed','sourceVisiblePixels':source_visible,'packedVisiblePixels':packed_visible,'seedAreas':seed_areas}}
+ return {'ch':ch if ch in CHARS else None,'page':page,'kind':kind,'src':target.name,'width':packed.width,'height':packed.height,'columns':4,'rows':rows,'frames':frames,'sourceDrawings':count,'geometryVersion':VERSION,'encoding':{'format':'webp','quality':WEBP_QUALITY,'alpha':'lossless'},'sourceSha256':hashlib.sha256(path.read_bytes()).hexdigest(),'encodedSha256':hashlib.sha256(target.read_bytes()).hexdigest(),'sourceStamp':[path.stat().st_mtime_ns,path.stat().st_size],'packing':{'method':'transparent-fixed-cells' if is_fx else 'alpha128-largest-nearest-seed','sourceVisiblePixels':source_visible,'packedVisiblePixels':packed_visible,'seedAreas':seed_areas}}
 
 def clips(atlases):
  result={}
@@ -111,7 +112,7 @@ def main():
   for path in sorted(args.source.glob('*.png')):
    if path.stem not in EXPECTED or args.only and path.stem not in args.only:continue
    stamp=[path.stat().st_mtime_ns,path.stat().st_size];old=manifest['atlases'].get(path.stem)
-   if old and old.get('geometryVersion')==VERSION and old.get('sourceStamp')==stamp and (args.output/old['src']).exists():continue
+   if old and old.get('geometryVersion')==VERSION and old.get('encoding',{}).get('quality')==WEBP_QUALITY and old.get('sourceStamp')==stamp and (args.output/old['src']).exists():continue
    if failed.get(path.stem)==stamp:continue
    try:
     a=encode(path,args.output);manifest['atlases'][path.stem]=a;manifest['clips']=clips(manifest['atlases']);manifest['totalDrawings']=sum(a['sourceDrawings'] for a in manifest['atlases'].values());tmp=target.with_suffix('.json.tmp');tmp.write_text(json.dumps(manifest,indent=2)+'\n');os.replace(tmp,target);print(path.stem,a['sourceDrawings'],a['width'],a['height'],'total',len(manifest['atlases']),flush=True)

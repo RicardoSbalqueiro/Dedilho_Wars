@@ -8,7 +8,7 @@ As ULTs usam 24 figuras exclusivas por forma sobre os tempos de impacto já defi
 
 Jane usa uma esportiva carenada amarela, branca e preta nas empinadas, arrancadas e quedas. O AreiaZord/EVA tem carcaça branca volumosa, placas douradas, ombreiras largas, visor com piloto, crista em V e símbolo de ampulheta no peito. Ulisses preserva sua katana na base; transformado, usa as mãos enfaixadas e garras, com tronco exposto e sobretudo rasgado. O áudio também deixa de emitir cortes de espada nessa forma.
 
-O cache decodifica duas folhas por vez, prioriza o desenho que está em uso, limita as superfícies por folha e mantém orçamentos de 16 megapixels no celular automático e 40 no desktop. Efeitos são carregados por lutador selecionado. As figuras continuam inteiras: o empacotamento não estica braços, rostos ou roupas.
+O cache decodifica duas folhas por vez, prioriza o desenho que está em uso, limita as superfícies por folha e mantém orçamentos de 16 megapixels no celular automático e 40 no desktop. Efeitos são carregados por lutador selecionado. As figuras continuam inteiras: o empacotamento não estica braços, rostos ou roupas. A compressão WebP reduz o pacote de distribuição sem remover quadros, reduzir dimensões ou alterar o canal alpha, que permanece sem perdas.
 
 A galeria de animação inclui todos os comandos, agarrão, reações e ULT. Permite alternar a forma, pausar e percorrer a sequência. A versão para download inclui as mesmas folhas e funciona offline com os arquivos extraídos.
 
