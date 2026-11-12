@@ -1,0 +1,6230 @@
+{
+  "version": 1,
+  "poses": [
+    "walkPassA",
+    "walkDownA",
+    "walkPassB",
+    "walkDownB",
+    "drawBack",
+    "halfStrike",
+    "followThrough",
+    "retract",
+    "chamber",
+    "halfKick",
+    "kickReturn",
+    "lowStrike"
+  ],
+  "formOffset": 12,
+  "atlases": {
+    "aneninha": {
+      "ch": "aneninha",
+      "geometryVersion": 3,
+      "src": "motion-aneninha.webp",
+      "width": 1084,
+      "height": 1800,
+      "columns": 4,
+      "rows": 6,
+      "referenceHeights": [
+        273,
+        273
+      ],
+      "rowReferenceHeights": [
+        273,
+        252.1276595744681,
+        239.79591836734696,
+        273,
+        253.19148936170214,
+        238.77551020408163
+      ],
+      "frames": [
+        {
+          "rect": [
+            41,
+            10,
+            188,
+            280
+          ],
+          "anchorX": 81.5,
+          "baseline": 276,
+          "height": 273,
+          "visiblePixels": 26456
+        },
+        {
+          "rect": [
+            336,
+            27,
+            141,
+            263
+          ],
+          "anchorX": 71.0,
+          "baseline": 259,
+          "height": 256,
+          "visiblePixels": 23102
+        },
+        {
+          "rect": [
+            573,
+            11,
+            209,
+            279
+          ],
+          "anchorX": 89.0,
+          "baseline": 275,
+          "height": 272,
+          "visiblePixels": 27157
+        },
+        {
+          "rect": [
+            875,
+            34,
+            146,
+            256
+          ],
+          "anchorX": 69.5,
+          "baseline": 252,
+          "height": 248,
+          "visiblePixels": 23039
+        },
+        {
+          "rect": [
+            32,
+            346,
+            206,
+            244
+          ],
+          "anchorX": 102.0,
+          "baseline": 241,
+          "height": 237,
+          "visiblePixels": 25299
+        },
+        {
+          "rect": [
+            296,
+            353,
+            220,
+            237
+          ],
+          "anchorX": 109.0,
+          "baseline": 234,
+          "height": 231,
+          "visiblePixels": 24096
+        },
+        {
+          "rect": [
+            561,
+            345,
+            232,
+            245
+          ],
+          "anchorX": 107.5,
+          "baseline": 242,
+          "height": 238,
+          "visiblePixels": 25425
+        },
+        {
+          "rect": [
+            843,
+            353,
+            210,
+            237
+          ],
+          "anchorX": 104.0,
+          "baseline": 234,
+          "height": 231,
+          "visiblePixels": 26156
+        },
+        {
+          "rect": [
+            55,
+            648,
+            161,
+            242
+          ],
+          "anchorX": 75.5,
+          "baseline": 239,
+          "height": 235,
+          "visiblePixels": 20457
+        },
+        {
+          "rect": [
+            287,
+            655,
+            239,
+            235
+          ],
+          "anchorX": 56.0,
+          "baseline": 232,
+          "height": 229,
+          "visiblePixels": 21686
+        },
+        {
+          "rect": [
+            596,
+            650,
+            163,
+            240
+          ],
+          "anchorX": 67.0,
+          "baseline": 237,
+          "height": 233,
+          "visiblePixels": 20658
+        },
+        {
+          "rect": [
+            823,
+            712,
+            250,
+            178
+          ],
+          "anchorX": 89.5,
+          "baseline": 175,
+          "height": 172,
+          "visiblePixels": 22586
+        },
+        {
+          "rect": [
+            41,
+            910,
+            188,
+            280
+          ],
+          "anchorX": 81.5,
+          "baseline": 276,
+          "height": 273,
+          "visiblePixels": 26471
+        },
+        {
+          "rect": [
+            336,
+            928,
+            141,
+            262
+          ],
+          "anchorX": 71.5,
+          "baseline": 259,
+          "height": 256,
+          "visiblePixels": 23134
+        },
+        {
+          "rect": [
+            573,
+            911,
+            209,
+            279
+          ],
+          "anchorX": 89.0,
+          "baseline": 275,
+          "height": 272,
+          "visiblePixels": 27253
+        },
+        {
+          "rect": [
+            875,
+            934,
+            146,
+            256
+          ],
+          "anchorX": 69.5,
+          "baseline": 252,
+          "height": 249,
+          "visiblePixels": 23356
+        },
+        {
+          "rect": [
+            32,
+            1245,
+            206,
+            245
+          ],
+          "anchorX": 102.0,
+          "baseline": 242,
+          "height": 238,
+          "visiblePixels": 25439
+        },
+        {
+          "rect": [
+            296,
+            1253,
+            221,
+            237
+          ],
+          "anchorX": 110.0,
+          "baseline": 234,
+          "height": 231,
+          "visiblePixels": 24282
+        },
+        {
+          "rect": [
+            562,
+            1244,
+            231,
+            246
+          ],
+          "anchorX": 106.5,
+          "baseline": 243,
+          "height": 239,
+          "visiblePixels": 25498
+        },
+        {
+          "rect": [
+            843,
+            1252,
+            210,
+            238
+          ],
+          "anchorX": 104.5,
+          "baseline": 235,
+          "height": 232,
+          "visiblePixels": 26229
+        },
+        {
+          "rect": [
+            55,
+            1553,
+            161,
+            237
+          ],
+          "anchorX": 75.5,
+          "baseline": 237,
+          "height": 234,
+          "visiblePixels": 20405
+        },
+        {
+          "rect": [
+            287,
+            1559,
+            238,
+            231
+          ],
+          "anchorX": 55.0,
+          "baseline": 231,
+          "height": 228,
+          "visiblePixels": 21677
+        },
+        {
+          "rect": [
+            595,
+            1554,
+            164,
+            236
+          ],
+          "anchorX": 67.0,
+          "baseline": 236,
+          "height": 232,
+          "visiblePixels": 20654
+        },
+        {
+          "rect": [
+            823,
+            1617,
+            251,
+            173
+          ],
+          "anchorX": 90.0,
+          "baseline": 173,
+          "height": 170,
+          "visiblePixels": 22344
+        }
+      ],
+      "packing": {
+        "method": "alpha128-largest24-nearest-seed",
+        "sourceVisiblePixels": 572859,
+        "packedVisiblePixels": 572859,
+        "sourceSeedAreas": [
+          25726,
+          22529,
+          26453,
+          22530,
+          24798,
+          23532,
+          24805,
+          25567,
+          20038,
+          21175,
+          20168,
+          21929,
+          25789,
+          22568,
+          26575,
+          22729,
+          24920,
+          23684,
+          24868,
+          25652,
+          19989,
+          21178,
+          20201,
+          21708
+        ]
+      },
+      "sourceSha256": "a264146ae16f204fb18d78a9347c9ecec7dc72c1d1acf7fa52d00f20932b4b3f",
+      "encodedSha256": "2c309f030eb36d1ce7c0f1e9b07a77d8e04d4326935a4ada805c1524ae60d780",
+      "sourceDrawings": 24
+    },
+    "bieu": {
+      "ch": "bieu",
+      "geometryVersion": 3,
+      "src": "motion-bieu.webp",
+      "width": 1140,
+      "height": 1848,
+      "columns": 4,
+      "rows": 6,
+      "referenceHeights": [
+        281,
+        278
+      ],
+      "rowReferenceHeights": [
+        281,
+        265.95744680851067,
+        241.83673469387756,
+        278,
+        255.31914893617022,
+        210.20408163265307
+      ],
+      "frames": [
+        {
+          "rect": [
+            36,
+            10,
+            212,
+            288
+          ],
+          "anchorX": 98.0,
+          "baseline": 285,
+          "height": 281,
+          "visiblePixels": 24946
+        },
+        {
+          "rect": [
+            357,
+            33,
+            141,
+            265
+          ],
+          "anchorX": 65.5,
+          "baseline": 262,
+          "height": 258,
+          "visiblePixels": 22205
+        },
+        {
+          "rect": [
+            603,
+            10,
+            219,
+            288
+          ],
+          "anchorX": 106.5,
+          "baseline": 284,
+          "height": 280,
+          "visiblePixels": 23670
+        },
+        {
+          "rect": [
+            925,
+            45,
+            145,
+            253
+          ],
+          "anchorX": 59.5,
+          "baseline": 249,
+          "height": 246,
+          "visiblePixels": 20873
+        },
+        {
+          "rect": [
+            47,
+            350,
+            190,
+            256
+          ],
+          "anchorX": 95.0,
+          "baseline": 253,
+          "height": 250,
+          "visiblePixels": 26114
+        },
+        {
+          "rect": [
+            327,
+            355,
+            201,
+            251
+          ],
+          "anchorX": 100.5,
+          "baseline": 248,
+          "height": 244,
+          "visiblePixels": 23569
+        },
+        {
+          "rect": [
+            585,
+            357,
+            255,
+            249
+          ],
+          "anchorX": 107.0,
+          "baseline": 246,
+          "height": 243,
+          "visiblePixels": 24326
+        },
+        {
+          "rect": [
+            905,
+            354,
+            184,
+            252
+          ],
+          "anchorX": 91.5,
+          "baseline": 249,
+          "height": 245,
+          "visiblePixels": 23375
+        },
+        {
+          "rect": [
+            66,
+            669,
+            152,
+            245
+          ],
+          "anchorX": 45.0,
+          "baseline": 241,
+          "height": 237,
+          "visiblePixels": 18967
+        },
+        {
+          "rect": [
+            312,
+            670,
+            230,
+            244
+          ],
+          "anchorX": 23.0,
+          "baseline": 240,
+          "height": 237,
+          "visiblePixels": 22241
+        },
+        {
+          "rect": [
+            635,
+            669,
+            155,
+            245
+          ],
+          "anchorX": 44.0,
+          "baseline": 241,
+          "height": 237,
+          "visiblePixels": 20165
+        },
+        {
+          "rect": [
+            865,
+            710,
+            264,
+            204
+          ],
+          "anchorX": 125.0,
+          "baseline": 201,
+          "height": 197,
+          "visiblePixels": 24736
+        },
+        {
+          "rect": [
+            38,
+            938,
+            208,
+            284
+          ],
+          "anchorX": 100.5,
+          "baseline": 281,
+          "height": 278,
+          "visiblePixels": 24783
+        },
+        {
+          "rect": [
+            355,
+            958,
+            144,
+            264
+          ],
+          "anchorX": 65.0,
+          "baseline": 260,
+          "height": 257,
+          "visiblePixels": 22666
+        },
+        {
+          "rect": [
+            602,
+            939,
+            220,
+            283
+          ],
+          "anchorX": 107.0,
+          "baseline": 279,
+          "height": 276,
+          "visiblePixels": 23558
+        },
+        {
+          "rect": [
+            925,
+            971,
+            145,
+            251
+          ],
+          "anchorX": 65.5,
+          "baseline": 248,
+          "height": 245,
+          "visiblePixels": 20880
+        },
+        {
+          "rect": [
+            48,
+            1284,
+            189,
+            246
+          ],
+          "anchorX": 93.5,
+          "baseline": 243,
+          "height": 240,
+          "visiblePixels": 25030
+        },
+        {
+          "rect": [
+            326,
+            1283,
+            203,
+            247
+          ],
+          "anchorX": 101.0,
+          "baseline": 243,
+          "height": 240,
+          "visiblePixels": 23569
+        },
+        {
+          "rect": [
+            585,
+            1285,
+            255,
+            245
+          ],
+          "anchorX": 103.5,
+          "baseline": 241,
+          "height": 238,
+          "visiblePixels": 23998
+        },
+        {
+          "rect": [
+            907,
+            1285,
+            181,
+            245
+          ],
+          "anchorX": 90.0,
+          "baseline": 241,
+          "height": 237,
+          "visiblePixels": 23050
+        },
+        {
+          "rect": [
+            68,
+            1624,
+            148,
+            214
+          ],
+          "anchorX": 43.5,
+          "baseline": 210,
+          "height": 206,
+          "visiblePixels": 16833
+        },
+        {
+          "rect": [
+            314,
+            1624,
+            227,
+            214
+          ],
+          "anchorX": 21.5,
+          "baseline": 210,
+          "height": 206,
+          "visiblePixels": 19866
+        },
+        {
+          "rect": [
+            635,
+            1625,
+            155,
+            213
+          ],
+          "anchorX": 42.5,
+          "baseline": 209,
+          "height": 206,
+          "visiblePixels": 18313
+        },
+        {
+          "rect": [
+            865,
+            1660,
+            265,
+            178
+          ],
+          "anchorX": 122.0,
+          "baseline": 174,
+          "height": 171,
+          "visiblePixels": 21389
+        }
+      ],
+      "packing": {
+        "method": "alpha128-largest24-nearest-seed",
+        "sourceVisiblePixels": 539122,
+        "packedVisiblePixels": 539122,
+        "sourceSeedAreas": [
+          24324,
+          21713,
+          23040,
+          20484,
+          25527,
+          23081,
+          23765,
+          22872,
+          18551,
+          21775,
+          19739,
+          24107,
+          24136,
+          22133,
+          22932,
+          20419,
+          24453,
+          23036,
+          23427,
+          22533,
+          16415,
+          19458,
+          17911,
+          20828
+        ]
+      },
+      "sourceSha256": "411f4412364b1b04fdd01cad1c4790b357c66660d6aa5109293243b6db1884b4",
+      "encodedSha256": "9f9daa6f52962508acbe97be120ca08c61d89d6b74ed86fe0cd6567efe034e37",
+      "sourceDrawings": 24
+    },
+    "caetano": {
+      "ch": "caetano",
+      "geometryVersion": 3,
+      "src": "motion-caetano.webp",
+      "width": 1000,
+      "height": 1650,
+      "columns": 4,
+      "rows": 6,
+      "referenceHeights": [
+        247,
+        246
+      ],
+      "rowReferenceHeights": [
+        247,
+        253.19148936170214,
+        253.06122448979593,
+        246,
+        252.1276595744681,
+        254.08163265306123
+      ],
+      "frames": [
+        {
+          "rect": [
+            69,
+            11,
+            112,
+            254
+          ],
+          "anchorX": 30.5,
+          "baseline": 250,
+          "height": 247,
+          "visiblePixels": 16374
+        },
+        {
+          "rect": [
+            303,
+            43,
+            144,
+            222
+          ],
+          "anchorX": 73.0,
+          "baseline": 219,
+          "height": 216,
+          "visiblePixels": 16825
+        },
+        {
+          "rect": [
+            562,
+            14,
+            125,
+            251
+          ],
+          "anchorX": 43.0,
+          "baseline": 248,
+          "height": 245,
+          "visiblePixels": 16250
+        },
+        {
+          "rect": [
+            802,
+            49,
+            145,
+            216
+          ],
+          "anchorX": 72.5,
+          "baseline": 212,
+          "height": 209,
+          "visiblePixels": 16487
+        },
+        {
+          "rect": [
+            40,
+            296,
+            169,
+            244
+          ],
+          "anchorX": 84.0,
+          "baseline": 241,
+          "height": 238,
+          "visiblePixels": 21169
+        },
+        {
+          "rect": [
+            270,
+            307,
+            209,
+            233
+          ],
+          "anchorX": 104.0,
+          "baseline": 230,
+          "height": 227,
+          "visiblePixels": 19286
+        },
+        {
+          "rect": [
+            512,
+            308,
+            225,
+            232
+          ],
+          "anchorX": 103.5,
+          "baseline": 229,
+          "height": 225,
+          "visiblePixels": 20226
+        },
+        {
+          "rect": [
+            771,
+            308,
+            207,
+            232
+          ],
+          "anchorX": 103.0,
+          "baseline": 229,
+          "height": 225,
+          "visiblePixels": 20695
+        },
+        {
+          "rect": [
+            64,
+            560,
+            122,
+            255
+          ],
+          "anchorX": 49.0,
+          "baseline": 252,
+          "height": 248,
+          "visiblePixels": 15553
+        },
+        {
+          "rect": [
+            277,
+            568,
+            195,
+            247
+          ],
+          "anchorX": 36.0,
+          "baseline": 243,
+          "height": 240,
+          "visiblePixels": 17577
+        },
+        {
+          "rect": [
+            556,
+            564,
+            137,
+            251
+          ],
+          "anchorX": 85.0,
+          "baseline": 248,
+          "height": 245,
+          "visiblePixels": 15160
+        },
+        {
+          "rect": [
+            760,
+            631,
+            230,
+            184
+          ],
+          "anchorX": 113.5,
+          "baseline": 181,
+          "height": 177,
+          "visiblePixels": 19234
+        },
+        {
+          "rect": [
+            69,
+            837,
+            112,
+            253
+          ],
+          "anchorX": 30.5,
+          "baseline": 250,
+          "height": 246,
+          "visiblePixels": 16288
+        },
+        {
+          "rect": [
+            303,
+            868,
+            144,
+            222
+          ],
+          "anchorX": 72.5,
+          "baseline": 219,
+          "height": 215,
+          "visiblePixels": 16882
+        },
+        {
+          "rect": [
+            562,
+            839,
+            126,
+            251
+          ],
+          "anchorX": 44.0,
+          "baseline": 248,
+          "height": 244,
+          "visiblePixels": 16323
+        },
+        {
+          "rect": [
+            802,
+            873,
+            145,
+            217
+          ],
+          "anchorX": 72.5,
+          "baseline": 213,
+          "height": 210,
+          "visiblePixels": 16502
+        },
+        {
+          "rect": [
+            41,
+            1121,
+            168,
+            244
+          ],
+          "anchorX": 84.0,
+          "baseline": 240,
+          "height": 237,
+          "visiblePixels": 21152
+        },
+        {
+          "rect": [
+            270,
+            1132,
+            209,
+            233
+          ],
+          "anchorX": 104.0,
+          "baseline": 230,
+          "height": 226,
+          "visiblePixels": 19263
+        },
+        {
+          "rect": [
+            512,
+            1133,
+            225,
+            232
+          ],
+          "anchorX": 103.5,
+          "baseline": 229,
+          "height": 225,
+          "visiblePixels": 20248
+        },
+        {
+          "rect": [
+            771,
+            1133,
+            207,
+            232
+          ],
+          "anchorX": 103.0,
+          "baseline": 229,
+          "height": 226,
+          "visiblePixels": 20770
+        },
+        {
+          "rect": [
+            64,
+            1385,
+            122,
+            255
+          ],
+          "anchorX": 49.0,
+          "baseline": 252,
+          "height": 249,
+          "visiblePixels": 15601
+        },
+        {
+          "rect": [
+            277,
+            1393,
+            195,
+            247
+          ],
+          "anchorX": 36.0,
+          "baseline": 243,
+          "height": 240,
+          "visiblePixels": 17600
+        },
+        {
+          "rect": [
+            556,
+            1389,
+            138,
+            251
+          ],
+          "anchorX": 86.0,
+          "baseline": 248,
+          "height": 245,
+          "visiblePixels": 15194
+        },
+        {
+          "rect": [
+            760,
+            1457,
+            230,
+            183
+          ],
+          "anchorX": 113.5,
+          "baseline": 181,
+          "height": 177,
+          "visiblePixels": 19237
+        }
+      ],
+      "packing": {
+        "method": "alpha128-largest24-nearest-seed",
+        "sourceVisiblePixels": 429896,
+        "packedVisiblePixels": 429896,
+        "sourceSeedAreas": [
+          15912,
+          16407,
+          15793,
+          16079,
+          20611,
+          18763,
+          19645,
+          20188,
+          15162,
+          17080,
+          14756,
+          18763,
+          15801,
+          16427,
+          15848,
+          16069,
+          20598,
+          18729,
+          19686,
+          20228,
+          15212,
+          17086,
+          14799,
+          18724
+        ]
+      },
+      "sourceSha256": "74c9f8f49e7197adf726cc47274e1075587fcf3f0290ab6eb27fcd8c0b9cd79e",
+      "encodedSha256": "ce2e8ee7fa352b49c1d1c3a5bf0e3360f814b988a8b9796ca7b43f10405562b9",
+      "sourceDrawings": 24
+    },
+    "cristyan": {
+      "ch": "cristyan",
+      "geometryVersion": 3,
+      "src": "motion-cristyan.webp",
+      "width": 1164,
+      "height": 1902,
+      "columns": 4,
+      "rows": 6,
+      "referenceHeights": [
+        290,
+        257
+      ],
+      "rowReferenceHeights": [
+        290,
+        282.97872340425533,
+        289.7959183673469,
+        257,
+        237.2340425531915,
+        165.3061224489796
+      ],
+      "frames": [
+        {
+          "rect": [
+            64,
+            10,
+            163,
+            297
+          ],
+          "anchorX": 85.5,
+          "baseline": 293,
+          "height": 290,
+          "visiblePixels": 20622
+        },
+        {
+          "rect": [
+            358,
+            36,
+            157,
+            271
+          ],
+          "anchorX": 69.5,
+          "baseline": 267,
+          "height": 264,
+          "visiblePixels": 22474
+        },
+        {
+          "rect": [
+            641,
+            14,
+            172,
+            293
+          ],
+          "anchorX": 75.5,
+          "baseline": 290,
+          "height": 286,
+          "visiblePixels": 18743
+        },
+        {
+          "rect": [
+            933,
+            39,
+            171,
+            268
+          ],
+          "anchorX": 89.0,
+          "baseline": 265,
+          "height": 262,
+          "visiblePixels": 20827
+        },
+        {
+          "rect": [
+            44,
+            352,
+            202,
+            272
+          ],
+          "anchorX": 97.5,
+          "baseline": 269,
+          "height": 266,
+          "visiblePixels": 25874
+        },
+        {
+          "rect": [
+            328,
+            351,
+            217,
+            273
+          ],
+          "anchorX": 108.0,
+          "baseline": 270,
+          "height": 266,
+          "visiblePixels": 23438
+        },
+        {
+          "rect": [
+            602,
+            351,
+            250,
+            273
+          ],
+          "anchorX": 120.0,
+          "baseline": 269,
+          "height": 266,
+          "visiblePixels": 24660
+        },
+        {
+          "rect": [
+            898,
+            350,
+            241,
+            274
+          ],
+          "anchorX": 120.0,
+          "baseline": 270,
+          "height": 266,
+          "visiblePixels": 24852
+        },
+        {
+          "rect": [
+            61,
+            650,
+            169,
+            291
+          ],
+          "anchorX": 57.5,
+          "baseline": 287,
+          "height": 283,
+          "visiblePixels": 20830
+        },
+        {
+          "rect": [
+            312,
+            650,
+            248,
+            291
+          ],
+          "anchorX": 43.5,
+          "baseline": 287,
+          "height": 284,
+          "visiblePixels": 20745
+        },
+        {
+          "rect": [
+            641,
+            658,
+            173,
+            283
+          ],
+          "anchorX": 68.0,
+          "baseline": 280,
+          "height": 276,
+          "visiblePixels": 19809
+        },
+        {
+          "rect": [
+            883,
+            717,
+            271,
+            224
+          ],
+          "anchorX": 106.5,
+          "baseline": 221,
+          "height": 218,
+          "visiblePixels": 23846
+        },
+        {
+          "rect": [
+            64,
+            994,
+            163,
+            264
+          ],
+          "anchorX": 86.0,
+          "baseline": 260,
+          "height": 257,
+          "visiblePixels": 17632
+        },
+        {
+          "rect": [
+            364,
+            1020,
+            145,
+            238
+          ],
+          "anchorX": 65.0,
+          "baseline": 235,
+          "height": 232,
+          "visiblePixels": 18888
+        },
+        {
+          "rect": [
+            641,
+            997,
+            172,
+            261
+          ],
+          "anchorX": 79.0,
+          "baseline": 257,
+          "height": 254,
+          "visiblePixels": 16082
+        },
+        {
+          "rect": [
+            932,
+            1021,
+            172,
+            237
+          ],
+          "anchorX": 89.5,
+          "baseline": 233,
+          "height": 229,
+          "visiblePixels": 17937
+        },
+        {
+          "rect": [
+            51,
+            1344,
+            188,
+            231
+          ],
+          "anchorX": 89.0,
+          "baseline": 227,
+          "height": 223,
+          "visiblePixels": 21028
+        },
+        {
+          "rect": [
+            338,
+            1348,
+            197,
+            227
+          ],
+          "anchorX": 97.5,
+          "baseline": 224,
+          "height": 221,
+          "visiblePixels": 18856
+        },
+        {
+          "rect": [
+            608,
+            1345,
+            239,
+            230
+          ],
+          "anchorX": 111.0,
+          "baseline": 226,
+          "height": 223,
+          "visiblePixels": 20916
+        },
+        {
+          "rect": [
+            906,
+            1345,
+            225,
+            230
+          ],
+          "anchorX": 112.0,
+          "baseline": 226,
+          "height": 222,
+          "visiblePixels": 20074
+        },
+        {
+          "rect": [
+            70,
+            1728,
+            150,
+            164
+          ],
+          "anchorX": 46.0,
+          "baseline": 164,
+          "height": 161,
+          "visiblePixels": 11910
+        },
+        {
+          "rect": [
+            324,
+            1727,
+            225,
+            165
+          ],
+          "anchorX": 41.5,
+          "baseline": 165,
+          "height": 162,
+          "visiblePixels": 12652
+        },
+        {
+          "rect": [
+            653,
+            1728,
+            149,
+            164
+          ],
+          "anchorX": 58.0,
+          "baseline": 164,
+          "height": 161,
+          "visiblePixels": 11616
+        },
+        {
+          "rect": [
+            898,
+            1762,
+            241,
+            130
+          ],
+          "anchorX": 89.5,
+          "baseline": 130,
+          "height": 127,
+          "visiblePixels": 13279
+        }
+      ],
+      "packing": {
+        "method": "alpha128-largest24-nearest-seed",
+        "sourceVisiblePixels": 467590,
+        "packedVisiblePixels": 467590,
+        "sourceSeedAreas": [
+          20096,
+          21915,
+          18222,
+          20255,
+          25297,
+          22839,
+          24069,
+          24265,
+          20356,
+          20244,
+          19348,
+          23294,
+          17141,
+          18371,
+          15638,
+          17433,
+          20524,
+          18329,
+          20372,
+          19555,
+          11561,
+          12310,
+          11289,
+          12932
+        ]
+      },
+      "sourceSha256": "54c203b324cc66b9112c661735059a57a48c4ccb34f261d12cd6b46e0dddd94f",
+      "encodedSha256": "dd7be97eb1960ac3890b10c8402f1ff2ba65047e3163b8c442aaa5fb4d0cd05d",
+      "sourceDrawings": 24
+    },
+    "eneas": {
+      "ch": "eneas",
+      "geometryVersion": 3,
+      "src": "motion-eneas.webp",
+      "width": 1180,
+      "height": 1758,
+      "columns": 4,
+      "rows": 6,
+      "referenceHeights": [
+        263,
+        267
+      ],
+      "rowReferenceHeights": [
+        263,
+        248.93617021276597,
+        262.2448979591837,
+        267,
+        248.93617021276597,
+        247.9591836734694
+      ],
+      "frames": [
+        {
+          "rect": [
+            44,
+            13,
+            207,
+            270
+          ],
+          "anchorX": 96.0,
+          "baseline": 267,
+          "height": 263,
+          "visiblePixels": 24329
+        },
+        {
+          "rect": [
+            347,
+            47,
+            190,
+            236
+          ],
+          "anchorX": 79.5,
+          "baseline": 233,
+          "height": 229,
+          "visiblePixels": 25361
+        },
+        {
+          "rect": [
+            650,
+            14,
+            174,
+            269
+          ],
+          "anchorX": 67.5,
+          "baseline": 266,
+          "height": 262,
+          "visiblePixels": 20818
+        },
+        {
+          "rect": [
+            937,
+            54,
+            190,
+            229
+          ],
+          "anchorX": 76.5,
+          "baseline": 225,
+          "height": 222,
+          "visiblePixels": 21677
+        },
+        {
+          "rect": [
+            46,
+            334,
+            202,
+            242
+          ],
+          "anchorX": 100.5,
+          "baseline": 238,
+          "height": 234,
+          "visiblePixels": 27205
+        },
+        {
+          "rect": [
+            332,
+            343,
+            221,
+            233
+          ],
+          "anchorX": 110.5,
+          "baseline": 230,
+          "height": 226,
+          "visiblePixels": 23468
+        },
+        {
+          "rect": [
+            616,
+            337,
+            243,
+            239
+          ],
+          "anchorX": 109.0,
+          "baseline": 236,
+          "height": 231,
+          "visiblePixels": 24173
+        },
+        {
+          "rect": [
+            927,
+            343,
+            210,
+            233
+          ],
+          "anchorX": 104.0,
+          "baseline": 229,
+          "height": 225,
+          "visiblePixels": 25135
+        },
+        {
+          "rect": [
+            72,
+            606,
+            151,
+            263
+          ],
+          "anchorX": 75.0,
+          "baseline": 260,
+          "height": 257,
+          "visiblePixels": 20137
+        },
+        {
+          "rect": [
+            317,
+            613,
+            250,
+            256
+          ],
+          "anchorX": 33.0,
+          "baseline": 253,
+          "height": 250,
+          "visiblePixels": 24251
+        },
+        {
+          "rect": [
+            653,
+            610,
+            168,
+            259
+          ],
+          "anchorX": 62.0,
+          "baseline": 256,
+          "height": 252,
+          "visiblePixels": 21687
+        },
+        {
+          "rect": [
+            913,
+            680,
+            238,
+            189
+          ],
+          "anchorX": 85.5,
+          "baseline": 186,
+          "height": 182,
+          "visiblePixels": 23624
+        },
+        {
+          "rect": [
+            47,
+            890,
+            200,
+            272
+          ],
+          "anchorX": 90.0,
+          "baseline": 269,
+          "height": 265,
+          "visiblePixels": 27826
+        },
+        {
+          "rect": [
+            344,
+            913,
+            197,
+            249
+          ],
+          "anchorX": 90.0,
+          "baseline": 246,
+          "height": 243,
+          "visiblePixels": 28675
+        },
+        {
+          "rect": [
+            651,
+            889,
+            172,
+            273
+          ],
+          "anchorX": 76.5,
+          "baseline": 270,
+          "height": 267,
+          "visiblePixels": 22431
+        },
+        {
+          "rect": [
+            932,
+            922,
+            201,
+            240
+          ],
+          "anchorX": 90.5,
+          "baseline": 236,
+          "height": 233,
+          "visiblePixels": 25029
+        },
+        {
+          "rect": [
+            45,
+            1213,
+            205,
+            242
+          ],
+          "anchorX": 104.5,
+          "baseline": 238,
+          "height": 234,
+          "visiblePixels": 31018
+        },
+        {
+          "rect": [
+            332,
+            1218,
+            221,
+            237
+          ],
+          "anchorX": 110.0,
+          "baseline": 234,
+          "height": 229,
+          "visiblePixels": 27340
+        },
+        {
+          "rect": [
+            614,
+            1215,
+            247,
+            240
+          ],
+          "anchorX": 110.5,
+          "baseline": 237,
+          "height": 233,
+          "visiblePixels": 27912
+        },
+        {
+          "rect": [
+            926,
+            1217,
+            212,
+            238
+          ],
+          "anchorX": 106.0,
+          "baseline": 235,
+          "height": 231,
+          "visiblePixels": 29253
+        },
+        {
+          "rect": [
+            60,
+            1500,
+            175,
+            248
+          ],
+          "anchorX": 92.5,
+          "baseline": 246,
+          "height": 243,
+          "visiblePixels": 21488
+        },
+        {
+          "rect": [
+            305,
+            1507,
+            275,
+            241
+          ],
+          "anchorX": 61.5,
+          "baseline": 239,
+          "height": 236,
+          "visiblePixels": 25366
+        },
+        {
+          "rect": [
+            643,
+            1503,
+            189,
+            245
+          ],
+          "anchorX": 85.0,
+          "baseline": 243,
+          "height": 239,
+          "visiblePixels": 23892
+        },
+        {
+          "rect": [
+            905,
+            1567,
+            255,
+            181
+          ],
+          "anchorX": 88.0,
+          "baseline": 180,
+          "height": 177,
+          "visiblePixels": 25643
+        }
+      ],
+      "packing": {
+        "method": "alpha128-largest24-nearest-seed",
+        "sourceVisiblePixels": 597738,
+        "packedVisiblePixels": 597738,
+        "sourceSeedAreas": [
+          23749,
+          24887,
+          20347,
+          21253,
+          26676,
+          22976,
+          23683,
+          24618,
+          19704,
+          23782,
+          21274,
+          23108,
+          27063,
+          27942,
+          21759,
+          24351,
+          30188,
+          26620,
+          27136,
+          28461,
+          20878,
+          24685,
+          23257,
+          24991
+        ]
+      },
+      "sourceSha256": "4449aa685b7ccc3c8d0cff5993aaa805dd2d30deb19ca3fbe8ea39431d833e80",
+      "encodedSha256": "de9aa3bf724615f50b50c06ffce8096fe384738ed7761b8a2c4ef81d2e2cc3ba",
+      "sourceDrawings": 24
+    },
+    "felipence": {
+      "ch": "felipence",
+      "geometryVersion": 3,
+      "src": "motion-felipence.webp",
+      "width": 1036,
+      "height": 1734,
+      "columns": 4,
+      "rows": 6,
+      "referenceHeights": [
+        261,
+        261
+      ],
+      "rowReferenceHeights": [
+        261,
+        232.97872340425533,
+        257.14285714285717,
+        261,
+        234.04255319148936,
+        257.14285714285717
+      ],
+      "frames": [
+        {
+          "rect": [
+            41,
+            10,
+            177,
+            269
+          ],
+          "anchorX": 84.5,
+          "baseline": 265,
+          "height": 261,
+          "visiblePixels": 19925
+        },
+        {
+          "rect": [
+            299,
+            37,
+            179,
+            242
+          ],
+          "anchorX": 80.0,
+          "baseline": 238,
+          "height": 234,
+          "visiblePixels": 21223
+        },
+        {
+          "rect": [
+            557,
+            13,
+            180,
+            266
+          ],
+          "anchorX": 87.5,
+          "baseline": 263,
+          "height": 260,
+          "visiblePixels": 20447
+        },
+        {
+          "rect": [
+            813,
+            38,
+            187,
+            241
+          ],
+          "anchorX": 83.0,
+          "baseline": 238,
+          "height": 235,
+          "visiblePixels": 20493
+        },
+        {
+          "rect": [
+            27,
+            341,
+            205,
+            227
+          ],
+          "anchorX": 102.5,
+          "baseline": 223,
+          "height": 219,
+          "visiblePixels": 20830
+        },
+        {
+          "rect": [
+            273,
+            349,
+            230,
+            219
+          ],
+          "anchorX": 108.0,
+          "baseline": 215,
+          "height": 212,
+          "visiblePixels": 21215
+        },
+        {
+          "rect": [
+            528,
+            351,
+            239,
+            217
+          ],
+          "anchorX": 106.0,
+          "baseline": 214,
+          "height": 210,
+          "visiblePixels": 21004
+        },
+        {
+          "rect": [
+            808,
+            348,
+            197,
+            220
+          ],
+          "anchorX": 100.0,
+          "baseline": 217,
+          "height": 213,
+          "visiblePixels": 20328
+        },
+        {
+          "rect": [
+            42,
+            598,
+            174,
+            259
+          ],
+          "anchorX": 86.5,
+          "baseline": 255,
+          "height": 252,
+          "visiblePixels": 22096
+        },
+        {
+          "rect": [
+            283,
+            614,
+            211,
+            243
+          ],
+          "anchorX": 105.5,
+          "baseline": 240,
+          "height": 236,
+          "visiblePixels": 20247
+        },
+        {
+          "rect": [
+            531,
+            648,
+            232,
+            209
+          ],
+          "anchorX": 95.0,
+          "baseline": 205,
+          "height": 202,
+          "visiblePixels": 20994
+        },
+        {
+          "rect": [
+            792,
+            689,
+            229,
+            168
+          ],
+          "anchorX": 86.0,
+          "baseline": 165,
+          "height": 162,
+          "visiblePixels": 17977
+        },
+        {
+          "rect": [
+            41,
+            878,
+            176,
+            268
+          ],
+          "anchorX": 84.0,
+          "baseline": 265,
+          "height": 261,
+          "visiblePixels": 19797
+        },
+        {
+          "rect": [
+            298,
+            905,
+            180,
+            241
+          ],
+          "anchorX": 81.5,
+          "baseline": 238,
+          "height": 234,
+          "visiblePixels": 21166
+        },
+        {
+          "rect": [
+            558,
+            879,
+            179,
+            267
+          ],
+          "anchorX": 87.5,
+          "baseline": 264,
+          "height": 260,
+          "visiblePixels": 20337
+        },
+        {
+          "rect": [
+            813,
+            905,
+            187,
+            241
+          ],
+          "anchorX": 83.0,
+          "baseline": 237,
+          "height": 233,
+          "visiblePixels": 20368
+        },
+        {
+          "rect": [
+            27,
+            1208,
+            204,
+            227
+          ],
+          "anchorX": 101.5,
+          "baseline": 224,
+          "height": 220,
+          "visiblePixels": 20686
+        },
+        {
+          "rect": [
+            274,
+            1217,
+            229,
+            218
+          ],
+          "anchorX": 107.5,
+          "baseline": 214,
+          "height": 211,
+          "visiblePixels": 21296
+        },
+        {
+          "rect": [
+            528,
+            1220,
+            238,
+            215
+          ],
+          "anchorX": 106.0,
+          "baseline": 212,
+          "height": 209,
+          "visiblePixels": 20844
+        },
+        {
+          "rect": [
+            808,
+            1217,
+            196,
+            218
+          ],
+          "anchorX": 99.5,
+          "baseline": 215,
+          "height": 212,
+          "visiblePixels": 20103
+        },
+        {
+          "rect": [
+            42,
+            1465,
+            175,
+            259
+          ],
+          "anchorX": 87.5,
+          "baseline": 255,
+          "height": 252,
+          "visiblePixels": 22144
+        },
+        {
+          "rect": [
+            283,
+            1481,
+            210,
+            243
+          ],
+          "anchorX": 104.5,
+          "baseline": 239,
+          "height": 236,
+          "visiblePixels": 20065
+        },
+        {
+          "rect": [
+            531,
+            1516,
+            233,
+            208
+          ],
+          "anchorX": 95.5,
+          "baseline": 204,
+          "height": 200,
+          "visiblePixels": 20653
+        },
+        {
+          "rect": [
+            792,
+            1558,
+            228,
+            166
+          ],
+          "anchorX": 86.5,
+          "baseline": 163,
+          "height": 160,
+          "visiblePixels": 17776
+        }
+      ],
+      "packing": {
+        "method": "alpha128-largest24-nearest-seed",
+        "sourceVisiblePixels": 492014,
+        "packedVisiblePixels": 492014,
+        "sourceSeedAreas": [
+          19377,
+          20693,
+          19846,
+          19934,
+          20271,
+          20645,
+          20450,
+          19779,
+          21493,
+          19650,
+          20464,
+          17568,
+          19235,
+          20614,
+          19738,
+          19824,
+          20144,
+          20740,
+          20241,
+          19554,
+          21536,
+          19472,
+          20101,
+          17347
+        ]
+      },
+      "sourceSha256": "c677458c0dd47cbeb7c7929535bd4b6c3473b1493503cf8cb1b1369a7b7fea26",
+      "encodedSha256": "20555b01d795e3bb3d2cacdfa227c80f7329ce31acc0d646f7ab10c9dd7e9b22",
+      "sourceDrawings": 24
+    },
+    "gabrielzin": {
+      "ch": "gabrielzin",
+      "geometryVersion": 3,
+      "src": "motion-gabrielzin.webp",
+      "width": 1108,
+      "height": 1926,
+      "columns": 4,
+      "rows": 6,
+      "referenceHeights": [
+        294,
+        264
+      ],
+      "rowReferenceHeights": [
+        294,
+        281.9148936170213,
+        287.7551020408163,
+        264,
+        228.72340425531917,
+        193.87755102040816
+      ],
+      "frames": [
+        {
+          "rect": [
+            29,
+            10,
+            219,
+            301
+          ],
+          "anchorX": 109.5,
+          "baseline": 297,
+          "height": 294,
+          "visiblePixels": 26366
+        },
+        {
+          "rect": [
+            340,
+            32,
+            150,
+            279
+          ],
+          "anchorX": 71.0,
+          "baseline": 275,
+          "height": 271,
+          "visiblePixels": 25762
+        },
+        {
+          "rect": [
+            604,
+            14,
+            176,
+            297
+          ],
+          "anchorX": 88.0,
+          "baseline": 293,
+          "height": 289,
+          "visiblePixels": 23960
+        },
+        {
+          "rect": [
+            898,
+            38,
+            143,
+            273
+          ],
+          "anchorX": 59.0,
+          "baseline": 269,
+          "height": 265,
+          "visiblePixels": 24062
+        },
+        {
+          "rect": [
+            35,
+            368,
+            206,
+            264
+          ],
+          "anchorX": 102.0,
+          "baseline": 261,
+          "height": 257,
+          "visiblePixels": 28397
+        },
+        {
+          "rect": [
+            292,
+            367,
+            247,
+            265
+          ],
+          "anchorX": 102.5,
+          "baseline": 262,
+          "height": 259,
+          "visiblePixels": 25247
+        },
+        {
+          "rect": [
+            564,
+            363,
+            257,
+            269
+          ],
+          "anchorX": 99.5,
+          "baseline": 265,
+          "height": 261,
+          "visiblePixels": 26589
+        },
+        {
+          "rect": [
+            875,
+            361,
+            189,
+            271
+          ],
+          "anchorX": 93.5,
+          "baseline": 268,
+          "height": 265,
+          "visiblePixels": 26715
+        },
+        {
+          "rect": [
+            70,
+            664,
+            137,
+            289
+          ],
+          "anchorX": 36.0,
+          "baseline": 286,
+          "height": 282,
+          "visiblePixels": 21591
+        },
+        {
+          "rect": [
+            297,
+            666,
+            237,
+            287
+          ],
+          "anchorX": 44.0,
+          "baseline": 283,
+          "height": 280,
+          "visiblePixels": 24206
+        },
+        {
+          "rect": [
+            612,
+            667,
+            160,
+            286
+          ],
+          "anchorX": 44.5,
+          "baseline": 282,
+          "height": 279,
+          "visiblePixels": 22344
+        },
+        {
+          "rect": [
+            849,
+            728,
+            240,
+            225
+          ],
+          "anchorX": 77.0,
+          "baseline": 221,
+          "height": 217,
+          "visiblePixels": 26298
+        },
+        {
+          "rect": [
+            31,
+            1003,
+            215,
+            271
+          ],
+          "anchorX": 109.5,
+          "baseline": 268,
+          "height": 264,
+          "visiblePixels": 27930
+        },
+        {
+          "rect": [
+            327,
+            1017,
+            177,
+            257
+          ],
+          "anchorX": 88.0,
+          "baseline": 254,
+          "height": 251,
+          "visiblePixels": 26844
+        },
+        {
+          "rect": [
+            599,
+            1007,
+            187,
+            267
+          ],
+          "anchorX": 101.0,
+          "baseline": 263,
+          "height": 260,
+          "visiblePixels": 25611
+        },
+        {
+          "rect": [
+            884,
+            1027,
+            171,
+            247
+          ],
+          "anchorX": 85.0,
+          "baseline": 243,
+          "height": 239,
+          "visiblePixels": 24612
+        },
+        {
+          "rect": [
+            37,
+            1373,
+            203,
+            222
+          ],
+          "anchorX": 102.5,
+          "baseline": 218,
+          "height": 215,
+          "visiblePixels": 27083
+        },
+        {
+          "rect": [
+            299,
+            1375,
+            232,
+            220
+          ],
+          "anchorX": 101.0,
+          "baseline": 216,
+          "height": 213,
+          "visiblePixels": 25294
+        },
+        {
+          "rect": [
+            571,
+            1372,
+            242,
+            223
+          ],
+          "anchorX": 93.5,
+          "baseline": 220,
+          "height": 216,
+          "visiblePixels": 25960
+        },
+        {
+          "rect": [
+            878,
+            1374,
+            183,
+            221
+          ],
+          "anchorX": 91.0,
+          "baseline": 218,
+          "height": 214,
+          "visiblePixels": 24956
+        },
+        {
+          "rect": [
+            70,
+            1722,
+            136,
+            194
+          ],
+          "anchorX": 52.0,
+          "baseline": 193,
+          "height": 190,
+          "visiblePixels": 15767
+        },
+        {
+          "rect": [
+            307,
+            1726,
+            217,
+            190
+          ],
+          "anchorX": 49.0,
+          "baseline": 189,
+          "height": 185,
+          "visiblePixels": 19040
+        },
+        {
+          "rect": [
+            621,
+            1722,
+            143,
+            194
+          ],
+          "anchorX": 46.5,
+          "baseline": 193,
+          "height": 190,
+          "visiblePixels": 16281
+        },
+        {
+          "rect": [
+            859,
+            1749,
+            220,
+            167
+          ],
+          "anchorX": 76.5,
+          "baseline": 166,
+          "height": 163,
+          "visiblePixels": 19564
+        }
+      ],
+      "packing": {
+        "method": "alpha128-largest24-nearest-seed",
+        "sourceVisiblePixels": 580479,
+        "packedVisiblePixels": 580479,
+        "sourceSeedAreas": [
+          25598,
+          25203,
+          23285,
+          23551,
+          27611,
+          24586,
+          25916,
+          26019,
+          21062,
+          23565,
+          21790,
+          25717,
+          27328,
+          26308,
+          25055,
+          24118,
+          26539,
+          24712,
+          25319,
+          24412,
+          15446,
+          18673,
+          15924,
+          19138
+        ]
+      },
+      "sourceSha256": "0cd99b7dd5f614a0f44e42c8de43d274a9497c6d11b90703f1c9142628bf69ad",
+      "encodedSha256": "c5f95868a921492702731ac6be5cdc663dbe8b388917ed1a409c042fc5d5e628",
+      "sourceDrawings": 24
+    },
+    "hdsh": {
+      "ch": "hdsh",
+      "geometryVersion": 3,
+      "src": "motion-hdsh.webp",
+      "width": 1168,
+      "height": 1932,
+      "columns": 4,
+      "rows": 6,
+      "referenceHeights": [
+        296,
+        257
+      ],
+      "rowReferenceHeights": [
+        296,
+        259.5744680851064,
+        273.46938775510205,
+        257,
+        217.0212765957447,
+        198.9795918367347
+      ],
+      "frames": [
+        {
+          "rect": [
+            49,
+            10,
+            194,
+            302
+          ],
+          "anchorX": 91.5,
+          "baseline": 299,
+          "height": 296,
+          "visiblePixels": 26648
+        },
+        {
+          "rect": [
+            356,
+            32,
+            164,
+            280
+          ],
+          "anchorX": 70.5,
+          "baseline": 276,
+          "height": 272,
+          "visiblePixels": 26865
+        },
+        {
+          "rect": [
+            641,
+            15,
+            177,
+            297
+          ],
+          "anchorX": 89.0,
+          "baseline": 293,
+          "height": 289,
+          "visiblePixels": 24109
+        },
+        {
+          "rect": [
+            939,
+            41,
+            165,
+            271
+          ],
+          "anchorX": 70.5,
+          "baseline": 268,
+          "height": 265,
+          "visiblePixels": 24025
+        },
+        {
+          "rect": [
+            35,
+            383,
+            221,
+            251
+          ],
+          "anchorX": 109.5,
+          "baseline": 248,
+          "height": 244,
+          "visiblePixels": 28111
+        },
+        {
+          "rect": [
+            331,
+            388,
+            214,
+            246
+          ],
+          "anchorX": 106.0,
+          "baseline": 243,
+          "height": 240,
+          "visiblePixels": 25761
+        },
+        {
+          "rect": [
+            605,
+            385,
+            250,
+            249
+          ],
+          "anchorX": 115.0,
+          "baseline": 246,
+          "height": 242,
+          "visiblePixels": 26756
+        },
+        {
+          "rect": [
+            908,
+            388,
+            228,
+            246
+          ],
+          "anchorX": 113.5,
+          "baseline": 243,
+          "height": 239,
+          "visiblePixels": 25297
+        },
+        {
+          "rect": [
+            60,
+            682,
+            172,
+            274
+          ],
+          "anchorX": 63.0,
+          "baseline": 271,
+          "height": 267,
+          "visiblePixels": 23333
+        },
+        {
+          "rect": [
+            315,
+            685,
+            246,
+            271
+          ],
+          "anchorX": 40.5,
+          "baseline": 268,
+          "height": 265,
+          "visiblePixels": 22882
+        },
+        {
+          "rect": [
+            639,
+            682,
+            181,
+            274
+          ],
+          "anchorX": 36.0,
+          "baseline": 271,
+          "height": 268,
+          "visiblePixels": 23016
+        },
+        {
+          "rect": [
+            886,
+            746,
+            272,
+            210
+          ],
+          "anchorX": 99.5,
+          "baseline": 207,
+          "height": 204,
+          "visiblePixels": 26384
+        },
+        {
+          "rect": [
+            58,
+            1014,
+            176,
+            264
+          ],
+          "anchorX": 84.5,
+          "baseline": 261,
+          "height": 257,
+          "visiblePixels": 21203
+        },
+        {
+          "rect": [
+            363,
+            1034,
+            150,
+            244
+          ],
+          "anchorX": 60.5,
+          "baseline": 240,
+          "height": 236,
+          "visiblePixels": 20842
+        },
+        {
+          "rect": [
+            651,
+            1015,
+            158,
+            263
+          ],
+          "anchorX": 79.0,
+          "baseline": 259,
+          "height": 255,
+          "visiblePixels": 19267
+        },
+        {
+          "rect": [
+            947,
+            1042,
+            149,
+            236
+          ],
+          "anchorX": 66.0,
+          "baseline": 233,
+          "height": 229,
+          "visiblePixels": 19481
+        },
+        {
+          "rect": [
+            45,
+            1389,
+            201,
+            211
+          ],
+          "anchorX": 100.0,
+          "baseline": 208,
+          "height": 204,
+          "visiblePixels": 21540
+        },
+        {
+          "rect": [
+            341,
+            1391,
+            194,
+            209
+          ],
+          "anchorX": 96.5,
+          "baseline": 206,
+          "height": 202,
+          "visiblePixels": 19679
+        },
+        {
+          "rect": [
+            617,
+            1390,
+            226,
+            210
+          ],
+          "anchorX": 102.0,
+          "baseline": 206,
+          "height": 203,
+          "visiblePixels": 20697
+        },
+        {
+          "rect": [
+            916,
+            1392,
+            211,
+            208
+          ],
+          "anchorX": 105.5,
+          "baseline": 205,
+          "height": 202,
+          "visiblePixels": 19623
+        },
+        {
+          "rect": [
+            69,
+            1720,
+            154,
+            202
+          ],
+          "anchorX": 56.0,
+          "baseline": 199,
+          "height": 195,
+          "visiblePixels": 15014
+        },
+        {
+          "rect": [
+            331,
+            1724,
+            214,
+            198
+          ],
+          "anchorX": 36.0,
+          "baseline": 194,
+          "height": 191,
+          "visiblePixels": 14946
+        },
+        {
+          "rect": [
+            651,
+            1722,
+            157,
+            200
+          ],
+          "anchorX": 30.5,
+          "baseline": 196,
+          "height": 193,
+          "visiblePixels": 14467
+        },
+        {
+          "rect": [
+            908,
+            1766,
+            228,
+            156
+          ],
+          "anchorX": 83.0,
+          "baseline": 153,
+          "height": 149,
+          "visiblePixels": 16345
+        }
+      ],
+      "packing": {
+        "method": "alpha128-largest24-nearest-seed",
+        "sourceVisiblePixels": 526291,
+        "packedVisiblePixels": 526291,
+        "sourceSeedAreas": [
+          25950,
+          26291,
+          23469,
+          23384,
+          27410,
+          25186,
+          26105,
+          24656,
+          22751,
+          22345,
+          22460,
+          25859,
+          20578,
+          20318,
+          18725,
+          18904,
+          20925,
+          19157,
+          20100,
+          19058,
+          14553,
+          14512,
+          14058,
+          15923
+        ]
+      },
+      "sourceSha256": "3b73aecbb4b91e5b8b15097526100bab02642c84627ccfea7acc59b59bfba7f8",
+      "encodedSha256": "25d4057f4332fb19c539445777b87d52a9768115363261ddf765b3808aedb0ac",
+      "sourceDrawings": 24
+    },
+    "jane": {
+      "ch": "jane",
+      "geometryVersion": 3,
+      "src": "motion-jane.webp",
+      "width": 1084,
+      "height": 1722,
+      "columns": 4,
+      "rows": 6,
+      "referenceHeights": [
+        256,
+        261
+      ],
+      "rowReferenceHeights": [
+        256,
+        246.8085106382979,
+        244.89795918367346,
+        261,
+        264.8936170212766,
+        252.0408163265306
+      ],
+      "frames": [
+        {
+          "rect": [
+            47,
+            15,
+            177,
+            262
+          ],
+          "anchorX": 93.0,
+          "baseline": 257,
+          "height": 254,
+          "visiblePixels": 22650
+        },
+        {
+          "rect": [
+            335,
+            34,
+            142,
+            243
+          ],
+          "anchorX": 72.5,
+          "baseline": 239,
+          "height": 235,
+          "visiblePixels": 20551
+        },
+        {
+          "rect": [
+            599,
+            14,
+            156,
+            263
+          ],
+          "anchorX": 98.5,
+          "baseline": 259,
+          "height": 256,
+          "visiblePixels": 21667
+        },
+        {
+          "rect": [
+            878,
+            42,
+            141,
+            235
+          ],
+          "anchorX": 84.5,
+          "baseline": 231,
+          "height": 227,
+          "visiblePixels": 20956
+        },
+        {
+          "rect": [
+            36,
+            324,
+            198,
+            240
+          ],
+          "anchorX": 100.0,
+          "baseline": 236,
+          "height": 232,
+          "visiblePixels": 24201
+        },
+        {
+          "rect": [
+            310,
+            329,
+            193,
+            235
+          ],
+          "anchorX": 95.5,
+          "baseline": 232,
+          "height": 228,
+          "visiblePixels": 22794
+        },
+        {
+          "rect": [
+            570,
+            328,
+            215,
+            236
+          ],
+          "anchorX": 86.5,
+          "baseline": 233,
+          "height": 229,
+          "visiblePixels": 23923
+        },
+        {
+          "rect": [
+            856,
+            327,
+            184,
+            237
+          ],
+          "anchorX": 91.5,
+          "baseline": 233,
+          "height": 230,
+          "visiblePixels": 22270
+        },
+        {
+          "rect": [
+            58,
+            604,
+            155,
+            247
+          ],
+          "anchorX": 59.5,
+          "baseline": 244,
+          "height": 240,
+          "visiblePixels": 18731
+        },
+        {
+          "rect": [
+            281,
+            611,
+            250,
+            240
+          ],
+          "anchorX": 60.5,
+          "baseline": 237,
+          "height": 234,
+          "visiblePixels": 22381
+        },
+        {
+          "rect": [
+            599,
+            606,
+            156,
+            245
+          ],
+          "anchorX": 90.5,
+          "baseline": 241,
+          "height": 237,
+          "visiblePixels": 19212
+        },
+        {
+          "rect": [
+            842,
+            673,
+            213,
+            178
+          ],
+          "anchorX": 71.0,
+          "baseline": 173,
+          "height": 169,
+          "visiblePixels": 19875
+        },
+        {
+          "rect": [
+            44,
+            871,
+            183,
+            267
+          ],
+          "anchorX": 102.5,
+          "baseline": 264,
+          "height": 261,
+          "visiblePixels": 23370
+        },
+        {
+          "rect": [
+            328,
+            886,
+            156,
+            252
+          ],
+          "anchorX": 95.5,
+          "baseline": 249,
+          "height": 246,
+          "visiblePixels": 22564
+        },
+        {
+          "rect": [
+            600,
+            875,
+            155,
+            263
+          ],
+          "anchorX": 105.0,
+          "baseline": 260,
+          "height": 257,
+          "visiblePixels": 21851
+        },
+        {
+          "rect": [
+            867,
+            888,
+            163,
+            250
+          ],
+          "anchorX": 79.5,
+          "baseline": 246,
+          "height": 242,
+          "visiblePixels": 22319
+        },
+        {
+          "rect": [
+            24,
+            1167,
+            223,
+            258
+          ],
+          "anchorX": 112.0,
+          "baseline": 253,
+          "height": 249,
+          "visiblePixels": 26282
+        },
+        {
+          "rect": [
+            299,
+            1171,
+            214,
+            254
+          ],
+          "anchorX": 108.0,
+          "baseline": 249,
+          "height": 246,
+          "visiblePixels": 25402
+        },
+        {
+          "rect": [
+            564,
+            1170,
+            226,
+            255
+          ],
+          "anchorX": 93.5,
+          "baseline": 251,
+          "height": 247,
+          "visiblePixels": 25440
+        },
+        {
+          "rect": [
+            847,
+            1175,
+            203,
+            250
+          ],
+          "anchorX": 101.5,
+          "baseline": 245,
+          "height": 242,
+          "visiblePixels": 24809
+        },
+        {
+          "rect": [
+            54,
+            1461,
+            163,
+            251
+          ],
+          "anchorX": 64.0,
+          "baseline": 250,
+          "height": 247,
+          "visiblePixels": 20305
+        },
+        {
+          "rect": [
+            281,
+            1469,
+            251,
+            243
+          ],
+          "anchorX": 52.5,
+          "baseline": 243,
+          "height": 240,
+          "visiblePixels": 21985
+        },
+        {
+          "rect": [
+            595,
+            1461,
+            165,
+            251
+          ],
+          "anchorX": 94.5,
+          "baseline": 251,
+          "height": 247,
+          "visiblePixels": 20969
+        },
+        {
+          "rect": [
+            839,
+            1522,
+            219,
+            190
+          ],
+          "anchorX": 70.5,
+          "baseline": 190,
+          "height": 186,
+          "visiblePixels": 22757
+        }
+      ],
+      "packing": {
+        "method": "alpha128-largest24-nearest-seed",
+        "sourceVisiblePixels": 537264,
+        "packedVisiblePixels": 537264,
+        "sourceSeedAreas": [
+          21932,
+          19936,
+          20992,
+          20344,
+          23493,
+          22049,
+          23110,
+          21557,
+          18148,
+          21656,
+          18639,
+          19202,
+          22541,
+          21830,
+          21065,
+          21578,
+          25345,
+          24447,
+          24422,
+          24000,
+          19624,
+          21199,
+          20275,
+          22075
+        ]
+      },
+      "sourceSha256": "1afb3fbb46766207b199bd70289ad0a6e78e0a339450cc4d8ebc9785eb732f97",
+      "encodedSha256": "34047c02b00fe31bbd46630113ad418a9a40798ae0855c66b300e98ccc11428e",
+      "sourceDrawings": 24
+    },
+    "jao": {
+      "ch": "jao",
+      "geometryVersion": 3,
+      "src": "motion-jao.webp",
+      "width": 1068,
+      "height": 1848,
+      "columns": 4,
+      "rows": 6,
+      "referenceHeights": [
+        281,
+        268
+      ],
+      "rowReferenceHeights": [
+        281,
+        258.51063829787233,
+        259.18367346938777,
+        268,
+        212.76595744680853,
+        200.0
+      ],
+      "frames": [
+        {
+          "rect": [
+            46,
+            10,
+            174,
+            288
+          ],
+          "anchorX": 93.5,
+          "baseline": 285,
+          "height": 281,
+          "visiblePixels": 22684
+        },
+        {
+          "rect": [
+            324,
+            31,
+            152,
+            267
+          ],
+          "anchorX": 71.5,
+          "baseline": 264,
+          "height": 261,
+          "visiblePixels": 23289
+        },
+        {
+          "rect": [
+            598,
+            14,
+            138,
+            284
+          ],
+          "anchorX": 69.0,
+          "baseline": 281,
+          "height": 277,
+          "visiblePixels": 20152
+        },
+        {
+          "rect": [
+            857,
+            34,
+            154,
+            264
+          ],
+          "anchorX": 76.5,
+          "baseline": 261,
+          "height": 258,
+          "visiblePixels": 21982
+        },
+        {
+          "rect": [
+            30,
+            357,
+            207,
+            249
+          ],
+          "anchorX": 103.0,
+          "baseline": 246,
+          "height": 243,
+          "visiblePixels": 25312
+        },
+        {
+          "rect": [
+            295,
+            360,
+            210,
+            246
+          ],
+          "anchorX": 104.5,
+          "baseline": 243,
+          "height": 239,
+          "visiblePixels": 21970
+        },
+        {
+          "rect": [
+            553,
+            359,
+            228,
+            247
+          ],
+          "anchorX": 105.5,
+          "baseline": 243,
+          "height": 240,
+          "visiblePixels": 22959
+        },
+        {
+          "rect": [
+            831,
+            359,
+            206,
+            247
+          ],
+          "anchorX": 103.0,
+          "baseline": 244,
+          "height": 241,
+          "visiblePixels": 23395
+        },
+        {
+          "rect": [
+            67,
+            655,
+            132,
+            259
+          ],
+          "anchorX": 53.0,
+          "baseline": 256,
+          "height": 253,
+          "visiblePixels": 18235
+        },
+        {
+          "rect": [
+            290,
+            654,
+            220,
+            260
+          ],
+          "anchorX": 56.0,
+          "baseline": 257,
+          "height": 254,
+          "visiblePixels": 19323
+        },
+        {
+          "rect": [
+            589,
+            653,
+            157,
+            261
+          ],
+          "anchorX": 64.5,
+          "baseline": 258,
+          "height": 254,
+          "visiblePixels": 19707
+        },
+        {
+          "rect": [
+            811,
+            718,
+            247,
+            196
+          ],
+          "anchorX": 80.0,
+          "baseline": 193,
+          "height": 190,
+          "visiblePixels": 22013
+        },
+        {
+          "rect": [
+            47,
+            946,
+            172,
+            276
+          ],
+          "anchorX": 92.5,
+          "baseline": 272,
+          "height": 268,
+          "visiblePixels": 21653
+        },
+        {
+          "rect": [
+            326,
+            965,
+            149,
+            257
+          ],
+          "anchorX": 70.5,
+          "baseline": 253,
+          "height": 250,
+          "visiblePixels": 21918
+        },
+        {
+          "rect": [
+            599,
+            949,
+            136,
+            273
+          ],
+          "anchorX": 69.5,
+          "baseline": 270,
+          "height": 267,
+          "visiblePixels": 19306
+        },
+        {
+          "rect": [
+            859,
+            969,
+            150,
+            253
+          ],
+          "anchorX": 75.0,
+          "baseline": 249,
+          "height": 245,
+          "visiblePixels": 20845
+        },
+        {
+          "rect": [
+            32,
+            1324,
+            202,
+            206
+          ],
+          "anchorX": 100.5,
+          "baseline": 203,
+          "height": 200,
+          "visiblePixels": 20795
+        },
+        {
+          "rect": [
+            298,
+            1329,
+            205,
+            201
+          ],
+          "anchorX": 102.0,
+          "baseline": 198,
+          "height": 195,
+          "visiblePixels": 17813
+        },
+        {
+          "rect": [
+            554,
+            1327,
+            226,
+            203
+          ],
+          "anchorX": 103.0,
+          "baseline": 200,
+          "height": 197,
+          "visiblePixels": 19392
+        },
+        {
+          "rect": [
+            831,
+            1328,
+            207,
+            202
+          ],
+          "anchorX": 103.0,
+          "baseline": 199,
+          "height": 196,
+          "visiblePixels": 18829
+        },
+        {
+          "rect": [
+            69,
+            1637,
+            128,
+            201
+          ],
+          "anchorX": 50.5,
+          "baseline": 199,
+          "height": 195,
+          "visiblePixels": 13435
+        },
+        {
+          "rect": [
+            294,
+            1640,
+            213,
+            198
+          ],
+          "anchorX": 53.0,
+          "baseline": 197,
+          "height": 194,
+          "visiblePixels": 14926
+        },
+        {
+          "rect": [
+            592,
+            1637,
+            150,
+            201
+          ],
+          "anchorX": 58.5,
+          "baseline": 199,
+          "height": 196,
+          "visiblePixels": 14835
+        },
+        {
+          "rect": [
+            811,
+            1689,
+            246,
+            149
+          ],
+          "anchorX": 80.5,
+          "baseline": 148,
+          "height": 144,
+          "visiblePixels": 16931
+        }
+      ],
+      "packing": {
+        "method": "alpha128-largest24-nearest-seed",
+        "sourceVisiblePixels": 481699,
+        "packedVisiblePixels": 481699,
+        "sourceSeedAreas": [
+          22114,
+          22786,
+          19683,
+          21563,
+          24779,
+          21516,
+          22452,
+          22888,
+          17844,
+          18953,
+          19343,
+          21558,
+          21124,
+          21463,
+          18821,
+          20421,
+          20338,
+          17391,
+          18922,
+          18424,
+          13096,
+          14575,
+          14532,
+          16540
+        ]
+      },
+      "sourceSha256": "f69460c7feea40227491619cb968385e9b46aa65153c3acf55dacd92abcf92b0",
+      "encodedSha256": "2e140e3e227b47c7978e706d9aae169ea3dcef422465de976dbf4273eb207391",
+      "sourceDrawings": 24
+    },
+    "nomad": {
+      "ch": "nomad",
+      "geometryVersion": 3,
+      "src": "motion-nomad.webp",
+      "width": 1084,
+      "height": 1824,
+      "columns": 4,
+      "rows": 6,
+      "referenceHeights": [
+        278,
+        264
+      ],
+      "rowReferenceHeights": [
+        278,
+        262.7659574468085,
+        268.36734693877554,
+        264,
+        241.48936170212767,
+        209.18367346938777
+      ],
+      "frames": [
+        {
+          "rect": [
+            40,
+            10,
+            190,
+            284
+          ],
+          "anchorX": 101.5,
+          "baseline": 281,
+          "height": 278,
+          "visiblePixels": 22694
+        },
+        {
+          "rect": [
+            332,
+            31,
+            149,
+            263
+          ],
+          "anchorX": 64.5,
+          "baseline": 259,
+          "height": 255,
+          "visiblePixels": 21478
+        },
+        {
+          "rect": [
+            578,
+            10,
+            199,
+            284
+          ],
+          "anchorX": 84.5,
+          "baseline": 280,
+          "height": 277,
+          "visiblePixels": 23842
+        },
+        {
+          "rect": [
+            874,
+            43,
+            149,
+            251
+          ],
+          "anchorX": 50.5,
+          "baseline": 248,
+          "height": 245,
+          "visiblePixels": 19350
+        },
+        {
+          "rect": [
+            35,
+            350,
+            201,
+            248
+          ],
+          "anchorX": 99.5,
+          "baseline": 245,
+          "height": 242,
+          "visiblePixels": 26234
+        },
+        {
+          "rect": [
+            301,
+            354,
+            210,
+            244
+          ],
+          "anchorX": 104.5,
+          "baseline": 241,
+          "height": 238,
+          "visiblePixels": 23640
+        },
+        {
+          "rect": [
+            555,
+            354,
+            244,
+            244
+          ],
+          "anchorX": 115.5,
+          "baseline": 241,
+          "height": 237,
+          "visiblePixels": 24379
+        },
+        {
+          "rect": [
+            853,
+            344,
+            191,
+            254
+          ],
+          "anchorX": 95.0,
+          "baseline": 250,
+          "height": 247,
+          "visiblePixels": 24773
+        },
+        {
+          "rect": [
+            59,
+            633,
+            153,
+            269
+          ],
+          "anchorX": 54.5,
+          "baseline": 266,
+          "height": 263,
+          "visiblePixels": 19853
+        },
+        {
+          "rect": [
+            294,
+            634,
+            225,
+            268
+          ],
+          "anchorX": 47.0,
+          "baseline": 265,
+          "height": 261,
+          "visiblePixels": 21260
+        },
+        {
+          "rect": [
+            608,
+            640,
+            138,
+            262
+          ],
+          "anchorX": 67.0,
+          "baseline": 259,
+          "height": 256,
+          "visiblePixels": 18685
+        },
+        {
+          "rect": [
+            823,
+            703,
+            251,
+            199
+          ],
+          "anchorX": 94.0,
+          "baseline": 195,
+          "height": 191,
+          "visiblePixels": 22078
+        },
+        {
+          "rect": [
+            43,
+            935,
+            185,
+            271
+          ],
+          "anchorX": 97.0,
+          "baseline": 268,
+          "height": 264,
+          "visiblePixels": 21420
+        },
+        {
+          "rect": [
+            331,
+            957,
+            150,
+            249
+          ],
+          "anchorX": 64.0,
+          "baseline": 246,
+          "height": 243,
+          "visiblePixels": 21000
+        },
+        {
+          "rect": [
+            578,
+            936,
+            199,
+            270
+          ],
+          "anchorX": 85.0,
+          "baseline": 267,
+          "height": 263,
+          "visiblePixels": 23093
+        },
+        {
+          "rect": [
+            875,
+            966,
+            147,
+            240
+          ],
+          "anchorX": 53.0,
+          "baseline": 237,
+          "height": 233,
+          "visiblePixels": 18704
+        },
+        {
+          "rect": [
+            39,
+            1282,
+            192,
+            228
+          ],
+          "anchorX": 95.0,
+          "baseline": 224,
+          "height": 221,
+          "visiblePixels": 23887
+        },
+        {
+          "rect": [
+            302,
+            1284,
+            208,
+            226
+          ],
+          "anchorX": 104.0,
+          "baseline": 222,
+          "height": 218,
+          "visiblePixels": 21774
+        },
+        {
+          "rect": [
+            557,
+            1283,
+            241,
+            227
+          ],
+          "anchorX": 115.0,
+          "baseline": 224,
+          "height": 220,
+          "visiblePixels": 22938
+        },
+        {
+          "rect": [
+            852,
+            1277,
+            192,
+            233
+          ],
+          "anchorX": 95.5,
+          "baseline": 230,
+          "height": 227,
+          "visiblePixels": 22907
+        },
+        {
+          "rect": [
+            68,
+            1605,
+            134,
+            209
+          ],
+          "anchorX": 46.0,
+          "baseline": 208,
+          "height": 205,
+          "visiblePixels": 14238
+        },
+        {
+          "rect": [
+            302,
+            1606,
+            209,
+            208
+          ],
+          "anchorX": 39.5,
+          "baseline": 208,
+          "height": 204,
+          "visiblePixels": 16179
+        },
+        {
+          "rect": [
+            613,
+            1607,
+            129,
+            207
+          ],
+          "anchorX": 61.0,
+          "baseline": 206,
+          "height": 201,
+          "visiblePixels": 13756
+        },
+        {
+          "rect": [
+            837,
+            1659,
+            223,
+            155
+          ],
+          "anchorX": 81.5,
+          "baseline": 155,
+          "height": 151,
+          "visiblePixels": 15934
+        }
+      ],
+      "packing": {
+        "method": "alpha128-largest24-nearest-seed",
+        "sourceVisiblePixels": 504096,
+        "packedVisiblePixels": 504096,
+        "sourceSeedAreas": [
+          22109,
+          20974,
+          23116,
+          18876,
+          25580,
+          23069,
+          23735,
+          24143,
+          19411,
+          20752,
+          18206,
+          21539,
+          20802,
+          20472,
+          22367,
+          18243,
+          23256,
+          21230,
+          22316,
+          22313,
+          13849,
+          15740,
+          13355,
+          15494
+        ]
+      },
+      "sourceSha256": "2e778b550d1f8a3101109df7ae8e0bfb160efc2b654b5db7491a9c6c3f2d1a7a",
+      "encodedSha256": "b63c049ab9c1c219ecef1fc78669aa7389652894075138bc5bf90472ceb34887",
+      "sourceDrawings": 24
+    },
+    "orango": {
+      "ch": "orango",
+      "geometryVersion": 3,
+      "src": "motion-orango.webp",
+      "width": 1260,
+      "height": 1644,
+      "columns": 4,
+      "rows": 6,
+      "referenceHeights": [
+        223,
+        225
+      ],
+      "rowReferenceHeights": [
+        223,
+        235.10638297872342,
+        251.0204081632653,
+        225,
+        235.10638297872342,
+        251.0204081632653
+      ],
+      "frames": [
+        {
+          "rect": [
+            34,
+            33,
+            246,
+            231
+          ],
+          "anchorX": 151.5,
+          "baseline": 227,
+          "height": 223,
+          "visiblePixels": 37041
+        },
+        {
+          "rect": [
+            359,
+            53,
+            226,
+            211
+          ],
+          "anchorX": 105.5,
+          "baseline": 207,
+          "height": 203,
+          "visiblePixels": 32804
+        },
+        {
+          "rect": [
+            664,
+            47,
+            247,
+            217
+          ],
+          "anchorX": 132.0,
+          "baseline": 214,
+          "height": 211,
+          "visiblePixels": 34485
+        },
+        {
+          "rect": [
+            988,
+            57,
+            229,
+            207
+          ],
+          "anchorX": 130.0,
+          "baseline": 204,
+          "height": 200,
+          "visiblePixels": 32442
+        },
+        {
+          "rect": [
+            42,
+            310,
+            230,
+            228
+          ],
+          "anchorX": 114.0,
+          "baseline": 225,
+          "height": 221,
+          "visiblePixels": 34446
+        },
+        {
+          "rect": [
+            351,
+            321,
+            242,
+            217
+          ],
+          "anchorX": 96.5,
+          "baseline": 214,
+          "height": 210,
+          "visiblePixels": 32487
+        },
+        {
+          "rect": [
+            640,
+            316,
+            295,
+            222
+          ],
+          "anchorX": 99.0,
+          "baseline": 219,
+          "height": 216,
+          "visiblePixels": 33651
+        },
+        {
+          "rect": [
+            986,
+            317,
+            233,
+            221
+          ],
+          "anchorX": 113.5,
+          "baseline": 218,
+          "height": 215,
+          "visiblePixels": 34903
+        },
+        {
+          "rect": [
+            43,
+            558,
+            229,
+            254
+          ],
+          "anchorX": 110.5,
+          "baseline": 250,
+          "height": 246,
+          "visiblePixels": 35221
+        },
+        {
+          "rect": [
+            356,
+            592,
+            233,
+            220
+          ],
+          "anchorX": 107.0,
+          "baseline": 217,
+          "height": 214,
+          "visiblePixels": 33655
+        },
+        {
+          "rect": [
+            671,
+            607,
+            232,
+            205
+          ],
+          "anchorX": 110.0,
+          "baseline": 202,
+          "height": 199,
+          "visiblePixels": 32580
+        },
+        {
+          "rect": [
+            975,
+            618,
+            254,
+            194
+          ],
+          "anchorX": 127.5,
+          "baseline": 191,
+          "height": 188,
+          "visiblePixels": 34204
+        },
+        {
+          "rect": [
+            34,
+            855,
+            246,
+            231
+          ],
+          "anchorX": 150.5,
+          "baseline": 228,
+          "height": 225,
+          "visiblePixels": 37095
+        },
+        {
+          "rect": [
+            359,
+            875,
+            226,
+            211
+          ],
+          "anchorX": 105.5,
+          "baseline": 208,
+          "height": 205,
+          "visiblePixels": 32820
+        },
+        {
+          "rect": [
+            664,
+            868,
+            246,
+            218
+          ],
+          "anchorX": 154.5,
+          "baseline": 215,
+          "height": 211,
+          "visiblePixels": 34402
+        },
+        {
+          "rect": [
+            988,
+            881,
+            228,
+            205
+          ],
+          "anchorX": 130.0,
+          "baseline": 202,
+          "height": 199,
+          "visiblePixels": 32133
+        },
+        {
+          "rect": [
+            42,
+            1131,
+            231,
+            229
+          ],
+          "anchorX": 114.5,
+          "baseline": 225,
+          "height": 221,
+          "visiblePixels": 34269
+        },
+        {
+          "rect": [
+            351,
+            1143,
+            242,
+            217
+          ],
+          "anchorX": 96.5,
+          "baseline": 214,
+          "height": 210,
+          "visiblePixels": 32307
+        },
+        {
+          "rect": [
+            640,
+            1139,
+            295,
+            221
+          ],
+          "anchorX": 100.0,
+          "baseline": 218,
+          "height": 214,
+          "visiblePixels": 33578
+        },
+        {
+          "rect": [
+            985,
+            1139,
+            234,
+            221
+          ],
+          "anchorX": 112.0,
+          "baseline": 218,
+          "height": 215,
+          "visiblePixels": 34836
+        },
+        {
+          "rect": [
+            43,
+            1381,
+            228,
+            253
+          ],
+          "anchorX": 110.0,
+          "baseline": 250,
+          "height": 246,
+          "visiblePixels": 35049
+        },
+        {
+          "rect": [
+            355,
+            1415,
+            235,
+            219
+          ],
+          "anchorX": 108.0,
+          "baseline": 216,
+          "height": 213,
+          "visiblePixels": 33565
+        },
+        {
+          "rect": [
+            672,
+            1430,
+            231,
+            204
+          ],
+          "anchorX": 110.0,
+          "baseline": 200,
+          "height": 197,
+          "visiblePixels": 32350
+        },
+        {
+          "rect": [
+            975,
+            1440,
+            254,
+            194
+          ],
+          "anchorX": 127.0,
+          "baseline": 191,
+          "height": 188,
+          "visiblePixels": 33881
+        }
+      ],
+      "packing": {
+        "method": "alpha128-largest24-nearest-seed",
+        "sourceVisiblePixels": 814204,
+        "packedVisiblePixels": 814204,
+        "sourceSeedAreas": [
+          36369,
+          32264,
+          33822,
+          31935,
+          33837,
+          31826,
+          32945,
+          34291,
+          34457,
+          32984,
+          32002,
+          33700,
+          36411,
+          32240,
+          33678,
+          31552,
+          33612,
+          31568,
+          32757,
+          34111,
+          34257,
+          32861,
+          31692,
+          33292
+        ]
+      },
+      "sourceSha256": "d54ebe925b9257d3e6724e16115bf1c375ca4e5c70a372c48e3de51d8938303c",
+      "encodedSha256": "a99bf464c31009af5e1e1436cfd42e3df017ca802eeca7dc26bd0a510639bb79",
+      "sourceDrawings": 24
+    },
+    "patrick": {
+      "ch": "patrick",
+      "geometryVersion": 3,
+      "src": "motion-patrick.webp",
+      "width": 1052,
+      "height": 1836,
+      "columns": 4,
+      "rows": 6,
+      "referenceHeights": [
+        279,
+        262
+      ],
+      "rowReferenceHeights": [
+        279,
+        265.95744680851067,
+        265.3061224489796,
+        262,
+        239.36170212765958,
+        198.9795918367347
+      ],
+      "frames": [
+        {
+          "rect": [
+            44,
+            14,
+            175,
+            282
+          ],
+          "anchorX": 90.0,
+          "baseline": 279,
+          "height": 275,
+          "visiblePixels": 21608
+        },
+        {
+          "rect": [
+            319,
+            35,
+            150,
+            261
+          ],
+          "anchorX": 76.0,
+          "baseline": 257,
+          "height": 253,
+          "visiblePixels": 20051
+        },
+        {
+          "rect": [
+            561,
+            10,
+            193,
+            286
+          ],
+          "anchorX": 80.0,
+          "baseline": 283,
+          "height": 279,
+          "visiblePixels": 22670
+        },
+        {
+          "rect": [
+            842,
+            44,
+            156,
+            252
+          ],
+          "anchorX": 54.5,
+          "baseline": 248,
+          "height": 245,
+          "visiblePixels": 18149
+        },
+        {
+          "rect": [
+            21,
+            345,
+            221,
+            257
+          ],
+          "anchorX": 110.0,
+          "baseline": 253,
+          "height": 250,
+          "visiblePixels": 24882
+        },
+        {
+          "rect": [
+            282,
+            356,
+            225,
+            246
+          ],
+          "anchorX": 106.0,
+          "baseline": 243,
+          "height": 240,
+          "visiblePixels": 22646
+        },
+        {
+          "rect": [
+            537,
+            358,
+            241,
+            244
+          ],
+          "anchorX": 118.0,
+          "baseline": 240,
+          "height": 237,
+          "visiblePixels": 23196
+        },
+        {
+          "rect": [
+            802,
+            349,
+            236,
+            253
+          ],
+          "anchorX": 116.5,
+          "baseline": 250,
+          "height": 247,
+          "visiblePixels": 23380
+        },
+        {
+          "rect": [
+            66,
+            641,
+            131,
+            267
+          ],
+          "anchorX": 66.5,
+          "baseline": 263,
+          "height": 259,
+          "visiblePixels": 17239
+        },
+        {
+          "rect": [
+            275,
+            646,
+            239,
+            262
+          ],
+          "anchorX": 42.5,
+          "baseline": 259,
+          "height": 255,
+          "visiblePixels": 21110
+        },
+        {
+          "rect": [
+            589,
+            641,
+            137,
+            267
+          ],
+          "anchorX": 68.5,
+          "baseline": 264,
+          "height": 260,
+          "visiblePixels": 18082
+        },
+        {
+          "rect": [
+            799,
+            704,
+            243,
+            204
+          ],
+          "anchorX": 93.0,
+          "baseline": 201,
+          "height": 197,
+          "visiblePixels": 20952
+        },
+        {
+          "rect": [
+            41,
+            949,
+            181,
+            265
+          ],
+          "anchorX": 94.0,
+          "baseline": 261,
+          "height": 258,
+          "visiblePixels": 22133
+        },
+        {
+          "rect": [
+            322,
+            966,
+            145,
+            248
+          ],
+          "anchorX": 69.0,
+          "baseline": 245,
+          "height": 241,
+          "visiblePixels": 20825
+        },
+        {
+          "rect": [
+            558,
+            944,
+            199,
+            270
+          ],
+          "anchorX": 89.5,
+          "baseline": 266,
+          "height": 262,
+          "visiblePixels": 23971
+        },
+        {
+          "rect": [
+            841,
+            980,
+            159,
+            234
+          ],
+          "anchorX": 55.0,
+          "baseline": 231,
+          "height": 228,
+          "visiblePixels": 18920
+        },
+        {
+          "rect": [
+            18,
+            1287,
+            226,
+            233
+          ],
+          "anchorX": 112.5,
+          "baseline": 229,
+          "height": 225,
+          "visiblePixels": 26555
+        },
+        {
+          "rect": [
+            277,
+            1295,
+            235,
+            225
+          ],
+          "anchorX": 117.0,
+          "baseline": 221,
+          "height": 218,
+          "visiblePixels": 24508
+        },
+        {
+          "rect": [
+            536,
+            1297,
+            243,
+            223
+          ],
+          "anchorX": 118.0,
+          "baseline": 220,
+          "height": 217,
+          "visiblePixels": 23623
+        },
+        {
+          "rect": [
+            799,
+            1293,
+            242,
+            227
+          ],
+          "anchorX": 120.5,
+          "baseline": 223,
+          "height": 219,
+          "visiblePixels": 24360
+        },
+        {
+          "rect": [
+            64,
+            1624,
+            134,
+            202
+          ],
+          "anchorX": 68.0,
+          "baseline": 199,
+          "height": 195,
+          "visiblePixels": 14352
+        },
+        {
+          "rect": [
+            278,
+            1631,
+            233,
+            195
+          ],
+          "anchorX": 34.0,
+          "baseline": 193,
+          "height": 190,
+          "visiblePixels": 18687
+        },
+        {
+          "rect": [
+            587,
+            1626,
+            140,
+            200
+          ],
+          "anchorX": 73.0,
+          "baseline": 197,
+          "height": 193,
+          "visiblePixels": 15312
+        },
+        {
+          "rect": [
+            800,
+            1667,
+            241,
+            159
+          ],
+          "anchorX": 95.0,
+          "baseline": 157,
+          "height": 153,
+          "visiblePixels": 19209
+        }
+      ],
+      "packing": {
+        "method": "alpha128-largest24-nearest-seed",
+        "sourceVisiblePixels": 506420,
+        "packedVisiblePixels": 506420,
+        "sourceSeedAreas": [
+          21013,
+          19587,
+          22005,
+          17724,
+          24279,
+          22079,
+          22593,
+          22793,
+          16789,
+          20541,
+          17588,
+          20454,
+          21440,
+          20225,
+          23231,
+          18361,
+          25850,
+          23859,
+          22900,
+          23718,
+          13932,
+          18121,
+          14901,
+          18703
+        ]
+      },
+      "sourceSha256": "3dd2b0bf9d683d74289c34efdb5095728bca18b48b5cc1dc915e5a13006f3627",
+      "encodedSha256": "66b2fea1649b5aadf3ff13b0b2fe4304416f6206ec92b294a3c2a44b3f08c3ef",
+      "sourceDrawings": 24
+    },
+    "renngotti": {
+      "ch": "renngotti",
+      "geometryVersion": 3,
+      "src": "motion-renngotti.webp",
+      "width": 1088,
+      "height": 1902,
+      "columns": 4,
+      "rows": 6,
+      "referenceHeights": [
+        290,
+        291
+      ],
+      "rowReferenceHeights": [
+        290,
+        258.51063829787233,
+        245.9183673469388,
+        291,
+        255.31914893617022,
+        185.71428571428572
+      ],
+      "frames": [
+        {
+          "rect": [
+            39,
+            10,
+            193,
+            297
+          ],
+          "anchorX": 88.0,
+          "baseline": 293,
+          "height": 290,
+          "visiblePixels": 26073
+        },
+        {
+          "rect": [
+            326,
+            32,
+            164,
+            275
+          ],
+          "anchorX": 99.0,
+          "baseline": 272,
+          "height": 268,
+          "visiblePixels": 26033
+        },
+        {
+          "rect": [
+            578,
+            10,
+            204,
+            297
+          ],
+          "anchorX": 88.0,
+          "baseline": 293,
+          "height": 290,
+          "visiblePixels": 26635
+        },
+        {
+          "rect": [
+            866,
+            49,
+            171,
+            258
+          ],
+          "anchorX": 123.0,
+          "baseline": 254,
+          "height": 251,
+          "visiblePixels": 24131
+        },
+        {
+          "rect": [
+            22,
+            375,
+            227,
+            249
+          ],
+          "anchorX": 113.0,
+          "baseline": 246,
+          "height": 243,
+          "visiblePixels": 28140
+        },
+        {
+          "rect": [
+            293,
+            384,
+            229,
+            240
+          ],
+          "anchorX": 113.5,
+          "baseline": 237,
+          "height": 234,
+          "visiblePixels": 24383
+        },
+        {
+          "rect": [
+            561,
+            379,
+            237,
+            245
+          ],
+          "anchorX": 113.0,
+          "baseline": 242,
+          "height": 239,
+          "visiblePixels": 26074
+        },
+        {
+          "rect": [
+            838,
+            381,
+            227,
+            243
+          ],
+          "anchorX": 113.0,
+          "baseline": 239,
+          "height": 236,
+          "visiblePixels": 26305
+        },
+        {
+          "rect": [
+            60,
+            693,
+            152,
+            248
+          ],
+          "anchorX": 71.0,
+          "baseline": 245,
+          "height": 241,
+          "visiblePixels": 18636
+        },
+        {
+          "rect": [
+            290,
+            700,
+            236,
+            241
+          ],
+          "anchorX": 53.0,
+          "baseline": 238,
+          "height": 235,
+          "visiblePixels": 20278
+        },
+        {
+          "rect": [
+            604,
+            698,
+            151,
+            243
+          ],
+          "anchorX": 101.5,
+          "baseline": 240,
+          "height": 236,
+          "visiblePixels": 18892
+        },
+        {
+          "rect": [
+            833,
+            742,
+            238,
+            199
+          ],
+          "anchorX": 79.0,
+          "baseline": 196,
+          "height": 193,
+          "visiblePixels": 23812
+        },
+        {
+          "rect": [
+            39,
+            961,
+            194,
+            297
+          ],
+          "anchorX": 88.0,
+          "baseline": 294,
+          "height": 291,
+          "visiblePixels": 27280
+        },
+        {
+          "rect": [
+            326,
+            981,
+            164,
+            277
+          ],
+          "anchorX": 99.0,
+          "baseline": 274,
+          "height": 270,
+          "visiblePixels": 26862
+        },
+        {
+          "rect": [
+            578,
+            962,
+            204,
+            296
+          ],
+          "anchorX": 88.0,
+          "baseline": 293,
+          "height": 290,
+          "visiblePixels": 27268
+        },
+        {
+          "rect": [
+            868,
+            998,
+            168,
+            260
+          ],
+          "anchorX": 120.5,
+          "baseline": 256,
+          "height": 252,
+          "visiblePixels": 24771
+        },
+        {
+          "rect": [
+            23,
+            1328,
+            226,
+            247
+          ],
+          "anchorX": 113.0,
+          "baseline": 243,
+          "height": 240,
+          "visiblePixels": 30497
+        },
+        {
+          "rect": [
+            293,
+            1334,
+            229,
+            241
+          ],
+          "anchorX": 114.0,
+          "baseline": 237,
+          "height": 234,
+          "visiblePixels": 26370
+        },
+        {
+          "rect": [
+            562,
+            1329,
+            236,
+            246
+          ],
+          "anchorX": 113.0,
+          "baseline": 242,
+          "height": 239,
+          "visiblePixels": 27152
+        },
+        {
+          "rect": [
+            839,
+            1333,
+            226,
+            242
+          ],
+          "anchorX": 112.0,
+          "baseline": 239,
+          "height": 235,
+          "visiblePixels": 27534
+        },
+        {
+          "rect": [
+            56,
+            1705,
+            160,
+            187
+          ],
+          "anchorX": 89.0,
+          "baseline": 186,
+          "height": 182,
+          "visiblePixels": 15231
+        },
+        {
+          "rect": [
+            282,
+            1713,
+            252,
+            179
+          ],
+          "anchorX": 79.5,
+          "baseline": 178,
+          "height": 175,
+          "visiblePixels": 17237
+        },
+        {
+          "rect": [
+            600,
+            1710,
+            159,
+            182
+          ],
+          "anchorX": 96.5,
+          "baseline": 181,
+          "height": 178,
+          "visiblePixels": 15275
+        },
+        {
+          "rect": [
+            832,
+            1753,
+            240,
+            139
+          ],
+          "anchorX": 86.5,
+          "baseline": 138,
+          "height": 135,
+          "visiblePixels": 16563
+        }
+      ],
+      "packing": {
+        "method": "alpha128-largest24-nearest-seed",
+        "sourceVisiblePixels": 571432,
+        "packedVisiblePixels": 571432,
+        "sourceSeedAreas": [
+          25547,
+          25592,
+          26087,
+          23648,
+          27594,
+          23864,
+          25520,
+          25809,
+          18260,
+          19852,
+          18528,
+          23378,
+          26619,
+          26108,
+          26614,
+          24134,
+          29654,
+          25575,
+          26358,
+          26779,
+          14761,
+          16600,
+          14814,
+          16106
+        ]
+      },
+      "sourceSha256": "ebf546bbd2bd25e92b076b7fc9361ce49542ff6d005d8725f22c644bb9292b2b",
+      "encodedSha256": "58a4efd68a80c608a86ae29d232344e548d0c8c43d16420c1298321e41218da2",
+      "sourceDrawings": 24
+    },
+    "rickzera": {
+      "ch": "rickzera",
+      "geometryVersion": 3,
+      "src": "motion-rickzera.webp",
+      "width": 1064,
+      "height": 1956,
+      "columns": 4,
+      "rows": 6,
+      "referenceHeights": [
+        299,
+        289
+      ],
+      "rowReferenceHeights": [
+        299,
+        259.5744680851064,
+        265.3061224489796,
+        289,
+        243.61702127659575,
+        190.81632653061226
+      ],
+      "frames": [
+        {
+          "rect": [
+            34,
+            16,
+            197,
+            300
+          ],
+          "anchorX": 100.0,
+          "baseline": 297,
+          "height": 294,
+          "visiblePixels": 21742
+        },
+        {
+          "rect": [
+            319,
+            39,
+            159,
+            277
+          ],
+          "anchorX": 71.5,
+          "baseline": 273,
+          "height": 269,
+          "visiblePixels": 23413
+        },
+        {
+          "rect": [
+            587,
+            10,
+            155,
+            306
+          ],
+          "anchorX": 80.5,
+          "baseline": 302,
+          "height": 299,
+          "visiblePixels": 20856
+        },
+        {
+          "rect": [
+            858,
+            30,
+            145,
+            286
+          ],
+          "anchorX": 76.5,
+          "baseline": 282,
+          "height": 278,
+          "visiblePixels": 22202
+        },
+        {
+          "rect": [
+            32,
+            391,
+            202,
+            251
+          ],
+          "anchorX": 98.5,
+          "baseline": 247,
+          "height": 243,
+          "visiblePixels": 25177
+        },
+        {
+          "rect": [
+            281,
+            398,
+            236,
+            244
+          ],
+          "anchorX": 117.0,
+          "baseline": 241,
+          "height": 238,
+          "visiblePixels": 22531
+        },
+        {
+          "rect": [
+            542,
+            396,
+            246,
+            246
+          ],
+          "anchorX": 105.5,
+          "baseline": 242,
+          "height": 238,
+          "visiblePixels": 22721
+        },
+        {
+          "rect": [
+            833,
+            391,
+            196,
+            251
+          ],
+          "anchorX": 97.5,
+          "baseline": 247,
+          "height": 244,
+          "visiblePixels": 23551
+        },
+        {
+          "rect": [
+            65,
+            702,
+            135,
+            266
+          ],
+          "anchorX": 71.5,
+          "baseline": 263,
+          "height": 260,
+          "visiblePixels": 17396
+        },
+        {
+          "rect": [
+            289,
+            708,
+            219,
+            260
+          ],
+          "anchorX": 22.0,
+          "baseline": 257,
+          "height": 253,
+          "visiblePixels": 20648
+        },
+        {
+          "rect": [
+            594,
+            710,
+            141,
+            258
+          ],
+          "anchorX": 80.5,
+          "baseline": 255,
+          "height": 252,
+          "visiblePixels": 17445
+        },
+        {
+          "rect": [
+            813,
+            761,
+            235,
+            207
+          ],
+          "anchorX": 92.0,
+          "baseline": 204,
+          "height": 201,
+          "visiblePixels": 20434
+        },
+        {
+          "rect": [
+            32,
+            1000,
+            202,
+            294
+          ],
+          "anchorX": 100.5,
+          "baseline": 290,
+          "height": 286,
+          "visiblePixels": 22180
+        },
+        {
+          "rect": [
+            320,
+            1016,
+            157,
+            278
+          ],
+          "anchorX": 73.0,
+          "baseline": 275,
+          "height": 271,
+          "visiblePixels": 23287
+        },
+        {
+          "rect": [
+            588,
+            998,
+            153,
+            296
+          ],
+          "anchorX": 76.0,
+          "baseline": 292,
+          "height": 289,
+          "visiblePixels": 20466
+        },
+        {
+          "rect": [
+            858,
+            1017,
+            145,
+            277
+          ],
+          "anchorX": 98.0,
+          "baseline": 273,
+          "height": 270,
+          "visiblePixels": 21433
+        },
+        {
+          "rect": [
+            33,
+            1384,
+            199,
+            236
+          ],
+          "anchorX": 95.5,
+          "baseline": 232,
+          "height": 229,
+          "visiblePixels": 24507
+        },
+        {
+          "rect": [
+            284,
+            1390,
+            229,
+            230
+          ],
+          "anchorX": 113.5,
+          "baseline": 226,
+          "height": 223,
+          "visiblePixels": 21411
+        },
+        {
+          "rect": [
+            546,
+            1389,
+            238,
+            231
+          ],
+          "anchorX": 105.0,
+          "baseline": 227,
+          "height": 223,
+          "visiblePixels": 21514
+        },
+        {
+          "rect": [
+            833,
+            1385,
+            195,
+            235
+          ],
+          "anchorX": 97.0,
+          "baseline": 231,
+          "height": 228,
+          "visiblePixels": 21805
+        },
+        {
+          "rect": [
+            67,
+            1755,
+            131,
+            191
+          ],
+          "anchorX": 73.5,
+          "baseline": 190,
+          "height": 187,
+          "visiblePixels": 13212
+        },
+        {
+          "rect": [
+            288,
+            1761,
+            221,
+            185
+          ],
+          "anchorX": 30.0,
+          "baseline": 185,
+          "height": 182,
+          "visiblePixels": 15822
+        },
+        {
+          "rect": [
+            594,
+            1758,
+            142,
+            188
+          ],
+          "anchorX": 84.5,
+          "baseline": 187,
+          "height": 184,
+          "visiblePixels": 13729
+        },
+        {
+          "rect": [
+            819,
+            1795,
+            223,
+            151
+          ],
+          "anchorX": 87.5,
+          "baseline": 151,
+          "height": 147,
+          "visiblePixels": 15111
+        }
+      ],
+      "packing": {
+        "method": "alpha128-largest24-nearest-seed",
+        "sourceVisiblePixels": 492593,
+        "packedVisiblePixels": 492593,
+        "sourceSeedAreas": [
+          21191,
+          22812,
+          20278,
+          21623,
+          24534,
+          21952,
+          22119,
+          22989,
+          17021,
+          20129,
+          17041,
+          19911,
+          21623,
+          22750,
+          19885,
+          20885,
+          23874,
+          20844,
+          20957,
+          21285,
+          12878,
+          15414,
+          13341,
+          14652
+        ]
+      },
+      "sourceSha256": "36c9962a280a5786415343376d44fd41a41673f1f425a46738f8521d9c1da5b6",
+      "encodedSha256": "39d81e83527d90bf7e1c2aa920ac39fe089cd545c2562ab0b809842e3d99438d",
+      "sourceDrawings": 24
+    },
+    "santox": {
+      "ch": "santox",
+      "geometryVersion": 3,
+      "src": "motion-santox.webp",
+      "width": 1056,
+      "height": 1818,
+      "columns": 4,
+      "rows": 6,
+      "referenceHeights": [
+        267,
+        248
+      ],
+      "rowReferenceHeights": [
+        267,
+        268.0851063829787,
+        282.6530612244898,
+        248,
+        238.29787234042556,
+        222.44897959183675
+      ],
+      "frames": [
+        {
+          "rect": [
+            49,
+            23,
+            166,
+            270
+          ],
+          "anchorX": 84.5,
+          "baseline": 267,
+          "height": 263,
+          "visiblePixels": 21437
+        },
+        {
+          "rect": [
+            325,
+            42,
+            141,
+            251
+          ],
+          "anchorX": 55.5,
+          "baseline": 247,
+          "height": 244,
+          "visiblePixels": 20347
+        },
+        {
+          "rect": [
+            564,
+            19,
+            192,
+            274
+          ],
+          "anchorX": 83.0,
+          "baseline": 271,
+          "height": 267,
+          "visiblePixels": 23082
+        },
+        {
+          "rect": [
+            854,
+            54,
+            140,
+            239
+          ],
+          "anchorX": 72.5,
+          "baseline": 235,
+          "height": 231,
+          "visiblePixels": 20775
+        },
+        {
+          "rect": [
+            39,
+            336,
+            186,
+            260
+          ],
+          "anchorX": 90.0,
+          "baseline": 256,
+          "height": 252,
+          "visiblePixels": 28428
+        },
+        {
+          "rect": [
+            295,
+            337,
+            201,
+            259
+          ],
+          "anchorX": 100.0,
+          "baseline": 255,
+          "height": 252,
+          "visiblePixels": 24999
+        },
+        {
+          "rect": [
+            538,
+            336,
+            244,
+            260
+          ],
+          "anchorX": 112.0,
+          "baseline": 256,
+          "height": 252,
+          "visiblePixels": 26379
+        },
+        {
+          "rect": [
+            818,
+            336,
+            212,
+            260
+          ],
+          "anchorX": 106.0,
+          "baseline": 256,
+          "height": 252,
+          "visiblePixels": 26785
+        },
+        {
+          "rect": [
+            53,
+            616,
+            158,
+            283
+          ],
+          "anchorX": 65.5,
+          "baseline": 280,
+          "height": 277,
+          "visiblePixels": 22939
+        },
+        {
+          "rect": [
+            279,
+            619,
+            234,
+            280
+          ],
+          "anchorX": 48.5,
+          "baseline": 277,
+          "height": 274,
+          "visiblePixels": 24227
+        },
+        {
+          "rect": [
+            580,
+            631,
+            159,
+            268
+          ],
+          "anchorX": 50.5,
+          "baseline": 265,
+          "height": 261,
+          "visiblePixels": 22438
+        },
+        {
+          "rect": [
+            804,
+            689,
+            239,
+            210
+          ],
+          "anchorX": 94.0,
+          "baseline": 206,
+          "height": 203,
+          "visiblePixels": 24192
+        },
+        {
+          "rect": [
+            41,
+            946,
+            182,
+            256
+          ],
+          "anchorX": 89.5,
+          "baseline": 252,
+          "height": 248,
+          "visiblePixels": 18438
+        },
+        {
+          "rect": [
+            321,
+            961,
+            150,
+            241
+          ],
+          "anchorX": 58.0,
+          "baseline": 237,
+          "height": 233,
+          "visiblePixels": 17927
+        },
+        {
+          "rect": [
+            561,
+            948,
+            198,
+            254
+          ],
+          "anchorX": 86.0,
+          "baseline": 250,
+          "height": 246,
+          "visiblePixels": 19326
+        },
+        {
+          "rect": [
+            856,
+            961,
+            136,
+            241
+          ],
+          "anchorX": 76.5,
+          "baseline": 237,
+          "height": 234,
+          "visiblePixels": 17517
+        },
+        {
+          "rect": [
+            40,
+            1275,
+            184,
+            230
+          ],
+          "anchorX": 91.5,
+          "baseline": 227,
+          "height": 224,
+          "visiblePixels": 21359
+        },
+        {
+          "rect": [
+            298,
+            1277,
+            196,
+            228
+          ],
+          "anchorX": 97.0,
+          "baseline": 225,
+          "height": 222,
+          "visiblePixels": 20142
+        },
+        {
+          "rect": [
+            539,
+            1275,
+            242,
+            230
+          ],
+          "anchorX": 102.0,
+          "baseline": 226,
+          "height": 223,
+          "visiblePixels": 20839
+        },
+        {
+          "rect": [
+            826,
+            1283,
+            195,
+            222
+          ],
+          "anchorX": 97.5,
+          "baseline": 219,
+          "height": 216,
+          "visiblePixels": 20702
+        },
+        {
+          "rect": [
+            62,
+            1586,
+            139,
+            222
+          ],
+          "anchorX": 59.5,
+          "baseline": 222,
+          "height": 218,
+          "visiblePixels": 16522
+        },
+        {
+          "rect": [
+            288,
+            1587,
+            215,
+            221
+          ],
+          "anchorX": 30.0,
+          "baseline": 221,
+          "height": 218,
+          "visiblePixels": 17637
+        },
+        {
+          "rect": [
+            587,
+            1589,
+            146,
+            219
+          ],
+          "anchorX": 44.5,
+          "baseline": 218,
+          "height": 215,
+          "visiblePixels": 17076
+        },
+        {
+          "rect": [
+            804,
+            1630,
+            240,
+            178
+          ],
+          "anchorX": 83.5,
+          "baseline": 178,
+          "height": 174,
+          "visiblePixels": 18883
+        }
+      ],
+      "packing": {
+        "method": "alpha128-largest24-nearest-seed",
+        "sourceVisiblePixels": 512396,
+        "packedVisiblePixels": 512396,
+        "sourceSeedAreas": [
+          20769,
+          19772,
+          22414,
+          20222,
+          27590,
+          24321,
+          25612,
+          26117,
+          22317,
+          23565,
+          21833,
+          23542,
+          17664,
+          17344,
+          18449,
+          16897,
+          20557,
+          19453,
+          20096,
+          20008,
+          15950,
+          17081,
+          16462,
+          18302
+        ]
+      },
+      "sourceSha256": "fc17edded969131ae9c5a314fbf665460776fa020490b7f804962dc426d54f63",
+      "encodedSha256": "5f3bb8b211969c2f3dbe7575c63b45e5cfdb13b6e6bf6e152e8945c93f0896c3",
+      "sourceDrawings": 24
+    },
+    "tubarao": {
+      "ch": "tubarao",
+      "geometryVersion": 3,
+      "src": "motion-tubarao.webp",
+      "width": 1132,
+      "height": 1644,
+      "columns": 4,
+      "rows": 6,
+      "referenceHeights": [
+        247,
+        240
+      ],
+      "rowReferenceHeights": [
+        247,
+        255.31914893617022,
+        252.0408163265306,
+        230,
+        255.31914893617022,
+        235.71428571428572
+      ],
+      "frames": [
+        {
+          "rect": [
+            39,
+            10,
+            205,
+            254
+          ],
+          "anchorX": 97.0,
+          "baseline": 250,
+          "height": 247,
+          "visiblePixels": 23668
+        },
+        {
+          "rect": [
+            326,
+            32,
+            196,
+            232
+          ],
+          "anchorX": 82.0,
+          "baseline": 228,
+          "height": 225,
+          "visiblePixels": 23722
+        },
+        {
+          "rect": [
+            602,
+            11,
+            210,
+            253
+          ],
+          "anchorX": 96.0,
+          "baseline": 250,
+          "height": 247,
+          "visiblePixels": 25498
+        },
+        {
+          "rect": [
+            889,
+            47,
+            202,
+            217
+          ],
+          "anchorX": 81.0,
+          "baseline": 214,
+          "height": 211,
+          "visiblePixels": 23569
+        },
+        {
+          "rect": [
+            31,
+            291,
+            221,
+            247
+          ],
+          "anchorX": 109.5,
+          "baseline": 244,
+          "height": 240,
+          "visiblePixels": 27771
+        },
+        {
+          "rect": [
+            312,
+            294,
+            225,
+            244
+          ],
+          "anchorX": 108.5,
+          "baseline": 240,
+          "height": 237,
+          "visiblePixels": 25779
+        },
+        {
+          "rect": [
+            588,
+            291,
+            238,
+            247
+          ],
+          "anchorX": 107.5,
+          "baseline": 244,
+          "height": 241,
+          "visiblePixels": 26759
+        },
+        {
+          "rect": [
+            878,
+            297,
+            224,
+            241
+          ],
+          "anchorX": 111.5,
+          "baseline": 237,
+          "height": 233,
+          "visiblePixels": 25516
+        },
+        {
+          "rect": [
+            51,
+            559,
+            180,
+            253
+          ],
+          "anchorX": 76.0,
+          "baseline": 249,
+          "height": 246,
+          "visiblePixels": 23140
+        },
+        {
+          "rect": [
+            293,
+            558,
+            263,
+            254
+          ],
+          "anchorX": 68.5,
+          "baseline": 250,
+          "height": 247,
+          "visiblePixels": 23450
+        },
+        {
+          "rect": [
+            619,
+            560,
+            177,
+            252
+          ],
+          "anchorX": 81.0,
+          "baseline": 248,
+          "height": 244,
+          "visiblePixels": 21128
+        },
+        {
+          "rect": [
+            861,
+            598,
+            258,
+            214
+          ],
+          "anchorX": 100.5,
+          "baseline": 210,
+          "height": 206,
+          "visiblePixels": 26329
+        },
+        {
+          "rect": [
+            29,
+            849,
+            224,
+            237
+          ],
+          "anchorX": 112.0,
+          "baseline": 234,
+          "height": 230,
+          "visiblePixels": 22460
+        },
+        {
+          "rect": [
+            310,
+            850,
+            228,
+            236
+          ],
+          "anchorX": 114.0,
+          "baseline": 233,
+          "height": 229,
+          "visiblePixels": 21815
+        },
+        {
+          "rect": [
+            585,
+            853,
+            245,
+            233
+          ],
+          "anchorX": 122.5,
+          "baseline": 230,
+          "height": 226,
+          "visiblePixels": 21230
+        },
+        {
+          "rect": [
+            878,
+            848,
+            225,
+            238
+          ],
+          "anchorX": 112.5,
+          "baseline": 234,
+          "height": 230,
+          "visiblePixels": 24063
+        },
+        {
+          "rect": [
+            27,
+            1114,
+            229,
+            246
+          ],
+          "anchorX": 114.5,
+          "baseline": 243,
+          "height": 240,
+          "visiblePixels": 25730
+        },
+        {
+          "rect": [
+            302,
+            1114,
+            244,
+            246
+          ],
+          "anchorX": 122.0,
+          "baseline": 243,
+          "height": 239,
+          "visiblePixels": 24772
+        },
+        {
+          "rect": [
+            591,
+            1121,
+            232,
+            239
+          ],
+          "anchorX": 116.0,
+          "baseline": 235,
+          "height": 231,
+          "visiblePixels": 23905
+        },
+        {
+          "rect": [
+            870,
+            1137,
+            240,
+            223
+          ],
+          "anchorX": 120.0,
+          "baseline": 220,
+          "height": 217,
+          "visiblePixels": 25532
+        },
+        {
+          "rect": [
+            22,
+            1397,
+            238,
+            237
+          ],
+          "anchorX": 119.0,
+          "baseline": 234,
+          "height": 231,
+          "visiblePixels": 23484
+        },
+        {
+          "rect": [
+            302,
+            1398,
+            245,
+            236
+          ],
+          "anchorX": 122.5,
+          "baseline": 232,
+          "height": 228,
+          "visiblePixels": 24923
+        },
+        {
+          "rect": [
+            592,
+            1398,
+            231,
+            236
+          ],
+          "anchorX": 115.5,
+          "baseline": 233,
+          "height": 230,
+          "visiblePixels": 22197
+        },
+        {
+          "rect": [
+            872,
+            1412,
+            236,
+            222
+          ],
+          "anchorX": 118.0,
+          "baseline": 219,
+          "height": 216,
+          "visiblePixels": 23869
+        }
+      ],
+      "packing": {
+        "method": "alpha128-largest24-nearest-seed",
+        "sourceVisiblePixels": 580309,
+        "packedVisiblePixels": 580309,
+        "sourceSeedAreas": [
+          23080,
+          23227,
+          24888,
+          23087,
+          27049,
+          25213,
+          26176,
+          24983,
+          22651,
+          22975,
+          20687,
+          25723,
+          21978,
+          21341,
+          20736,
+          23553,
+          25198,
+          24304,
+          23410,
+          25041,
+          22984,
+          24466,
+          21735,
+          23403
+        ]
+      },
+      "sourceSha256": "e3ebc9902f9686345c453c07c69230bd63ac0f89508ebfed4cdce27fc3ca1f43",
+      "encodedSha256": "22b8822cd7229a9d7aaedb3a3cd472d8127969b4e646cd0c7d980aeb793f969a",
+      "sourceDrawings": 24
+    },
+    "ulisses": {
+      "ch": "ulisses",
+      "geometryVersion": 3,
+      "src": "motion-ulisses.webp",
+      "width": 1156,
+      "height": 1626,
+      "columns": 4,
+      "rows": 6,
+      "referenceHeights": [
+        241,
+        241
+      ],
+      "rowReferenceHeights": [
+        241,
+        248.93617021276597,
+        248.9795918367347,
+        241,
+        248.93617021276597,
+        247.9591836734694
+      ],
+      "frames": [
+        {
+          "rect": [
+            51,
+            14,
+            187,
+            247
+          ],
+          "anchorX": 111.0,
+          "baseline": 244,
+          "height": 240,
+          "visiblePixels": 21223
+        },
+        {
+          "rect": [
+            339,
+            46,
+            188,
+            215
+          ],
+          "anchorX": 106.0,
+          "baseline": 212,
+          "height": 209,
+          "visiblePixels": 21235
+        },
+        {
+          "rect": [
+            630,
+            13,
+            185,
+            248
+          ],
+          "anchorX": 88.5,
+          "baseline": 244,
+          "height": 241,
+          "visiblePixels": 19003
+        },
+        {
+          "rect": [
+            919,
+            48,
+            184,
+            213
+          ],
+          "anchorX": 101.0,
+          "baseline": 209,
+          "height": 206,
+          "visiblePixels": 21135
+        },
+        {
+          "rect": [
+            46,
+            291,
+            196,
+            241
+          ],
+          "anchorX": 108.0,
+          "baseline": 237,
+          "height": 234,
+          "visiblePixels": 23131
+        },
+        {
+          "rect": [
+            309,
+            312,
+            249,
+            220
+          ],
+          "anchorX": 106.5,
+          "baseline": 217,
+          "height": 213,
+          "visiblePixels": 21444
+        },
+        {
+          "rect": [
+            593,
+            309,
+            259,
+            223
+          ],
+          "anchorX": 116.5,
+          "baseline": 220,
+          "height": 216,
+          "visiblePixels": 21798
+        },
+        {
+          "rect": [
+            893,
+            305,
+            237,
+            227
+          ],
+          "anchorX": 123.0,
+          "baseline": 224,
+          "height": 221,
+          "visiblePixels": 22245
+        },
+        {
+          "rect": [
+            35,
+            557,
+            219,
+            246
+          ],
+          "anchorX": 123.5,
+          "baseline": 242,
+          "height": 239,
+          "visiblePixels": 23537
+        },
+        {
+          "rect": [
+            324,
+            553,
+            218,
+            250
+          ],
+          "anchorX": 126.5,
+          "baseline": 247,
+          "height": 244,
+          "visiblePixels": 23378
+        },
+        {
+          "rect": [
+            594,
+            594,
+            256,
+            209
+          ],
+          "anchorX": 142.0,
+          "baseline": 206,
+          "height": 202,
+          "visiblePixels": 21649
+        },
+        {
+          "rect": [
+            888,
+            630,
+            246,
+            173
+          ],
+          "anchorX": 97.5,
+          "baseline": 169,
+          "height": 166,
+          "visiblePixels": 21233
+        },
+        {
+          "rect": [
+            47,
+            827,
+            195,
+            247
+          ],
+          "anchorX": 117.0,
+          "baseline": 244,
+          "height": 241,
+          "visiblePixels": 21421
+        },
+        {
+          "rect": [
+            338,
+            859,
+            190,
+            215
+          ],
+          "anchorX": 107.5,
+          "baseline": 212,
+          "height": 209,
+          "visiblePixels": 21754
+        },
+        {
+          "rect": [
+            627,
+            827,
+            190,
+            247
+          ],
+          "anchorX": 93.5,
+          "baseline": 244,
+          "height": 240,
+          "visiblePixels": 19334
+        },
+        {
+          "rect": [
+            916,
+            865,
+            190,
+            209
+          ],
+          "anchorX": 103.5,
+          "baseline": 206,
+          "height": 203,
+          "visiblePixels": 21855
+        },
+        {
+          "rect": [
+            34,
+            1104,
+            220,
+            241
+          ],
+          "anchorX": 115.5,
+          "baseline": 237,
+          "height": 234,
+          "visiblePixels": 23978
+        },
+        {
+          "rect": [
+            304,
+            1126,
+            259,
+            219
+          ],
+          "anchorX": 117.5,
+          "baseline": 215,
+          "height": 212,
+          "visiblePixels": 22899
+        },
+        {
+          "rect": [
+            588,
+            1122,
+            269,
+            223
+          ],
+          "anchorX": 125.5,
+          "baseline": 220,
+          "height": 216,
+          "visiblePixels": 23226
+        },
+        {
+          "rect": [
+            897,
+            1120,
+            229,
+            225
+          ],
+          "anchorX": 116.0,
+          "baseline": 222,
+          "height": 219,
+          "visiblePixels": 22391
+        },
+        {
+          "rect": [
+            34,
+            1367,
+            220,
+            249
+          ],
+          "anchorX": 124.0,
+          "baseline": 245,
+          "height": 241,
+          "visiblePixels": 23819
+        },
+        {
+          "rect": [
+            321,
+            1365,
+            224,
+            251
+          ],
+          "anchorX": 131.5,
+          "baseline": 247,
+          "height": 243,
+          "visiblePixels": 23527
+        },
+        {
+          "rect": [
+            592,
+            1408,
+            261,
+            208
+          ],
+          "anchorX": 146.5,
+          "baseline": 205,
+          "height": 202,
+          "visiblePixels": 21540
+        },
+        {
+          "rect": [
+            886,
+            1442,
+            250,
+            174
+          ],
+          "anchorX": 99.5,
+          "baseline": 171,
+          "height": 167,
+          "visiblePixels": 21146
+        }
+      ],
+      "packing": {
+        "method": "alpha128-largest24-nearest-seed",
+        "sourceVisiblePixels": 527901,
+        "packedVisiblePixels": 527901,
+        "sourceSeedAreas": [
+          20568,
+          20643,
+          18376,
+          20618,
+          22460,
+          20744,
+          21009,
+          21597,
+          22859,
+          22591,
+          20957,
+          20714,
+          20474,
+          20865,
+          18357,
+          21001,
+          22976,
+          21786,
+          22099,
+          21303,
+          22743,
+          22414,
+          20601,
+          20265
+        ]
+      },
+      "sourceSha256": "0f244c26345433da82d06a4d25c752b0c5407a9325ee73e53ff6250042060bc7",
+      "encodedSha256": "9f2a1ae25025c090cba45b0f42553f1b4f92f31bdf30ec3acdf51eb5a1457dcc",
+      "sourceDrawings": 24
+    }
+  }
+}

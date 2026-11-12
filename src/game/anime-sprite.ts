@@ -5,6 +5,8 @@ import {CHARS,CHAR_IDS} from './data';
 import type {CharId,Pose} from './data';
 import type {DrawOpts} from './rig';
 import rawManifest from '../assets/sprites/manifest.json';
+import {loadedMotionAtlas,preloadMotionSprites} from './motion-atlas';
+import {sampleDrawnFrame} from './sprite-timeline';
 
 export type AnimeSpriteRect=readonly [number,number,number,number];
 export interface AnimeSpriteAtlas {
@@ -89,6 +91,7 @@ function loadedAtlas(ch:CharId,form:boolean){
  * loaded on demand so mobile browsers do not decode 36 large sheets at once. */
 export function preloadAnimeSprites(ids:readonly CharId[]=CHAR_IDS,includeForms=false):Promise<void>{
  const pending:Promise<void>[]=[];
+ if(includeForms&&ids.length<=4)pending.push(preloadMotionSprites(ids));
  for(const ch of ids){
   const base=atlasFor(ch);if(base){const entry=imageFor(base.key,base.atlas);if(entry)pending.push(entry.promise)}
   if(includeForms&&manifest.atlases[ch+'-form']){const form=atlasFor(ch,true)!;const entry=imageFor(form.key,form.atlas);if(entry)pending.push(entry.promise)}
@@ -96,7 +99,7 @@ export function preloadAnimeSprites(ids:readonly CharId[]=CHAR_IDS,includeForms=
  return Promise.all(pending).then(()=>{});
 }
 export function preloadAnimeSprite(ch:CharId,form=false):Promise<void>{
- const data=atlasFor(ch,form);if(!data)return Promise.resolve();return imageFor(data.key,data.atlas)?.promise??Promise.resolve();
+ const data=atlasFor(ch,form);if(!data)return Promise.resolve();return Promise.all([imageFor(data.key,data.atlas)?.promise??Promise.resolve(),preloadMotionSprites([ch])]).then(()=>{});
 }
 export function animeSpriteReady(ch:CharId,form=false):boolean{
  const selected=atlasFor(ch,form);return !!selected&&images.get(selected.key)?.status==='ready';
@@ -173,23 +176,31 @@ function bodyHeight(ch:CharId,form:boolean):number{
 
 export function drawAnimeSprite(c:CanvasRenderingContext2D,ch:CharId,pose:Pose,o:DrawOpts):boolean{
  const data=loadedAtlas(ch,!!o.transformation);if(!data)return false;
- const {atlas,image}=data,index=selectAnimeSpriteFrame(pose,o),rect=frameRect(atlas,index);
- const [sx,sy,sw,sh]=rect;if(sw<=0||sh<=0||atlas.idleHeight<=0)return false;
- const scale=bodyHeight(ch,!!o.transformation)/atlas.idleHeight,row=Math.floor(index/atlas.columns),baseline=atlas.baselines[row]??sh;
- const dx=-sw*.5*scale,dy=-baseline*scale,dw=sw*scale,dh=sh*scale;
- const time=finite(o.time),state=o.spriteState,idle=index===0||index===1;
+ const {atlas}=data,legacy=selectAnimeSpriteFrame(pose,o),sample=sampleDrawnFrame(legacy,o);
+ const motion=sample.bank==='motion'?loadedMotionAtlas(ch):undefined;
+ const index=sample.bank==='base'?sample.index:legacy,rect=frameRect(atlas,index);
+ let [sx,sy,sw,sh]=rect;if(sw<=0||sh<=0||atlas.idleHeight<=0)return false;
+ let source:CanvasImageSource=data.image,scale=bodyHeight(ch,!!o.transformation)/atlas.idleHeight;
+ const row=Math.floor(index/atlas.columns),baseline=atlas.baselines[row]??sh;
+ let dx=-sw*.5*scale,dy=-baseline*scale,bounds:readonly number[]=atlas.bounds[index]??[0,0,sw,sh];
+ if(motion){
+  const variant=o.transformation?1:0,cell=motion.atlas.frames[sample.index+variant*12];
+  if(cell){[sx,sy,sw,sh]=cell.rect;source=motion.image;scale=bodyHeight(ch,!!o.transformation)/(motion.atlas.rowReferenceHeights?.[variant*3+Math.floor(sample.index/4)]??motion.atlas.referenceHeights[variant]);dx=-cell.anchorX*scale;dy=-cell.baseline*scale;bounds=[0,0,sw,sh];}
+ }
+ const dw=sw*scale,dh=sh*scale;
+ const time=finite(o.time),state=o.spriteState,idle=!motion&&(index===0||index===1);
  c.save();c.imageSmoothingEnabled=true;c.imageSmoothingQuality='high';
  if(idle){const breath=Math.sin(time*.063);c.translate(0,-.35*(breath+1));const breathe=1+breath*.0015;c.scale(breathe,breathe)}
- else if(state==='walk'||index===2||index===3)c.translate(0,-.65*(1-Math.cos(time*Math.PI/7)));
+ else if(!motion&&(state==='walk'||index===2||index===3))c.translate(0,-.65*(1-Math.cos(time*Math.PI/7)));
  const rotation=finite(pose.rot);
  if(Math.abs(rotation)>.08){
-  const b=atlas.bounds[index]??[0,0,sw,sh],left=dx+b[0]*scale,right=left+b[2]*scale,top=dy+b[1]*scale,bottom=top+b[3]*scale;
+  const b=bounds,left=dx+b[0]*scale,right=left+b[2]*scale,top=dy+b[1]*scale,bottom=top+b[3]*scale;
   const cx=(left+right)*.5,cy=(top+bottom)*.5,a=Math.abs(Math.cos(rotation)),bSin=Math.abs(Math.sin(rotation)),height=(bottom-top)*a+(right-left)*bSin;
   // Whole illustrated figure rotates for launch/down/spins. Re-anchor its outer
   // bound at the game's feet origin; no face or limb is independently warped.
   c.translate(0,-height*.5);c.rotate(rotation);c.translate(-cx,-cy);
  }
- c.drawImage(image,sx,sy,sw,sh,dx,dy,dw,dh);c.restore();return true;
+ c.drawImage(source,sx,sy,sw,sh,dx,dy,dw,dh);c.restore();return true;
 }
 
 export function drawAnimeSpriteHead(c:CanvasRenderingContext2D,ch:CharId,r:number,o:DrawOpts):boolean{

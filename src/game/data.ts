@@ -825,8 +825,10 @@ for(const def of Object.values(CHARS)){
 for(const ch of CHAR_IDS)applyAccessoryNormals(ch,CHARS[ch].moves);
 
 export function movePhase(move:Move,frame:number,connected:boolean){
-  if(frame<move.startup)return {phase:'startup' as const,progress:0};
-  if(frame<move.startup+move.active)return {phase:'active' as const,progress:0};
+  // Progress within each phase is presentation data; phase boundaries and the
+  // original recovery progress used by the engine stay exactly the same.
+  if(frame<move.startup)return {phase:'startup' as const,progress:Math.max(0,frame/Math.max(1,move.startup))};
+  if(frame<move.startup+move.active)return {phase:'active' as const,progress:Math.max(0,(frame-move.startup)/Math.max(1,move.active))};
   const duration=move.recovery+(connected?0:move.whiff);
   return {phase:'recovery' as const,progress:Math.min(1,Math.max(0,(frame-move.startup-move.active+1)/Math.max(1,duration)))};
 }

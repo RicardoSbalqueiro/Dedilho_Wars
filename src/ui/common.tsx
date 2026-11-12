@@ -138,7 +138,7 @@ export function ArtCanvas({ variant, selected,paused=false }: { variant: ArtVari
           ctx.scale(Math.sign(turn)*Math.max(.18,Math.abs(turn)),1);
         }
         const hop=ch==='jane'&&move.id==='s3'&&frame>18&&frame<38?-Math.sin((frame-18)/20*Math.PI)*35:0;
-        drawFullBody(ctx,ch,0,hop,1,t,name,false,pose,{poseName:attacking?name:'model',spriteState:attacking?'attack':'idle',spritePhase:attacking?movePhase(move,frame,true).phase:undefined,spriteProgress:attacking?movePhase(move,frame,true).progress:0,spriteKind:move.kind==='normal'?/^(k|cK|jK)/.test(move.id)?'kick':'punch':move.kind==='super'?'super':'special',spriteRank:move.rank,spriteAir:move.air,normalAccessory:move.accessory});ctx.restore();
+        drawFullBody(ctx,ch,0,hop,1,t,name,false,pose,{poseName:attacking?name:'model',spriteState:attacking?'attack':'idle',spriteMove:move.id,spritePhase:attacking?movePhase(move,frame,true).phase:undefined,spriteProgress:attacking?movePhase(move,frame,true).progress:0,spriteKind:move.kind==='normal'?/^(k|cK|jK)/.test(move.id)?'kick':'punch':move.kind==='super'?'super':'special',spriteRank:move.rank,spriteAir:move.air,normalAccessory:move.accessory});ctx.restore();
       }
       // folhas
       for (const l of leaves) {

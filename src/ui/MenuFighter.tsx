@@ -9,6 +9,7 @@ import { attackAnimation } from '../game/animation';
 import { modelSheetPose } from '../game/model-sheet';
 import { preloadAnimeSprite, animeSpriteReady } from '../game/anime-sprite';
 import { settings } from '../game/visual-settings';
+import { drawFormPreview } from '../game/form-effects';
 
 /** An illustrated fighter with accessory normals; never creates a match or changes combat. */
 export function MenuFighter({ ch, strike, transformed, paused }: { ch: CharId; strike: number; transformed: boolean; paused: boolean }) {
@@ -39,14 +40,12 @@ export function MenuFighter({ ch, strike, transformed, paused }: { ch: CharId; s
       const scale = targetHeight / ((p.ch === 'tubarao' && p.transformed ? 155 : character.hurtH) * 1.055);
       c.fillStyle = '#080a1070'; c.beginPath(); c.ellipse(320, 560, 122, 14, -.03, 0, Math.PI * 2); c.fill();
       if (p.transformed) {
-        c.save(); c.translate(320, 308); c.rotate(reduced.matches ? 0 : t * .002);
-        c.strokeStyle = character.glow; c.globalAlpha = settings.reducedFlash ? .2 : .55; c.lineWidth = 2;
-        for (let i = 0; i < 3; i++) { c.beginPath(); c.ellipse(0, 0, 190 + i * 16, 244 - i * 32, i, .1, Math.PI * 1.8); c.stroke(); }
-        c.restore();
+        c.save(); c.translate(320, 558); c.scale(scale, scale);
+        drawFormPreview(c, p.ch, reduced.matches ? 30 : t); c.restore();
       }
       drawFullBody(c, p.ch, 320, 558, scale, reduced.matches ? 0 : t, name, false, pose, {
         poseName: name, transformation: p.transformed, spriteState: attacking ? 'attack' : 'idle',
-        spritePhase: phase?.phase, spriteProgress: phase?.progress ?? 0,
+        spritePhase: phase?.phase, spriteProgress: phase?.progress ?? 0, spriteMove: move.id,
         spriteKind: p.strike % 2 ? 'punch' : 'kick', spriteRank: move.rank, normalAccessory: attacking ? move.accessory : undefined,
       });
       if (attacking && phase?.phase === 'active' && !settings.reducedFlash) {

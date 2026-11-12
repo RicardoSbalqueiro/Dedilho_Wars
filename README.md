@@ -12,7 +12,7 @@ Jogue em https://dedilho-wars-luta.pithyblimp1.chatgpt.site. O download completo
 
 Os cinco novos personagens são Viewers. Dr. Acreano ocupa o lugar de Dr. Enéas. O identificador técnico antigo `eneas` é conservado para não invalidar histórico, perfis e salas; toda apresentação usa Dr. Acreano.
 
-Os personagens usam **ilustrações de anime japonês** inspiradas nas fichas de War of Champions: rostos, cabelos, roupas, acessórios e silhuetas próprios. São **36 atlas e 432 poses ilustradas**: 12 poses na base e 12 na transformação de cada lutador. Retratos, luta, seleção, galeria e cinematográficas usam essa arte. Veja [arte anime e armas nos normais](docs/anime-sprites.md).
+Os personagens usam **ilustrações de anime japonês** inspiradas nas fichas de War of Champions: rostos, cabelos, roupas, acessórios e silhuetas próprios. São **54 atlas e 864 desenhos ilustrados**: 24 na base e 24 na transformação de cada lutador, incluindo passadas, preparação, extensão e retorno dos golpes. Retratos, luta, seleção, galeria e cinematográficas usam essa arte. Veja [arte anime e armas nos normais](docs/anime-sprites.md) e [animação e efeitos de combate](docs/combat-fluidity.md).
 
 O motor continua em **60 Hz**, independente da tela. Os nove ciclos mantêm 1.098 amostras de tempo por personagem para cadência, transições e contatos; as ilustrações são selecionadas conforme estado e fase do golpe. Essas amostras não correspondem a desenhos diferentes. Startup, ativos, recovery e tamanho lógico da arena continuam separados da arte.
 

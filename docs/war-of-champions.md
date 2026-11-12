@@ -57,7 +57,7 @@ O protocolo `dw-online-11` inclui todos os novos recursos, estados e 16 bits de 
 - Typecheck, suíte completa e build foram executados na versão atual; os resultados finais constam no commit.
 - **103 novas regressões** de War of Champions: 18 formas, interrupção, custo/tempo, recuperação, recursos próprios, dois estoques, snapshots atômicos, potência de agarrões e lasers EVA mirados/bloqueáveis.
 - **72 rotas** verificadas contra defesa mantida, incluindo execução por teclado/toque/máscaras online, espelhamento e retorno defensivo. Patrick usa perseguição aérea curta pelo peso do lançamento.
-- **1.098 amostras de tempo por lutador**, 19.764 no catálogo interno; a auditoria verifica a cadência e os contatos. A arte atual contém 432 poses ilustradas em 36 atlas.
+- **1.098 amostras de tempo por lutador**, 19.764 no catálogo interno; a auditoria verifica a cadência e os contatos. A arte atual contém 864 desenhos ilustrados em 54 atlas, incluindo 432 novos quadros de movimento.
 - Primeira arte: 1.884 desenhos Canvas com todas as poses/18 lutadores, base e formas, sem mutar poses/esqueletos. Fluxos de luta: **311 renderizações Full HD**, cobrindo ativação, ULT e finisher dos 18; EVA/Rei Tatu também em 4K.
 - Interface no Chromium: nove Viewers, laboratório de recursos, galeria de formas, teclado F e toque FORMA/CARREGAR em celular DPR 3, vertical/horizontal. Nenhum erro JavaScript.
 - Dois navegadores autenticados, computador e celular, via relay HTTP: novo Viewer, HP dobrado, carga por toque, transformações dos dois participantes, energia Rick zerada, Full Box com exatos 200 HP e estoque restante, rajada de três orbes com 64,8 após escala, 16 de energia e um uso de distância. Nenhum erro JavaScript.

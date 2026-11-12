@@ -1,4 +1,5 @@
 import {drawAccessoryNormal} from './accessories';
+import {drawCombatFlowFx} from './form-effects';
 import {animeMotion} from './anime-motion';
 import {formStats} from './resources';
 import {WOC_ULTIMATES} from './woc-choreography';
@@ -279,6 +280,7 @@ function drawFx(ctx: CanvasRenderingContext2D, g: Game, f: Fighter, time: number
 }
 
 function drawAura(ctx: CanvasRenderingContext2D, f: Fighter, time: number) {
+  if(f.formT>0||f.state==='transform')return;
   const a = f.aura;
   if (a <= 0.02) return;
   ctx.save();
@@ -358,6 +360,7 @@ function drawFighter(ctx: CanvasRenderingContext2D, g: Game, f: Fighter, time: n
   if(!reflect&&m)drawAccessoryNormal(ctx,m,frame);
   if(!reflect)drawGuardInk(ctx,f,g.tick,settings.reducedFlash);
   if (!reflect) drawFx(ctx, g, f, time);
+  if(!reflect)drawCombatFlowFx(ctx,f,g.tick);
   if(!reflect&&m&&(f.ch==='jane'||f.ch==='cristyan'||f.ch==='eneas')&&/^s[123]$/.test(m.id)&&frame>=m.startup-3&&frame<m.startup+Math.min(m.active,30)+8)drawTrioMoveFx(ctx,f.ch,m.id,frame-m.startup);
   ctx.restore();
 }

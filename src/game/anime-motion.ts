@@ -4,7 +4,7 @@ import type {DrawOpts} from './rig';
 
 /** Match artwork to authoritative combat state, including interrupted attacks.
  * Held directions never hide a hit reaction or shorten committed recovery. */
-export function animeMotion(f:Pick<Fighter,'state'|'move'|'moveT'|'connected'|'charging'|'guard'|'crouch'|'walking'|'landLag'>):Partial<DrawOpts>{
+export function animeMotion(f:Pick<Fighter,'state'|'move'|'moveT'|'connected'|'charging'|'guard'|'crouch'|'walking'|'landLag'>&Partial<Pick<Fighter,'stateT'>>):Partial<DrawOpts>{
  let spriteState:DrawOpts['spriteState'];
  if(f.state==='attack'&&f.move)spriteState='attack';
  else if(f.state==='transform'||f.charging)spriteState='charge';
@@ -20,5 +20,5 @@ export function animeMotion(f:Pick<Fighter,'state'|'move'|'moveT'|'connected'|'c
  const m=f.move,phase=m?movePhase(m,Math.max(0,f.moveT-1),f.connected):undefined;
  return {spriteState,spritePhase:phase?.phase,spriteProgress:phase?.progress,
   spriteKind:m?.kind==='normal'?/^(k|cK|jK)/.test(m.id)?'kick':'punch':m?.kind==='super'?'super':'special',
-  spriteRank:m?.rank,spriteAir:m?.air,normalAccessory:m?.accessory};
+  spriteRank:m?.rank,spriteAir:m?.air,normalAccessory:m?.accessory,spriteMove:m?.id,spriteAction:f.state,spriteStateTime:f.stateT??0};
 }

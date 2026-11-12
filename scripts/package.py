@@ -13,7 +13,7 @@ for old in out.glob('Dedilho-Wars-*'):
         old.unlink()
 (out / 'animation-frames.json').write_bytes((root / 'docs/animation-frames.json').read_bytes())
 offline = (client / 'index.html').read_text()
-for extension, count in [('mp3', 8), ('webp', 40)]:
+for extension, count in [('mp3', 8), ('webp', 58)]:
     assets = list(client.glob('*.' + extension))
     assert len(assets) == count, (extension, len(assets))
     for asset in assets:
@@ -37,7 +37,7 @@ with ZipFile(archive, 'w', ZIP_DEFLATED) as z:
     z.writestr('Dedilho-Wars/JOGAR.html', offline)
     assert z.testzip() is None
     assert len([i for i in z.namelist() if i.endswith('.mp3')]) == 8
-    assert len([i for i in z.namelist() if i.endswith('.webp')]) == 40
+    assert len([i for i in z.namelist() if i.endswith('.webp')]) == 58
 
 payload = archive.read_bytes()
 parts = []
@@ -56,7 +56,7 @@ manifest = {'version': 1, 'filename': 'Dedilho-Wars-completo.zip', 'bytes': len(
 (out / 'download.json').write_text(json.dumps(manifest, indent=2) + '\n')
 assert b''.join((out / p['name']).read_bytes() for p in parts) == payload
 
-(out / 'index.html').write_text('''<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Baixar DEDILHO WARS</title><style>body{margin:0;background:#100b1c;color:white;font:18px/1.6 system-ui}main{max-width:700px;margin:6vh auto;padding:24px}a,button{display:block;box-sizing:border-box;width:100%;padding:16px 20px;background:#6d28d9;color:white;border:0;font:inherit;text-align:left;border-radius:10px;margin:18px 0;text-decoration:none;cursor:pointer}button:disabled{opacity:.65;cursor:wait}small,#status{color:#c7c0d2}</style><main><h1>DEDILHO WARS</h1><p>18 lutadores com arte anime, 18 transformações de 10 segundos, 432 poses ilustradas, 17 arenas, menu Wars of Champions com quatro campanhas em breve, rádio, stamina, dois estoques de ULT, finishers, perfis e ranking, partidas online, controles para celular, 18 desafios e 72 rotas de combos.</p><a href="/">Jogar no navegador</a><button id="download">Baixar jogo completo e código-fonte (.zip)</button><p id="status" role="status" aria-live="polite"></p><a href="animation-frames.json" download>Catálogo das amostras de tempo de animação (.json)</a><p><small>Extraia toda a pasta e abra JOGAR.html. Mantenha a pasta src/assets com as ilustrações, os sete raps e a trilha de campanha. Os modos locais e os desafios funcionam offline; contas e partidas online usam o site.</small></p></main><script>
+(out / 'index.html').write_text('''<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Baixar DEDILHO WARS</title><style>body{margin:0;background:#100b1c;color:white;font:18px/1.6 system-ui}main{max-width:700px;margin:6vh auto;padding:24px}a,button{display:block;box-sizing:border-box;width:100%;padding:16px 20px;background:#6d28d9;color:white;border:0;font:inherit;text-align:left;border-radius:10px;margin:18px 0;text-decoration:none;cursor:pointer}button:disabled{opacity:.65;cursor:wait}small,#status{color:#c7c0d2}</style><main><h1>DEDILHO WARS</h1><p>18 lutadores com arte anime, 18 transformações de 10 segundos, 864 poses ilustradas, 17 arenas, menu Wars of Champions com quatro campanhas em breve, rádio, stamina, dois estoques de ULT, finishers, perfis e ranking, partidas online, controles para celular, 18 desafios e 72 rotas de combos.</p><a href="/">Jogar no navegador</a><button id="download">Baixar jogo completo e código-fonte (.zip)</button><p id="status" role="status" aria-live="polite"></p><a href="animation-frames.json" download>Catálogo das amostras de tempo de animação (.json)</a><p><small>Extraia toda a pasta e abra JOGAR.html. Mantenha a pasta src/assets com as ilustrações, os sete raps e a trilha de campanha. Os modos locais e os desafios funcionam offline; contas e partidas online usam o site.</small></p></main><script>
 const button=document.querySelector('#download'),status=document.querySelector('#status');
 button.addEventListener('click',async()=>{
  button.disabled=true;status.textContent='Preparando download…';

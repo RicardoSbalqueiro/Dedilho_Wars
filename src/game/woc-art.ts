@@ -1,4 +1,5 @@
 import {settings} from './visual-settings';
+import {drawFormEffects} from './form-effects';
 // Timelines are sampled using simulation ticks, never a separate animation clock.
 import {CHARS} from './data';
 import type {CharId,Pose} from './data';
@@ -56,15 +57,7 @@ export function drawWocUltimate(c:CanvasRenderingContext2D,ch:CharId,target:Char
  text(c,`${Math.min(duration,Math.floor(t))} / ${duration}`,935,477,9,'#c5becb','right');c.restore();
 }
 export function drawFormAura(c:CanvasRenderingContext2D,f:Fighter,time:number){
- if(f.formT<=0&&f.state!=='transform')return;
- const col=f.ch==='orango'?'#c084fc':f.def.glow;
- const pulse=settings.reducedFlash?.4:.4+.12*Math.sin(time*.1);c.save();c.globalAlpha=pulse;
- for(let i=0;i<3;i++)oval(c,0,-f.def.hurtH*.45,35+i*8,65+i*12,col);
- if(f.ch==='rickzera'){
-  c.save();c.translate(0,-1);c.scale(1,.22);c.fillStyle='#8cff44';c.fillRect(-7,-115,14,230);c.fillRect(-85,-27,170,14);oval(c,0,0,95,95,'#afff60');c.restore();
- }else if(f.ch==='felipence')text(c,'♫',-40,-135,38,col);
- else if(f.ch==='orango'||f.ch==='santox')for(let i=0;i<5;i++)oval(c,Math.cos(time*.03+i)*45,-80+Math.sin(time*.03+i)*45,4,6,col,true);
- c.restore();
+ drawFormEffects(c,f,time);
 }
 export function drawTransformCutin(c:CanvasRenderingContext2D,g:Game){
  for(const f of g.f){if(f.state!=='transform')continue;const t=f.stateT,u=clamp(t/72),left=f.idx===0;const x=left?0:685;c.save();

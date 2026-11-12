@@ -6,12 +6,12 @@ import type { Pose } from './data';
 export interface MotionFrame {
   x:number;y:number;pose:Pose;state:string;serial:number;facing:number;guard:boolean;crouch:boolean;
   turn:number;rotAdd:number;impact:number|undefined;
-  animT:number;stateT:number;vx:number;vy:number;walking:number;poseName:string;landLag:number;
+  animT:number;stateT:number;moveT:number;vx:number;vy:number;walking:number;poseName:string;landLag:number;
 }
 export function captureMotion(f:Fighter):MotionFrame {
   return {x:f.x,y:f.y,pose:{...f.pose},state:f.state,serial:f.serial,facing:f.facing,guard:f.guard,crouch:f.crouch,
     turn:f.turn,rotAdd:f.rotAdd,impact:f.impact?.serial,animT:f.animT,stateT:f.stateT,vx:f.vx,vy:f.vy,
-    walking:f.walking,poseName:f.poseName,landLag:f.landLag};
+    walking:f.walking,poseName:f.poseName,landLag:f.landLag,moveT:f.moveT};
 }
 /** Smooth only the rendered body between fixed simulation ticks. New commands,
  * defensive posture, active hitboxes and authored spins stay immediate. */
@@ -35,7 +35,7 @@ export function localPresentation(f:Fighter,previous:MotionFrame|undefined,fract
       pose[key]+=delta;
     }
   }
-  return {...f,x:p.x+(f.x-p.x)*k,y:p.y+(f.y-p.y)*k,animT,pose,rig:computeRig(f.ch,pose)};
+  return {...f,x:p.x+(f.x-p.x)*k,y:p.y+(f.y-p.y)*k,animT,stateT:p.stateT+(f.stateT-p.stateT)*k,moveT:p.moveT+(f.moveT-p.moveT)*k,pose,rig:computeRig(f.ch,pose)};
 }
 
 interface Frame { tick:number; at:number; duration:number; from:Fighter; shown:Fighter; facing:number }
@@ -54,6 +54,10 @@ export function remotePresentation(f:Fighter,now:number,locked:boolean):Fighter 
   }
   const k=Math.max(0,Math.min(1,(now-c.at)/Math.max(1,c.duration)));
   const pose=mixAnimation(c.from.pose,f.pose,k);
-  const shown={...f,x:c.from.x+(f.x-c.from.x)*k,y:c.from.y+(f.y-c.from.y)*k,pose,rig:computeRig(f.ch,pose)};
+  const sameAction=f.state===c.from.state&&f.serial===c.from.serial&&!f.hbActive&&f.connected===c.from.connected;
+  const shown={...f,x:c.from.x+(f.x-c.from.x)*k,y:c.from.y+(f.y-c.from.y)*k,
+    animT:sameAction?c.from.animT+(f.animT-c.from.animT)*k:f.animT,
+    stateT:sameAction?c.from.stateT+(f.stateT-c.from.stateT)*k:f.stateT,
+    moveT:sameAction?c.from.moveT+(f.moveT-c.from.moveT)*k:f.moveT,pose,rig:computeRig(f.ch,pose)};
   c.shown=shown;return shown;
 }

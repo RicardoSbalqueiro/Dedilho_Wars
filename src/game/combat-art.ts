@@ -1,6 +1,7 @@
 import type { Fighter } from './engine';
 import { attackAnimation } from './animation';
 import { computeRig, drawRig } from './rig';
+import {animeMotion} from './anime-motion';
 
 /** Motion ink is anchored to the same joints as the animated hands and feet.
  * No extra hitboxes, body transforms or state changes are introduced here. */
@@ -13,7 +14,8 @@ export function drawMotionInk(ctx:CanvasRenderingContext2D,f:Fighter,reduced:boo
   if(heavy&&!reduced&&age<8){
     const pose=attackAnimation(f.ch,m,Math.max(0,t-2.5),f.connected);
     ctx.save();ctx.globalAlpha*=.12*a;ctx.translate(-f.vx*f.facing*.3,0);
-    drawRig(ctx,f.ch,computeRig(f.ch,pose),pose,{time:f.animT-2.5,expr:f.expr,poseName:f.poseName});ctx.restore();
+    drawRig(ctx,f.ch,computeRig(f.ch,pose),pose,{time:f.animT-2.5,expr:f.expr,poseName:f.poseName,transformation:f.formT>0,formVariant:f.formVariant,formTime:f.formElapsed,
+      ...animeMotion({...f,moveT:Math.max(0,f.moveT-2.5)})});ctx.restore();
   }
   if(m.grab||m.kind==='super')return;
   const joint=m.trail==='bw'?'wB':m.trail==='ba'?'aB':m.trail==='fa'||/^(k|cK|jK)/.test(m.id)?'aF':'wF';
