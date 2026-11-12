@@ -28,7 +28,7 @@ export function menuBrawlFrame(time:number,rally=false):CrowdFighter[]{
   const formAge=(t+i*71)%960,form=formAge<FORMS[ch].duration;
   const state:CrowdFighter['state']=attacking?'attack':phase>cycle-6?'guard':'walk';
   return {ch,x:xs[i],y:FLOOR_Y,facing:(rival.j===i||xs[rival.j]>=xs[i]?1:-1) as 1|-1,target:rival.id,state,move,moveFrame,form,formAge,
-   contact:attacking&&p.phase==='active',options:{time:t+i*11,spriteState:state,spriteMove:move.id,spritePhase:p.phase,spriteProgress:p.progress,spriteKind:/^(k|cK)/.test(move.id)?'kick':'punch',spriteRank:move.rank,spriteAir:false,normalAccessory:move.accessory,poseName:move.poses[moveFrame<move.startup?0:1],transformation:form}};
+   contact:attacking&&p.phase==='active',options:{time:t+i*11,actionClip:'menu',spriteState:state,spriteMove:move.id,spritePhase:p.phase,spriteProgress:p.progress,spriteKind:/^(k|cK)/.test(move.id)?'kick':'punch',spriteRank:move.rank,spriteAir:false,normalAccessory:ch==='ulisses'&&form?undefined:move.accessory,poseName:move.poses[moveFrame<move.startup?0:1],transformation:form}};
  });
  for(const f of fighters)if(f.state==='attack')f.x+=f.facing*Math.sin(Math.min(1,f.moveFrame/(f.move.startup+f.move.active+f.move.recovery+f.move.whiff))*Math.PI)*12;
  // Multiple attackers can hit the same rival. The attacker/target graph is not

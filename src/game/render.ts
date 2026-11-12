@@ -1,5 +1,9 @@
 import {drawAccessoryNormal} from './accessories';
 import {drawCombatFlowFx} from './form-effects';
+import {actionAtlasReady} from './action-atlas';
+import {drawProjectileIllustration} from './action-effects';
+import {captureArtOptions} from './capture-art';
+import {drawIllustratedUltimate} from './illustrated-ultimate';
 import {animeMotion} from './anime-motion';
 import {formStats} from './resources';
 import {WOC_ULTIMATES} from './woc-choreography';
@@ -346,9 +350,9 @@ function drawFighter(ctx: CanvasRenderingContext2D, g: Game, f: Fighter, time: n
   const frame=Math.max(0,f.moveT-1);
   if(f.ch==='jane'&&f.formT===0){
     if(m?.id==='s2'||m?.id==='bikeRush'){
-      ctx.save();if(m.id==='bikeRush'){ctx.translate(0,-25);ctx.rotate(Math.sin(f.moveT*1.6)*.075);ctx.translate(0,25);}drawJaneBike(ctx,time,Math.min(1,f.bikeTicks/300));ctx.restore();
+      if(!actionAtlasReady('jane-bike')){ctx.save();if(m.id==='bikeRush'){ctx.translate(0,-25);ctx.rotate(Math.sin(f.moveT*1.6)*.075);ctx.translate(0,25);}drawJaneBike(ctx,time,Math.min(1,f.bikeTicks/300));ctx.restore();}
     }
-    if(f.bikeDizzy>0){drawJaneBikeFall(ctx,60-f.bikeDizzy,60);if(!reflect)drawJaneDizzy(ctx,time);}
+    if(f.bikeDizzy>0){if(!actionAtlasReady('jane-bike'))drawJaneBikeFall(ctx,60-f.bikeDizzy,60);if(!reflect)drawJaneDizzy(ctx,time);}
   }
   const stretch=f.ch==='santox'&&m?.id==='s1'?370*Math.min(1,m.startup?frame/m.startup:1,Math.max(0,1-(frame-m.startup-m.active)/m.recovery)):undefined;
   if(f.ch==='santox'&&f.invuln>0&&m?.id==='s3')ctx.globalAlpha*=.6;
@@ -356,8 +360,8 @@ function drawFighter(ctx: CanvasRenderingContext2D, g: Game, f: Fighter, time: n
   const accessoryPose=f.poseOverride||(m&&phase?.phase==='recovery'&&phase.progress<.35?m.recoveryPose||m.poses[1]:f.poseName);
   if(!reflect)drawMotionInk(ctx,f,settings.reducedFlash);
   drawRig(ctx, f.ch, f.rig, f.pose, { time:f.animT, expr: f.expr, glow: f.glow, glowColor: f.def.glow, stretch,transformation:f.formT>0,formVariant:f.formVariant,formTime:f.formElapsed,poseName:accessoryPose,
-    ...animeMotion(f) });
-  if(!reflect&&m)drawAccessoryNormal(ctx,m,frame);
+    ...animeMotion(f),...captureArtOptions(g,f),...(f.ch==='jane'&&f.formT===0&&f.bikeDizzy>0&&actionAtlasReady('jane-bike')?{actionClip:'bike',actionProgress:10.01/12}:{}) });
+  if(!reflect&&m&&!(f.ch==='ulisses'&&f.formT>0))drawAccessoryNormal(ctx,m,frame);
   if(!reflect)drawGuardInk(ctx,f,g.tick,settings.reducedFlash);
   if (!reflect) drawFx(ctx, g, f, time);
   if(!reflect)drawCombatFlowFx(ctx,f,g.tick);
@@ -451,6 +455,9 @@ function drawVehicles(ctx: CanvasRenderingContext2D, g: Game) {
 function drawProjectiles(ctx: CanvasRenderingContext2D, g: Game) {
   for (const shot of g.projectiles) {
     if(shot.life<=0)continue;
+    ctx.save();ctx.translate(shot.x,FLOOR_Y+shot.y);ctx.scale(shot.vx>=0?1:-1,1);
+    const illustrated=drawProjectileIllustration(ctx,shot.kind,shot.age??g.tick,g.f[shot.owner].ch);ctx.restore();
+    if(illustrated)continue;
     if(drawWocProjectile(ctx,shot,g.f[shot.owner].def.glow))continue;
     if(shot.kind==='chess')continue;
     const facing = shot.vx >= 0 ? 1 : -1;
@@ -1002,6 +1009,7 @@ function drawCine(ctx: CanvasRenderingContext2D, g: Game) {
 export function render(ctx: CanvasRenderingContext2D, g: Game, stage: Stage, time: number, remoteNow?:number,compact=false) {
   ctx.save();
   if(g.finisher){drawFinisherArt(ctx,g.f[g.finisher.winner].ch,g.f[1-g.finisher.winner].ch,g.finisher.t,g.finisher.dur);ctx.restore();return;}
+  if(g.seq?.kind.startsWith('super')&&actionAtlasReady(g.seq.a.ch+(g.seq.a.formT>0?'-ult-form':'-ult'))){drawIllustratedUltimate(ctx,g.seq.a.ch,g.seq.d.ch,g.seq.t,g.seq.dur,g.seq.a.formT>0,g.seq.d.formT>0);ctx.restore();return;}
   if(g.seq?.kind.startsWith('super')&&WOC_ULTIMATES[g.seq.a.ch]){drawWocUltimate(ctx,g.seq.a.ch,g.seq.d.ch,g.seq.t,g.seq.dur,g.seq.a.formT>0);ctx.restore();return;}
   if(g.seq?.kind==='superT'){drawSharkSuper(ctx,g.seq.d.ch,g.seq.t,g.seq.dur,g.seq.a.facing);ctx.restore();return;}
   if(g.seq&&(g.seq.a.ch==='jane'||g.seq.a.ch==='cristyan'||g.seq.a.ch==='eneas')&&g.seq.kind.startsWith('super')){drawTrioSuper(ctx,g.seq.a.ch,g.seq.d.ch,g.seq.t,g.seq.dur);ctx.restore();return;}

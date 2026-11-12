@@ -1428,7 +1428,7 @@ export class Game {
       } else f.turn = 1;
     }
     if (t === m.startup) {
-      audio.swing(f.ch,m);
+      audio.swing(f.ch,f.ch==='ulisses'&&f.formT>0?{...m,accessory:undefined}:m);
       if (m.sound === 'purple') audio.purple();
       if (m.sound === 'red') audio.red();
       if (m.kind === 'special') this.speed = Math.max(this.speed, 0.5);

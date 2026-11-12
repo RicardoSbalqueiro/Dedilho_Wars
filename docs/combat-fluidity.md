@@ -1,6 +1,6 @@
 # Animação ilustrada e efeitos de combate
 
-O renderizador anterior dispunha de doze desenhos por forma. Os muitos valores interpolados de articulação eram âncoras invisíveis e não acrescentavam desenhos ao personagem. Esta atualização inclui **432 ilustrações novas**: dezoito atlas WebP com doze desenhos da base e doze da transformação. A coleção passa a **864 desenhos, 24 por forma**, preservando as 432 imagens originais.
+O renderizador anterior dispunha de doze desenhos por forma. Os muitos valores interpolados de articulação eram âncoras invisíveis e não acrescentavam desenhos ao personagem. A etapa inicial incluiu **432 ilustrações novas**: dezoito atlas WebP com doze desenhos da base e doze da transformação. A coleção dessa etapa passou a **864 desenhos, 24 por forma**. A atualização atual amplia o acervo para 4.500 desenhos: veja [golpes e ULTs ilustrados](action-illustrations.md).
 
 ## Movimento e contato
 

@@ -23,6 +23,8 @@ export interface DrawOpts {
   spriteMove?:string;
   spriteAction?:string;
   spriteStateTime?:number;
+  actionClip?:string;
+  actionProgress?:number;
   normalAccessory?:'katana'|'guitar'|'screwdriver'|'spray';
 
   expr?: 'n' | 'hit' | 'shout';
