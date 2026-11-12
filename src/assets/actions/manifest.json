@@ -326,8 +326,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "54d6166111e931e4092945093fafbbee45c44250041248f72e0a712ace9f0b36",
-      "encodedSha256": "875277c923745ea6d61ab0c2779b6615db16327e22ef3d7f42e3286271839dfd",
+      "encodedSha256": "3814e9e8246373f854b3e718583239bee8dd27355e697adff0318fcdd915e2f0",
       "sourceStamp": [
         1794509849469561178,
         3224075
@@ -689,8 +694,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "26e7cea98e04dff8e238cd041882b1f8431807a94f2fb5890f0a855a0d1e938a",
-      "encodedSha256": "f13876008657d2e092d8afee1573a8f725aee2b6ac44eebbcbfbb0067ba16e90",
+      "encodedSha256": "a5a35b39bcf9cb3c7dc68ea55deb3301d81a58cadf2a5868fc9007c648bd1d94",
       "sourceStamp": [
         1794510780606588653,
         2967695
@@ -1052,8 +1062,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "cb6d84bcfca869fd364c7ffcb6780803b0259f1caaad4ee1aa28e97efbc6be0a",
-      "encodedSha256": "7d1a5d4b5e2cc490967428a5614b488143479cb70e2140e3a7b960e9e6d78e81",
+      "encodedSha256": "83d47487d47f7cfc26188412f113dad892005a393b5bd90c68a475fcec8207c0",
       "sourceStamp": [
         1794510355540987868,
         2800641
@@ -1415,8 +1430,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "58a6eff483061824f88f445c3a25c31e892464c42b953d115b5f6822fd8dab22",
-      "encodedSha256": "f36bdccd6d320f5796486f5129fac2af6148bc188dbaca03ab3f3ff1da3e887b",
+      "encodedSha256": "55b499835f410184bd8ea948bd73501780efbc3d6f415ad9b873c21eefa4b87a",
       "sourceStamp": [
         1794510425238769120,
         2849454
@@ -1778,8 +1798,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "bb26c5628f76b75777e96904f1e47cf6195db280743f38c4e38a628bfb6c4987",
-      "encodedSha256": "5deedcfd4e5d2831752226ecb8faea09e30c60be0bceff54478a1d3956d9b685",
+      "encodedSha256": "01b66b7cb0a00062b7635bba14e62297cdec6c2b7bdeffa2bb5c74cc4ad494b0",
       "sourceStamp": [
         1794510425238769120,
         2612853
@@ -2141,8 +2166,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "f6de5e476153cb6f7e9cd61ca4510532f2356a267c68844d4a71048f98ef01c8",
-      "encodedSha256": "65596d18bdbd7d6119fa8b01b8ac63da02890eb07e2e62a561e8fe63d575b228",
+      "encodedSha256": "ac7c5c7e8284789fddc5e403ddb289fff5750e7184e3dffebdc01475186cbcca",
       "sourceStamp": [
         1794509567811254971,
         2885357
@@ -2504,8 +2534,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "e2456e839f55cf6308534236ca19bed221296622eb9e285955bf9ccb35674d58",
-      "encodedSha256": "ca5323a3ea1787f85abdfe1fa1dbce1b1bd71b3a400e52f94cd5aff3649bc1ae",
+      "encodedSha256": "99c60579cb3c59d17e816e0cce95c9120816a84327a499254b191167b4190c6c",
       "sourceStamp": [
         1794510787330741911,
         2860463
@@ -2867,8 +2902,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "def30684d6f6b3735ebef495a75d43e6f9602a29b64f7e5a7b3134ee9289f9a8",
-      "encodedSha256": "bc353be41f948032f7bd4f101dcfdc58c86286165d7c379c385f42e6ed27d22a",
+      "encodedSha256": "322e98f98128f55e50fd015c3157c4be4aac4b150ec3856bc7e3808bf39b699c",
       "sourceStamp": [
         1794510347624811984,
         2698151
@@ -3230,8 +3270,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "0ae2066b04d93bbc0eb9b1400e6a4fe316c3c85712f3d9fb8a0e7f5815dd3c97",
-      "encodedSha256": "52a5645e71ce5e4242b6b9cde34baf2d39fc9e768e996c22353b50a60d902af0",
+      "encodedSha256": "13d17c3a9a89834d862dd55849dc2dff677efda8310bb81a1e7423176c6eac59",
       "sourceStamp": [
         1794509636700798627,
         2570037
@@ -3593,8 +3638,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "86b87a39c09689ae849a4fd2058d07ac4fcc697d47ad787c024bb1d30cb2c431",
-      "encodedSha256": "5788ef64be6ab7730bcb940a7664861f405521aeca96c12caef2d5f9ea4f3fde",
+      "encodedSha256": "5cd3c121bbd3a00c248c6e5a7eeb10be29c3285be21dc9124e03265b22a0f47a",
       "sourceStamp": [
         1794510425258550466,
         2766200
@@ -3956,8 +4006,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "85cd39c1872c682e0a9ae1b21d7ea6d08cf673a69e14a8170019282441db5c6f",
-      "encodedSha256": "3a709157b754a035b00a78b07ab31e580e85fc495600013408c7d5c317ebd914",
+      "encodedSha256": "d2a9cbb818781aabb444e03c67a926e8d9a2ce487fdc79f6aa16132119841e4e",
       "sourceStamp": [
         1794509710742457186,
         2675959
@@ -4319,8 +4374,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "d1fc8562c3ac55da043aa55d2ccbbf2b8bf55e152a9e80a5dc20ced337e6d8ae",
-      "encodedSha256": "ee7134fee90619ae1d1edfdb4579f0618e18931221a58f2999dbf740be16cb16",
+      "encodedSha256": "f78a79401c4e7ec0f00a4ec55a9497133673169194361728a410eeeac107142f",
       "sourceStamp": [
         1794510650427689876,
         2201216
@@ -4682,8 +4742,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "b1572d16682660d3ef0a65780ad72d1d5e87f7cc6db04074c2c9407bed5156e4",
-      "encodedSha256": "319231b914ce04b24f261fd11df7b74062532d9c48698b896fe6a0868652bdb8",
+      "encodedSha256": "290f2592b2df0fd4e0cd7763156a043a5bbf6c03d8907f018b89d5169f4e1312",
       "sourceStamp": [
         1794509849505561987,
         2668089
@@ -5045,8 +5110,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "34bbfb6976cff4db3d1f3c49210535e9e3c3a7b93b35ab9a6511384c03cb941f",
-      "encodedSha256": "ab6f589389f852328131b1fe6eaf36a1d171cfcf3f06fd859b34b0ed728442ea",
+      "encodedSha256": "b37fa343ffe4ef871c01da9e35b7a361d3bf224b604b65ed99990aa3bea3ca24",
       "sourceStamp": [
         1794509784732113553,
         2801874
@@ -5408,8 +5478,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "a7a6cc9ca4fb46225c6a3e1e3ada80e30bd9396e1f8d2932606e72b9163d6660",
-      "encodedSha256": "218dec9aefcd2c480ab3c6f53b6d1ce422b51fd6f9de1a5b3150feaf2a5fd773",
+      "encodedSha256": "88dd5ccac2a5deb16a8139f09455fdad7f46a8c8374deb0bc5e2191125238848",
       "sourceStamp": [
         1794522426848180244,
         2019694
@@ -5771,8 +5846,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "03e53402f6bdd21c4297c192bc7f972ba09b9b47d5baf98dec7c5fc0f730be78",
-      "encodedSha256": "77b0318f8d777ebd1e9eaed0c37072d5ca5fc8bfc9f46c40694fdc99a6d0b046",
+      "encodedSha256": "0676354098683ba6d463e80d02e5ec2ea9fb4925d5a4c29ba9c39c6dc89abd7f",
       "sourceStamp": [
         1794509919799148913,
         2737221
@@ -6134,8 +6214,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "13130ae2da909b8b4afd706004abb68945a2bf3106b9b83812082ad4ee67df7c",
-      "encodedSha256": "cb669508416e1dce1d5b15fa030ca9dadb1f6c36b8a8972ccaced4b3d822b87b",
+      "encodedSha256": "4136a9c212b547c44cd1f02073fd1c9460e967d18f7ee33f7ee8beb3f46fce19",
       "sourceStamp": [
         1794510654103772395,
         2892639
@@ -6341,8 +6426,13 @@
       ],
       "sourceDrawings": 12,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "a955813d514eae4c8bdc4c0450a607f45202ff391a347c7e21003d388c1a396d",
-      "encodedSha256": "84c22450d6e0c13f54ca800b11902fa7fcaa1212ffab3602f78f1c4d532dff22",
+      "encodedSha256": "15bd2b5c29b6ddac8a30aa9252873ecc0ba67135aaaace20222815a640ca67a1",
       "sourceStamp": [
         1794508980150086955,
         2785833
@@ -6692,8 +6782,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "9f008aa4b582de04eeb64e4e5a875ffa24d437cd016dc0c6aee5705418cd752c",
-      "encodedSha256": "2aee73a062d2fe0aef22edc8474af7549b20f9d82709b0b51349155daee27bab",
+      "encodedSha256": "ff5087f7e3ad8284906c05692f0a213cde7e0198235cccc915f3464b4bcdc052",
       "sourceStamp": [
         1794510347628812072,
         3024147
@@ -7055,8 +7150,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "ee0f0962534604b6da66ed2ccf5ac6f61d347f4507b7dcb0bd37ca04496dcedc",
-      "encodedSha256": "2ba69ad99fd19245bf605845146e5c6b087fb6bbf3fb57916a105c312b870a04",
+      "encodedSha256": "24dab75b20f068a4a3380ee1af52c8f3f6f98c7582831e1d1c168e97a07858ae",
       "sourceStamp": [
         1794510644899565372,
         3014666
@@ -7418,8 +7518,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "7ead7a75a7afd411ef1d0964b1b6b9c27a0ac58c2c1942f8ca0145ba4f14c6f7",
-      "encodedSha256": "a3fa8a15beea4b86bf39d364395f919997ea836f0177d5101bb114ed74f5dc42",
+      "encodedSha256": "70bf0baeaa41801ef294498581505c64a511a8a48d3058e6024c1adc07ec6964",
       "sourceStamp": [
         1794509991504814133,
         2333650
@@ -7781,8 +7886,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "b6d2e63ed07de1ec2b47f26770113deffae2cef57e670b8728c47c64304312af",
-      "encodedSha256": "20085e1038f2cfcae7fa8a3220f570a76791bb6f3971a735fb7042c8d5b6934a",
+      "encodedSha256": "fc19fc749f71ea9d982d90defa5ee3ef79078d5a4aebfc8e0697d91fbddceb2d",
       "sourceStamp": [
         1794510279131283158,
         2405321
@@ -8144,8 +8254,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "b120f8a00e83a31adc82ca5ff9b9c06e3ff47a86f6f98f6cc2b2d0bedb046d2d",
-      "encodedSha256": "d061f8361b69920cb2de0f7559d1a6dd43587125bb178a38fcc1f374134d756f",
+      "encodedSha256": "74977ac49d122362295bfba793979164e740971ef92ec171505f98290892532e",
       "sourceStamp": [
         1794510715633150779,
         2698464
@@ -8507,8 +8622,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "53255ff52bd4451cbbccfab75c269f109d6d352354366151e2ab6701e69759d6",
-      "encodedSha256": "d45751daa58c805833db5989e56accae1a35e493953a5cd520a6c16b59025ae3",
+      "encodedSha256": "a691c26f3bed2ff5b386acd31b1ddde867f2756bf0e90436edda2e7ad2b194b9",
       "sourceStamp": [
         1794522238015126911,
         2116518
@@ -8870,8 +8990,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "6b71bc3fc0125d809112351c7d9b1753486cda87283d708d08f4b8fc3631db06",
-      "encodedSha256": "6a48f3bb64bfe88d3eb2d4287e196aed6e0fe84d46bc161f278693bf548b8780",
+      "encodedSha256": "61504607949bbcc38c77abf55abf3c90ebd5b2edae3234261d82ff59ef5a888c",
       "sourceStamp": [
         1794509991624816777,
         3009926
@@ -9233,8 +9358,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "3cf48746b01d15e4ae62ba65d69a9a97727877d42677c8da379d8e47a9dced79",
-      "encodedSha256": "d50e9630ebde8b1eed561fb8a15f2df7300750db2c729e98396184f5544c2834",
+      "encodedSha256": "123033d1cb3a99cfc285b06694f2c68fd1149dc55941056254a0e6a283dccce3",
       "sourceStamp": [
         1794510787330741911,
         2976980
@@ -9596,8 +9726,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "797c30adeb62b7d60e9c0f0b51971f689fe4ac5726857d67c16d494e24453317",
-      "encodedSha256": "b30f5482f7fd4cea3d50f2f894b543ea7a07c62953eac5ce7acf53099990a835",
+      "encodedSha256": "08c3b7ecea2b4b27872a00ad60e3356a84cbd9a669f76bff75b6cac09a81d095",
       "sourceStamp": [
         1794509710770457809,
         2705520
@@ -9959,8 +10094,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "c4947eb8a4750dca0cecea3b28c4553bf4c3f5f44f8804b14ceba710bdea9bcd",
-      "encodedSha256": "c4a4505a37fa6eba7f285981fbfd9d1b0aae1121b2b270aec36a89a020b88f71",
+      "encodedSha256": "8fb3dc3b1218ee39deca065c55eb1a07d8c259314161f405643bf5db6c31ea79",
       "sourceStamp": [
         1794510654083771943,
         2856924
@@ -10322,8 +10462,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "27683e0afe1d69d7892592ba3aa5794e876b97a51a7587dac5cd4dc49ed2c438",
-      "encodedSha256": "068f80191ec1fd4c307c3bf1bb97154bf49753e5d7bd64e3f0a27e1e7acb607b",
+      "encodedSha256": "5e2164682ab8303fe7b17b1e5d66a2b6469313f96402be8967dbbdd4ad3c066d",
       "sourceStamp": [
         1794510851816216877,
         3008379
@@ -10685,8 +10830,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "a3904df454e8e08c4db75b463226e682b39eb63f38a2193393ec7a427d18fa80",
-      "encodedSha256": "4e7db254a84f671cc1e4e91ee221daed4c5b8838025eab3a3ebc8b7dce35b4e5",
+      "encodedSha256": "7ec0c99ecf94788020ecbe4312c598e94fb0676a80ea4e2c58927bb4817e8abd",
       "sourceStamp": [
         1794509991596816161,
         2808831
@@ -11048,8 +11198,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "757fff28464b44e9e4d1a20265a351848f1842a28a117580d1c28d368222fada",
-      "encodedSha256": "c42c67ff031bec40228d42b7b5227c8ec36c42020f442eafb71c1f2ec687ad85",
+      "encodedSha256": "df0be81ca67a69f6bbcf555bf30c4fbb244f88643e145416f16f6c44b501ce7c",
       "sourceStamp": [
         1794510851804216602,
         2849280
@@ -11411,8 +11566,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "755daa43ffa3a60d690122562b40229b6453d6cc7b9281c1b78c52e6399c4021",
-      "encodedSha256": "442305360e3c55f5d9d9303ff2919508713822380a59598576b844bc12ada6f4",
+      "encodedSha256": "0daa5bdfa55f198c119c7a92c909bfda62d39bb1a54a3240b09fc342b1fffa52",
       "sourceStamp": [
         1794510212118354428,
         2792441
@@ -11774,8 +11934,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "9326a7fd068a38b53e9bde713dd9a8f1253712e647aa9e21894051cec95bbe38",
-      "encodedSha256": "a06a853e3954a8ca93ea450dcdb8ec69f91201f6f5a55e259de32a3b31adbac9",
+      "encodedSha256": "4cb2f9687955e7ed7e7396b63b907295915d436e71a75a9b6ee8ce4c77608940",
       "sourceStamp": [
         1794510160728620540,
         2590042
@@ -12137,8 +12302,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "be7f61adca80ddb897ee9a202fc479af4850bd3b74afbfe5e84b421da71bae06",
-      "encodedSha256": "79154af4a0608354dd4527f99c2b61da8f6239a2a20037d31377b608dacf00ef",
+      "encodedSha256": "1a8fd6931a48cc5f459f351ae5586a352fea73547014f0e710174abae813d87d",
       "sourceStamp": [
         1794510852460231612,
         2120432
@@ -12500,8 +12670,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "914a56649d80ad239b39ab12a869c7cbf2f78e38ea548909e0e34b83d314f250",
-      "encodedSha256": "a0e0a1bbd5d875a9f76e401894fa51cc9720cf8860d71c4177a33ea3efb0f179",
+      "encodedSha256": "5b518405b24639b2362594b3b4978a565d0c56e9e7212a57b2462670bebf78c2",
       "sourceStamp": [
         1794510348312827218,
         2579486
@@ -12863,8 +13038,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "48a6557591cde7560f2c893a1ddfa44fc28fd353ae56d7c3415bc430fd726a1b",
-      "encodedSha256": "cdf9a21cfd54fe2a04a1cfbde57d91f98deb9d22449b3f19d60b29973e55c5e5",
+      "encodedSha256": "d4cf0995d11e97e33f16f2969fd30673b559507f838a6643d440d672f2ef17ab",
       "sourceStamp": [
         1794510242730466096,
         2721901
@@ -13226,8 +13406,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "3363ac6068e3e8b44683e867b12b0c7f576fbef72ee65666a6aa9c68fa93e4c1",
-      "encodedSha256": "4bc31d681ccb1331672a3354eceb0feaa461a3f4ad5d25893a11a4d2131d77ea",
+      "encodedSha256": "5c120c9cbeb09f708f6ced2cca079eb99cc1b36c081a86075c0ce6cb1e73da11",
       "sourceStamp": [
         1794510425202549206,
         2712855
@@ -13589,8 +13774,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "b5a8bec3519fb13d748d4bd3a8d42163078e75226aac345b1964811c8062aa99",
-      "encodedSha256": "4dae2d6d31182c7a5b8124612d4fc62aaf84f945e6b7875ac93e57261c4d2bd5",
+      "encodedSha256": "a425381372c07f84f5b197aea2ade8023bfea7be3f10eb7b88940842672abc03",
       "sourceStamp": [
         1794509991536814840,
         2593084
@@ -13952,8 +14142,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "e1a53319d3aa3726b0befbe6c681fff36184e9a5021c8ac20a1264db6521ab62",
-      "encodedSha256": "bfeee3f910c7615a1863c5517b1ac3a24b2e0eaaa3be97b5de04d3028a6ce713",
+      "encodedSha256": "a23ee8443e229ad6c87da750e037685d3321d025156436813c933c8d6d555e1b",
       "sourceStamp": [
         1794510852496232435,
         2607522
@@ -14315,8 +14510,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "f8b658edec668822d6d7bd3fc0c15674abaeb79e81bd0100a0d40684259d468e",
-      "encodedSha256": "8430bdc94da0f2083b0a8f0c591526d989041ea3fc96a81181583a9129f85cda",
+      "encodedSha256": "9c5bf176988577b0fb368eadef3aa70d4a44d3bd504de399e0b6cd0a8b5fbd7b",
       "sourceStamp": [
         1794509991560815369,
         2615928
@@ -14678,8 +14878,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "c7776ff67487f6dc5c717e8b8218a9a38cb0dd6966db31ddc087b2df1a654b92",
-      "encodedSha256": "ce54e6d1f58dfb523455dd6fa129aa60c5f02e5a1caebd30abd8c998d1264c01",
+      "encodedSha256": "95298056c46c0b47470ff417d4454e206ed851ba79575d84df3cf983d9d2a824",
       "sourceStamp": [
         1794510715681151854,
         2828243
@@ -15041,8 +15246,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "87e74da7614527e7ecd968b0b81c06614feb7eb365173ca19a49d35bee58f044",
-      "encodedSha256": "e29004481b70a9b9c8a4e49fcdfb8f576d078b1c62698eb3b0c7ed5dc9abd647",
+      "encodedSha256": "74124e4c96bc9bc3f9229e096cb9907afee649cf75db1ef55cdcea81a0bdd7b7",
       "sourceStamp": [
         1794510991311315655,
         3120105
@@ -15404,8 +15614,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "6e4dedc823cd57c8fea401802c91637a76235895f696430983272751efce5e28",
-      "encodedSha256": "73a1dc36e368a5bb1d827a786f13d11bba480f6b6d649153261c29b32b687984",
+      "encodedSha256": "9e4e3c8a9900f01d560cb9264777f9b88c0a4bdbc21dbc7a9b1fee5b3fbba05d",
       "sourceStamp": [
         1794510991315315744,
         2516699
@@ -15767,8 +15982,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "dd22cef4e23557c1b766d12fe9415ab419106658b3087e35f0731696899c5ff2",
-      "encodedSha256": "546b85f2b3832306e8a93c8309772d7f4192caaa21eee20e494c40965eb5e8e1",
+      "encodedSha256": "eaaaa16318934092ad57d58e6de5988bed3101958974c458be04fc3cf5fffe7e",
       "sourceStamp": [
         1794511062956910348,
         2853166
@@ -16130,8 +16350,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "4cd168eec6a93d6763963d3b6e235a4f51457aa4a8aae096c9a4130208dc1aa8",
-      "encodedSha256": "eb0d6a17eca83d2efc38b7572260061892ca419432c9ef3994d5280af5f1a87e",
+      "encodedSha256": "41969548267b589a9d051bf79d35aba654072637804ef2adb1752d6a4403b1e6",
       "sourceStamp": [
         1794511120394190074,
         2273789
@@ -16493,8 +16718,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "75da0e56737411d363624d272ef02c79c3b67b1f78a5d9a0d262b6094ccf496f",
-      "encodedSha256": "053432ded79e3c246f1b8a9267d19513d5a49f30e3b3dfc33146bac64eb9994f",
+      "encodedSha256": "7e5edd887bb79e73d2d4dfefff3a9ec2ca9b2a50b35e34e652991bb3ed1135ab",
       "sourceStamp": [
         1794511120346189005,
         2780216
@@ -16856,8 +17086,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "73572b9dd798907bac3103b65e48a2a417fb58f3d25c560faeea2cd9f5f20278",
-      "encodedSha256": "92276987cba102a994227f36a665b55ee6c57266b4ce6bbcbf0a2312af411a75",
+      "encodedSha256": "3c7e9d4ca7faeee1843184c86e0e0686b65bcdbf8594680991d187e65ff0ff49",
       "sourceStamp": [
         1794511140082630820,
         2958904
@@ -17219,8 +17454,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "96ff327c1211b64ab306f9f0265fba51c70dd2dc8b57ba3ac4afb88f418bbf25",
-      "encodedSha256": "ad0e6e173dbb62521d305d8a69c12e1ed63e831c12152c8cc3a6df69e30426dd",
+      "encodedSha256": "a3776239f66c93b7f50af14cee2cbd9b7b3de63f825f7274f5d79d82a11e5ef1",
       "sourceStamp": [
         1794511140034629744,
         2974185
@@ -17582,8 +17822,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "f283c47246bfd95826386d3dabd07fe00f6b135d8608557ac3827da350a6d996",
-      "encodedSha256": "2a1a12be68bea227dba50ab4fe57c3555893d3a5630494683fac3a6a695be2fd",
+      "encodedSha256": "b22c7606cd2035dccfb27ffc8286eed251e5dc15185b31907f48e157e63325bc",
       "sourceStamp": [
         1794511258837286882,
         3133423
@@ -17945,8 +18190,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "9782e8ecbe599278470c3c7a04b7e1b956d20ba152e0dc1d279604b895b2b12f",
-      "encodedSha256": "9f3ef7cc96084143b47d9f8b4d5b9566d12dcacd96382a438e0789da6a29215c",
+      "encodedSha256": "08033002f7fa65742c4b6b8a842288cdb8adac050a617474940a1223558a88c8",
       "sourceStamp": [
         1794511258845287061,
         2685679
@@ -18308,8 +18558,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "e618cc5a8580c54bc42daebf818931deb539eb19a99d0ac43d841faed316e8a7",
-      "encodedSha256": "8718c1ff7218eb69c97ddb8a3a15e1a7d83e1c9bb899498b2de02007c8e60a2d",
+      "encodedSha256": "3d95d381d68c904234e17e65825a8738da6f2b225d76d4a922b60b1efddf0494",
       "sourceStamp": [
         1794511258879193235,
         2556735
@@ -18671,8 +18926,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "24ef1225da23ee6344399090a4c744b8fe05d2e0aba08a0be8582ab08da36f77",
-      "encodedSha256": "4b861d41d54b1038a32453ad55ce86107b363243d4616127d7a247695a01e0e9",
+      "encodedSha256": "b5f432abceec78a82b752a8d5966b25539a8456ec36631987a23e448b6965edf",
       "sourceStamp": [
         1794511258885287956,
         2776982
@@ -19034,8 +19294,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "391b43b60634b193a3a9d4e91af0177df88347a66ae2a1e1a0305a87ec58314e",
-      "encodedSha256": "4b6bf66863de6791831d5400e3788e81848a876d7d82a7c7fa410135bb42808b",
+      "encodedSha256": "a9299e36fafc779ec1b00163e7555e9beb0cb31369d0985e59605198457b7c5e",
       "sourceStamp": [
         1794511260521324564,
         2979091
@@ -19397,8 +19662,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "6076617e6f820560ef3d878915b28de08dbc7dbd5f8ed613b839046072612b65",
-      "encodedSha256": "1ea5ec8dca32e333082d80dbdfb6aa57c0e6b422b49f280e2cc8b5d389d128d7",
+      "encodedSha256": "ea207e0be76d1b425c9942d43dd393ca1761797a852de7207d9d0d82dba88a8c",
       "sourceStamp": [
         1794511262884648474,
         2869943
@@ -19760,8 +20030,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "9b7d313554039d7eb14032a6a008280bae0b0afa0729a6e82d2ff015e3d7e420",
-      "encodedSha256": "271b3418f37a40aca161a81b97ed72e18389d12587de28c1e09efb956c9384ad",
+      "encodedSha256": "9965865ac3adf5251eed54f6fd0b4b559f6cab2d3f838350b5a6ba1566e94b4b",
       "sourceStamp": [
         1794511262874346253,
         3152242
@@ -20123,8 +20398,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "fe84ea421af10ad11203d89aa66968d4a27cf4deea71e89ae6db934ae7623247",
-      "encodedSha256": "332542023eda7b6fdadce26e82e5c148ac04625ebe409194ef9c0afed652b1cf",
+      "encodedSha256": "80b660529cbb7067f29ccdbcb9858c1eda406d0fb7ded5054105ad95d947363c",
       "sourceStamp": [
         1794511262896689100,
         2368727
@@ -20486,8 +20766,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "a801a215f57704bc36209ddf873fdf3f7124db5e6d9068cc2ee1a708afbfff85",
-      "encodedSha256": "12fe221f8ff29d0ac72dc78c5ab31a166d123df9398238b5dd4817eed123cc5a",
+      "encodedSha256": "2fc75115d19fb468996a46145ebbc75c829838017ec9c1c925ed8bc1e6d4d2e9",
       "sourceStamp": [
         1794511391988271527,
         2811659
@@ -20849,8 +21134,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "5567fc22dbe99117d803b874a473b14b4833cab595adbc038ac141bf4318c731",
-      "encodedSha256": "36d52e69eeca7e8f7cb1629f6862eff95d7228ba445e22e14f692eeb2f9de8b5",
+      "encodedSha256": "3d556ddff554af333a2975568bd18d2b0e2567f0b548bc94497b00cfa21f3b25",
       "sourceStamp": [
         1794511520055143433,
         2730361
@@ -21212,8 +21502,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "d3669533dd82dfde0cab04950968ff940b9e1321b4db223b4d70cf351f9df197",
-      "encodedSha256": "1472b682ef77b73a1cfda2ee6d656e21afd74a46318d3860bf08a2b7b59212a0",
+      "encodedSha256": "3e74af0521ba494f1ac8df2485d4b31cf8cbc1572ceba4b1d920831df678140c",
       "sourceStamp": [
         1794511529469360977,
         2814408
@@ -21575,8 +21870,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "a070c0dc044880d9acf61a458a8bbdc36051ae09357e723b6a25fe4961383817",
-      "encodedSha256": "989d42f7df48aeb534090a16706b1780be096bc525673c637c442ef634dc000f",
+      "encodedSha256": "959a503125862e7671ffd0967c389ea9f44ca592debd8598badbfa26a5ff89ac",
       "sourceStamp": [
         1794511529507578159,
         2653682
@@ -21938,8 +22238,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "d2bc9f487c183d3411b5e03e07955bbcc3ce0351bb4eaabab11564ae0babc525",
-      "encodedSha256": "808bd05b163a684f5d0f4fbc223ad93d20ad153545433ea548d6ba1b6470e3be",
+      "encodedSha256": "800bf87277b81197423fd8ad77605526b5677eab9c6ebf60aa86d5892bf0b0bd",
       "sourceStamp": [
         1794511529478209202,
         2395020
@@ -22301,8 +22606,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "afee15d394df996e9b9013eff528f6e95d771fa304f26b36c5b68813fa5d4dcc",
-      "encodedSha256": "7215b50c915547cf520ba8662940d56d338c03805a105186f6da838ac8885387",
+      "encodedSha256": "1066c705ec661ff8a72d927cc7e83bc0934044a990411200615f09786bf3ae78",
       "sourceStamp": [
         1794511582580543740,
         2678772
@@ -22664,8 +22974,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "4d486ca1a1c3b40c38d3d6590230c8a0fe4e830c8ad4c4ff33f9893d3407afcd",
-      "encodedSha256": "7579cab5b69082726be3c27256c04ea7e7c4a486528ae495439afcc6e209ead3",
+      "encodedSha256": "c5cbb42d22c8021d0f3c14bec22812d4fbc0cedc700d6972097e2a395b4d9d6f",
       "sourceStamp": [
         1794511736311818608,
         2609729
@@ -23027,8 +23342,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "946f34c1aade891829c27cc69c22064fd846c74ff7f2fdebfda2e81c72e33629",
-      "encodedSha256": "fd4ce99d55e87915ebc4c6d2357d52eca071b63ddb086ae03809ed27f2db38f7",
+      "encodedSha256": "5970460ed06baf26cef31a27c82c2f3e3b32b2e7c1fa631773c5fccbd503019e",
       "sourceStamp": [
         1794511774348632096,
         2806621
@@ -23390,8 +23710,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "0cc7121f8e9c20bfd26ec5b9dfcaa5f67370549a832ef8bc12c2df9cc9439d4a",
-      "encodedSha256": "99c1fcc636a480d827ca0694e2650e2b485ddc78184bd466ae418acdea380298",
+      "encodedSha256": "ac86b1990ec1ac096fe88ebe428f429a3aaff5db87550690dee6e840e9a845d6",
       "sourceStamp": [
         1794522487236699059,
         2127392
@@ -23753,8 +24078,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "5f6c12563257790a6c64b8929e8b6de04fa0c2c95cbaadccde3035b814d9b006",
-      "encodedSha256": "f8d7618d0d93aa2aa48d9a7e22b0464895a1239eff25b54e98245c51227e01d2",
+      "encodedSha256": "52574a7571f43d46dba3de0fabdb12194a2c0458c004f8156870d8b1c72de622",
       "sourceStamp": [
         1794511774464634541,
         2750763
@@ -24116,8 +24446,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "46cbf9703db1d307c056906525c17571f5dc9291d4aa060c93c63a6397ab4883",
-      "encodedSha256": "90581b3636dcf6b8baa603a79a96339ae69c8feb9845fc6f1b3540d37bdf6247",
+      "encodedSha256": "2ea7f093281be45ad6957c2f768548d9b6657376848abe4d9701a0be65ab735b",
       "sourceStamp": [
         1794511774444634120,
         2504004
@@ -24479,8 +24814,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "ba712c10aa2d18c64b949542418f4e82cb1770fe5732eeea09e9a761314c65aa",
-      "encodedSha256": "6b77dcdd72c2e92a5442065baa0d4f7b83cf4e3aec4a9aba49d1339d05579d6e",
+      "encodedSha256": "a9931f2e8b73c41d5b074ffe6cf785a855d993dfbf3e87891e51f4c974e095ea",
       "sourceStamp": [
         1794511774392633023,
         2661434
@@ -24842,8 +25182,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "5ec1e6a03b9bb85c1fa6653bed6f8a16480e10827137ec87691e66ffd80461a1",
-      "encodedSha256": "adfe351fbd50c96b649ed11e5e64d65c4ff35c8142c7f577f0cc26734a551a41",
+      "encodedSha256": "5618736ff6bcc7e11a2d9bd1f6480491b8f51f9ba6e26cde39e0663962d7e16d",
       "sourceStamp": [
         1794511802189242153,
         2893491
@@ -25205,8 +25550,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "3634b9a702230e071c0416e4edb2774fa4d57dac651006d9c974fde01d2157fe",
-      "encodedSha256": "96461a7fb72b37e4006ada9e72538dc346e8b2e550d287e9d8703659c294fbf5",
+      "encodedSha256": "802b9bce8984897f0a20387a1d5d9f4628812f3492e32ba92a1e4daf7d0ffeef",
       "sourceStamp": [
         1794511802189242153,
         2522918
@@ -25568,8 +25918,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "acbd0a56fc9081905962be9a4a411f05d169beaffe3f96c9a686f53ab7764930",
-      "encodedSha256": "7f1e953754821e343865382bd13c3fdcfffd20d17394aa2bd8cefac7755bfcba",
+      "encodedSha256": "7cb368fbab6a2f09f50c085f5cd29134016ea1f72a0d91dbc85e4bb26083d02d",
       "sourceStamp": [
         1794511802127822205,
         2782471
@@ -25931,8 +26286,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "b8e63e62ecac2669e9b2ae69de80c81e93c28e90b47700f103d6f5e194b6f16b",
-      "encodedSha256": "64c22398c53e115fa943876cd79f50682fdb3f69d90b723838ef716e98554210",
+      "encodedSha256": "f5d15ac9d7d1566165387fb91f8e9fa26da4bb95bb57b5756914de1ed02a1c89",
       "sourceStamp": [
         1794511802189242153,
         2627285
@@ -26294,8 +26654,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "5db20ddf69119c94dff4284ff01d4c35c73e095b70d46dfc8de2b5e117de0163",
-      "encodedSha256": "6c9206a9a16967bee0dc078c19420c11b2f93dc5a4c0407e042d6992f00f231e",
+      "encodedSha256": "3e0ac1a2c8da44f35789bd424fbd27486b84aacc6708c809f311f54c553a4021",
       "sourceStamp": [
         1794511802133240950,
         2595011
@@ -26657,8 +27022,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "d84dcae89e44b5abf8b62a7dc5db1ee5d437c5214c3411894144871c9eca38e2",
-      "encodedSha256": "ff5a634ae4501e29b86507b4c64475990bcd18566e8dddcdc5fae50811c71c8a",
+      "encodedSha256": "7d5f08048d0fcaccc18426332cd769c57fb20f599f0bf69a1f4fc98b0fa532b4",
       "sourceStamp": [
         1794511803445271662,
         2739890
@@ -27020,8 +27390,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "156896739bb26500887abb1bbc7fa4645a817d0db331b79e78ef2e710b30480f",
-      "encodedSha256": "2a309b7fc6814a85f68945bd4b7ef51603ac1f3b6af73a121d20aee912eebef5",
+      "encodedSha256": "42ab3786b3ab680e13f60efa11076c96b8c1adde966c87f49d84393845586459",
       "sourceStamp": [
         1794511905843514332,
         2447933
@@ -27383,8 +27758,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "b8f60a56d417328f22f0be76505a856db94f2dab105f20fe4d752fabb378115d",
-      "encodedSha256": "3f89dd0fcb472ed6be891855300e90279ddaac0533f6ff72a2ab235ce23d6e04",
+      "encodedSha256": "9d22d63510a378cf0ed7ae65b15adff7bb8545ecb63d81d532cf59eca8c5b6ea",
       "sourceStamp": [
         1794511967461095298,
         2711219
@@ -27746,8 +28126,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "06b80834b00bdf5be1d72e28b2985362b19513425e3f974676a1940043aa8d6c",
-      "encodedSha256": "8ca63502d987f7e52ebb46a3c6000cfb3167017278b50392670a9bdf6027d79f",
+      "encodedSha256": "a423bfb1cf05eb68fbe53cfdb5a85d1d2b6a4dfeee0463118cfd04c1d043ac9e",
       "sourceStamp": [
         1794520387350366824,
         2670360
@@ -28109,8 +28494,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "d5054254854851c5a7cc4fb998cc2aca0d49cbec0a11a7b2f177b0ec597f91e1",
-      "encodedSha256": "b9c8a6c559e2b672f09326ac620fcded004013af4a6959e7435f3e958c2dd650",
+      "encodedSha256": "729416852ede7c07030cc318b9e45150a692e895931725aa9a1cd4e740f753e8",
       "sourceStamp": [
         1794520453787228072,
         2526414
@@ -28472,8 +28862,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "eed2523d0f4c19bc5d281fc2aba7a76e62daaf0fa51595442276fa8d88c00553",
-      "encodedSha256": "1356d2b20497a4e7cf61addce696dd6aebcef9f66a64ab89a844fbe73085230e",
+      "encodedSha256": "2e81671f374c6c9cac1782fb8baa9be63179fdbba8638b6feb264a1708a92079",
       "sourceStamp": [
         1794522426828765660,
         1808481
@@ -28835,8 +29230,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "ad3ddbfc890df101404e045392c85152ff77f6e90efaa4eca8a8edc61b42628c",
-      "encodedSha256": "bf28625d242f2ba9783596a888cddb0a09d573db2ec47fce241c14185e3dcfde",
+      "encodedSha256": "f43181b98fb5aeefaaf93f39aedf81da99c9f8a8493a309df96e7738964b715a",
       "sourceStamp": [
         1794520581610081139,
         2821274
@@ -29198,8 +29598,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "2c7ad5ce68678c92f12d30375fabf7490bc43d1e3863ebcc3ee413e4cf58d846",
-      "encodedSha256": "e5be114f46e75bdd503ef541c6d14682f275919b246a939c3b45314714b924c3",
+      "encodedSha256": "2d11b408b2f4a2e7ae381c1c718561b2a60c888c7887d16eaf51a2aee0ac0e69",
       "sourceStamp": [
         1794520581646081893,
         2522787
@@ -29561,8 +29966,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "542562434f10d2197977f932cb7430b6b47343952b6dd7f236e986a3a59bd05c",
-      "encodedSha256": "b96b38012041aee45a92980e5ce3c4d10e92c5bfcf898175fac37d44a82a3961",
+      "encodedSha256": "5ba3450e937a981fe0797fa97fcddb2c913b7e121dc83556a5950fe32458509d",
       "sourceStamp": [
         1794520647824972194,
         2539582
@@ -29924,8 +30334,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "30f1d223b3ccba894b500fc48329cd95e00c4e5b9a9bbdfcbec168d1fdd6b672",
-      "encodedSha256": "f997cef43143a7d5b24ab64ad813b1bb3f43dfc1cbc5b051c906fa4a645d5ac8",
+      "encodedSha256": "7dcaa03586d27261fe905a22398c5d51d2900166654e1b0436ba10561219b22f",
       "sourceStamp": [
         1794520704972843802,
         2655232
@@ -30287,8 +30702,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "d983bf542f7b5a156fdb090139b8004d7e68f36748e458e9f5a9ac28e189172a",
-      "encodedSha256": "eff11815c50d813d8b4013d86f5ebdea522d47ace3ea9b1a4ea59cf6dffdb83d",
+      "encodedSha256": "446ddcca432e9252122f3941dbc97f1d1490b5db3d496acefc98f61c72f5a896",
       "sourceStamp": [
         1794520704952843354,
         3015773
@@ -30650,8 +31070,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "b8a727408b91a1cc20ed24cef6cbaaa07f5fe710311d0f82640e21a82003c9d5",
-      "encodedSha256": "4443bf2489fe88f4c1c8e974027b9430eea0275f187ca13dd9424085e52a88ad",
+      "encodedSha256": "675bdbcdab7ff418b1e2a1d388a79f781f7bd0328a1b120e2c132f42392cdc42",
       "sourceStamp": [
         1794520707749459395,
         2543577
@@ -31013,8 +31438,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "34a88edf8d7bc7a27ecfa88f6adc365158b8236add89d3fbefb0b9309029aece",
-      "encodedSha256": "f2c7086fee98450f742aafbdb0190ccf6bf973650ee2978b1059095cf81915fa",
+      "encodedSha256": "05c4977e35c0cef7739fec422a1fcda5f22d099204057707518b80d077a4b817",
       "sourceStamp": [
         1794520707739930320,
         2665896
@@ -31376,8 +31806,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "1bdbf486aa36e6b407c2c75309d1c8558a188b547eb7e1a5e2c52d1f84905e40",
-      "encodedSha256": "6b26381ef44c1da3d2a95397c8199ea4fa6be726e0caeb5c1fa9f243699aae16",
+      "encodedSha256": "1da7e7ebfcea99210f70fa42e750ae7559b80edd9ddd7d9e5f82c27180175edd",
       "sourceStamp": [
         1794520714203441557,
         2424303
@@ -31739,8 +32174,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "33385a3416108aa36eeaef129c8ba1b8823e31b35dadc63efa32e0ff4a46246a",
-      "encodedSha256": "c3aaf23ca77e85b75e37d610a77fe76ce7f26540d7cd9190c66fb53255801f8b",
+      "encodedSha256": "ebf538f0e099d7b6d05b0ccccdf34cace8838e607cfd486463ddf9bef0de273d",
       "sourceStamp": [
         1794520730257415851,
         2525516
@@ -32102,8 +32542,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "57a5f4a8960babf4a5e635ed4b336f90fe7519149acdb4ecddbd4a25d4de7633",
-      "encodedSha256": "6e1996d9da8cddd615a4085419cfab13c5bfa67a009177cfc9df17766f829b20",
+      "encodedSha256": "5dc0f890e2c5fb36cda6ef360243acbe752d550248806349b1c2c4115647d48d",
       "sourceStamp": [
         1794520792046809591,
         2426405
@@ -32465,8 +32910,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "0c23df52f00e2fbf2b25da8d3fde6afa350c332e0b00b2f105e46b6f88dbc483",
-      "encodedSha256": "c62e719ea0a036d83c0db81796adc8cb0beb9f60f8a8029a6b0588a5cc269157",
+      "encodedSha256": "6c3c2365234ddba44768f1c75b4a10e5343b0224681e7dcc78f375bdbafd780b",
       "sourceStamp": [
         1794520871640605301,
         2169260
@@ -32828,8 +33278,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "39949ebb1d419dff767c0eeedb185a7113412ecec6a855ee86e17a563f8cda2f",
-      "encodedSha256": "f122889eab4c8a9af1485f997c1689b50e1635ee6707641da1da6c1fe26a3b0d",
+      "encodedSha256": "23c9868dbd08d10ec189204be08d1d0688ed258c420325b382b02acc5a679dfe",
       "sourceStamp": [
         1794520871576603867,
         2628801
@@ -33191,8 +33646,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "4404eb5333d910d35dac83cbc37e36ecdba0d6b6375443d5a479e87e0e221bbd",
-      "encodedSha256": "19cab5b0e05b352d2a47a765778f522b75cc1a0aa43997537854fe1ac424294c",
+      "encodedSha256": "0a719905a03143686237d3ee0366fa436b37e5196a3bfb3fd03e7549c57c9a56",
       "sourceStamp": [
         1794520887184952060,
         2226112
@@ -33554,8 +34014,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "abbf0dcecf1468c541e8c82c1111d5a73c50c39576ad0d6c44e4b1c11c832da9",
-      "encodedSha256": "23df867f3a955eddd80ae22817ef01ed3a98fa4ad17da725ae3f7e56a3b1a3ea",
+      "encodedSha256": "73a09e4edd02abe86fd5532c9b95e10b0ae6cbf36819c26355867cdef3cbe742",
       "sourceStamp": [
         1794520887164951617,
         2533793
@@ -33917,8 +34382,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "3de6d33ee682f2d75a2d6ecde287490a3e94dfbc7b5295ed5675d6394dd9be1c",
-      "encodedSha256": "b5917922dc62f9fb83d67a22458602ad8aa152f628860f7ea06bc30a6317cdb2",
+      "encodedSha256": "d9ab4216ce5991138d069facdf0f4160b87a5218bd369245d1c00472bb4f66b7",
       "sourceStamp": [
         1794520980119026625,
         2753395
@@ -34280,8 +34750,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "c69aa65cb45d858e733669becef3c862edea9675a7892c3df0e8e7e60a1348c3",
-      "encodedSha256": "27fdfd5e8d012ec415e386b03a541e6994d403c03323f37de33ab8a44b64da6d",
+      "encodedSha256": "4ec39afc0b88e51c22da1083b44b153496fad8b168e426a14884ae1a708681e8",
       "sourceStamp": [
         1794520980143027161,
         2621729
@@ -34643,8 +35118,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "d52a5e9dcd577a76664c76c92908d79a68c58a1b4177923133a63cb39a979200",
-      "encodedSha256": "93473d39cfc60a14b591d233097c15bc510fee5e207de706460f32037e3740b1",
+      "encodedSha256": "bfd01fa52f996da7d2f507da91331852af1113e8d2e5b6da31d84568f256b397",
       "sourceStamp": [
         1794520980095026088,
         2685146
@@ -35006,8 +35486,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "f93e17f894714b34f46a6366b41b8703cba40a6ed30a94865809ad6975fb68ad",
-      "encodedSha256": "a3e2949bc47dfefe71a4281a672ee51e228bc55fc3a62bcdda70f6c0232c68e4",
+      "encodedSha256": "944d2e21a0fb7731bb7890bf123140ab6b696666c106fcaab11684a4008f9b96",
       "sourceStamp": [
         1794521042092411840,
         2653411
@@ -35369,8 +35854,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "3fab093ce192b1f676ae2afeccdfd2ab23bbf46ca624f3f885f615b3594262e8",
-      "encodedSha256": "8bb049638af90ee625fc258b39665cb833e3a6608c356242d575066604f84068",
+      "encodedSha256": "f8d8aed3d61dc810012e5307eae9b5b3adb1a95533f87b9fa23f0277f6a328bf",
       "sourceStamp": [
         1794521042148413092,
         2629535
@@ -35732,8 +36222,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "1ee0f1e7ef9e0bec4b87602ca463d461b072eea9bbbe1551bce5dfdd8bd42689",
-      "encodedSha256": "c62b5498f80baba0ff77ec40b03854541218263f1bbf70656b8230fd19467ef9",
+      "encodedSha256": "25b67209de158b1689dc4c8324b5b3106849749dcbe44ff7d5f97d8df9c50b38",
       "sourceStamp": [
         1794521042156413270,
         2450596
@@ -36095,8 +36590,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "4ad55ac9689f401ad4f85e914e9cbb1500ef8cff936315b24ec07a833f1cb91b",
-      "encodedSha256": "f043b3bdf911b4d1cfd46bc7bf282c0ad6336bcfc642363ebb0de12b58829f2a",
+      "encodedSha256": "70f58df276e557b98762ae16dfc6ae88f52e30855a45c0b1778f457153f3ac3e",
       "sourceStamp": [
         1794521042080411572,
         3068001
@@ -36458,8 +36958,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "a0e40c4463f0e6c7247ea2ce9ca3baf5688e5aa324e4da4ad82dbd5224165ba5",
-      "encodedSha256": "46d410dd7fa4841cc6bc46eb57945d2955f3b20f4b81f0877299e19fd1366e47",
+      "encodedSha256": "1f9577128e84a7312adbd65153bf4df08049a9156cdf85acf8be496684afca0c",
       "sourceStamp": [
         1794521042132412734,
         2509461
@@ -36821,8 +37326,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "f323aac6ee5e72cd0f99287ba6193d00d6de54e6a0e3ce9d66776574081bb230",
-      "encodedSha256": "39ed0e3f7fac9fe0b3fcbba7764d8b7e11da79a2255ccfd4dbccf5b213c38f32",
+      "encodedSha256": "8e3634c46776308989a75648d3b201538dc5b037a081bdc4e75e8be589714028",
       "sourceStamp": [
         1794521049436574480,
         2791642
@@ -37184,8 +37694,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "0b23aaabe87b55652d8eb671c421420e3b13930300868881a7dd14d81458328d",
-      "encodedSha256": "5d58caa5a738faa48b20d008871a0ccae4253c55628c0c0148f9bfc9b26490fc",
+      "encodedSha256": "02f1a2b057d4d6bae33fdb3a9cd9a70ddbea3b88cc553555d109e7e133335e5f",
       "sourceStamp": [
         1794521100677712601,
         2420710
@@ -37547,8 +38062,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "2a322743235e5b752f2ea51d722682af6184517611bfc33216b35b5049b520c4",
-      "encodedSha256": "137e70c0c4a78eb3e867830a7174eff718b757dc9ed3aeae9b14811101a6c49a",
+      "encodedSha256": "3a9e8d9bde89af75caafd54cfc8b41e0429070062f543fb4933def1b22073bc7",
       "sourceStamp": [
         1794521111777961201,
         2495667
@@ -37910,8 +38430,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "5a3e0f2b571e4ec8e4b0f6c97157e7f50462ee3ae5d15fadc28bb9a936b65bde",
-      "encodedSha256": "ff1a619d552dd3aeaaf68f7e23e0e6b476e59411ea4eaf55953462284dad5434",
+      "encodedSha256": "773ec684c34e0bf7140109c09fedf63b6ffdb0c65f38748547015786f757d9c7",
       "sourceStamp": [
         1794521164287136572,
         2806211
@@ -38273,8 +38798,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "79d77be428ad20ceff1e0cc83cc26f6aabd236ec3092c5221ef94c6675189f57",
-      "encodedSha256": "b1a63dc9512de9ffc8c7d85050d8dae50ed48b3e216c928546973d832b39ca64",
+      "encodedSha256": "f50ba5a83011dced5e4e86496284004f2ef44cc72b61dae7f88e4ef30f120eaa",
       "sourceStamp": [
         1794521166511186291,
         2681034
@@ -38636,8 +39166,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "cf316f519deea825a56b8bd0a0aac141187d3fb4cbfd80d66fcd9e2ff3863fa7",
-      "encodedSha256": "8e937c31fbf8af53d86668e24fd1841c4ce6acbfe72581071e22174407c2294b",
+      "encodedSha256": "dffe3e9cb332b68990b46ab0fbe1ffdef7bd98c3a37f70b7203302671f09eed1",
       "sourceStamp": [
         1794521166487185754,
         2809807
@@ -38999,8 +39534,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "b9511b8a3b8352355412dd5b80e7896c0ec86bbc0869f716757729f852d9a79e",
-      "encodedSha256": "84553d6bdc99b8e597083b59c4fc09b7047aac6d4028736fc966b2866fc8807f",
+      "encodedSha256": "7ad9bd9fcb960c303f506e624913f09e0c7486f194271ec12cdc97d47c6227e3",
       "sourceStamp": [
         1794521221632419387,
         2641958
@@ -39362,8 +39902,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "2ab1baf8dedf5d4d0c729c3625fef7d6323a29b733d8f2cdb96ba3ad404e77f5",
-      "encodedSha256": "7ae77b00d8189fe00ccf97dd21d5a861d9bd4284d6e7b4f7af4ba64de99f13f9",
+      "encodedSha256": "a5715a6326da18ec5a113d8589b70fb410afb374669559ced27263b22e1c93cd",
       "sourceStamp": [
         1794521221572418042,
         2693390
@@ -39725,8 +40270,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "c2d06e35e291ea90e32ba6e944f5559c592498b44c0fb487bc5620e1bfc14ddc",
-      "encodedSha256": "7fa343aed7c0d936ede7b4810aec13cc12192a756f72954b8fb8ce0d2c1a0d65",
+      "encodedSha256": "6c4a1f79a2cdfe9bd077850e474b73ec0b2a211790240dbb2456094960b5feb3",
       "sourceStamp": [
         1794521286011312429,
         2575009
@@ -40088,8 +40638,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "4d74f3ca103c45e98c8aae249ff23d184adac9e9fd8981205c91b37e392bb35d",
-      "encodedSha256": "a6a5199a31256d43eb2c7f1825b79152d2c97562ef87c229f9f4360bf01795da",
+      "encodedSha256": "436a21801213d5fcf9d178e57563c3c77f267c0f88695bb8d90d2ff890730a07",
       "sourceStamp": [
         1794521295408772179,
         2348960
@@ -40451,8 +41006,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "2ea7dc3e0487aa1f3a119763f1997070f15b35d5dfc096f590bb44ba58aa4a0c",
-      "encodedSha256": "d123022e5b216edee9885d88e06fc3ed652fac5a28633c9f23690ff7e59c06ff",
+      "encodedSha256": "c7ce20ccc78d0b8e2562798d3b636c8a36d3396b8398d4c5ec62004d8bc1b40e",
       "sourceStamp": [
         1794522426818718915,
         1901464
@@ -40814,8 +41374,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "1a0061bbd3e7b5cebf41db5ec6d6b698dacb71d6f563c81c8637b202221b23b5",
-      "encodedSha256": "d82329fa6dac8220dd59e95180e3587498a3a8bf2ec26c9a458d9f7ec4ea4295",
+      "encodedSha256": "b08288143e9009cb0942f31ea474cffbff5dc6009be08558c48a7286c1ca7ef7",
       "sourceStamp": [
         1794521352647355208,
         3034879
@@ -41177,8 +41742,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "fbf1a8ee852f426d69af74e6ad61445d36754bfbb69b08c2c6c9845d623d5025",
-      "encodedSha256": "675c86f9baa15fbf38734e64b03ff4d9efc7424bbcb682c8c5428a5cbf40087c",
+      "encodedSha256": "8f1932de6095db6ef910841bcd78bb62086505970a256d283b2406411b37c429",
       "sourceStamp": [
         1794521352651355297,
         2734094
@@ -41540,8 +42110,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "228040da3ae62e7ce065ad8d4a207816738b1fdd2f84a15d2511897451264edc",
-      "encodedSha256": "fea98a3d31faa34eb2337af105347db29dc1be9ba5b8426025764a04aca80247",
+      "encodedSha256": "09d7de7198ff5a892d05c78012afff95e6914f3d1128ff2808eca7d253e4c797",
       "sourceStamp": [
         1794521358615199878,
         2843247
@@ -41903,8 +42478,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "0dfc55d48de0152fb95b98f1762058fb60adc9953e47db8f57750ee1cfe9df16",
-      "encodedSha256": "8ca07c241c1d35c10fac11b67250b610d72aef97bedf6bc9983cc78a824aec44",
+      "encodedSha256": "79581c85146ecebe462f104a7315aeda999b0ea154be217711e759bf154179d6",
       "sourceStamp": [
         1794521358600776852,
         2563788
@@ -42266,8 +42846,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "3b2a5293486bd263f537af5bbb11f78ea674222f10b9f7ca76f70897250cb9ce",
-      "encodedSha256": "af508d64e758f4640a0283780cab2c3b27be13426c9b92d9e7598fa1b028e08e",
+      "encodedSha256": "df1cc7f2e6d825fda07e2e78706193861e5ed5ff31cac2bc73f384faa2c45e7a",
       "sourceStamp": [
         1794521371407774715,
         3001538
@@ -42629,8 +43214,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "35127fa016d2319cc66550cbf7160765a94ef637f8558bf4bf4b4badb49c2275",
-      "encodedSha256": "125251b962a7ab601eb5bf7c1e9eb7542be2b96b8d08a7bd16614cfc6ca556aa",
+      "encodedSha256": "50a99fa419eb45c6cce4414c6f2221d417d34d866b19a8455469d01ea2a216b6",
       "sourceStamp": [
         1794521371405179154,
         2542833
@@ -42992,8 +43582,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "fa00878dc2ee07599bf7fff91c3dcb4774180162f31e39997817851c26ca88ac",
-      "encodedSha256": "3ca2f1c58e4a29a9679b5666358c9ebfa2c0c1ac8cedda17d637c30e79220e46",
+      "encodedSha256": "f69e05704b419328f91ac8ea8b821154704654f41d27d85cb2d49acb2f85b652",
       "sourceStamp": [
         1794521412588696870,
         2640001
@@ -43355,8 +43950,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "4f9176408dbd8c7d90efd5bb993c12a4491fd930e57c5d45c35eedbfba366cae",
-      "encodedSha256": "b0b168c9e5033a972538f0235e01da75871f7134429a0e8c9231a648f6090442",
+      "encodedSha256": "3b51a2c35962217cd53403c945b455bbf3d695b04e7f8a7baf7da942199d8b31",
       "sourceStamp": [
         1794521472078175635,
         2694939
@@ -43718,8 +44318,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "978b340844803dcfd55edcdee3888031c4a6f820532f94a3da108c996bf2bde0",
-      "encodedSha256": "29fc78b7c5de5db727a81fd4357bfac9eb92ce03978cc7dd5eb957dd1c71bf93",
+      "encodedSha256": "50f38940b8fa5929d5485c5ccafbf4e67fd264f54ff5bc821ba62907a4eb0c92",
       "sourceStamp": [
         1794521472102753615,
         2695187
@@ -44081,8 +44686,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "d14c83efd82770b6870491d6226d05257c0482642feb5444a4707ebc2d35803a",
-      "encodedSha256": "eb304749d8d7a8993db52b705747945d01cca618cbddfef62d533a1af9413c3d",
+      "encodedSha256": "11fffe54eb44b4544206b06b0bc53a8df884975cdb2ca2ba072f27e4d92b37dc",
       "sourceStamp": [
         1794521471586016829,
         2523182
@@ -44444,8 +45054,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "26a09df5ea1d9caa7b6212fe1174aa9c1227c14dee5912171a6ced4275491303",
-      "encodedSha256": "cce55b3bcc36dc66904982ee541b16a12a2fddf915a41cd8e23ad8d57d63b664",
+      "encodedSha256": "9cf181caa756f29d3b3a1ef7f59ee36186ca7fbe21d81bc49c04887eb6608217",
       "sourceStamp": [
         1794521478546009706,
         2926526
@@ -44807,8 +45422,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "1b2b44ec485f49fe1fbba7ba4547367cc6857462256a2f1e087c27059349657e",
-      "encodedSha256": "2bc66f02c5babdc654f1d63b343034bc3acdb079c6e413bec2b429c71ee5c823",
+      "encodedSha256": "da8bd3813330710080bcea0f88388bdec352605333337dec6ce10d6952b27327",
       "sourceStamp": [
         1794521601576926664,
         2569643
@@ -45170,8 +45790,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "fe3f496ddf9b14e81747fe9a5d9818bfa8785a3a40ffc0a6cd964cd8f7cc23c6",
-      "encodedSha256": "536fc2bde0b9cb66e440dd1ed1c9ba838e017f2ef2bc4b4136ee9b9e601a99ff",
+      "encodedSha256": "f5b0d8ba6070312d59a47e340fcdc00c113e4aa98e4684fc7ad5be59c8ce173e",
       "sourceStamp": [
         1794521604076679766,
         2781949
@@ -45533,8 +46158,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "3b899a6b04b686d6bbfdb5681c5d7f7c0167a6fe19f6e4077f56b87a242c47dc",
-      "encodedSha256": "4fdceb8563d8afd9225b08b2e3c003e59be2bd8d2c3f59c99706820d5a585823",
+      "encodedSha256": "f0453399195861c92f8398eeccf98a40745157bcec9f2353001380643e2bc019",
       "sourceStamp": [
         1794521604104983268,
         2579704
@@ -45871,8 +46501,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "6bc3b8785d1e6bdbfb915cbc73dc75a610f25cfe6c51472fe90ba56e69b4a33d",
-      "encodedSha256": "2ef0ec967ca8bf328630d7689a33b675d90c53c48a3071dec9b3241db26cbc48",
+      "encodedSha256": "5daa109d4a888a0a6b41ccba9bb60ecf76ef3db8e856782822ad082f18a09da6",
       "sourceStamp": [
         1794521604092982999,
         2399173
@@ -46234,8 +46869,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "d76411a51ff1fdadbe847f749c7cffee2308d3fcb9edd73b642d28ffeca42524",
-      "encodedSha256": "40aae33502963547c8d2a9871bd57c94133eda51d8ae5894c34786c68fd98371",
+      "encodedSha256": "aefcc3e30948f97197c1c562d36545f5cd8827cfcfae0643bcdb9f7b64c31be2",
       "sourceStamp": [
         1794521604072085301,
         2459023
@@ -46597,8 +47237,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "0a24aaff4a372aaee6c9411c21b4694776866b148e84e03ac0371892a2a6ed28",
-      "encodedSha256": "3875891142d837bf5869186a4ab09078c6c60c99eaeafd4c756ea021b90728b6",
+      "encodedSha256": "779d27472e4725b5b349ed611e98363550de8edba19b30e0012d8499f67fc9a5",
       "sourceStamp": [
         1794521664970345382,
         2644490
@@ -46960,8 +47605,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "46f614e490ad1508f607b8b2c7e795498c47b495325f9d8f555b9b459ffcffdb",
-      "encodedSha256": "48aaac5ec9566d19e235903876ab80a11e0c0eb14dfdf4df1578226c6502ff4a",
+      "encodedSha256": "83bb3bd06b46b46987cea1d4174fad5c18f759ee29b04ad3ff00fd3ae6f9f7de",
       "sourceStamp": [
         1794521668830431781,
         1856390
@@ -47323,8 +47973,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "d199a94906b8f264aae44e72e3b152e5d46b17b9cd76510f6d58d92d1fe5c799",
-      "encodedSha256": "0c6a5c34e8d8d0d39582a37cb9ca79edc3a61755ad63d77f1f9391d2335c2df3",
+      "encodedSha256": "5b021905a5b2abdef14da8b0cf404cec89ccb6164f623a7a3a5654819b7c5567",
       "sourceStamp": [
         1794521668954715803,
         2808124
@@ -47686,8 +48341,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "b42a5978950d6e81a7a2699c8d6aa541aa79aa5e8018c405a4072a411a253212",
-      "encodedSha256": "844dc68368fec3ceeb089d465b121997a92dd65933ae2402adc7292f8253f271",
+      "encodedSha256": "4ca78ce692d93139dc9a5c08c740fdf6e045b7135fc4dc197637b8e9f29026bd",
       "sourceStamp": [
         1794521668818431512,
         2527852
@@ -48049,8 +48709,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "a33015b4e9a0653995a49127d463ed71030d74cf0d50f9446f1ce281aeec5fcc",
-      "encodedSha256": "7d824f5198a0e94f813ef3b025b60dae4950088431bfe9ff19c499129cb20b03",
+      "encodedSha256": "61a31bfc43ff439ee82ed3c051f8a2887ed22c8709fef621011b1fad694d7918",
       "sourceStamp": [
         1794521726087712328,
         2852407
@@ -48412,8 +49077,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "17a52e070ee728ae43b77a67d21ad80ddfd6bb6b866cae15e0abed3391dff340",
-      "encodedSha256": "090f5a184bb37b2f45619e9bf89d368d8f1f683cacdba7abd42c69ca3de2d18b",
+      "encodedSha256": "0306a700d788edba6013e61b87a8e9fddcaa34e2fc5aeb36a1c8fbc44da32080",
       "sourceStamp": [
         1794521726080656060,
         2836121
@@ -48775,8 +49445,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "cee70684551f144521ae688547cda1c08aa92306267f91798df002c5380cf895",
-      "encodedSha256": "a742d4bf93bf9ac5f741811d179f63384bf5500bce89d4c548581e0ad9e79c71",
+      "encodedSha256": "462699de460212a3357863c95c7f6874caa53fc33cb071ce799d06d8407e533e",
       "sourceStamp": [
         1794521734560672493,
         2668988
@@ -49138,8 +49813,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "8264e303de386f51c51b41c3610119579e7c0b44cb8fa3ebd01f039646e120fc",
-      "encodedSha256": "2f62995f0f62f58947a76a6f7b4e4bbc32cc1cc8d7bcbcd1ce8a03c2bac0170f",
+      "encodedSha256": "5b5b3c4bf3c8095a6738e74ce3c27efa3c06bda5ea159bbb394e55f700a1c850",
       "sourceStamp": [
         1794521796389285286,
         2625123
@@ -49501,8 +50181,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "b44efa547300dd2c5ed1b3d25a6cac38375fc7d5d8ff41312b2823434c29acef",
-      "encodedSha256": "ad6f267b9326d13bd5064d98c2fac19b1cf56612df27f5f9f088aa9d2a9ae810",
+      "encodedSha256": "2047b509a63d49621cc0ef73f72c7b27af66af8a8f4b3b6c12f776fd628bffde",
       "sourceStamp": [
         1794521797169302738,
         2729909
@@ -49864,8 +50549,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "7feeb9bcc3daa1502e058292396e73ba76a1bed518412cb43874dd82806b26f2",
-      "encodedSha256": "bc73d42b89b22945134e02de89a946c9199cff73165ab37e000a9371bb17a9ec",
+      "encodedSha256": "f866759de1acf59dc2657cce6f2b5028d62fbbbcd8b3db768eab010339dba9ba",
       "sourceStamp": [
         1794521797233304170,
         2398475
@@ -50227,8 +50917,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "374aaf7db423deddeda2c7621618f99433c024c3f59c8b570c99783c6a76e98c",
-      "encodedSha256": "fe91d7a32ced979d51b565ed7f4ed479f9036b3c3e4f219f7951b652fbaa73e2",
+      "encodedSha256": "a0043621ff8a0e3d42959b88dead38ebf5a29b0baa020227c9b04dc502258114",
       "sourceStamp": [
         1794521797221303901,
         2983451
@@ -50590,8 +51285,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "599fc7a18ba279477361870d7cef7756f4de4c38454ea211ee6a2149c60a336f",
-      "encodedSha256": "db38afff234d345018c1b4c597cd571d9ce50be6b2aae2b372812b81981ac2c5",
+      "encodedSha256": "81e7cf86ec6a69b6f1a123cd9a2b50179c4c25cbc01c816fc528625e27c6b78b",
       "sourceStamp": [
         1794521865578833502,
         2886831
@@ -50953,8 +51653,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "45d00008e55dc6b5926a123fc9a38d33393a59d4cf6e158c50099b7f2b96da87",
-      "encodedSha256": "f2e044077aa2aee3ec9dc55f2ccf4dec4f0a2dea181cacdfacd7c7a2cb2bc434",
+      "encodedSha256": "49a3d003b2a1a6a66edefffba4f3fc2a7c7410b3fe62afa1709beda648a1998b",
       "sourceStamp": [
         1794521866930863749,
         2492636
@@ -51316,8 +52021,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "99922c2fe6a5176045409fb4d4dd427ca65dcd95a9d31a9f179bb90c437a7c73",
-      "encodedSha256": "2e273159bb4134da0b069d9edda3be4de12a419da2af49ff55353274b38b6891",
+      "encodedSha256": "aa598eb552d8ed466f205418274432d69c5c7dd67720d1ac256da9503d9a8321",
       "sourceStamp": [
         1794521932684334649,
         2459256
@@ -51654,8 +52364,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "21221d2d675bb0bd8083589a66186f52ded1748518a27f1835f2f7d4ad5fca35",
-      "encodedSha256": "b94f51f9b8976e1a24a797759e9df0d57ccc8038cc52bb5901e6ad51b1fcdd56",
+      "encodedSha256": "5cce402bb635e8c8888182ba1f5782f68b611d1b0e96ac3f4f44772be705676f",
       "sourceStamp": [
         1794521932944340468,
         2916055
@@ -51992,8 +52707,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "e9c3f22807c17ab87a82ca12ac1750ecd1740af96400b864b08df51344f8511e",
-      "encodedSha256": "3721239f922fe9d4b9a31b5d87b6691c1832f0a0eff6b9b8371d7f94761dba60",
+      "encodedSha256": "d0e23705073fbbda78b60d2fecbab1003399361ea4483eeebf03c979fe1797e1",
       "sourceStamp": [
         1794521932744335991,
         2507915
@@ -52355,8 +53075,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "94465cc89b3b82af054bf606ec85073d743bc511a70581355f6b0d2012f543ad",
-      "encodedSha256": "125606d3a9b183c469120bab2d9514c4160dbc113822cadd5e80b0d417945153",
+      "encodedSha256": "f99e4603a44d41ea5fb4d7cb44c994378b99bbb2cd2a5df609f7c6ab379a3a98",
       "sourceStamp": [
         1794521932724335543,
         2656372
@@ -52718,8 +53443,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "2585b7de63f2415f43f1792356d243db30bac6b1d97a6a498f08ec48505bd0bb",
-      "encodedSha256": "d0441d71e4f8df0002d124dc63b1caa887366d8e03788a3e1988fc4f2c01e083",
+      "encodedSha256": "b6be07e0b0dda75ce2bc574eb07d3d1709d584381cdcfb7bd1eabfc66378c0e4",
       "sourceStamp": [
         1794521938532465466,
         2662846
@@ -53081,8 +53811,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "1ba8acad385dd6ef9305df69b871757d5ec61e39ec7eca521f857ebaae64c937",
-      "encodedSha256": "9806cf9b26b8a6d59b3ee6e2e9233a5bbce4ce2ba528e1ec061f7e95121db0b7",
+      "encodedSha256": "c2cee40cc0845165144d0c7fa972cb1ba3c6fdc59b67634b1866b895c3d5390d",
       "sourceStamp": [
         1794521994297713416,
         2207354
@@ -53419,8 +54154,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "10e57617bda4805033acc4f8c411e9c6f68893ec144fe941420183275b95981e",
-      "encodedSha256": "d93fe2c53c3d0012589ab32962d47ebe07859c9663e4961a5960e1cfb4ed601e",
+      "encodedSha256": "ad732d666e26976ef35e51a4aa0e9dc2806082840db90ef9126e3c5c41ea23b0",
       "sourceStamp": [
         1794522043050803655,
         2794785
@@ -53757,8 +54497,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "0489620d21159c2382c9e2f1e0cf6a2d5499d5ad1a54d0592b331504240d86e5",
-      "encodedSha256": "d433e100fd7d87431ffa038b5695554216716d2271ffb6d120088d93beda0496",
+      "encodedSha256": "e74bcff94b72d1485c26bb93b6c71141b1d2b4d93b97f17992aaa27bfc9d98c8",
       "sourceStamp": [
         1794522043086804461,
         2409559
@@ -54095,8 +54840,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "83c337b39618e5c9d20fbd1b5ce8c3922caab5f1d5909fe79f36c37ad6cc8fcc",
-      "encodedSha256": "5d82661a87c1d93a2e1d07e24c57eb52ef757bd8f09f0d342962cb3869901f51",
+      "encodedSha256": "6cc07ba0455ae08d29c2802c754731e03a4304ce288f83c2560be29a16fce8d8",
       "sourceStamp": [
         1794522054771065164,
         2720002
@@ -54458,8 +55208,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "29f02a676b3ccdce7f5654cfe471cfa9aff8c866c9835475e26d9b6f5a6e61ee",
-      "encodedSha256": "f998a63103e53c70cabc8329c03bd8f1b233601a8bd18ef32e3d096d6e7306dd",
+      "encodedSha256": "91f3e9ffdb9e3f38e0284a7e9ce921b9c7b71e540fda09294b33fca427ce303a",
       "sourceStamp": [
         1794522054811066049,
         2683324
@@ -54796,8 +55551,13 @@
       ],
       "sourceDrawings": 24,
       "geometryVersion": 1,
+      "encoding": {
+        "format": "webp",
+        "quality": 80,
+        "alpha": "lossless"
+      },
       "sourceSha256": "d90af061eb3c4a6f8e4be36adefc8b7b02aefdbe81fe83d6dbdf7d776aceb87c",
-      "encodedSha256": "2ea593d43d30ae7e372eebeaed3860661d18e494a9947b92e9f284f6903d01c9",
+      "encodedSha256": "ebf834f975a6d7f1991b930a6d0918b158893ea80a123e9a24d5f7111b5fb80a",
       "sourceStamp": [
         1794522066943336026,
         2671622

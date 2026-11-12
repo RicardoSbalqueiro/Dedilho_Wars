@@ -29,5 +29,15 @@
       "queued": 0
     },
     "physicalMobileDevice": "not tested"
+  },
+  "compression": {
+    "atlases": 152,
+    "drawings": 3636,
+    "beforeBytes": 100381940,
+    "afterBytes": 72720222,
+    "savedBytes": 27661718,
+    "dimensions": "unchanged",
+    "allFrameGeometry": "unchanged",
+    "alpha": "byte-for-byte identical"
   }
 }
