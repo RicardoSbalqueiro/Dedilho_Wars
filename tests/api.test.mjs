@@ -43,7 +43,7 @@ try {
  assert.equal((await call(path+'/sync',{epoch,n:1,input:{mask:0,events:[{id:1,mask:1024,clash:-1}]}},guest.cookie)).status,400);
  assert.equal((await call(path+'/sync',{epoch,n:1,input:{mask:0,events:[{id:1,mask:1024,clash:42,clashFrame:241}]}},guest.cookie)).status,400);
  assert.equal((await call(path+'/sync',{epoch,n:1,input:{mask:16,events:[{id:1,mask:16}]}},outsider.cookie)).status,403);
- const state={v:'dw-online-11',f:[{hp:1000},{hp:900}],g:{tick:10}};
+ const state={v:'dw-online-12',f:[{hp:1000},{hp:900}],g:{tick:10}};
  assert.equal((await call(path+'/sync',{epoch,n:2,state:{...state,v:'dw-online-9'}},a.cookie)).status,400,'outdated fighter snapshots require an update');
  await call(path+'/sync',{epoch,n:2,state},a.cookie);
  const sync=await call(path+'/sync',{epoch,n:3,input:{mask:16,events:[{id:1,mask:16}]}},guest.cookie);assert.deepEqual(sync.body.value,state);assert.equal(sync.body.n,2);

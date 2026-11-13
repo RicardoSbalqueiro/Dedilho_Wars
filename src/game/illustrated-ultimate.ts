@@ -5,6 +5,7 @@ import {drawIllustratedEffect} from './action-effects';
 import {ultimateBodyOptions,ultimateContacts} from './ultimate-direction';
 import {drawFormPreview,FORM_VISUALS} from './form-effects';
 import {settings} from './visual-settings';
+import {drawImpactSpectacle,drawCinematicAtmosphere} from './fight-spectacle';
 import {computeRig,drawRig} from './rig';
 
 const TAU=Math.PI*2,clamp=(v:number)=>Math.max(0,Math.min(1,v)),smooth=(v:number)=>{const u=clamp(v);return u*u*(3-2*u)};
@@ -34,6 +35,7 @@ export function drawIllustratedUltimate(c:CanvasRenderingContext2D,ch:CharId,tar
  // A moving floor grid and parallax strokes give the attack depth. Reduced
  // flash keeps all drawings and movement while attenuating high-contrast VFX.
  c.strokeStyle=col+'33';c.lineWidth=1;
+ drawCinematicAtmosphere(c,ch,t,form);
  for(let i=0;i<12;i++){const x=(i*127-t*(1+i%3))%1150-80;c.beginPath();c.moveTo(x,130+i%4*48);c.lineTo(x+110,100+i%4*48);c.stroke();}
  for(let i=0;i<8;i++){const y=430+i*i*1.7;c.beginPath();c.moveTo(0,y);c.lineTo(960,y);c.stroke();}
  for(let i=-6;i<7;i++){c.beginPath();c.moveTo(480+i*16,405);c.lineTo(480+i*150,510);c.stroke();}
@@ -85,6 +87,7 @@ export function drawIllustratedUltimate(c:CanvasRenderingContext2D,ch:CharId,tar
   drawIllustratedEffect(c,effect,t,dx-125,210,220,185,clamp(age/14));
  }
  c.restore();if(age>=0&&age<17){
+  drawImpactSpectacle(c,ch,dx-25,295,age,2.6,Math.floor(t-age),'hit');
   c.save();c.translate(dx-25,295);c.globalAlpha=(1-age/17)*(settings.reducedFlash?.2:.75);c.strokeStyle=light;c.lineWidth=2;
   for(let i=0;i<8;i++){const a=i/8*TAU,r=20+age*5;c.beginPath();c.moveTo(Math.cos(a)*r*.45,Math.sin(a)*r*.45);c.lineTo(Math.cos(a)*r,Math.sin(a)*r);c.stroke();}c.restore();
  }

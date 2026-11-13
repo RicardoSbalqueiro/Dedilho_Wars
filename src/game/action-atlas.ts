@@ -2,6 +2,7 @@
 import type {CharId} from './data';
 import type {DrawOpts} from './rig';
 import {mobileGraphics} from './mobile-settings';
+import {spritePlacement} from './sprite-size';
 import raw from '../assets/actions/manifest.json';
 
 export interface ActionCell {rect:[number,number,number,number];anchorX:number;baseline:number;referenceHeight:number;visiblePixels:number}
@@ -81,12 +82,12 @@ export function sampleActionFrame(ch:CharId,o:DrawOpts):{clip:ActionClip;frame:n
 }
 /** Paint a complete illustrated figure. Root movement comes from the match or
  * the cinematic choreography, never from deforming individual illustrated limbs. */
-export function drawActionSprite(c:CanvasRenderingContext2D,ch:CharId,o:DrawOpts,height:number,rotation=0):boolean{
+export function drawActionSprite(c:CanvasRenderingContext2D,ch:CharId,o:DrawOpts,height:number,_rotation=0):boolean{
  const pick=sampleActionFrame(ch,o);if(!pick)return false;const e=entry(pick.clip.atlas,true);if(!e||e.status!=='ready'||!e.source)return false;
- const cell=e.atlas.frames[pick.frame];if(!cell)return false;const [x,y,w,h]=cell.rect,scale=height/Math.max(1,cell.referenceHeight),dx=-cell.anchorX*scale,dy=-cell.baseline*scale;
+ const cell=e.atlas.frames[pick.frame];if(!cell)return false;const [x,y,w,h]=cell.rect,placement=spritePlacement('actions',pick.clip.atlas,pick.frame,height,{...o,actionClip:pick.action},{reference:cell.referenceHeight,baseline:cell.baseline,anchorX:cell.anchorX}),scale=placement.scale,dx=-placement.anchorX*scale,dy=-placement.baseline*scale;
  c.save();c.imageSmoothingEnabled=true;c.imageSmoothingQuality='high';
- if(pick.action==='react')rotation=0;
- if(Math.abs(rotation)>.08){const cx=dx+w*scale*.5,cy=dy+h*scale*.5,extent=Math.abs(Math.cos(rotation))*h*scale+Math.abs(Math.sin(rotation))*w*scale;c.translate(0,-extent*.5);c.rotate(rotation);c.translate(-cx,-cy);}
+ // Each new plate already contains the complete authored body pose. Rotating
+ // its weapon-sized bounding box again was changing apparent height and feet.
  c.drawImage(e.source,x*e.rx,y*e.ry,w*e.rx,h*e.ry,dx,dy,w*scale,h*scale);c.restore();return true;
 }
 export function drawActionProp(c:CanvasRenderingContext2D,key:string,frame:number,x:number,y:number,width:number,height:number):boolean{

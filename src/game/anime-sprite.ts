@@ -8,6 +8,7 @@ import rawManifest from '../assets/sprites/manifest.json';
 import {loadedMotionAtlas,preloadMotionSprites} from './motion-atlas';
 import {sampleDrawnFrame} from './sprite-timeline';
 import {drawActionSprite,preloadActionSprites} from './action-atlas';
+import {spritePlacement} from './sprite-size';
 
 export type AnimeSpriteRect=readonly [number,number,number,number];
 export interface AnimeSpriteAtlas {
@@ -185,16 +186,18 @@ export function drawAnimeSprite(c:CanvasRenderingContext2D,ch:CharId,pose:Pose,o
  let source:CanvasImageSource=data.image,scale=bodyHeight(ch,!!o.transformation)/atlas.idleHeight;
  const row=Math.floor(index/atlas.columns),baseline=atlas.baselines[row]??sh;
  let dx=-sw*.5*scale,dy=-baseline*scale,bounds:readonly number[]=atlas.bounds[index]??[0,0,sw,sh];
+ let placement=spritePlacement('sprites',data.key,index,bodyHeight(ch,!!o.transformation),o,{reference:atlas.idleHeight,baseline,anchorX:sw*.5});
  if(motion){
   const variant=o.transformation?1:0,cell=motion.atlas.frames[sample.index+variant*12];
-  if(cell){[sx,sy,sw,sh]=cell.rect;source=motion.image;scale=bodyHeight(ch,!!o.transformation)/(motion.atlas.rowReferenceHeights?.[variant*3+Math.floor(sample.index/4)]??motion.atlas.referenceHeights[variant]);dx=-cell.anchorX*scale;dy=-cell.baseline*scale;bounds=[0,0,sw,sh];}
+  if(cell){[sx,sy,sw,sh]=cell.rect;source=motion.image;placement=spritePlacement('motion',ch,sample.index+variant*12,bodyHeight(ch,!!o.transformation),o,{reference:motion.atlas.referenceHeights[variant],baseline:cell.baseline,anchorX:cell.anchorX});bounds=[0,0,sw,sh];}
  }
+ scale=placement.scale;dx=-placement.anchorX*scale;dy=-placement.baseline*scale;
  const dw=sw*scale,dh=sh*scale;
  const time=finite(o.time),state=o.spriteState,idle=!motion&&(index===0||index===1);
  c.save();c.imageSmoothingEnabled=true;c.imageSmoothingQuality='high';
  if(idle){const breath=Math.sin(time*.063);c.translate(0,-.35*(breath+1));const breathe=1+breath*.0015;c.scale(breathe,breathe)}
  else if(!motion&&(state==='walk'||index===2||index===3))c.translate(0,-.65*(1-Math.cos(time*Math.PI/7)));
- const rotation=finite(pose.rot);
+ const rotation=state==='attack'?0:finite(pose.rot);
  if(Math.abs(rotation)>.08){
   const b=bounds,left=dx+b[0]*scale,right=left+b[2]*scale,top=dy+b[1]*scale,bottom=top+b[3]*scale;
   const cx=(left+right)*.5,cy=(top+bottom)*.5,a=Math.abs(Math.cos(rotation)),bSin=Math.abs(Math.sin(rotation)),height=(bottom-top)*a+(right-left)*bSin;

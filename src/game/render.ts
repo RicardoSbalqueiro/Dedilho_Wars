@@ -1,5 +1,6 @@
 import {drawAccessoryNormal} from './accessories';
 import {drawCombatFlowFx} from './form-effects';
+import {drawStrikeSpectacle,drawFightEnvironment,drawFightImpacts,drawFightScreen} from './fight-spectacle';
 import {actionAtlasReady} from './action-atlas';
 import {drawProjectileIllustration} from './action-effects';
 import {captureArtOptions} from './capture-art';
@@ -359,6 +360,7 @@ function drawFighter(ctx: CanvasRenderingContext2D, g: Game, f: Fighter, time: n
   const phase=m?movePhase(m,frame,f.connected):null;
   const accessoryPose=f.poseOverride||(m&&phase?.phase==='recovery'&&phase.progress<.35?m.recoveryPose||m.poses[1]:f.poseName);
   if(!reflect)drawMotionInk(ctx,f,settings.reducedFlash);
+  if(!reflect)drawStrikeSpectacle(ctx,f,g.tick);
   drawRig(ctx, f.ch, f.rig, f.pose, { time:f.animT, expr: f.expr, glow: f.glow, glowColor: f.def.glow, stretch,transformation:f.formT>0,formVariant:f.formVariant,formTime:f.formElapsed,poseName:accessoryPose,
     ...animeMotion(f),...captureArtOptions(g,f),...(f.ch==='jane'&&f.formT===0&&f.bikeDizzy>0&&actionAtlasReady('jane-bike')?{actionClip:'bike',actionProgress:10.01/12}:{}) });
   if(!reflect&&m&&!(f.ch==='ulisses'&&f.formT>0))drawAccessoryNormal(ctx,m,frame);
@@ -1032,6 +1034,7 @@ export function render(ctx: CanvasRenderingContext2D, g: Game, stage: Stage, tim
   ctx.scale(g.cam.zoom, g.cam.zoom);
   ctx.translate(-g.cam.x, -FLOOR_Y);
   stage.drawFloor(ctx);
+  drawFightEnvironment(ctx,g);
   for(const p of g.parts)if(p.type==='crater')drawParticle(ctx,p);
   for(const p of g.projectiles)if(p.kind==='chess'&&p.life>0){ctx.save();ctx.translate(p.x,FLOOR_Y);ctx.globalAlpha=Math.min(1,(p.age??0)/8,p.life/20);drawChessFloor(ctx,(p.radius??110)*2,time);ctx.restore();}
   let tint: string | null = null;
@@ -1091,7 +1094,9 @@ export function render(ctx: CanvasRenderingContext2D, g: Game, stage: Stage, tim
   drawVehicles(ctx, g);
   drawProjectiles(ctx, g);
   for (const p of g.parts)if(p.type!=='crater')drawParticle(ctx,p);
+  drawFightImpacts(ctx,g);
   ctx.restore();
+  drawFightScreen(ctx,g);
 
   // ---- sobreposições de tela
   const vg = ctx.createRadialGradient(W / 2, H / 2, 200, W / 2, H / 2, 620);
