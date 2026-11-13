@@ -4,13 +4,17 @@ import type {DrawOpts} from './rig';
 import {mobileGraphics} from './mobile-settings';
 import {spritePlacement} from './sprite-size';
 import raw from '../assets/actions/manifest.json';
+import flowRaw from '../assets/flow/manifest.json';
+import {sampleFlowFrame} from './flow-timeline';
 
 export interface ActionCell {rect:[number,number,number,number];anchorX:number;baseline:number;referenceHeight:number;visiblePixels:number}
 export interface ActionAtlas {ch?:CharId;src:string;width:number;height:number;frames:ActionCell[];sourceDrawings:number;kind:string;encodedSha256:string}
 export interface ActionClip {atlas:string;frames:number[];kind:'move'|'ultimate'|'prop'|'effect'}
 interface Manifest {version:number;atlases:Record<string,ActionAtlas>;clips:Record<string,ActionClip>}
 const manifest=raw as unknown as Manifest;
+const flow=flowRaw as unknown as {atlases:Record<string,ActionAtlas>;totalDrawings:number;formOffset:number};
 const urls:Record<string,string>=(()=>{try{return import.meta.glob<string>('../assets/actions/*.webp',{eager:true,query:'?url',import:'default'})}catch{return {}}})();
+const flowUrls:Record<string,string>=(()=>{try{return import.meta.glob<string>('../assets/flow/*.webp',{eager:true,query:'?url',import:'default'})}catch{return {}}})();
 interface Entry {source?:CanvasImageSource;image?:HTMLImageElement;atlas:ActionAtlas;status:'queued'|'loading'|'ready'|'error';promise:Promise<void>;resolve:()=>void;rx:number;ry:number;used:number;pixels:number}
 const cache=new Map<string,Entry>(),queue:string[]=[];let loading=0,serial=0,notified=false;
 const clamp=(n:number)=>Number.isFinite(n)?Math.max(0,Math.min(1,n)):0;
@@ -18,7 +22,7 @@ function notify(){if(notified||typeof window==='undefined')return;notified=true;
 function trim(protectedKey:string){
  let pixels=[...cache.values()].reduce((sum,e)=>sum+e.pixels,0);const limit=(mobileGraphics()==='auto'?16:40)*1024*1024;
  for(const [key,e] of [...cache].filter(([key,e])=>key!==protectedKey&&e.status==='ready').sort((a,b)=>a[1].used-b[1].used)){
-  if(pixels<=limit&&cache.size<=22)break;pixels-=e.pixels;cache.delete(key);
+  if(pixels<=limit&&cache.size<=30)break;pixels-=e.pixels;cache.delete(key);
  }
 }
 function pump(){
@@ -30,7 +34,7 @@ function pump(){
    if(ok){
     // Bound the decoded surface per sheet so both selected fighters, reactions,
     // ULTs and their effect sheets fit together on a phone without cache churn.
-    const scale=Math.min(1,Math.sqrt((mobileGraphics()==='auto'?720000:1800000)/(image.naturalWidth*image.naturalHeight)));
+    const isFlow=!!flow.atlases[key],scale=Math.min(1,Math.sqrt((mobileGraphics()==='auto'?(isFlow?480000:720000):1800000)/(image.naturalWidth*image.naturalHeight)));
     if(scale<1&&typeof document!=='undefined'){
      const surface=document.createElement('canvas');surface.width=Math.max(1,Math.round(image.naturalWidth*scale));surface.height=Math.max(1,Math.round(image.naturalHeight*scale));
      const c=surface.getContext('2d');if(c){c.drawImage(image,0,0,surface.width,surface.height);e.source=surface;e.rx=surface.width/e.atlas.width;e.ry=surface.height/e.atlas.height;e.image=undefined;image.src='';}
@@ -39,24 +43,25 @@ function pump(){
    }
    e.resolve();pump();
   };
-  image.onload=()=>finish(true);image.onerror=()=>finish(false);image.src=urls['../assets/actions/'+e.atlas.src]||new URL('../assets/actions/'+e.atlas.src,import.meta.url).href;
+  image.onload=()=>finish(true);image.onerror=()=>finish(false);const bank=flow.atlases[key]?'flow':'actions';image.src=(bank==='flow'?flowUrls:urls)['../assets/'+bank+'/'+e.atlas.src]||new URL('../assets/'+bank+'/'+e.atlas.src,import.meta.url).href;
  }
 }
 function entry(key:string,urgent=false){
  const old=cache.get(key);if(old){old.used=++serial;if(urgent&&old.status==='queued'){const i=queue.indexOf(key);if(i>0){queue.splice(i,1);queue.unshift(key);}}return old;}
- const atlas=manifest.atlases[key];if(!atlas||typeof Image==='undefined')return;
+ const atlas=manifest.atlases[key]??flow.atlases[key];if(!atlas||typeof Image==='undefined')return;
  let resolve=()=>{};const e:Entry={atlas,status:'queued',promise:new Promise<void>(done=>{resolve=done}),resolve:()=>resolve(),rx:1,ry:1,used:++serial,pixels:0};cache.set(key,e);if(urgent)queue.unshift(key);else queue.push(key);pump();return e;
 }
 export function preloadActionSheets(keys:readonly string[]){return Promise.all(keys.map(key=>entry(key)?.promise??Promise.resolve())).then(()=>{})}
 const EFFECT_PAGE:Record<CharId,string>={caetano:'f',rickzera:'a',renngotti:'b',jao:'c',bieu:'a',nomad:'b',aneninha:'a',santox:'scene',jane:'c',cristyan:'f',eneas:'d',patrick:'f',gabrielzin:'e',ulisses:'f',felipence:'e',hdsh:'d',orango:'b',tubarao:'b'};
 export function preloadActionSprites(ids:readonly CharId[]){
- const priority=['punches','kicks','specials','reactions','low','misc','ult','ult-form'];
- const keys=priority.flatMap(page=>ids.map(ch=>ch+'-'+page)).filter(key=>manifest.atlases[key]);
+ const priority=['support','punches','kicks','bridges','specials','reactions','low','misc','ult','ult-form'];
+ const keys=priority.flatMap(page=>ids.map(ch=>ch+'-'+page)).filter(key=>manifest.atlases[key]||flow.atlases[key]);
  if(ids.includes('jane')&&manifest.atlases['jane-bike'])keys.push('jane-bike');
  keys.push(...new Set(ids.map(ch=>'fx-'+EFFECT_PAGE[ch])),'fx-scene');return preloadActionSheets(keys);
 }
 export function preloadActionEffects(){return Promise.all(Object.entries(manifest.atlases).filter(([,a])=>a.kind==='effects').map(([key])=>entry(key)?.promise??Promise.resolve())).then(()=>{})}
 export const actionAtlasManifest=()=>manifest;
+export const flowAtlasManifest=()=>flow;
 export const actionAtlasReady=(key:string)=>cache.get(key)?.status==='ready';
 export function actionCacheStats(){return {images:cache.size,pixels:[...cache.values()].reduce((n,e)=>n+e.pixels,0),loading,queued:queue.length}}
 export function actionClip(ch:CharId,move:string,form=false){return manifest.clips[ch+'/'+(form?'form':'base')+'/'+move];}
@@ -83,11 +88,14 @@ export function sampleActionFrame(ch:CharId,o:DrawOpts):{clip:ActionClip;frame:n
 /** Paint a complete illustrated figure. Root movement comes from the match or
  * the cinematic choreography, never from deforming individual illustrated limbs. */
 export function drawActionSprite(c:CanvasRenderingContext2D,ch:CharId,o:DrawOpts,height:number,_rotation=0):boolean{
- const pick=sampleActionFrame(ch,o);if(!pick)return false;const e=entry(pick.clip.atlas,true);if(!e||e.status!=='ready'||!e.source)return false;
+ const added=sampleFlowFrame(ch,o),addedEntry=added?entry(added.atlas,true):undefined;
+ const useAdded=!!added&&addedEntry?.status==='ready';
+ const pick=useAdded?{clip:{atlas:added!.atlas,frames:[added!.frame],kind:'move' as const},frame:added!.frame,action:added!.action}:sampleActionFrame(ch,o);
+ if(!pick)return false;const e=entry(pick.clip.atlas,true);if(!e||e.status!=='ready'||!e.source)return false;
  if(!e.atlas.frames[pick.frame])return false;
  c.save();c.imageSmoothingEnabled=true;c.imageSmoothingQuality='high';
- const paint=(frame:number,alpha:number,key=pick.clip.atlas)=>{if(alpha<=0)return;const source=key===pick.clip.atlas?e:entry(key,true);if(!source?.source||source.status!=='ready')return;const f=source.atlas.frames[frame];if(!f)return;const [sx,sy,sw,sh]=f.rect,p=spritePlacement('actions',key,frame,height,{...o,actionClip:pick.action},{reference:f.referenceHeight,baseline:f.baseline,anchorX:f.anchorX});c.save();c.globalAlpha*=alpha;c.drawImage(source.source,sx*source.rx,sy*source.ry,sw*source.rx,sh*source.ry,-p.anchorX*p.scale,-p.baseline*p.scale,sw*p.scale,sh*p.scale);c.restore();};
- const smooth=(v:number)=>{const t=clamp(v);return t*t*(3-2*t)},p=clamp(o.spriteProgress??0),ordinary=o.actionProgress===undefined&&pick.clip.kind==='move'&&pick.action!=='react';
+ const paint=(frame:number,alpha:number,key=pick.clip.atlas)=>{if(alpha<=0)return;const source=key===pick.clip.atlas?e:entry(key,true);if(!source?.source||source.status!=='ready')return;const f=source.atlas.frames[frame];if(!f)return;const [sx,sy,sw,sh]=f.rect,p=spritePlacement(flow.atlases[key]?'flow':'actions',key,frame,height,{...o,actionClip:pick.action},{reference:f.referenceHeight,baseline:f.baseline,anchorX:f.anchorX});c.save();c.globalAlpha*=alpha;c.drawImage(source.source,sx*source.rx,sy*source.ry,sw*source.rx,sh*source.ry,-p.anchorX*p.scale,-p.baseline*p.scale,sw*p.scale,sh*p.scale);c.restore();};
+ const smooth=(v:number)=>{const t=clamp(v);return t*t*(3-2*t)},p=clamp(o.spriteProgress??0),ordinary=!useAdded&&o.actionProgress===undefined&&pick.clip.kind==='move'&&pick.action!=='react';
  // Contact frames stay exact; anticipation and recovery blend whole drawings
  // at the same calibrated unit and feet plane. Explicit gallery frames stay exact.
  if(ordinary&&o.spritePhase==='startup'&&pick.clip.frames.length===4){const t=smooth((p-.28)/.42);paint(pick.clip.frames[0],1-t);paint(pick.clip.frames[1],t);}

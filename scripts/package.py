@@ -1,85 +1,72 @@
-"""Ship source and a file:// playable game, respecting the hosting asset limit."""
+"""Ship one standard offline ZIP, reusing the site's illustrated asset bytes.
+
+The download recipe contains a compressed source prefix, asset local headers
+and a ZIP central directory. The browser fetches the existing art URLs once and
+assembles those exact bytes. No duplicate 140+ MB download parts are hosted.
+"""
 from pathlib import Path
-from zipfile import ZipFile, ZIP_DEFLATED
 from hashlib import sha256
-import json
+from zipfile import ZipFile
+import base64, binascii, json, struct, zlib
 
-root = Path(__file__).resolve().parent.parent
-client = root / 'dist/client'
-out = client / 'baixar'
-out.mkdir(exist_ok=True)
+root=Path(__file__).resolve().parent.parent
+client=root/'dist/client';out=client/'baixar';out.mkdir(exist_ok=True)
 for old in out.glob('Dedilho-Wars-*'):
-    if old.is_file():
-        old.unlink()
-(out / 'animation-frames.json').write_bytes((root / 'docs/animation-frames.json').read_bytes())
-(out / 'action-atlas.json').write_bytes((root / 'src/assets/actions/manifest.json').read_bytes())
-offline = (client / 'index.html').read_text()
-asset_counts={extension:len(list((root/'src/assets').rglob('*.'+extension))) for extension in ['mp3','webp']}
-for extension, count in asset_counts.items():
-    assets = list(client.glob('*.' + extension))
-    assert len(assets) == count, (extension, len(assets))
-    for asset in assets:
-        sources = list((root / 'src/assets').rglob('*.' + extension))
-        matches = [p for p in sources if asset.stem.startswith(p.stem + '-') and len(asset.stem) - len(p.stem) == 9]
-        assert len(matches) == 1, asset.name
-        source = matches[0]
-        assert asset.name in offline, asset.name
-        offline = offline.replace(asset.name, source.relative_to(root).as_posix())
+ if old.is_file():old.unlink()
+(out/'animation-frames.json').write_bytes((root/'docs/animation-frames.json').read_bytes())
+(out/'action-atlas.json').write_bytes((root/'src/assets/actions/manifest.json').read_bytes())
+(out/'flow-atlas.json').write_bytes((root/'src/assets/flow/manifest.json').read_bytes())
+offline=(client/'index.html').read_text();assets=[];counts={}
+for extension in ['mp3','webp']:
+ sources=list((root/'src/assets').rglob('*.'+extension));hosted=sorted(client.glob('*.'+extension));counts[extension]=len(sources)
+ assert len(hosted)==len(sources),(extension,len(hosted),len(sources))
+ for asset in hosted:
+  matches=[p for p in sources if asset.stem.startswith(p.stem+'-') and len(asset.stem)-len(p.stem)==9]
+  assert len(matches)==1,asset.name
+  source=matches[0];assert asset.name in offline,asset.name
+  offline=offline.replace(asset.name,source.relative_to(root).as_posix())
+  assets.append((source,'../'+asset.name))
 
-scratch = root / '.sites-runtime'
-scratch.mkdir(exist_ok=True)
-archive = scratch / 'Dedilho-Wars-projeto.zip'
-with ZipFile(archive, 'w', ZIP_DEFLATED) as z:
-    for name in ['README.md', '.gitignore', '.openai/hosting.json', 'package.json', 'package-lock.json', 'tsconfig.json', 'vite.config.ts', 'drizzle.config.ts', 'index.html']:
-        z.write(root / name, 'Dedilho-Wars/' + name)
-    for folder in ['src', 'worker', 'db', 'drizzle', 'scripts', 'tests', 'docs']:
-        for p in sorted((root / folder).rglob('*')):
-            if p.is_file() and '__pycache__' not in p.parts:
-                z.write(p, 'Dedilho-Wars/' + p.relative_to(root).as_posix())
-    z.writestr('Dedilho-Wars/JOGAR.html', offline)
-    assert z.testzip() is None
-    for extension,count in asset_counts.items():
-        assert len([i for i in z.namelist() if i.endswith('.'+extension)]) == count
+# Stable, standard UTF-8 ZIP entries with a fixed timestamp (2026-01-01).
+# Headers are prepared here, so the browser only concatenates verified bytes.
+central=[];offset=0;prefix=bytearray();recipe=[];fullhash=sha256();entry_count=0
+scratch=root/'.sites-runtime';scratch.mkdir(exist_ok=True);archive=scratch/'Dedilho-Wars-projeto.zip'
+output=archive.open('wb')
+def entry(name,data,compress=False):
+ global offset,entry_count
+ filename=name.encode('utf8');crc=binascii.crc32(data)&0xffffffff
+ if compress:
+  encoder=zlib.compressobj(9,zlib.DEFLATED,-15);payload=encoder.compress(data)+encoder.flush();method=8
+ else:payload=data;method=0
+ header=struct.pack('<IHHHHHIIIHH',0x04034b50,20,0x800,method,0,23585,crc,len(payload),len(data),len(filename),0)+filename
+ central.append(struct.pack('<IHHHHHHIIIHHHHHII',0x02014b50,788,20,0x800,method,0,23585,crc,len(payload),len(data),len(filename),0,0,0,0,0o100644<<16,offset)+filename)
+ output.write(header);output.write(payload);fullhash.update(header);fullhash.update(payload)
+ offset+=len(header)+len(payload);entry_count+=1
+ return header,payload
 
-payload = archive.read_bytes()
-parts = []
-# The browser assembles one standard ZIP; each hosted part stays below 25 MiB.
-for i, start in enumerate(range(0, len(payload), 20 * 1024 * 1024), 1):
-    data = payload[start:start + 20 * 1024 * 1024]
-    name = 'Dedilho-Wars-projeto.zip' if len(payload) < 25 * 1024 * 1024 else f'Dedilho-Wars-projeto.part{i}.bin'
-    (out / name).write_bytes(data)
-    parts.append({'name': name, 'bytes': len(data)})
-    if name.endswith('.zip'):
-        # A small complete archive needs no second part.
-        (out / name).write_bytes(payload)
-        parts[0]['bytes'] = len(payload)
-        break
-manifest = {'version': 1, 'filename': 'Dedilho-Wars-completo.zip', 'bytes': len(payload), 'sha256': sha256(payload).hexdigest(), 'parts': parts}
-(out / 'download.json').write_text(json.dumps(manifest, indent=2) + '\n')
-assert b''.join((out / p['name']).read_bytes() for p in parts) == payload
-
-(out / 'index.html').write_text('''<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Baixar DEDILHO WARS</title><style>body{margin:0;background:#100b1c;color:white;font:18px/1.6 system-ui}main{max-width:700px;margin:6vh auto;padding:24px}a,button{display:block;box-sizing:border-box;width:100%;padding:16px 20px;background:#6d28d9;color:white;border:0;font:inherit;text-align:left;border-radius:10px;margin:18px 0;text-decoration:none;cursor:pointer}button:disabled{opacity:.65;cursor:wait}small,#status{color:#c7c0d2}</style><main><h1>DEDILHO WARS</h1><p>18 lutadores com arte anime, 18 transformações invulneráveis de 10 segundos, recursos recuperados por acertos, efeitos de impacto ampliados, 4.500 desenhos de personagens, golpes e efeitos, 17 arenas, menu Wars of Champions com quatro campanhas em breve, rádio, stamina, dois estoques de ULT, finishers, perfis e ranking, partidas online, controles para celular, 18 desafios, quebra de guarda, cenários reativos e 90 rotas de combos.</p><a href="/">Jogar no navegador</a><button id="download">Baixar jogo completo e código-fonte (.zip)</button><p id="status" role="status" aria-live="polite"></p><a href="action-atlas.json" download>Catálogo dos desenhos de golpes e ULTs (.json)</a><a href="animation-frames.json" download>Catálogo das amostras de tempo de animação (.json)</a><p><small>Extraia toda a pasta e abra JOGAR.html. Mantenha a pasta src/assets com as ilustrações, os sete raps e a trilha de campanha. Os modos locais e os desafios funcionam offline; contas e partidas online usam o site.</small></p></main><script>
-const button=document.querySelector('#download'),status=document.querySelector('#status');
-button.addEventListener('click',async()=>{
- button.disabled=true;status.textContent='Preparando download…';
- try{
-  const response=await fetch('download.json');if(!response.ok)throw Error('manifest');
-  const spec=await response.json(),chunks=[];let loaded=0;
-  for(const part of spec.parts){
-   const r=await fetch(part.name);if(!r.ok)throw Error('part');
-   const data=await r.arrayBuffer();if(data.byteLength!==part.bytes)throw Error('length');
-   chunks.push(data);loaded+=data.byteLength;status.textContent='Preparando arquivo: '+Math.round(loaded/spec.bytes*100)+'%';
-  }
-  if(loaded!==spec.bytes)throw Error('total');
-  const blob=new Blob(chunks,{type:'application/zip'});
-  if(globalThis.crypto?.subtle){const digest=await crypto.subtle.digest('SHA-256',await blob.arrayBuffer());const hash=Array.from(new Uint8Array(digest),n=>n.toString(16).padStart(2,'0')).join('');if(hash!==spec.sha256)throw Error('checksum');}
-  const url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download=spec.filename;link.click();
-  setTimeout(()=>URL.revokeObjectURL(url),60000);status.textContent='Download pronto. Extraia a pasta e abra JOGAR.html.';
- }catch{status.textContent='Não foi possível concluir o download. Tente novamente.';}
- finally{button.disabled=false;}
-});
-</script></html>''')
+def source_entry(name,data):
+ header,payload=entry('Dedilho-Wars/'+name,data,True);prefix.extend(header);prefix.extend(payload)
+for name in ['README.md','.gitignore','.openai/hosting.json','package.json','package-lock.json','tsconfig.json','vite.config.ts','drizzle.config.ts','index.html']:
+ source_entry(name,(root/name).read_bytes())
+for folder in ['src','worker','db','drizzle','scripts','tests','docs']:
+ for p in sorted((root/folder).rglob('*')):
+  if p.is_file() and '__pycache__' not in p.parts and p.suffix not in ['.mp3','.webp']:
+   source_entry(p.relative_to(root).as_posix(),p.read_bytes())
+source_entry('JOGAR.html',offline.encode())
+source_name='Dedilho-Wars-codigo.bin';(out/source_name).write_bytes(prefix)
+for p,url in assets:
+ data=p.read_bytes();header,_=entry('Dedilho-Wars/'+p.relative_to(root).as_posix(),data)
+ recipe.append({'url':url,'path':'Dedilho-Wars/'+p.relative_to(root).as_posix(),'bytes':len(data),'sha256':sha256(data).hexdigest(),'header':base64.b64encode(header).decode()})
+directory=b''.join(central);suffix=directory+struct.pack('<IHHHHIIH',0x06054b50,0,0,entry_count,entry_count,len(directory),offset,0)
+output.write(suffix);output.close();fullhash.update(suffix)
+manifest={'version':2,'filename':'Dedilho-Wars-completo.zip','bytes':archive.stat().st_size,'sha256':fullhash.hexdigest(),'source':{'name':source_name,'bytes':len(prefix),'sha256':sha256(prefix).hexdigest()},'assets':recipe,'suffix':base64.b64encode(suffix).decode()}
+(out/'download.json').write_text(json.dumps(manifest,separators=(',',':'))+'\n')
+(out/'download.js').write_bytes((root/'scripts/download-client.js').read_bytes())
+with ZipFile(archive) as z:
+ assert z.testzip() is None
+ for extension,count in counts.items():assert len([i for i in z.namelist() if i.endswith('.'+extension)])==count
+ assert z.read('Dedilho-Wars/JOGAR.html')==offline.encode()
+(out/'index.html').write_text('''<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Baixar DEDILHO WARS</title><style>body{margin:0;background:#100b1c;color:white;font:18px/1.6 system-ui}main{max-width:700px;margin:6vh auto;padding:24px}a,button{display:block;box-sizing:border-box;width:100%;padding:16px 20px;background:#6d28d9;color:white;border:0;font:inherit;text-align:left;border-radius:10px;margin:18px 0;text-decoration:none;cursor:pointer}button:disabled{opacity:.65;cursor:wait}small,#status{color:#c7c0d2}</style><main><h1>DEDILHO WARS</h1><p>18 lutadores com arte anime, transformações de 10 segundos, novos desenhos de dash, salto, defesa e ataques, efeitos de movimento e impacto, 17 arenas, quebra de guarda e 90 rotas de combos.</p><a href="/">Jogar no navegador</a><button id="download">Baixar jogo completo e código-fonte (.zip)</button><p id="status" role="status" aria-live="polite"></p><a href="action-atlas.json" download>Catálogo dos desenhos de golpes e ULTs (.json)</a><a href="flow-atlas.json" download>Catálogo dos novos quadros de movimento (.json)</a><a href="animation-frames.json" download>Catálogo das amostras de tempo (.json)</a><p><small>Extraia toda a pasta e abra JOGAR.html. Mantenha a pasta src/assets com todas as ilustrações e músicas. Os modos locais e desafios funcionam offline; contas e partidas online usam o site.</small></p></main><script src="download.js"></script></html>''')
 for p in client.rglob('*'):
-    if p.is_file():
-        assert p.stat().st_size < 25 * 1024 * 1024, (p, p.stat().st_size)
-print(json.dumps({'archive': str(archive), 'bytes': len(payload), 'parts': len(parts), 'sha256': manifest['sha256']}))
+ if p.is_file():assert p.stat().st_size<25*1024*1024,(p,p.stat().st_size)
+print(json.dumps({'archive':str(archive),'bytes':manifest['bytes'],'sourceBytes':len(prefix),'sharedAssets':len(recipe),'sha256':manifest['sha256']}))
