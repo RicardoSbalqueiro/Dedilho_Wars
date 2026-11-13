@@ -14,7 +14,7 @@ Os cinco novos personagens são Viewers. Dr. Acreano ocupa o lugar de Dr. Enéas
 
 Os personagens usam **ilustrações de anime japonês** inspiradas nas fichas de War of Champions: rostos, cabelos, roupas, acessórios e silhuetas próprios. A coleção usa **206 atlas e 4.500 desenhos de personagens, golpes e efeitos**. Cada comando tem quatro desenhos próprios por forma, cada ULT tem 24 por forma, e cada lutador tem doze reações por forma. Jane pilota uma moto esportiva e se une ao AreiaZord branco e dourado; Ulisses transformado luta com braços e garras. Veja [desenhos por ataque](docs/action-illustrations.md). Retratos, luta, seleção, galeria e cinematográficas usam essa arte. Veja [arte anime e armas nos normais](docs/anime-sprites.md) e [animação e efeitos de combate](docs/combat-fluidity.md).
 
-O motor continua em **60 Hz**, independente da tela. Os nove ciclos mantêm 1.098 amostras de tempo por personagem para cadência, transições e contatos; as ilustrações são selecionadas conforme estado e fase do golpe. Essas amostras não correspondem a desenhos diferentes. Startup, ativos, recovery e tamanho lógico da arena continuam separados da arte.
+O motor continua em **60 Hz**, independente da tela. Os nove ciclos mantêm 1.098 amostras de tempo por personagem para cadência, transições e contatos; as ilustrações são selecionadas conforme estado e fase do golpe. Essas amostras não correspondem a desenhos diferentes. Startup, ativos, recovery e tamanho lógico da arena continuam separados da arte. A escala dos desenhos é calibrada por corpo e forma; o recorte do ataque não redimensiona o lutador. Os pés permanecem no plano do chão. Impactos, projéteis, ULTs e transformações recebem rastros ilustrados, arcos de energia, ondas de choque, detritos e escudos. Veja [escala, poder das formas e efeitos](docs/combat-impact-update.md).
 
 No computador, cenas e combate renderizam de **1080p até 4K**. No celular, a qualidade automática acompanha os pixels da tela e prioriza resposta e bateria; a opção Alta oferece mais nitidez. Menus, retratos e mapas se adaptam ao DPR/Retina. Veja [resolução e nitidez](docs/resolution.md).
 
@@ -49,7 +49,9 @@ Os comandos são configuráveis e têm alternativas para teclado sem numpad. A m
 
 Todos os HP máximos anteriores foram **dobrados**, preservando suas diferenças. Os novos lutadores também usam essa escala. O dano base não foi dobrado. Exemplos: Caetano 1.000 → 2.000; Rick 940 → 1.880; Jane 860 → 1.720; Cristyan 1.060 → 2.120.
 
-A barra armazena **200 ULT**, em dois estoques. Uma Ultimate custa **100** e não apaga o estoque restante. A transformação custa **200**, exige estado neutro no chão, recursos próprios e pelo menos 30 de fôlego. Ela é independente da Ultimate. Há 36 frames de preparação interrompível e 72 de compromisso; ativar não concede invulnerabilidade. Ser interrompido na preparação perde o custo.
+A barra armazena **200 ULT**, em dois estoques. Uma Ultimate custa **100** e não apaga o estoque restante. A transformação custa **200**, exige estado neutro no chão, recursos próprios e pelo menos 30 de fôlego. Ela é independente da Ultimate. Há 36 frames de preparação interrompível e 72 de compromisso. Ao se manifestar, toda forma concede imunidade total a ataques e atravessa guarda, defesa perfeita, esquiva, armadura e escape de agarrão durante seus 10 segundos ativos. Duas formas ativas preservam a imunidade de ambas. Ser interrompido na preparação perde o custo.
+
+Cada acerto recupera **4% da bateria da Jane**, **1 sangue do Ulisses** ou **5 de energia do Rickzera**, inclusive transformados, respeitando seus limites. Erros, guarda e alvos invulneráveis não geram recuperação.
 
 A **stamina** é separada de HP, ULT e recursos exclusivos. O ajuste experimental inicial usa máximo 120, normais de 3/5/8, especiais de 6/10 e agarrões de 12; saltos custam 5 e dashes 7. Bloquear custa 3, ou 5 contra fortes. Descansar recupera após 32 ticks sem gasto. Exaustão limita especiais, fortes, dash e saltos, mas mantém golpes leves e defesa. Recuperação e exaustão não quebram hitstun nem combos verdadeiros.
 
@@ -63,13 +65,13 @@ Rick usa cabelo loiro curto, olhos verdes, camiseta preta e cargo bege. A Energi
 - **Soco de Energia:** projeção de punho verde, 72 de dano base, custo 22; bloqueável e sem rastreamento.
 - **Salto de Energia:** impulso elevado, custo 18; segundo impulso aéreo também tem custo.
 - **Combo Wise:** seis contatos, Ultimate separada da transformação.
-- **Cruz de Energia:** consome toda a energia e 200 ULT. Dano e movimento físicos ×2 e dano recebido ×0,5; não duplica HP máximo, capacidade de ULT ou stamina. O alcance recebe ajuste próprio, não uma duplicação universal da arena/hitboxes. **Não acumula energia durante a forma por nenhum desses meios**, inclusive ferramentas de recarga do treino. Ao terminar, fica em zero e precisa carregar ou receber dano novamente.
+- **Cruz de Energia:** consome toda a energia e 200 ULT. Dano e movimento físicos ×2 e imunidade a dano durante a forma; não duplica HP máximo, capacidade de ULT ou stamina. O alcance recebe ajuste próprio, não uma duplicação universal da arena/hitboxes. **Cada acerto recupera 5 de energia, inclusive na forma**. A carga manual e as ferramentas de recarga do treino permanecem indisponíveis durante a forma. Ao terminar, fica em zero e precisa carregar ou receber dano novamente.
 
 ## Formas e novos estilos
 
 Todas as 18 transformações duram **10 segundos ativos (600 ticks)**, contados desde a manifestação da forma. Pausar congela o contador. Fôlego e bateria continuam sendo gastos e limitam ataques ao esgotar; sangue limita a cura de Ulisses. Esses recursos não encerram mais a forma antes dos 10 segundos. Preparação interrompível, custos e recuperação posterior continuam valendo.
 
-Patrick combina Escudo de Casco, Investida Blindada e Punho Couraçado; Rei Tatu reduz dano e tem três contatos de armadura, vencidos por agarrões/ULTs. Gabrielzin lança Beijinho/Piscadinha, aproxima com Abraço de Cupido e veste Gatito, com patas e alcance maior. O tema de Gatito usa um motivo original sintetizado e voz, sem adicionar uma gravação externa à rádio.
+Patrick combina Escudo de Casco, Investida Blindada e Punho Couraçado; Rei Tatu concede imunidade total a ataques e atravessa defesas, como as outras formas ativas. Gabrielzin lança Beijinho/Piscadinha, aproxima com Abraço de Cupido e veste Gatito, com patas e alcance maior. O tema de Gatito usa um motivo original sintetizado e voz, sem adicionar uma gravação externa à rádio.
 
 Ulisses ataca com a katana nos golpes normais e usa membros distorcidos, Presas Sugadoras e Manipulação de Sangue. Presas capturam até três estoques; Regeneração Imediata consome um a cada cinco segundos para curar até 100 HP, sem ultrapassar o máximo. Felipence bate com a guitarra nos golpes normais e usa Riff, Pulso e Lamento; Sinfonia do Caos amplia pressão sonora. H?D?SH controla o chão com Go, dispara tendência e marca o airdrop 30 frames antes da queda. Sua Ultimate é Full Box 200.
 
@@ -85,7 +87,7 @@ ULTs preservam a preparação de captura, erro punível e batalha de ULTs: quand
 
 O treino tem **18 desafios**, incluindo transformação, fôlego e carga de energia, e **72 rotas verificadas — quatro por personagem**. FRAME DATA mostra alcance, startup, recovery, defesa, acertos e retorno ao controle. RECURSOS E FORMAS permite inspecionar custos e abastecer recursos no treino offline; ANIMAÇÕES permite observar todos os lutadores e suas formas. A barra de ULT é abastecida automaticamente no treino; a regra de não recarregar energia durante Cruz de Energia continua sendo respeitada.
 
-O online usa host autoritativo, WebRTC com relay HTTP de fallback e protocolo **`dw-online-11`**. Stamina, estoques, energia, sangue, bateria, transformação, efeitos e recuperação são sincronizados. Os dois jogadores precisam carregar a versão atual. Contas usam usuário e senha, sem email; estatísticas, histórico, XP e ranking persistem no D1. Nenhum cadastro é necessário para jogar offline.
+O online usa host autoritativo, WebRTC com relay HTTP de fallback e protocolo **`dw-online-12`**. Stamina, estoques, energia, sangue, bateria, transformação, efeitos e recuperação são sincronizados. Os dois jogadores precisam carregar a versão atual. Contas usam usuário e senha, sem email; estatísticas, histórico, XP e ranking persistem no D1. Nenhum cadastro é necessário para jogar offline.
 
 ## Menus responsivos
 

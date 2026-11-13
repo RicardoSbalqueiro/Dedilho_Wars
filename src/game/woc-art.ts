@@ -75,10 +75,10 @@ export function drawResourcesHud(c:CanvasRenderingContext2D,g:Game){
  if(f.ch==='rickzera')text(c,`ENERGIA ${Math.floor(f.energy)}/100${f.charging?' · CARREGANDO':''}`,x2,126,11,'#86efac',align);
  if(f.ch==='ulisses')text(c,`SANGUE ${f.blood}/3`,x2,126,11,'#fb7185',align);
  if(f.ch==='jane')text(c,`BATERIA ${Math.ceil(f.battery)}%`,x2,126,11,'#fde047',align);
- if(f.formT>0)text(c,`${FORMS[f.ch].name} · ${(f.formT/60).toFixed(1)}s${f.ch==='nomad'?[' · FORÇA 2×',' · VELOCIDADE',' · TAMANHO'][f.formVariant]:''}`,x2,480,11,f.def.glow,align);
+ if(f.formT>0){text(c,`${FORMS[f.ch].name} · ${(f.formT/60).toFixed(1)}s${f.ch==='nomad'?[' · FORÇA 2×',' · VELOCIDADE',' · TAMANHO'][f.formVariant]:''}`,x2,480,11,f.def.glow,align);text(c,'IMUNE · ROMPE DEFESA',x2,465,10,'#fff1b5',align);}
  else if(f.aftermathT>0&&['renngotti','tubarao'].includes(f.ch))text(c,`${f.ch==='renngotti'?'RECUPERAÇÃO BERSERKER':'CRESCENDO'} ${(f.aftermathT/60).toFixed(0)}s`,x2,480,10,'#fda4af',align);
  else if(canTransform(f))text(c,`FORMA PRONTA [${g.cfg.bindings[f.idx].transform[0].replace('Key','').replace('Numpad','NUM ')}]`,x2,480,11,'#a3ff8c',align);
- if(f.confusionT>0)text(c,'CONFUSÃO · DIREÇÕES INVERTIDAS',x2,465,10,'#f0abfc',align);c.restore();}
+ if(f.confusionT>0)text(c,'CONFUSÃO · DIREÇÕES INVERTIDAS',x2,f.formT>0?450:465,10,'#f0abfc',align);c.restore();}
 }
 export function drawWocProjectile(c:CanvasRenderingContext2D,p:Projectile,color:string){
  const t=p.age??0,k=p.kind;

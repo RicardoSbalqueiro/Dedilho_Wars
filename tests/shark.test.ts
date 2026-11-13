@@ -25,7 +25,7 @@ function capture(g:Game){for(let i=0;i<180&&!g.seq;i++)g.step();assert.equal(g.s
 function finish(g:Game){for(let i=0;i<400&&g.seq;i++)g.step();assert.equal(g.seq,null)}
 test('new move mapping, damage budget, inspector and preserved kit',g=>{
  const a=g.f[0];assert.equal(a.def.specials[2].name,'BEIJO DO FISCALIZADOR');assert.equal(a.def.moves.s3.label,a.def.specials[2].name);assert.equal(a.def.superName,'QUANDO TERÁ LIVE?');assert.equal(a.def.moves.s3.dmg,64);assert(SHARK_KISS_DAMAGE<290/4);assert.equal(SHARK_ULT_DAMAGE,290);assert.equal(frameData('tubarao','s3').chip,1.6);assert.equal(frameData('tubarao','s3').level,'médio');assert.equal(frameData('tubarao','super').damage,290);
- assert.equal(a.def.hp,2460);assert.equal(a.def.moves.s1.dmg,100);assert.equal(a.def.moves.s2.dmg,125);assert.equal(a.def.moves.s2.grab,'engole');assert.deepEqual(RANGED_MOVES.tubarao,[]);assert.equal(FINISHER_NAMES.tubarao,'MARÉ DA MALHA FINA');assert.equal(ONLINE_PROTOCOL,'dw-online-11');
+ assert.equal(a.def.hp,2460);assert.equal(a.def.moves.s1.dmg,100);assert.equal(a.def.moves.s2.dmg,125);assert.equal(a.def.moves.s2.grab,'engole');assert.deepEqual(RANGED_MOVES.tubarao,[]);assert.equal(FINISHER_NAMES.tubarao,'MARÉ DA MALHA FINA');assert.equal(ONLINE_PROTOCOL,'dw-online-12');
 });
 for(const side of [0,1] as const)for(const mirror of [false,true])for(const target of ['jane','cristyan'] as const)for(const source of ['keyboard','touch','online'] as const){
  if(source==='touch'&&side===1)continue;
@@ -78,11 +78,11 @@ test('shared visual phases remain bounded and align lick/tail contacts',()=>{
  for(let t=0;t<=SHARK_ULT_DURATION;t++){const m=sharkUltMotion(t);for(const n of [m.transform,m.restore,m.tongue,m.windup,m.flight])assert(n>=0&&n<=1&&Number.isFinite(n))}
  for(const [at] of SHARK_ULT_BEATS.slice(0,3))assert.equal(sharkUltMotion(at).tongue,1);assert.equal(sharkUltMotion(SHARK_ULT_TAIL_FRAME).flight,0);assert.equal(sharkUltMotion(185).flight,1);assert.equal(SHARK_ULT_THROW,700);
 });
-test('protocol 11 rejects old kiss-as-Ultimate snapshots',g=>{
+test('protocol 12 rejects old kiss-as-Ultimate snapshots',g=>{
  const state=captureState(g);assert(applyState(g,JSON.parse(JSON.stringify(state))));assert(!applyState(g,{...state,v:'dw-online-9'}));
 });
 test('AI no longer selects the contact kiss from far away',g=>{
  const a=g.f[0];g.f[1].x=1300;a.meter=0;
  for(let i=0;i<100;i++){g.tick++;a.ai.thinkT=0;aiAct(g,a,'hard');assert(!a.pad.buffered('s3',g.tick));assert(a.ai.stopDist<=150)}
 });
-console.log(`Tubarão Fiscal: ${cases} regressions passed (reduced blockable kiss, no fin armor, 290-damage transformation/licks/tail, mirrored long throw/bounds/recovery, all 18 targets, keyboard/touch/P2/online, scaling, snapshots and protocol 11).`);
+console.log(`Tubarão Fiscal: ${cases} regressions passed (reduced blockable kiss, no fin armor, 290-damage transformation/licks/tail, mirrored long throw/bounds/recovery, all 18 targets, keyboard/touch/P2/online, scaling, snapshots and protocol 12).`);

@@ -1,6 +1,6 @@
 import { Game } from './engine';
 import { computeRig } from './rig';
-export const ONLINE_PROTOCOL = 'dw-online-11';
+export const ONLINE_PROTOCOL = 'dw-online-12';
 const FIELDS = ['x','y','vx','vy','facing','manualFacing','hp','maxHp','dispHp','meter','stamina','staminaDelay','exhaustT','energy','blood','battery','formT','formStartup','formElapsed','formVariant','aftermathT','charging','formShield','confusionT','predictionCooldown','state','stateT','move','moveT','connected','contact','contactFrame','poseName','impact','hitDone','hbActive','serial','hitstun','blockstun','stunLow','groundSmash','crouch','guard','guardSpentAt','guardResult','guardResultT','guardReadyT','walking','landLag','airAttacked','airJumps','precision','parryCooldown','momentum','momentumT','throwShield','throwTechUntil','rangedUses','rangedCooldown','fourthCooldown','bikeCooldown','bikeTicks','bikeHits','bikeNextHit','bikeDizzy','hidden','juggle','invuln','armor','ko','pose','poseOverride','animT','turn','rotAdd','exprT','exprOverride','expr','glow','aura','comboHits','comboDmg','comboMoves','comboKind','comboLastSerial','comboResult','wins'] as const;
 const GLOBAL = ['tick','hitstop','slowmo','paused','phase','phaseT','round','winsNeeded','timeLeft','timeAcc','cam','camOv','camOvT','flash','shake','ann','moveBanner','expl','comboShow','hype','speed','perfect','winner','finisher','finishedBy','elapsedTicks'] as const;
 export interface NetState {v: string; inputAck?:number; f: Record<string, unknown>[]; g: Record<string, unknown>; parts: Game['parts']; projectiles: Game['projectiles']; seq: Record<string, unknown>|null; cine: Record<string, unknown>|null; clash: Record<string, unknown>|null}
@@ -19,7 +19,7 @@ export function captureState(game: Game): NetState {
 }
 export function applyState(game: Game, state: NetState) {
   if(state?.v!==ONLINE_PROTOCOL || !Array.isArray(state.f) || state.f.length!==2 || !state.g)return false;
-  // Validate the complete revision-11 resource payload before mutating either fighter.
+  // Validate the complete revision-12 resource payload before mutating either fighter.
   for(const s of state.f){
     if(!s||!Number.isFinite(s.x)||!Number.isFinite(s.y)||!s.pose)return false;
     for(const key of ['meter','stamina','energy','blood','battery','formT','formStartup','formElapsed','formVariant','aftermathT','exhaustT','staminaDelay','formShield','confusionT','predictionCooldown'])if(!Number.isFinite(s[key])||(s[key] as number)<0)return false;

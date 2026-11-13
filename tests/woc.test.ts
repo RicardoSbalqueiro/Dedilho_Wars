@@ -40,7 +40,7 @@ for(const ch of CHAR_IDS){
  });
  check(`${ch}: transformation commits 200, activates for ten seconds, and syncs all resources`,()=>{
   const g=make(ch),guest=make(ch);try{const f=g.f[0];ready(f);assert(canTransform(f));tap(g,'transform');assert.equal(f.state,'transform');assert.equal(f.meter,0);assert.equal(f.formT,0);assert(!f.invuln&&!f.armor);finishActivation(g);
-   assert(f.formT<=FORMS[ch].duration&&f.formT>FORMS[ch].duration-80);const state=JSON.parse(JSON.stringify(captureState(g)));assert.equal(state.v,'dw-online-11');assert(applyState(guest,state));
+   assert(f.formT<=FORMS[ch].duration&&f.formT>FORMS[ch].duration-80);const state=JSON.parse(JSON.stringify(captureState(g)));assert.equal(state.v,'dw-online-12');assert(applyState(guest,state));
    for(const k of ['stamina','exhaustT','energy','blood','battery','formT','formStartup','formElapsed','formVariant','aftermathT'] as const)assert.equal(guest.f[0][k],f[k]);assert(JSON.stringify(state).length<64000);
    g.paused=true;const before=JSON.stringify(captureState(g));step(g,180);assert.equal(JSON.stringify(captureState(g)),before);
   }finally{g.destroy();guest.destroy();}
@@ -81,5 +81,5 @@ check('EVA second-hand laser shares the three-activation ranged cooldown and can
 for(const facing of [-1,1] as const)check(`EVA hand laser aims once at launch and reaches a standing target, facing ${facing}`,()=>{
  const g=make('jane');try{const [a,d]=g.f;a.x=800;d.x=800+facing*260;a.facing=facing;a.manualFacing=true;a.formT=300;assert(g.startMove(a,a.def.moves.s1));let fired=false;for(let i=0;i<80;i++){g.step();fired||=g.projectiles.some(p=>p.kind==='laser');}assert(fired);assert(Math.abs(d.maxHp-d.hp-60*1.35)<.001);assert.equal(a.rangedUses,1);}finally{g.destroy();}
 });
-assert.equal(ONLINE_PROTOCOL,'dw-online-11');
+assert.equal(ONLINE_PROTOCOL,'dw-online-12');
 console.log(`War of Champions: ${cases} regressions passed (18 fighters, double HP, finite resources/forms, interruption and recovery, true-stun commitment, 2 ULT stocks, snapshots and model-sheet cinematic damage).`);

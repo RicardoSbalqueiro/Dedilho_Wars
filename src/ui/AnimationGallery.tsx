@@ -1,7 +1,7 @@
 import {useEffect,useRef,useState} from 'react';
 import {CHAR_IDS,CHARS,movePhase} from '../game/data';
 import type {CharId} from '../game/data';
-import {FORMS} from '../game/resources';
+import {FORMS,FORM_POWER_HELP} from '../game/resources';
 import {CanvasSurface} from '../game/canvas';
 import {ANIMATION_CLIPS,ANIMATION_CLIP_IDS,ANIMATION_SUBFRAMES,animationFrame,attackAnimation} from '../game/animation';
 import type {AnimationClip} from '../game/animation';
@@ -57,7 +57,7 @@ export function AnimationGallery({initial}:{initial:CharId}){
   const reset=()=>{position.current=0;setFrame(0)};
   return <section className="animation-gallery" data-animation-character={ch} data-animation-frame={frame}>
     <div className="animation-gallery-fields"><label>Lutador<select aria-label="Lutador da galeria de animação" value={ch} onChange={e=>{setCh(e.target.value as CharId);reset()}}>{CHAR_IDS.map(id=><option key={id} value={id}>{CHARS[id].name}</option>)}</select></label><label>Animação<select aria-label="Clipe de animação" value={clip} onChange={e=>{setClip(e.target.value as GalleryClip);reset()}}><optgroup label="Movimentação">{ANIMATION_CLIP_IDS.map(id=><option key={id} value={id}>{ANIMATION_CLIPS[id].label}</option>)}</optgroup><optgroup label="Golpes">{Object.values(CHARS[ch].moves).map(m=><option key={m.id} value={'move:'+m.id}>{m.label}</option>)}<option value="throw">Agarrão</option></optgroup><optgroup label="Ultimate"><option value="ult">{CHARS[ch].superName}</option></optgroup></select></label></div>
-    <label><input type="checkbox" aria-label="Exibir transformação" checked={form} onChange={e=>setForm(e.target.checked)}/> Forma: {FORMS[ch].name}</label><p>{FORMS[ch].cost} · {FORMS[ch].duration/60}s · {FORMS[ch].help}</p>
+    <label><input type="checkbox" aria-label="Exibir transformação" checked={form} onChange={e=>setForm(e.target.checked)}/> Forma: {FORMS[ch].name}</label><p>{FORMS[ch].cost} · {FORMS[ch].duration/60}s · {FORMS[ch].help}</p><p>{FORM_POWER_HELP}</p>
     <label><input type="checkbox" aria-label="Pose do cartaz" checked={sheet} onChange={e=>setSheet(e.target.checked)}/> Pose do cartaz</label>
     <p>Golpes com preparação, liberação, impacto e retomada próprios. ULTs com 24 desenhos exclusivos por forma.</p>
     <canvas ref={canvas} width={680} height={380} aria-label={`${CHARS[ch].name}: ${label}`}/>

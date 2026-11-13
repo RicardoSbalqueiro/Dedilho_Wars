@@ -1,5 +1,5 @@
 import {transformationAudio} from './transformation-audio';
-import {RESOURCE_RULES,FORMS,freshResources,formStats,canTransform,gainEnergy,payStamina,staminaCost} from './resources';
+import {RESOURCE_RULES,FORMS,freshResources,formStats,formPowerActive,canTransform,gainEnergy,recoverAttackResource,payStamina,staminaCost} from './resources';
 import type {ResourceState} from './resources';
 import {WOC_ULTIMATES,ultimatePose} from './woc-choreography';
 import {SHARK_ULT_DURATION,SHARK_ULT_BEATS,SHARK_ULT_TAIL_FRAME,SHARK_ULT_THROW,sharkUltMotion} from './shark-choreography';
@@ -94,7 +94,7 @@ export interface Fighter extends ResourceState {
   contact:'pending'|'hit'|'block'|'whiff';
   contactFrame:number;
   poseName:string;
-  impact:{serial:number;kind:'hit'|'block'|'perfect'|'precision'|'armor';strength:number;tick:number}|null;
+  impact:{serial:number;kind:'hit'|'block'|'perfect'|'precision'|'armor';strength:number;tick:number;x?:number;y?:number}|null;
   hitDone: boolean;
   hbActive: boolean;
   serial: number;
@@ -1540,7 +1540,7 @@ export class Game {
       const ry = p.kind === 'osasco' ? 65 : p.kind === 'spray' ? 55 : p.anchored?28:p.kind==='basketball'?23:p.kind==='five'||p.kind==='six'?30:p.kind === 'bullet' ? 6 : p.kind==='drop'?32:p.kind==='laser'?18:15;
       const box = { x0: p.x - r, x1: p.x + r, y0: p.y - ry, y1: p.y + ry };
       if (!this.overlap(box, this.hurtBox(d))) return true;
-      if(d.invuln>0){if(d.idx===0&&d.ch==='santox'&&d.move?.id==='s3')this.challengeEvent('special',1,'s3');return true;}
+      if(d.invuln>0&&!formPowerActive(a)&&!formPowerActive(d)){if(d.idx===0&&d.ch==='santox'&&d.move?.id==='s3')this.challengeEvent('special',1,'s3');return true;}
       this.applyHit(a, d, p.move, { x: p.x, y: FLOOR_Y + p.y, dir: Math.sign(p.vx) || Math.sign(d.x-p.x) || p.launchFacing || a.facing, serial: p.serial });
       if (p.kind === 'boomerang') {
         p.hitMask = (p.hitMask ?? 0) | phaseMask;
@@ -1580,10 +1580,10 @@ export class Game {
 
   private canHit(att: Fighter, def: Fighter) {
     const m = att.move!;
-    if (def.invuln > 0) return false;
+    if (def.invuln > 0&&!formPowerActive(att)&&!formPowerActive(def)) return false;
     const dead = ['down', 'getup', 'seq', 'cine', 'win'];
     if (m.grab === 'super') return !dead.includes(def.state);
-    if(m.grab)return def.throwShield===0&&def.y===0&&(def.state==='ground'||def.state==='dash'||def.state==='dizzy'||def.state==='transform'||(def.state==='block'&&def.blockstun<=0)||(def.state==='attack'&&!!def.move&&(def.armor||(def.ch==='jane'&&['s2','bikeRush'].includes(def.move.id))||def.moveT>=def.move.startup+def.move.active))||(m.grab==='throw'&&def.move?.id==='throw'));
+    if(m.grab)return (def.throwShield===0||formPowerActive(att))&&def.y===0&&(def.state==='ground'||def.state==='dash'||def.state==='dizzy'||def.state==='transform'||(def.state==='block'&&(def.blockstun<=0||formPowerActive(att)))||(def.state==='attack'&&!!def.move&&(formPowerActive(att)||def.armor||(def.ch==='jane'&&['s2','bikeRush'].includes(def.move.id))||def.moveT>=def.move.startup+def.move.active))||(m.grab==='throw'&&def.move?.id==='throw'));
     if (dead.includes(def.state)) return false;
     if (def.state === 'launched' && def.juggle >= 4) return false;
     return true;
@@ -1635,10 +1635,10 @@ export class Game {
   private resolveHits() {
     const [a, b] = this.f;
     if (this.phase !== 'fight') return;
-    if(a.state==='attack'&&b.state==='attack'&&a.move?.kind==='super'&&b.move?.kind==='super'&&a.hbActive&&b.hbActive&&a.facing!==b.facing&&this.overlap(this.boxOf(a),this.boxOf(b))){
+    if(!formPowerActive(a)&&!formPowerActive(b)&&a.state==='attack'&&b.state==='attack'&&a.move?.kind==='super'&&b.move?.kind==='super'&&a.hbActive&&b.hbActive&&a.facing!==b.facing&&this.overlap(this.boxOf(a),this.boxOf(b))){
       this.startClash(a,b,'super');return;
     }
-    if (this.clashWindow(a) && this.clashWindow(b)) {
+    if (!formPowerActive(a)&&!formPowerActive(b)&&this.clashWindow(a) && this.clashWindow(b)) {
       if (this.overlap(this.boxOf(a), this.boxOf(b))) {
         this.startClash(a, b);
         return;
@@ -1651,10 +1651,10 @@ export class Game {
       hits.push({a:x,d:y,m:x.move,impact:{x:(Math.max(ba.x0,bd.x0)+Math.min(ba.x1,bd.x1))/2,y:FLOOR_Y+(Math.max(ba.y0,bd.y0)+Math.min(ba.y1,bd.y1))/2,dir:(x.ch==='jane'&&x.move.id==='s2')||(x.ch==='cristyan'&&x.move.id==='s3')?(Math.sign(y.x-x.x)||x.facing):x.facing,serial:x.serial}});
     }
     for(const h of hits){
-      if(h.m.grab&&hits.some(other=>other.d===h.a&&!other.m.grab))continue;
+      if(h.m.grab&&!formPowerActive(h.a)&&hits.some(other=>other.d===h.a&&!other.m.grab))continue;
       if(this.seq)break;
       this.applyHit(h.a,h.d,h.m,h.impact);
-      if(h.m.grab)break;
+      if(h.m.grab&&(this.seq||!formPowerActive(h.d)))break;
     }
     if(!this.training&&a.hp<=0&&b.hp<=0){a.ko=b.ko=true;this.phase='ko';}
   }
@@ -1675,6 +1675,7 @@ export class Game {
   }
 
   private dealDamage(a: Fighter, d: Fighter, dmg: number) {
+    if(formPowerActive(d))return 0;
     dmg*=formStats(d).defense;
     gainEnergy(d,dmg*RESOURCE_RULES.energyOnDamage);
     if(d.formStartup>0){d.formStartup=0;d.poseOverride=null;if(d.formT===0)this.text(d.x,FLOOR_Y-205,'TRANSFORMAÇÃO INTERROMPIDA',d.def.glow,18);}
@@ -1695,6 +1696,11 @@ export class Game {
     }
     this.gainMeter(a, dmg * 0.16);
     this.gainMeter(d, dmg * 0.11);
+    if(dmg>0){const restored=recoverAttackResource(a);if(restored){
+      this.text(a.x,FLOOR_Y+a.y-a.def.hurtH-18,`${restored.label} +${Number(restored.amount.toFixed(1))}`,a.def.glow,15);
+      this.ring(a.x,FLOOR_Y+a.y-60,a.def.glow,48,16,2);
+    }}
+    return dmg;
   }
 
   private applyHit(a: Fighter, d: Fighter, m = a.move!, impact?: { x: number; y: number; dir: number; serial: number }) {
@@ -1711,10 +1717,29 @@ export class Game {
     const py = impact?.y ?? FLOOR_Y + (Math.max(ba.y0, bd.y0) + Math.min(ba.y1, bd.y1)) / 2;
     const dir = impact?.dir ?? a.facing;
 
+    // Absolute form immunity has priority even when the attacker is transformed.
+    // Consume the contact but do not award a hit, stun, chip, grab or resources.
+    if(formPowerActive(d)){
+      if(latest)a.contact='whiff';
+      if(this.training)this.train.lastDmg=0;
+      const showImmunity=!d.impact||d.impact.kind!=='armor'||this.tick-d.impact.tick>=18;
+      if(!d.impact||this.tick-d.impact.tick>=6){
+        this.recordImpact(d,'armor',Math.max(1,impactStrength(m)),px,py);
+        this.spark(px,py,d.def.glow,22,8,3,18);this.ring(px,py,d.def.glow,110,18,5);this.ring(px,py,'#ffffff',55,12,2);
+        if(showImmunity)this.text(px,py-55,'INVULNERÁVEL',d.def.glow,19);
+        audio.block();
+      }
+      return;
+    }
+    const breakDefense=formPowerActive(a);
+    if(breakDefense&&(d.guard||d.armor||d.invuln>0||m.grab&&d.throwShield>0)){
+      this.text(px,py-60,'DEFESA ROMPIDA!',a.def.glow,23);this.ring(px,py,a.def.glow,160,22,7);this.spark(px,py,a.def.glow,32,11,4,22);
+    }
+
     // --- agarrões ---
     if (m.grab) {
       if(a.ch==='orango'&&m.kind!=='super'){a.momentum=Math.min(3,a.momentum+1);a.momentumT=180;}
-      if(m.grab==='throw'&&(this.tick-d.pad.edgeAt.grab<=8||(d.move?.id==='throw'&&this.tick<=d.throwTechUntil))){
+      if(!breakDefense&&m.grab==='throw'&&(this.tick-d.pad.edgeAt.grab<=8||(d.move?.id==='throw'&&this.tick<=d.throwTechUntil))){
         for(const f of [a,d]){f.move=null;f.hbActive=false;f.state='ground';f.stateT=0;f.landLag=10;f.throwShield=25;f.pad.consume('grab');}
         a.vx=-a.facing*4;d.vx=a.facing*4;this.text(px,py-40,'ESCAPOU!', '#bae6fd',28);audio.block();return;
       }
@@ -1727,7 +1752,7 @@ export class Game {
       return;
     }
 
-    const blocked = d.guard && d.landLag===0 && d.y === 0 && (d.state === 'ground' || d.state === 'block') && !m.unblockable && (m.level !== 'low' || d.crouch) && (m.level !== 'high' || !d.crouch);
+    const blocked = !breakDefense&&d.guard && d.landLag===0 && d.y === 0 && (d.state === 'ground' || d.state === 'block') && !m.unblockable && (m.level !== 'low' || d.crouch) && (m.level !== 'high' || !d.crouch);
     if (tracked) a.connected = true;
     if(latest)a.contact=blocked?'block':'hit';
     if(tracked)a.contactFrame=a.moveT;
@@ -1738,7 +1763,7 @@ export class Game {
       const perfect=fresh&&age<PERFECT_GUARD_FRAMES;
       const result=precision?'precision':perfect?'perfect':'block';
       d.guardSpentAt=d.pad.edgeAt.block;d.guardResult=result;d.guardResultT=36;d.guardReadyT=0;
-      this.recordImpact(d,result,impactStrength(m));
+      this.recordImpact(d,result,impactStrength(m),px,py);
       if (d.idx === 0){this.challengeEvent('block');if(m.level==='low')this.challengeEvent('blockLow');if(perfect||precision)this.challengeEvent('perfect');}
       const chip = precision||m.kind==='normal'?0:m.dmg*Math.min(.08,m.chip??.04);
       const prev = d.hp;
@@ -1771,10 +1796,10 @@ export class Game {
       return;
     }
 
-    if(d.armor||(d.ch==='patrick'&&d.formT>0&&d.formShield>0)){
+    if(!breakDefense&&(d.armor||(d.ch==='patrick'&&d.formT>0&&d.formShield>0))){
       if(d.ch==='patrick'&&d.formT>0&&d.formShield>0)d.formShield--;
       d.manualFacing=false;
-      this.recordImpact(d,'armor',.7);
+      this.recordImpact(d,'armor',.7,px,py);
       this.dealDamage(a,d,Math.max(1,m.dmg*.75*(m.resourcePower??1)));this.hitstop=Math.max(this.hitstop,4);
       this.spark(px,py,'#e2e8f0',10,6,3,16);this.text(px,py-30,'ARMADURA', '#cbd5e1',18);audio.hit(.7);
       if(d.hp<=0){d.armor=false;d.move=null;d.hbActive=false;d.state='launched';d.y=-2;d.vy=-9;d.vx=dir*6;this.triggerKO(a,d);}
@@ -1843,8 +1868,8 @@ export class Game {
       this.ring(px,py,col,d.comboKind==='basic'?45:75,16,d.comboKind==='punish'?6:3);
       if(d.comboHits===2)this.text(px,py-65,d.comboKind==='punish'?'PUNIÇÃO':d.comboKind==='advanced'?'COMBO AVANÇADO':'COMBO!',col,21);
     }
-    this.recordImpact(d,'hit',strength);audio.hit(strength);
-    this.spark(px, py, glow, 6 + Math.round(strength * 6), 4 + strength * 3, 3 + strength, 16 + strength * 4);
+    this.recordImpact(d,'hit',strength,px,py);audio.hit(strength);
+    this.spark(px, py, glow, 16 + Math.round(strength * 15), 6 + strength * 4, 3 + strength, 20 + strength * 5);
     this.spark(px, py, '#ffffff', m.rank===1?3:5, 6, 2, 10);
     this.glowFx(px, py, '#ffffff', 40 + strength * 25, 8);
     if (strength >= 1) this.ring(px, py, col, 50 + strength * 25, 16, 5);
@@ -1890,8 +1915,8 @@ export class Game {
     this.shake=Math.max(this.shake,15);audio.knuckleImpact();
   }
 
-  private recordImpact(d:Fighter,kind:NonNullable<Fighter['impact']>['kind'],strength:number){
-    d.impact={serial:(d.impact?.serial??0)+1,kind,strength,tick:this.tick};
+  private recordImpact(d:Fighter,kind:NonNullable<Fighter['impact']>['kind'],strength:number,x=d.x,y=FLOOR_Y+d.y-d.def.hurtH*.58){
+    d.impact={serial:(d.impact?.serial??0)+1,kind,strength,tick:this.tick,x,y};
   }
 
   // ------------------------------------------------------------ DEDILHO CLASH
@@ -2105,6 +2130,7 @@ export class Game {
   }
 
   private startSeq(kind: Seq['kind'], a: Fighter, d: Fighter) {
+    if(formPowerActive(d))return;
     const dur = kind.startsWith('super')&&WOC_ULTIMATES[a.ch]?WOC_ULTIMATES[a.ch]!.duration:{ puxao: 86, mordida: 78, engole: 100, superC: 215, superO: 215, superT:SHARK_ULT_DURATION, superR: 170, superB: 160, superN: 150, superG: 155, superA: 206,superS:180,superJ:195,superJane:180,superCristyan:185,superEneas:195,superWoc:180,vampire:82,cupid:82, moon: 74, throw:60 }[kind];
     const recovered=kind.startsWith('super')?this.recoveredCombos.get(d):undefined;
     if(recovered){d.comboHits=recovered.hits;d.comboDmg=recovered.damage;d.comboMoves=[...recovered.moves];d.comboKind=recovered.kind;d.comboLastSerial=recovered.serial;}
@@ -2141,6 +2167,7 @@ export class Game {
   }
 
   private seqHit(a: Fighter, d: Fighter, dmg: number, power: number, color: string) {
+    if(formPowerActive(d))return;
     this.dealDamage(a, d, dmg*(this.seq?.damageScale??1)*(this.seq?.resourcePower??1));
     d.comboHits++;
     this.trainingEvent('hit',a,d.comboMoves[d.comboMoves.length-1]||'super',d);
@@ -2148,7 +2175,7 @@ export class Game {
     const px = d.x + rand(-14, 14);
     const py = FLOOR_Y + d.y - rand(60, 120);
     audio.hit(Math.min(power, 3));
-    this.recordImpact(d,'hit',Math.min(power,3));
+    this.recordImpact(d,'hit',Math.min(power,3),d.x,FLOOR_Y+d.y-d.def.hurtH*.58);
     this.spark(px, py, color, 10 + power * 4, 5 + power * 3, 3 + power, 16);
     this.spark(px, py, '#ffffff', 4, 7, 2, 9);
     this.glowFx(px, py, '#ffffff', 40 + power * 30, 7);

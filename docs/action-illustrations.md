@@ -10,6 +10,8 @@ Jane usa uma esportiva carenada amarela, branca e preta nas empinadas, arrancada
 
 O cache decodifica duas folhas por vez, prioriza o desenho que está em uso, limita as superfícies por folha e mantém orçamentos de 16 megapixels no celular automático e 40 no desktop. Efeitos são carregados por lutador selecionado. As figuras continuam inteiras: o empacotamento não estica braços, rostos ou roupas. A compressão WebP reduz o pacote de distribuição sem remover quadros, reduzir dimensões ou alterar o canal alpha, que permanece sem perdas.
 
+A revisão de [escala, formas e impacto](combat-impact-update.md) calibra a unidade dos desenhos e ancora os pés de cada quadro; os recortes de armas e poses não mudam a escala do lutador.
+
 A galeria de animação inclui todos os comandos, agarrão, reações e ULT. Permite alternar a forma, pausar e percorrer a sequência. A versão para download inclui as mesmas folhas e funciona offline com os arquivos extraídos.
 
 Validação: hashes e geometria de todos os atlas, conservação dos pixels/alpha no empacotamento, cobertura de todos os comandos e das 24 figuras de cada ULT, comparação dos contatos visuais com os contatos reais, regressões do combate e inspeção no Canvas em desktop e emulação mobile. Os resultados estão no [relatório de validação](action-illustrations-validation.json): 93 novas verificações, 3.636 desenhos pintados em Canvas, 512 amostras de ULT, navegação/galeria no desktop e toque em celular emulado. A suíte completa, incluindo API, passou. Não houve teste em aparelho físico.
