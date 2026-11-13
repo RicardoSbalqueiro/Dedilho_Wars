@@ -7,6 +7,7 @@ import { Online } from './ui/Online';
 import { GameScreen } from './ui/GameScreen';
 import { RadioPanel } from './ui/Radio';
 import {CampaignMenu} from './ui/CampaignMenu';
+import {SenbukanTestArea} from './ui/SenbukanTestArea';
 import { audio } from './game/audio';
 import { loadBindings } from './game/input';
 import { applyPrefs, loadPrefs } from './game/prefs';
@@ -14,7 +15,7 @@ import type { CharId } from './game/data';
 import type { Difficulty, GameConfig, Mode } from './game/engine';
 import type { StageId } from './game/stage';
 
-type Screen = 'splash' | 'menu' | 'campaigns' | 'diff' | 'select' | 'controls' | 'settings' | 'stage' | 'game' | 'online' | 'profile';
+type Screen = 'splash' | 'menu' | 'campaigns' | 'senbukan' | 'diff' | 'select' | 'controls' | 'settings' | 'stage' | 'game' | 'online' | 'profile';
 
 export default function App() {
   const [screen, setScreen] = useState<Screen>('splash');
@@ -25,7 +26,7 @@ export default function App() {
   const [gameKey, setGameKey] = useState(0);
   const [stageId, setStageId] = useState<StageId>('dojo');
   const [radioOpen, setRadioOpen] = useState(false);
-  const openRadio = useCallback(() => {if(screen!=='campaigns')setRadioOpen(true)}, [screen]);
+  const openRadio = useCallback(() => {if(screen!=='campaigns'&&screen!=='senbukan')setRadioOpen(true)}, [screen]);
   const closeRadio = useCallback(() => setRadioOpen(false), []);
 
   useEffect(() => {
@@ -74,7 +75,8 @@ export default function App() {
     <>
       {screen === 'splash' && <Splash onStart={start} />}
       {screen === 'menu' && <MainMenu onChoose={choose} onRadio={openRadio} suspended={radioOpen} />}
-      {screen==='campaigns'&&<CampaignMenu onBack={toMenu}/>}
+      {screen==='campaigns'&&<CampaignMenu onBack={toMenu} onSenbukan={()=>{setRadioOpen(false);setScreen('senbukan')}}/>}
+      {screen==='senbukan'&&<SenbukanTestArea onBack={()=>setScreen('campaigns')}/>}
       {screen === 'profile' && <Profile onBack={toMenu} onLogin={()=>setScreen('online')}/>}
       {screen === 'online' && <Online onBack={toMenu}/>}
       {screen === 'diff' && (
