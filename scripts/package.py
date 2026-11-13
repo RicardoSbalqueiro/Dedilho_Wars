@@ -17,14 +17,16 @@ for old in out.glob('Dedilho-Wars-*'):
 (out/'action-atlas.json').write_bytes((root/'src/assets/actions/manifest.json').read_bytes())
 (out/'flow-atlas.json').write_bytes((root/'src/assets/flow/manifest.json').read_bytes())
 offline=(client/'index.html').read_text();assets=[];counts={}
-for extension in ['mp3','webp']:
+for extension in ['mp3','webp','glb']:
  sources=list((root/'src/assets').rglob('*.'+extension));hosted=sorted(client.glob('*.'+extension));counts[extension]=len(sources)
  assert len(hosted)==len(sources),(extension,len(hosted),len(sources))
  for asset in hosted:
   matches=[p for p in sources if asset.stem.startswith(p.stem+'-') and len(asset.stem)-len(p.stem)==9]
   assert len(matches)==1,asset.name
   source=matches[0];assert asset.name in offline,asset.name
-  offline=offline.replace(asset.name,source.relative_to(root).as_posix())
+  # file:// cannot fetch local GLB bytes. Inline only the offline copy.
+  target=('data:model/gltf-binary;base64,'+base64.b64encode(source.read_bytes()).decode()) if extension=='glb' else source.relative_to(root).as_posix()
+  offline=offline.replace(asset.name,target)
   assets.append((source,'../'+asset.name))
 
 # Stable, standard UTF-8 ZIP entries with a fixed timestamp (2026-01-01).
@@ -50,7 +52,7 @@ for name in ['README.md','.gitignore','.openai/hosting.json','package.json','pac
  source_entry(name,(root/name).read_bytes())
 for folder in ['src','worker','db','drizzle','scripts','tests','docs','unity','blender']:
  for p in sorted((root/folder).rglob('*')):
-  if p.is_file() and not any(part in {'__pycache__','Library','Temp','Obj','Logs','UserSettings','Builds','previews'} for part in p.parts) and p.suffix not in ['.mp3','.webp','.blend1','.blend2']:
+  if p.is_file() and not any(part in {'__pycache__','Library','Temp','Obj','Logs','UserSettings','Builds','previews'} for part in p.parts) and p.suffix not in ['.mp3','.webp','.glb','.blend1','.blend2']:
    source_entry(p.relative_to(root).as_posix(),p.read_bytes())
 source_entry('senbukan/Senbukan-Unity-projeto.zip',(root/'public/senbukan/Senbukan-Unity-projeto.zip').read_bytes())
 source_entry('senbukan/build.json',(root/'public/senbukan/build.json').read_bytes())
@@ -68,7 +70,7 @@ with ZipFile(archive) as z:
  assert z.testzip() is None
  for extension,count in counts.items():assert len([i for i in z.namelist() if i.endswith('.'+extension)])==count
  assert z.read('Dedilho-Wars/JOGAR.html')==offline.encode()
-(out/'index.html').write_text('''<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Baixar DEDILHO WARS</title><style>body{margin:0;background:#100b1c;color:white;font:18px/1.6 system-ui}main{max-width:700px;margin:6vh auto;padding:24px}a,button{display:block;box-sizing:border-box;width:100%;padding:16px 20px;background:#6d28d9;color:white;border:0;font:inherit;text-align:left;border-radius:10px;margin:18px 0;text-decoration:none;cursor:pointer}button:disabled{opacity:.65;cursor:wait}small,#status{color:#c7c0d2}</style><main><h1>DEDILHO WARS</h1><p>18 lutadores com arte anime, transformações de 10 segundos, novos desenhos de dash, salto, defesa e ataques, efeitos de movimento e impacto, 17 arenas, quebra de guarda e 90 rotas de combos.</p><a href="/">Jogar no navegador</a><button id="download">Baixar jogo completo e código-fonte (.zip)</button><p id="status" role="status" aria-live="polite"></p><a href="action-atlas.json" download>Catálogo dos desenhos de golpes e ULTs (.json)</a><a href="flow-atlas.json" download>Catálogo dos novos quadros de movimento (.json)</a><a href="animation-frames.json" download>Catálogo das amostras de tempo (.json)</a><p><small>Extraia toda a pasta e abra JOGAR.html. Mantenha a pasta src/assets com todas as ilustrações e músicas. Os modos locais e desafios funcionam offline; contas e partidas online usam o site.</small></p></main><script src="download.js"></script></html>''')
+(out/'index.html').write_text('''<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Baixar DEDILHO WARS</title><style>body{margin:0;background:#100b1c;color:white;font:18px/1.6 system-ui}main{max-width:700px;margin:6vh auto;padding:24px}a,button{display:block;box-sizing:border-box;width:100%;padding:16px 20px;background:#6d28d9;color:white;border:0;font:inherit;text-align:left;border-radius:10px;margin:18px 0;text-decoration:none;cursor:pointer}button:disabled{opacity:.65;cursor:wait}small,#status{color:#c7c0d2}</style><main><h1>DEDILHO WARS</h1><p>Arena Senbukan 3D jogável com Caetano e um aluno, modelos animados do Blender, controles de teclado e toque. No modo clássico: 18 lutadores com arte anime, transformações de 10 segundos, novos desenhos de dash, salto, defesa e ataques, efeitos de movimento e impacto, 17 arenas, quebra de guarda e 90 rotas de combos.</p><a href="/">Jogar no navegador</a><button id="download">Baixar jogo completo e código-fonte (.zip)</button><p id="status" role="status" aria-live="polite"></p><a href="action-atlas.json" download>Catálogo dos desenhos de golpes e ULTs (.json)</a><a href="flow-atlas.json" download>Catálogo dos novos quadros de movimento (.json)</a><a href="animation-frames.json" download>Catálogo das amostras de tempo (.json)</a><p><small>Extraia toda a pasta e abra JOGAR.html. Mantenha a pasta src/assets com todas as ilustrações e músicas. Os modos locais e desafios funcionam offline; contas e partidas online usam o site.</small></p></main><script src="download.js"></script></html>''')
 for p in client.rglob('*'):
  if p.is_file():assert p.stat().st_size<25*1024*1024,(p,p.stat().st_size)
 print(json.dumps({'archive':str(archive),'bytes':manifest['bytes'],'sourceBytes':len(prefix),'sharedAssets':len(recipe),'sha256':manifest['sha256']}))

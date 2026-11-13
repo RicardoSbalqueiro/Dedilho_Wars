@@ -3,6 +3,8 @@ import { rmSync,mkdirSync,copyFileSync,writeFileSync,readFileSync } from 'node:f
 import { spawnSync } from 'node:child_process';
 rmSync('dist',{recursive:true,force:true});
 const r=spawnSync(process.execPath,['node_modules/vite/bin/vite.js','build'],{stdio:'inherit'});if(r.status!==0)process.exit(r.status||1);
+// Three.js embeds shader literals; normalize generated line endings for source review.
+const htmlPath='dist/client/index.html';writeFileSync(htmlPath,readFileSync(htmlPath,'utf8').replace(/[ \t]+(?=\r?\n)/g,''));
 mkdirSync('dist/server',{recursive:true});mkdirSync('dist/.openai',{recursive:true});
 await build({entryPoints:['worker/index.js'],outfile:'dist/server/index.js',bundle:true,format:'esm',platform:'browser',target:'es2022'});copyFileSync('.openai/hosting.json','dist/.openai/hosting.json');
 const manifest=JSON.parse(readFileSync('.openai/hosting.json','utf8'));

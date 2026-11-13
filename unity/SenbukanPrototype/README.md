@@ -1,6 +1,6 @@
 # Senbukan — protótipo Unity + Blender
 
-Estado: **projeto-fonte preparado; ainda não compilado nem executado no Unity**. O Blender 4.3.2 foi usado para modelar, rigar, animar, exportar e reimportar os FBX. A prévia exibida no site é um render do Blender, não uma captura de um jogo Unity em execução.
+Estado: **projeto-fonte preparado; ainda não compilado nem executado no Unity**. O Blender 4.3.2 foi usado para modelar, rigar, animar, exportar e reimportar os FBX. O site já oferece um treino jogável separado em Three.js/WebGL, usando os GLBs e os clipes exportados dos mesmos modelos Blender. Este projeto-fonte Unity continua disponível para futura compilação e não deve ser confundido com o runtime atual do site.
 
 ## Abrir
 
@@ -35,7 +35,7 @@ Use **Dedilho Wars → Gerar WebGL para a campanha**. O comando prepara a cena, 
 
 Execute o build na estrutura de pastas extraída completa: a saída esperada é `public/senbukan/unity` na raiz do Dedilho Wars. Depois, valide o build em navegador e execute os checks, build e empacotamento do site antes de publicar. Não altere manualmente o manifesto para fingir que um build existe.
 
-O site abre o build Unity em iframe apenas quando o manifesto é válido. O retorno usa `postMessage` restrito à mesma origem e ao iframe do teste. O template contém carregamento, erro legível, limite de resolução e liberação da instância ao sair. Arquivos individuais da hospedagem devem ficar abaixo de 25 MiB; o script de build verifica esse limite.
+Atualmente `src/ui/SenbukanTestArea.tsx` abre o treino WebGL implementado em `SenbukanGame.tsx`. Um futuro build Unity validado poderá substituir essa entrada; o manifesto e o parser de validação continuam no projeto. O template Unity já possui retorno por `postMessage`, carregamento, erro legível, limite de resolução e liberação da instância. A integração do iframe deverá ser reativada e testada quando houver um build Unity real. Arquivos individuais da hospedagem devem ficar abaixo de 25 MiB; o script de build verifica esse limite.
 
 ## Arte e escala
 
