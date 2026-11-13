@@ -20,7 +20,7 @@ No computador, cenas e combate renderizam de **1080p até 4K**. No celular, a qu
 
 ## Guarda e combate em pé
 
-A guarda tem resistência 100 e rompe por 0,7 segundo sob pressão. Defesa perfeita restaura resistência; descansar com a defesa solta recupera a barra. Os normais fortes comuns mantêm o rival em pé, e cada lutador tem uma sequência exclusiva de seis comandos em Treinamento → Combos. Felipence acumula ressonância para fortalecer o Riff. Arenas recebem destruição visual e plateia reativa; provocações e vitórias variam entre rivais. Em Configurações, Detalhe dos efeitos oferece Automático, Alto e Leve. Veja [regras, apresentação e validação](docs/combat-evolution.md).
+A guarda tem resistência 100 e rompe por 0,7 segundo sob pressão. Defesa perfeita restaura resistência; descansar com a defesa solta recupera a barra. Os normais fortes comuns mantêm o rival em pé, e cada lutador tem uma sequência exclusiva de seis comandos em Treinamento → Academia → Rotas de combo. Felipence acumula ressonância para fortalecer o Riff. Arenas recebem destruição visual e plateia reativa; provocações e vitórias variam entre rivais. Em Configurações, Detalhe dos efeitos oferece Automático, Alto e Leve. Veja [regras, apresentação e validação](docs/combat-evolution.md).
 
 ## Menus vivos e campanhas
 
@@ -128,3 +128,12 @@ O salão noturno e os dois modelos rigados foram preparados no Blender a partir 
 ### Treino 3D jogável — Senbukan
 
 Wars of Champions → Senbukan abre a arena WebGL de Caetano contra um aluno com IA, usando os modelos e 13 animações esqueléticas de cada lutador do Blender. Tem movimento livre, câmera com alvo, socos encadeados, chute, Dedilho, defesa/quebra de guarda, dash, salto e Prime de 10 segundos. Também há comandos de toque. [Controles, regras e arte](docs/senbukan-playable.md). Esta implementação usa Three.js, enquanto o projeto Unity e seus fontes continuam disponíveis separadamente, com compilação Unity pendente.
+
+
+## Training Reborn — Academia dos Campeões
+
+**Treinamento** abre seis áreas com 13 aulas, 57 desafios (incluindo soldados de Twitchcity), 90 rotas de combo, Torre de 50 andares, seis exames, sete dificuldades e domínio individual dos 18 personagens. O Laboratório permite configurar os adversários, gravar e reproduzir comandos, examinar frame data e praticar nas novas arenas Capital, Militar e Conservador.
+
+Com uma conta, as atividades autorizadas geram XP após validação da sequência de comandos no servidor. O perfil separa treinamento e multiplayer, preservando o total existente e os pontos competitivos. Sem login, o progresso fica local e nunca é importado automaticamente como XP de conta. Veja [conteúdo, regras, persistência e validação](docs/training-reborn.md).
+
+Para desenvolvimento: `npm install`, `npm run db:local`, `npm run build`, `npm run preview`. A migração aditiva `0003_training_reborn.sql` deve acompanhar o Worker. Verifique `npm run typecheck`, `npm test` e `npm run build` antes de publicar.
