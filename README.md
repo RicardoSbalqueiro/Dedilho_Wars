@@ -120,3 +120,7 @@ npm run dev
 Relatórios históricos de balanceamento descrevem versões anteriores. Para esta reformulação, use o código atual, os multiplicadores no laboratório e o relatório de War of Champions; resultados automatizados não substituem testes de equilíbrio com jogadores humanos.
 
 Os novos 864 desenhos de extensão/retorno dos ataques, dash, salto, pouso e guarda estão descritos em [Animação ampliada](docs/animation-plus.md).
+
+## Experimento Senbukan em 3D
+
+Wars of Champions → Senbukan abre uma área de preparação do protótipo Unity + Blender. O salão noturno e dois modelos rigados foram preparados a partir das referências. A prévia é renderizada no Blender; ainda não existe build Unity jogável nesta versão. O projeto completo pode ser baixado nessa área. Veja [abrir e compilar o projeto](unity/SenbukanPrototype/README.md) e [inventário verificado dos assets](docs/senbukan-assets.json). O combate 2D continua no menu principal.

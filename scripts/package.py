@@ -48,10 +48,12 @@ def source_entry(name,data):
  header,payload=entry('Dedilho-Wars/'+name,data,True);prefix.extend(header);prefix.extend(payload)
 for name in ['README.md','.gitignore','.openai/hosting.json','package.json','package-lock.json','tsconfig.json','vite.config.ts','drizzle.config.ts','index.html']:
  source_entry(name,(root/name).read_bytes())
-for folder in ['src','worker','db','drizzle','scripts','tests','docs']:
+for folder in ['src','worker','db','drizzle','scripts','tests','docs','unity','blender']:
  for p in sorted((root/folder).rglob('*')):
-  if p.is_file() and '__pycache__' not in p.parts and p.suffix not in ['.mp3','.webp']:
+  if p.is_file() and not any(part in {'__pycache__','Library','Temp','Obj','Logs','UserSettings','Builds','previews'} for part in p.parts) and p.suffix not in ['.mp3','.webp','.blend1','.blend2']:
    source_entry(p.relative_to(root).as_posix(),p.read_bytes())
+source_entry('senbukan/Senbukan-Unity-projeto.zip',(root/'public/senbukan/Senbukan-Unity-projeto.zip').read_bytes())
+source_entry('senbukan/build.json',(root/'public/senbukan/build.json').read_bytes())
 source_entry('JOGAR.html',offline.encode())
 source_name='Dedilho-Wars-codigo.bin';(out/source_name).write_bytes(prefix)
 for p,url in assets:

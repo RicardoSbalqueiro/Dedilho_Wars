@@ -1,0 +1,69 @@
+{
+  "status": "prepared",
+  "unityCompiled": false,
+  "unityExecuted": false,
+  "editorTarget": "2022.3 LTS",
+  "files": {
+    "Caetano.fbx": {
+      "bytes": 2380844,
+      "sha256": "c39ac8cd90e89e3162324ca7af647fd74957c73122bc8a3279378589f8970beb"
+    },
+    "DojoSenbukan.fbx": {
+      "bytes": 743324,
+      "sha256": "736ab993cb9496a1755c1bd22914f05161aad7f5f860a167bb472c54edacee23"
+    },
+    "DojoStudent.fbx": {
+      "bytes": 2226396,
+      "sha256": "76a2e38f38241494a8809a5a04e8a36bbe2828dbd05baf9f389195d9126751c1"
+    }
+  },
+  "fighters": {
+    "Caetano": {
+      "triangles": 16084,
+      "bones": 20,
+      "unweightedVertices": 0,
+      "clips": [
+        "dash",
+        "down",
+        "guard",
+        "hit",
+        "idle",
+        "jump",
+        "kick",
+        "punch1",
+        "punch2",
+        "punch3",
+        "run",
+        "transform",
+        "walk"
+      ]
+    },
+    "DojoStudent": {
+      "triangles": 9696,
+      "bones": 20,
+      "unweightedVertices": 0,
+      "clips": [
+        "dash",
+        "down",
+        "guard",
+        "hit",
+        "idle",
+        "jump",
+        "kick",
+        "punch1",
+        "punch2",
+        "punch3",
+        "run",
+        "transform",
+        "walk"
+      ]
+    }
+  },
+  "dojo": {
+    "meshes": 26,
+    "triangles": 46056,
+    "materialsAssigned": true,
+    "source": "Blender FBX roundtrip",
+    "unityExecution": "pending"
+  }
+}
