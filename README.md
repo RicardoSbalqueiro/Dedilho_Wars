@@ -18,6 +18,10 @@ O motor continua em **60 Hz**, independente da tela. Os nove ciclos mantêm 1.09
 
 No computador, cenas e combate renderizam de **1080p até 4K**. No celular, a qualidade automática acompanha os pixels da tela e prioriza resposta e bateria; a opção Alta oferece mais nitidez. Menus, retratos e mapas se adaptam ao DPR/Retina. Veja [resolução e nitidez](docs/resolution.md).
 
+## Guarda e combate em pé
+
+A guarda tem resistência 100 e rompe por 0,7 segundo sob pressão. Defesa perfeita restaura resistência; descansar com a defesa solta recupera a barra. Os normais fortes comuns mantêm o rival em pé, e cada lutador tem uma sequência exclusiva de seis comandos em Treinamento → Combos. Felipence acumula ressonância para fortalecer o Riff. Arenas recebem destruição visual e plateia reativa; provocações e vitórias variam entre rivais. Em Configurações, Detalhe dos efeitos oferece Automático, Alto e Leve. Veja [regras, apresentação e validação](docs/combat-evolution.md).
+
 ## Menus vivos e campanhas
 
 O menu inicial reúne os **18 lutadores numa pancadaria geral**, com rivais que mudam, ataques normais e transformações. Todos ficam no chão. No PC, use Agitar a luta ao fundo para provocar uma reação coletiva; essa demonstração não usa Ultimates e não altera o combate das partidas.
@@ -85,9 +89,9 @@ O input buffer de nove frames, cancelamentos confirmados, defesa perfeita de tr�
 
 ULTs preservam a preparação de captura, erro punível e batalha de ULTs: quando se chocam, cada jogador aperta seu comando de ULT. Finishers continuam disponíveis após o KO decisivo. Novas cinematográficas usam timelines com os mesmos frames de contato que causam o dano real; preparação, expressão, ataque, impacto e retorno são separados do motor.
 
-O treino tem **18 desafios**, incluindo transformação, fôlego e carga de energia, e **72 rotas verificadas — quatro por personagem**. FRAME DATA mostra alcance, startup, recovery, defesa, acertos e retorno ao controle. RECURSOS E FORMAS permite inspecionar custos e abastecer recursos no treino offline; ANIMAÇÕES permite observar todos os lutadores e suas formas. A barra de ULT é abastecida automaticamente no treino; a regra de não recarregar energia durante Cruz de Energia continua sendo respeitada.
+O treino tem **18 desafios**, incluindo transformação, fôlego e carga de energia, e **90 rotas verificadas — cinco por personagem**, incluindo uma sequência exclusiva de seis comandos. FRAME DATA mostra alcance, startup, recovery, defesa, acertos e retorno ao controle. RECURSOS E FORMAS permite inspecionar custos e abastecer recursos no treino offline; ANIMAÇÕES permite observar todos os lutadores e suas formas. A barra de ULT é abastecida automaticamente no treino; a recarga manual continua restrita ao neutro fora da forma; acertar recupera energia também transformado.
 
-O online usa host autoritativo, WebRTC com relay HTTP de fallback e protocolo **`dw-online-12`**. Stamina, estoques, energia, sangue, bateria, transformação, efeitos e recuperação são sincronizados. Os dois jogadores precisam carregar a versão atual. Contas usam usuário e senha, sem email; estatísticas, histórico, XP e ranking persistem no D1. Nenhum cadastro é necessário para jogar offline.
+O online usa host autoritativo, WebRTC com relay HTTP de fallback e protocolo **`dw-online-13`**. Stamina, estoques, energia, sangue, bateria, transformação, efeitos e recuperação são sincronizados. Os dois jogadores precisam carregar a versão atual. Contas usam usuário e senha, sem email; estatísticas, histórico, XP e ranking persistem no D1. Nenhum cadastro é necessário para jogar offline.
 
 ## Menus responsivos
 
