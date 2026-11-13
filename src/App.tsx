@@ -1,3 +1,4 @@
+import {TrainingReborn} from './ui/TrainingReborn';
 import { Profile } from './ui/Profile';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Frame } from './ui/common';
@@ -15,7 +16,7 @@ import type { CharId } from './game/data';
 import type { Difficulty, GameConfig, Mode } from './game/engine';
 import type { StageId } from './game/stage';
 
-type Screen = 'splash' | 'menu' | 'campaigns' | 'senbukan' | 'diff' | 'select' | 'controls' | 'settings' | 'stage' | 'game' | 'online' | 'profile';
+type Screen = 'splash' | 'training' | 'menu' | 'campaigns' | 'senbukan' | 'diff' | 'select' | 'controls' | 'settings' | 'stage' | 'game' | 'online' | 'profile';
 
 export default function App() {
   const [screen, setScreen] = useState<Screen>('splash');
@@ -56,7 +57,7 @@ export default function App() {
       setScreen('select');
     } else if (c === 'training') {
       setMode('training');
-      setScreen('select');
+      setScreen('training');
     } else if(c==='campaigns'){setRadioOpen(false);audio.startCampaignMusic();setScreen('campaigns');}
     else if (c === 'online') setScreen('online');
     else if (c === 'profile') setScreen('profile');
@@ -77,6 +78,7 @@ export default function App() {
       {screen === 'menu' && <MainMenu onChoose={choose} onRadio={openRadio} suspended={radioOpen} />}
       {screen==='campaigns'&&<CampaignMenu onBack={toMenu} onSenbukan={()=>{setRadioOpen(false);setScreen('senbukan')}}/>}
       {screen==='senbukan'&&<SenbukanTestArea onBack={()=>setScreen('campaigns')}/>}
+      {screen==='training'&&<TrainingReborn onBack={toMenu} onLogin={()=>setScreen('online')}/>}
       {screen === 'profile' && <Profile onBack={toMenu} onLogin={()=>setScreen('online')}/>}
       {screen === 'online' && <Online onBack={toMenu}/>}
       {screen === 'diff' && (

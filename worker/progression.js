@@ -4,7 +4,7 @@ export async function rememberMatch(db,code,epoch,time) {
  await db.prepare(`INSERT OR IGNORE INTO matches (id,room_code,host_id,guest_id,host_char,guest_char,stage,created)
  SELECT epoch,code,host_id,guest_id,host_char,guest_char,stage,? FROM rooms WHERE code=? AND epoch=? AND guest_id IS NOT NULL AND status='playing'`).bind(time,code,epoch).run();
 }
-const statsCols='u.id,u.username,u.games,u.wins,u.losses,u.xp,u.points,u.finishers,u.streak,u.best_streak';
+const statsCols='u.id,u.username,u.games,u.wins,u.losses,u.xp,u.training_xp,(u.xp-u.training_xp) AS multiplayer_xp,u.points,u.finishers,u.streak,u.best_streak';
 export async function leaderboard(db,url,json) {
  const page=Math.floor(Math.max(0,Math.min(49,Number(url.searchParams.get('page'))||0)));
  const rows=await db.prepare(`SELECT ${statsCols} FROM users u WHERE games>0 ORDER BY points DESC,wins DESC,losses ASC,username_key ASC LIMIT 21 OFFSET ?`).bind(page*20).all();

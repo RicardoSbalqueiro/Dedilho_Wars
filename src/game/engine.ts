@@ -1,3 +1,7 @@
+import {applyTrainingNpc} from './training/npc';
+import type {TrainingNpcId} from './training/npc';
+import {TrainingSession} from './training/runtime';
+import type {CombatEvent,TrainingResult,TrainingSpec} from './training/types';
 import {transformationAudio} from './transformation-audio';
 import {RESOURCE_RULES,FORMS,freshResources,formStats,formPowerActive,canTransform,gainEnergy,recoverAttackResource,payStamina,staminaCost} from './resources';
 import type {ResourceState} from './resources';
@@ -8,7 +12,7 @@ import {GUARD_RULES,STANDING_COMBO_LIMIT,signatureContinuation,guardPressure} fr
 import { challengeDefinition, challengeAvailable, saveChallengeBadge } from './challenges';
 import type { ChallengeId, ChallengeProgress } from './challenges';
 // Lógica de combate (separada da renderização).
-import { CHARS, NORMAL_BY_RANK, RANGED_MOVES, movePhase, impactStrength } from './data';
+import { CHAR_IDS, CHARS, NORMAL_BY_RANK, RANGED_MOVES, movePhase, impactStrength } from './data';
 import type { CharDef, CharId, Move, Pose } from './data';
 import { ACTIONS, Pad, keyboard } from './input';
 import { touchInput } from './touch';
@@ -49,10 +53,14 @@ export interface GameConfig {
   difficulty: Difficulty;
   bindings: [Bindings, Bindings];
   online?: boolean;
+  reborn?:TrainingSpec;
+  headless?:boolean;
+  trainingInput?:(tick:number)=>{held:number;pressed:number};
 }
 
 export interface GameEvent {
-  type: 'pause' | 'matchEnd';
+  type: 'pause' | 'matchEnd' | 'training' | 'trainingResult';
+  result?:TrainingResult;
   paused?: boolean;
   winner?: number;
 }
@@ -75,6 +83,7 @@ export interface Particle {
 
 export interface Fighter extends ResourceState {
   idx: 0 | 1;
+  npc?:TrainingNpcId;
   ch: CharId;
   def: CharDef;
   x: number;
@@ -291,6 +300,8 @@ export class Game {
   coach:ComboCoach|null=null;
   trainingLog:CoachEvent[]=[];
   cfg: GameConfig;
+  reborn:TrainingSession|null=null;
+  private randomState=0;
   f: [Fighter, Fighter];
   tick = 0;
   hitstop = 0;
@@ -340,19 +351,30 @@ export class Game {
 
   constructor(cfg: GameConfig, onEvent: (e: GameEvent) => void) {
     this.cfg = cfg;
+    this.randomState=cfg.reborn?.seed??0;
     audio.setArena(cfg.stage||'dojo');
     this.onEvent = onEvent;
     const other = cfg.p2;
     this.f = [makeFighter(0, cfg.p1, false), makeFighter(1, other, cfg.mode === 'ai')];
+    if(cfg.reborn?.npc)applyTrainingNpc(this.f[1],cfg.reborn.npc);
     this.keyHandler = (code, e) => this.onKey(code, e);
-    keyboard.attach();
-    keyboard.listeners.push(this.keyHandler);
+    if(!cfg.headless){keyboard.attach();keyboard.listeners.push(this.keyHandler);}
+    if(cfg.reborn)this.f.forEach((f,i)=>f.animT=((cfg.reborn!.seed>>>(i*8))>>>0)%100);
     this.resetMatch();
+    if(cfg.reborn){this.reborn=new TrainingSession(this,cfg.reborn);this.reborn.setup();}
   }
 
+  random(){if(!this.cfg.reborn)return Math.random();this.randomState=(Math.imul(this.randomState,1664525)+1013904223)>>>0;return this.randomState/4294967296;}
+  get infiniteTrainingResources(){return this.training&&!this.reborn;}
+  get sandboxTraining(){return this.training&&!this.reborn?.finite;}
+  combatEvent(type:CombatEvent['type'],a:Fighter,d=this.opp(a),move=a.move?.id??'',amount=0){
+    if(!this.reborn)return;const m=a.move??a.def.moves[move];
+    this.reborn.combat({type,tick:this.tick,actor:a.idx,target:d.idx,move,serial:a.serial,amount,hits:d.comboHits,combo:d.comboKind,low:m?.level==='low',air:a.y<0,targetAir:d.y<0,perfect:d.guardResult==='perfect'||d.guardResult==='precision'});
+  }
+  replaceTrainingOpponent(ch:CharId,npc?:TrainingNpcId){if(!this.reborn||!this.reborn.finite&&!this.reborn.isLab)return false;this.f[1]=makeFighter(1,ch,true);if(npc)applyTrainingNpc(this.f[1],npc);this.f[1].animT=(this.cfg.reborn!.seed+CHAR_IDS.indexOf(ch))%100;this.resetRound();return true;}
+
   destroy() {
-    keyboard.listeners = keyboard.listeners.filter((l) => l !== this.keyHandler);
-    keyboard.detach();
+    if(!this.cfg.headless){keyboard.listeners = keyboard.listeners.filter((l) => l !== this.keyHandler);keyboard.detach();}
     audio.stopMusic();
   }
 
@@ -385,7 +407,7 @@ export class Game {
   }
 
   resetRound() {
-    keyboard.pressed.clear();touchInput.pressed.clear();
+    if(!this.cfg.headless){keyboard.pressed.clear();touchInput.pressed.clear();}
     for (const f of this.f) {
       f.x = f.idx === 0 ? 560 : 1040;
       f.y = 0;
@@ -460,6 +482,7 @@ export class Game {
   }
 
   private challengeEvent(metric: string, amount = 1, token = '') {
+    this.reborn?.metric(metric,amount,token);
     const c=this.challenge;
     if (!this.training || !c || c.done) return;
     const def=challengeDefinition(c.id);
@@ -474,7 +497,7 @@ export class Game {
     const route=id?comboRoute(id):null;
     if(id&&(!route||route.ch!==this.f[0].ch))return false;
     this.coach=null;this.challenge=null;this.train.dummy=0;
-    keyboard.down.clear();keyboard.pressed.clear();touchInput.clear();this.resetPositions();
+    if(!this.cfg.headless){keyboard.down.clear();keyboard.pressed.clear();touchInput.clear();}this.resetPositions();
     this.f[0].x=600;this.f[1].x=600+this.f[0].def.pushW+this.f[1].def.pushW+5;
     if(id)this.coach=newComboCoach(id);
     this.ann=null;this.moveBanner=null;this.train.lastDmg=this.train.combo=this.train.total=0;
@@ -483,6 +506,7 @@ export class Game {
 
   private trainingEvent(type:CoachEvent['type'],f:Fighter,move='',target=this.opp(f),serial=f.serial){
     if(!this.training)return;
+    this.combatEvent(type,f,target,move);
     const e:CoachEvent={type,actor:f.idx,move,serial,tick:this.tick,hits:type==='free'?f.comboHits:target.comboHits,damage:type==='free'?f.comboDmg:target.comboDmg};
     this.trainingLog.push(e);if(this.trainingLog.length>96)this.trainingLog.shift();
     if(this.coach)advanceComboCoach(this.coach,e);
@@ -495,27 +519,27 @@ export class Game {
   }
 
   private onKey(code: string, e: KeyboardEvent) {
+    if(this.reborn&&e.target instanceof Element&&e.target.closest('button,input,select,textarea,[contenteditable="true"],[role="dialog"]'))return;
     // evita rolagem da página / busca rápida
     const bound = this.cfg.bindings.some((b) => Object.values(b).some((c) => c.includes(code)));
     if (bound || code === 'Escape' || code === 'Space') e.preventDefault();
-    if (e.repeat) return;
+    if (e.repeat||this.reborn?.result) return;
     if (code === 'Escape' || code === 'KeyP') {
       if (!this.cfg.online) this.togglePause();
-    } else if (this.training && !this.paused) {
-      if (code === 'KeyR') this.resetPositions();
+    } else if (this.training && !this.paused && (!this.reborn||this.reborn.isLab)) {
+      if (code === 'KeyR'){if(this.reborn?.isLab)this.reborn.configureLab(this.reborn.lab);else this.resetPositions();}
       if (code === 'KeyT') {
-        this.train.dummy = (this.train.dummy + 1) % 4;
-        this.f[1].cpu = this.train.dummy === 1;
-        this.f[1].pad.reset();
+        if(this.reborn?.isLab){const modes=['idle','adaptive','script','p2'] as const;this.reborn.configureLab({...this.reborn.lab,dummy:modes[(modes.indexOf(this.reborn.lab.dummy as typeof modes[number])+1)%modes.length]});}
+        else {this.train.dummy = (this.train.dummy + 1) % 4;this.f[1].cpu = this.train.dummy === 1;this.f[1].pad.reset();}
       }
     }
   }
 
   togglePause(v?: boolean) {
-    if (this.phase === 'matchEnd') return;
+    if (this.phase === 'matchEnd'&&!this.reborn) return;
     this.paused = v === undefined ? !this.paused : v;
     this.resetClock();
-    keyboard.pressed.clear();touchInput.pressed.clear();
+    if(!this.cfg.headless){keyboard.pressed.clear();touchInput.pressed.clear();if(this.reborn){keyboard.down.clear();touchInput.clear();for(const f of this.f)f.pad.reset();}}
     this.onEvent({ type: 'pause', paused: this.paused });
   }
 
@@ -551,6 +575,8 @@ export class Game {
   }
 
   private pollInputs() {
+    if(this.cfg.trainingInput){const input=this.cfg.trainingInput(this.tick);ACTIONS.forEach((a,i)=>{this.f[0].pad.set(a,!!(input.held&(1<<i)),this.tick);if(input.pressed&(1<<i)&&this.f[0].pad.pressedAt[a]!==this.tick)this.f[0].pad.tap(a,this.tick);});return;}
+    if(this.cfg.headless)return;
     if (this.cfg.online) {
       keyboard.consumePressed();
       for (const f of this.f) {
@@ -571,7 +597,8 @@ export class Game {
     for (let i = 0; i < 2; i++) if (human[i]) this.f[i].pad.pollKeys(this.cfg.bindings[i], this.tick, i === 0, presses);
   }
 
-  step() {
+  step(){if(this.paused)return;this.reborn?.beforeTick();this.stepCore();this.reborn?.afterTick();}
+  private stepCore() {
     if (this.paused) return;
     this.recoveredCombos.clear();
     this.tick++;
@@ -581,6 +608,7 @@ export class Game {
       if (f.rangedCooldown > 0 && --f.rangedCooldown === 0) { f.rangedUses = 0; if(f.idx===0)this.challengeEvent('range'); }
     }
     this.pollInputs();
+    this.reborn?.recordInputs();
     if(this.phase==='intro'&&this.phaseT>=30&&this.f.some(f=>f.pad.buffered('p',this.tick)||f.pad.buffered('k',this.tick))){
       this.phase='fight';this.phaseT=0;for(const f of this.f){f.pad.consume('p');f.pad.consume('k');}
       this.announce('FIGHT!','',35,'#fb923c');audio.gong();
@@ -637,6 +665,7 @@ export class Game {
       return;
     }
     if (this.cine) {
+      this.reborn?.controlOpponent();
       // A free opponent may commit a full-meter ULT during the rival's cinematic.
       // Stun, attacks, landing commitment and the initial dash commitment stay locked.
       const rival=this.opp(this.cine.f);
@@ -663,7 +692,8 @@ export class Game {
     if (this.phase === 'fight') {
       const [a, b] = this.f;
       if (this.cfg.mode === 'ai') aiAct(this, b, this.cfg.difficulty);
-      if (this.training) {
+      if (this.training && this.reborn) this.reborn.controlOpponent();
+      else if (this.training) {
         const d = this.train.dummy;
         if (d === 1) aiAct(this, b, 'normal');
         else if (d === 2) {
@@ -711,7 +741,7 @@ export class Game {
         }
         break;
       case 'fight':
-        if (!this.training) {
+        if (!this.sandboxTraining) {
           this.timeAcc++;
           if (this.timeAcc >= 60) {
             this.timeAcc = 0;
@@ -816,7 +846,7 @@ export class Game {
   }
 
   private triggerKO(a: Fighter, d: Fighter) {
-    if (this.training) {
+    if (this.sandboxTraining) {
       d.hp = d.maxHp;
       return;
     }
@@ -869,7 +899,7 @@ export class Game {
   }
 
   private beginTransformation(f:Fighter){
-    if(!canTransform(f))return false;
+    if(f.npc||!canTransform(f))return false;
     f.meter-=RESOURCE_RULES.transformationCost;payStamina(f,12);
     if(f.ch==='rickzera')f.energy=0;
     if(f.ch==='nomad'){f.hp-=f.maxHp*.1;f.formVariant=(this.tick+f.serial*7)%3;}
@@ -890,7 +920,7 @@ export class Game {
   }
 
   private canSuper(f: Fighter) {
-    return (f.meter >= 100 || this.training) && this.phase === 'fight';
+    return !f.npc && (f.meter >= 100 || this.infiniteTrainingResources) && this.phase === 'fight';
   }
 
   private pickNormal(f: Fighter, btn: 'p' | 'k'): string {
@@ -1471,6 +1501,7 @@ export class Game {
   }
 
   private projectileKind(f: Fighter, m: Move): Projectile['kind'] | null {
+    if(f.npc)return null;
     if(f.ch==='rickzera')return m.id==='s1'?'energy':m.id==='s2'?'energyFist':null;
     if (f.ch === 'bieu') return m.id === 's2' ? 'rat' : m.id === 's3' ? 'spray' : null;
     if (f.ch === 'nomad') return m.id === 's1' ? 'burger' : m.id === 's3' ? 'boomerang' : null;
@@ -1676,7 +1707,7 @@ export class Game {
       this.applyHit(h.a,h.d,h.m,h.impact);
       if(h.m.grab&&(this.seq||!formPowerActive(h.d)))break;
     }
-    if(!this.training&&a.hp<=0&&b.hp<=0){a.ko=b.ko=true;this.phase='ko';}
+    if(!this.sandboxTraining&&a.hp<=0&&b.hp<=0){a.ko=b.ko=true;this.phase='ko';}
   }
 
   private gainMeter(f: Fighter, amount: number) {
@@ -1705,7 +1736,7 @@ export class Game {
       this.challengeEvent('damage',dmg);
       if(this.seq?.kind.startsWith('super') && this.challengeSuperSerial!==a.serial) {this.challengeSuperSerial=a.serial;this.challengeEvent('super');}
     }
-    if (this.training) {
+    if (this.sandboxTraining) {
       this.train.lastDmg = Math.round(dmg);
       d.comboDmg += dmg;
       d.hp = Math.max(1, d.hp - dmg);
@@ -1714,9 +1745,11 @@ export class Game {
       d.hp = Math.max(0, d.hp - dmg);
       d.comboDmg += dmg;
     }
+    this.combatEvent('damage',a,d,this.seq?.kind.startsWith('super')?'super':a.move?.id??this.seq?.kind??'',dmg);
     this.gainMeter(a, dmg * 0.16);
     this.gainMeter(d, dmg * 0.11);
     if(dmg>0){const restored=recoverAttackResource(a);if(restored){
+      if(a.idx===0)this.reborn?.metric('resource',restored.amount);
       this.text(a.x,FLOOR_Y+a.y-a.def.hurtH-18,`${restored.label} +${Number(restored.amount.toFixed(1))}`,a.def.glow,15);
       this.ring(a.x,FLOOR_Y+a.y-60,a.def.glow,48,16,2);
     }}
@@ -1791,7 +1824,8 @@ export class Game {
       if (d.idx === 0){this.challengeEvent('block');if(m.level==='low')this.challengeEvent('blockLow');if(perfect||precision)this.challengeEvent('perfect');}
       const chip = precision||m.kind==='normal'?0:m.dmg*Math.min(.08,m.chip??.04);
       const prev = d.hp;
-      d.hp = Math.max(this.training||m.kind!=='super'?1:0,d.hp-chip);gainEnergy(d,(prev-d.hp)*RESOURCE_RULES.energyOnDamage);
+      d.hp = Math.max(this.sandboxTraining||m.kind!=='super'?1:0,d.hp-chip);gainEnergy(d,(prev-d.hp)*RESOURCE_RULES.energyOnDamage);
+      this.combatEvent('chip',a,d,m.id,Math.max(0,prev-d.hp));
       d.dispHp = Math.max(d.hp, d.dispHp);
       this.gainMeter(a, m.dmg * 0.08);
       this.gainMeter(d, m.dmg * 0.05);
@@ -1818,6 +1852,7 @@ export class Game {
       if (d.hp <= 0 && prev > 0) this.triggerKO(a, d);
       this.trainingEvent('block',a,m.id,d,impact?.serial??a.serial);
       if(d.guardMeter===0&&!precision&&!perfect){
+        this.combatEvent('guardBreak',a,d,m.id);
         d.guardBreakT=GUARD_RULES.breakFrames;d.state='hit';d.stateT=0;d.hitstun=GUARD_RULES.breakFrames;d.blockstun=0;
         d.guard=d.armor=d.crouch=false;d.vx=dir*.8;d.guardResult='none';d.guardResultT=0;d.stunLow=false;
         if(latest)a.contact='hit';
@@ -2003,7 +2038,7 @@ export class Game {
       c.c[i]+=c.pending[i];c.pending[i]=0;
       if(!active){f.pad.consume(action);continue;}
       if (f.cpu || (this.training && i === 1 && this.train.dummy === 1)) {
-        if (Math.random() < aiMashRate(this.cfg.difficulty) / 60) c.c[i]++;
+        if (this.random() < aiMashRate(this.cfg.difficulty) / 60) c.c[i]++;
       } else if (f.pad.buffered(action,this.tick)) {
         c.c[i]++;
         f.pad.consume(action);
@@ -2026,7 +2061,7 @@ export class Game {
         this.announce('EMPATE DE ULTS!','AS DUAS BARRAS FORAM GASTAS',65,'#67e8f9');
         this.ring(mid,FLOOR_Y-100,'#67e8f9',180,24,6);audio.clash();return;
       }
-      const w = diff > 0 ? 0 : diff < 0 ? 1 : Math.random() < 0.5 ? 0 : 1;
+      const w = diff > 0 ? 0 : diff < 0 ? 1 : this.random() < 0.5 ? 0 : 1;
       const win = fs[w];
       const lose = fs[1 - w];
       const m = c.m[w];
@@ -2077,7 +2112,8 @@ export class Game {
     if(this.cine?.f===f||this.cine?.next===f.idx)return;
     this.interruptBike(f);
     f.manualFacing=false;f.guardResultT=f.guardReadyT=0;
-    if (!this.training) f.meter = Math.max(0,f.meter-RESOURCE_RULES.ultimateCost);
+    if (!this.infiniteTrainingResources) f.meter = Math.max(0,f.meter-RESOURCE_RULES.ultimateCost);
+    this.combatEvent('super',f,this.opp(f),'super');
     f.state = 'cine';
     f.stateT = 0;
     f.move = null;
@@ -2178,6 +2214,7 @@ export class Game {
 
   private startSeq(kind: Seq['kind'], a: Fighter, d: Fighter) {
     if(formPowerActive(d))return;
+    if(a.idx===0&&!kind.startsWith('super'))this.reborn?.metric('grabs',1);
     const dur = kind.startsWith('super')&&WOC_ULTIMATES[a.ch]?WOC_ULTIMATES[a.ch]!.duration:{ puxao: 86, mordida: 78, engole: 100, superC: 215, superO: 215, superT:SHARK_ULT_DURATION, superR: 170, superB: 160, superN: 150, superG: 155, superA: 206,superS:180,superJ:195,superJane:180,superCristyan:185,superEneas:195,superWoc:180,vampire:82,cupid:82, moon: 74, throw:60 }[kind];
     const recovered=kind.startsWith('super')?this.recoveredCombos.get(d):undefined;
     if(recovered){d.comboHits=recovered.hits;d.comboDmg=recovered.damage;d.comboMoves=[...recovered.moves];d.comboKind=recovered.kind;d.comboLastSerial=recovered.serial;}
@@ -3015,11 +3052,12 @@ export class Game {
   }
 
   private updateTraining() {
-    if (!this.training) return;
+    if (!this.sandboxTraining) return;
     const d = this.f[1];
     const a = this.f[0];
     if(a.crouch&&a.y===0)this.challengeEvent('crouch');
     for (const f of this.f) {
+      if(this.reborn?.isLab&&!this.reborn.lab.heal)continue;
       if (f.state === 'ground' && f.hp < f.maxHp) {
         this.train.idle++;
         if (this.train.idle > 90) f.hp = Math.min(f.maxHp, f.hp + 12);
@@ -3034,6 +3072,7 @@ export class Game {
   }
 
   private updateFx() {
+    if(this.cfg.headless){this.parts=[];return;}
     for (let i = this.parts.length - 1; i >= 0; i--) {
       const p = this.parts[i];
       p.life--;
@@ -3066,6 +3105,7 @@ export class Game {
 
   // ------------------------------------------------------------ helpers de partículas
   spark(x: number, y: number, color: string, n: number, spd: number, size = 3, life = 18) {
+    if(this.cfg.headless)return;
     for (let i = 0; i < n; i++) {
       const a = rand(0, Math.PI * 2);
       const v = rand(spd * 0.3, spd);
@@ -3073,19 +3113,23 @@ export class Game {
     }
   }
   ring(x: number, y: number, color: string, maxR: number, life = 20, lw = 6) {
+    if(this.cfg.headless)return;
     this.parts.push({ type: 'ring', x, y, vx: 0, vy: 0, life, max: life, size: 8, color, g: 0, rot: lw, grow: (maxR - 8) / life });
   }
   glowFx(x: number, y: number, color: string, size: number, life = 10) {
     this.parts.push({ type: 'glow', x, y, vx: 0, vy: 0, life, max: life, size, color, g: 0, rot: 0, grow: 0 });
   }
   streak(x: number, y: number, ang: number, color: string) {
+    if(this.cfg.headless)return;
     const v = rand(10, 22);
     this.parts.push({ type: 'streak', x, y, vx: Math.cos(ang) * v, vy: Math.sin(ang) * v, life: 12, max: 12, size: rand(20, 50), color, g: 0, rot: ang, grow: 0 });
   }
   dust(x: number, y: number, n: number) {
+    if(this.cfg.headless)return;
     for (let i = 0; i < n; i++) this.parts.push({ type: 'dust', x: x + rand(-16, 16), y: y + rand(-4, 4), vx: rand(-2, 2), vy: rand(-1.8, -0.2), life: 26, max: 26, size: rand(4, 9), color: '#d7b894', g: -0.02, rot: 0, grow: 0.25 });
   }
   text(x: number, y: number, txt: string, color: string, size = 40) {
+    if(this.cfg.headless)return;
     this.parts.push({ type: 'text', x, y, vx: 0, vy: -0.7, life: 50, max: 50, size, color, g: 0, rot: rand(-0.12, 0.12), grow: 0, text: txt });
   }
 }

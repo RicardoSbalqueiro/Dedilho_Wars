@@ -186,16 +186,16 @@ function FighterDetails({ ch, bindings }: { ch: CharId; bindings: Bindings }) {
 export function StageSelect({ p1, p2, initialStage = 'dojo', onPick, onBack, onRadio, suspended = false }: {
   p1: CharId; p2: CharId; initialStage?: StageId; onPick: (stage: StageId) => void; onBack: () => void; onRadio: () => void; suspended?: boolean;
 }) {
-  const [page, setPage] = useState(Math.floor(STAGE_IDS.indexOf(initialStage) / 6));
+  const [page, setPage] = useState(Math.floor((STAGE_IDS as readonly StageId[]).indexOf(initialStage) / 6));
   const [selected, setSelected] = useState<StageId>(initialStage);
-  const choose = (id: StageId) => { setSelected(id); setPage(Math.floor(STAGE_IDS.indexOf(id) / 6)); audio.select(); };
+  const choose = (id: StageId) => { setSelected(id); setPage(Math.floor((STAGE_IDS as readonly StageId[]).indexOf(id) / 6)); audio.select(); };
   useMenuBack(onBack, suspended);
   useEffect(() => { audio.music('menu'); }, []);
   useEffect(() => {
     const key = (e: KeyboardEvent) => {
       if (suspended || e.repeat) return;
       const delta: Record<string, number> = { ArrowLeft: -1, KeyA: -1, ArrowRight: 1, KeyD: 1, ArrowUp: -3, KeyW: -3, ArrowDown: 3, KeyS: 3 };
-      if (e.code in delta) { e.preventDefault(); choose(STAGE_IDS[(STAGE_IDS.indexOf(selected) + delta[e.code] + STAGE_IDS.length) % STAGE_IDS.length]); }
+      if (e.code in delta) { e.preventDefault(); choose(STAGE_IDS[((STAGE_IDS as readonly StageId[]).indexOf(selected) + delta[e.code] + STAGE_IDS.length) % STAGE_IDS.length]); }
       if (['Enter', 'Space'].includes(e.code) && !isNativeControl(e.target)) { e.preventDefault(); onPick(selected); }
     };
     window.addEventListener('keydown', key); return () => window.removeEventListener('keydown', key);

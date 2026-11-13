@@ -1,3 +1,4 @@
+import {drawTrainingNpcPortrait} from './training/npc-art';
 import {drawReactiveArena} from './reactive-arena';
 import {effectDetail,recordDrawCost} from './visual-budget';
 import {drawAccessoryNormal} from './accessories';
@@ -366,9 +367,9 @@ function drawFighter(ctx: CanvasRenderingContext2D, g: Game, f: Fighter, time: n
   const phase=m?movePhase(m,frame,f.connected):null;
   const accessoryPose=f.poseOverride||(m&&phase?.phase==='recovery'&&phase.progress<.35?m.recoveryPose||m.poses[1]:f.poseName);
   if(!reflect)drawMotionInk(ctx,f,settings.reducedFlash);
-  drawRig(ctx, f.ch, f.rig, f.pose, { time:f.animT, expr: f.expr, glow: f.glow, glowColor: f.def.glow, stretch,transformation:f.formT>0,formVariant:f.formVariant,formTime:f.formElapsed,poseName:accessoryPose,
-    ...animeMotion(f,g.tick),...captureArtOptions(g,f),...(f.ch==='jane'&&f.formT===0&&f.bikeDizzy>0&&actionAtlasReady('jane-bike')?{actionClip:'bike',actionProgress:10.01/12}:{}) });
-  if(!reflect&&m&&!(f.ch==='ulisses'&&f.formT>0))drawAccessoryNormal(ctx,m,frame);
+  drawRig(ctx, f.ch, f.rig, f.pose, { time:f.animT,trainingNpc:f.npc, expr: f.expr, glow: f.glow, glowColor: f.def.glow, stretch,transformation:f.formT>0,formVariant:f.formVariant,formTime:f.formElapsed,poseName:accessoryPose,
+    ...animeMotion(f,g.tick),...captureArtOptions(g,f),...(f.npc&&m?.id==='s2'?{spriteAir:true}:{}),...(f.ch==='jane'&&f.formT===0&&f.bikeDizzy>0&&actionAtlasReady('jane-bike')?{actionClip:'bike',actionProgress:10.01/12}:{}) });
+  if(!f.npc&&!reflect&&m&&!(f.ch==='ulisses'&&f.formT>0))drawAccessoryNormal(ctx,m,frame);
   if(!reflect)drawGuardInk(ctx,f,g.tick,settings.reducedFlash);
   if (!reflect) drawFx(ctx, g, f, time);
   if(!reflect)drawCombatFlowFx(ctx,f,g.tick);
@@ -704,7 +705,7 @@ function drawBar(ctx: CanvasRenderingContext2D, g: Game, f: Fighter, side: 0 | 1
   ctx.fillStyle = gp;
   ctx.fillRect(px - 32, 6, 64, 64);
   const hurt = f.state === 'hit' || f.state === 'launched' || f.hp / f.maxHp < 0.2;
-  drawPortrait(ctx, f.ch, px + (side === 0 ? -2 : 2), 42,20, { time: g.tick, expr: hurt ? 'hit' : 'n', glow:f.glow,transformation:f.formT>0,formVariant:f.formVariant,formTime:f.formElapsed},side===1);
+  if(f.npc)drawTrainingNpcPortrait(ctx,f.npc,px,42,20,g.tick);else drawPortrait(ctx, f.ch, px + (side === 0 ? -2 : 2), 42,20, { time: g.tick, expr: hurt ? 'hit' : 'n', glow:f.glow,transformation:f.formT>0,formVariant:f.formVariant,formTime:f.formElapsed},side===1);
   ctx.restore();
   ctx.beginPath();
   ctx.arc(px, 38, 30, 0, Math.PI * 2);
@@ -720,7 +721,7 @@ function drawBar(ctx: CanvasRenderingContext2D, g: Game, f: Fighter, side: 0 | 1
   label(ctx, f.def.name, nx, 64, 15, '#fff', f.def.color2, side === 0 ? 'left' : 'right', side === 0 ? -0.18 : 0.18, 4);
 
   // pips de rounds
-  if (!g.training) {
+  if (!g.sandboxTraining) {
     for (let i = 0; i < g.winsNeeded; i++) {
       const cx = side === 0 ? 422 - i * 20 : W - 422 + i * 20;
       ctx.beginPath();
@@ -735,6 +736,7 @@ function drawBar(ctx: CanvasRenderingContext2D, g: Game, f: Fighter, side: 0 | 1
 }
 
 function drawMeter(ctx:CanvasRenderingContext2D,g:Game,f:Fighter,side:0|1){
+ if(f.npc)return;
  const x=side===0?40:590,y=504,w=330,h=14;
  ctx.save();ctx.fillStyle='#0b0a18';ctx.fillRect(x,y,w,h);
  for(let stock=0;stock<2;stock++){
@@ -759,7 +761,7 @@ function drawHUD(ctx: CanvasRenderingContext2D, g: Game, compact=false) {
   drawBar(ctx, g, a, 0);
   drawBar(ctx, g, b, 1);
   for (const f of g.f) {
-    if (!RANGED_MOVES[f.ch].length) continue;
+    if (f.npc||!RANGED_MOVES[f.ch].length) continue;
     const right = f.idx === 1;
     const text = f.rangedCooldown > 0 ? `DISTÂNCIA: ${(f.rangedCooldown / 60).toFixed(1)}s` : `DISTÂNCIA: ${f.rangedUses}/3`;
     label(ctx, text, right ? W - 48 : 48,94,11, f.rangedCooldown ? '#fb7185' : '#ddd6fe', '#150a1e', right ? 'right' : 'left', 0, 3);
@@ -793,11 +795,11 @@ function drawHUD(ctx: CanvasRenderingContext2D, g: Game, compact=false) {
   ctx.strokeStyle = '#e8c872';
   ctx.stroke();
   ctx.restore();
-  const low = !g.training && g.timeLeft <= 10 && g.phase === 'fight';
-  label(ctx, g.training ? '∞' : String(Math.max(0, g.timeLeft)).padStart(2, '0'), 480, 38, low ? 44 + Math.sin(g.tick * 0.4) * 3 : 42, low ? '#ff5a4a' : '#fff', '#000', 'center', 0, 6);
+  const low = !g.sandboxTraining && g.timeLeft <= 10 && g.phase === 'fight';
+  label(ctx, g.sandboxTraining ? '∞' : String(Math.max(0, g.timeLeft)).padStart(2, '0'), 480, 38, low ? 44 + Math.sin(g.tick * 0.4) * 3 : 42, low ? '#ff5a4a' : '#fff', '#000', 'center', 0, 6);
   drawMeter(ctx, g, a, 0);
   drawMeter(ctx, g, b, 1);
-  if(settings.combatHints&&!g.cfg.online&&!g.cine&&!g.seq&&g.phase==='fight'){
+  if(settings.combatHints&&!g.reborn&&!g.cfg.online&&!g.cine&&!g.seq&&g.phase==='fight'){
     const touch=typeof matchMedia==='function'&&matchMedia('(pointer: coarse)').matches;
     label(ctx,combatHint(a,g.cfg.bindings[0],touch),W/2,H-33,10,'#e1e4f5','#0a0714','center',0,3);
   }
@@ -860,7 +862,7 @@ function drawHUD(ctx: CanvasRenderingContext2D, g: Game, compact=false) {
   }
 
   // treino
-  if (!compact&&g.training && !g.cine && !g.seq) {
+  if (!compact&&g.training && !g.reborn && !g.cine && !g.seq) {
     const names = ['PARADO', 'IA', 'DEFENDENDO', 'JOGADOR 2'];
     ctx.save();
     ctx.fillStyle = 'rgba(8,4,16,0.7)';
