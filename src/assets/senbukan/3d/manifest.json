@@ -1,0 +1,358 @@
+{
+  "format": "glTF 2.0 binary",
+  "exporter": "Blender 4.3.2 glTF 2.0",
+  "coordinateSystem": {
+    "units": "meters",
+    "up": "+Y",
+    "forward": "+Z"
+  },
+  "runtimePlacement": "Load each scene at scale 1; place fighter scene root at arena floorY. Do not renormalize per frame or per clip.",
+  "caetano": {
+    "file": "caetano.glb",
+    "source": "unity/SenbukanPrototype/Assets/Senbukan/Art/Caetano.fbx",
+    "bodyHeightMeters": 1.83,
+    "pivot": "feet at y=0; hip x/z origin preserved",
+    "forward": "+Z",
+    "normalizationAppliedInAsset": {
+      "uniformScale": 1.0095653858130171,
+      "sourceRestHeightMeters": 1.8126611963090191,
+      "sourceRestMinZ": -2.53495464619391e-08,
+      "removedConstantObjectAnimationChannels": 117
+    },
+    "runtimeScale": 1,
+    "runtimeRotationY": 0,
+    "clipDurationsSeconds": {
+      "idle": 1.966667,
+      "walk": 1.033333,
+      "run": 0.766667,
+      "punch1": 0.5,
+      "punch2": 0.566667,
+      "punch3": 0.766667,
+      "kick": 0.766667,
+      "guard": 0.966667,
+      "hit": 0.566667,
+      "jump": 0.966667,
+      "dash": 0.566667,
+      "transform": 1.566667,
+      "down": 0.966667
+    },
+    "validation": {
+      "roundtrip": "Blender 4.3.2 glTF import",
+      "meshes": 1,
+      "armatures": 1,
+      "triangles": 16084,
+      "materials": 11,
+      "bytes": 885636,
+      "sha256": "f4f59ac096d1f5325fd5c9c2284db36c5260fdb4916ca5c0e05ea44aac2a11a4",
+      "bones": 20,
+      "unweightedVertices": 0,
+      "restBoundsBlenderZUp": [
+        [
+          -0.606463,
+          0.606463
+        ],
+        [
+          -0.206833,
+          0.126514
+        ],
+        [
+          0.0,
+          1.83
+        ]
+      ],
+      "sampledJointTravelMeters": {
+        "dash": {
+          "Hand.L": 0.055344,
+          "Hand.R": 0.023446,
+          "Foot.L": 0.0,
+          "Foot.R": 0.0,
+          "Head": 0.055609
+        },
+        "down": {
+          "Hand.L": 0.763354,
+          "Hand.R": 0.518907,
+          "Foot.L": 0.431705,
+          "Foot.R": 0.431705,
+          "Head": 0.209946
+        },
+        "guard": {
+          "Hand.L": 0.013932,
+          "Hand.R": 0.0745,
+          "Foot.L": 0.015709,
+          "Foot.R": 0.015716,
+          "Head": 0.001398
+        },
+        "hit": {
+          "Hand.L": 0.279584,
+          "Hand.R": 0.251413,
+          "Foot.L": 0.067797,
+          "Foot.R": 0.067804,
+          "Head": 0.094372
+        },
+        "idle": {
+          "Hand.L": 0.018061,
+          "Hand.R": 0.017131,
+          "Foot.L": 0.015767,
+          "Foot.R": 0.015759,
+          "Head": 0.000458
+        },
+        "jump": {
+          "Hand.L": 0.05805,
+          "Hand.R": 0.123537,
+          "Foot.L": 0.432423,
+          "Foot.R": 0.561217,
+          "Head": 0.07448
+        },
+        "kick": {
+          "Hand.L": 0.079993,
+          "Hand.R": 0.149867,
+          "Foot.L": 0.033479,
+          "Foot.R": 1.515577,
+          "Head": 0.080253
+        },
+        "punch1": {
+          "Hand.L": 0.489062,
+          "Hand.R": 0.085816,
+          "Foot.L": 0.026043,
+          "Foot.R": 0.026046,
+          "Head": 0.000443
+        },
+        "punch2": {
+          "Hand.L": 0.062134,
+          "Hand.R": 0.797941,
+          "Foot.L": 0.026608,
+          "Foot.R": 0.026618,
+          "Head": 0.000448
+        },
+        "punch3": {
+          "Hand.L": 0.061153,
+          "Hand.R": 0.68724,
+          "Foot.L": 0.026464,
+          "Foot.R": 0.026474,
+          "Head": 0.020282
+        },
+        "run": {
+          "Hand.L": 0.634482,
+          "Hand.R": 0.447755,
+          "Foot.L": 0.55787,
+          "Foot.R": 0.571538,
+          "Head": 0.004121
+        },
+        "transform": {
+          "Hand.L": 0.324769,
+          "Hand.R": 0.260367,
+          "Foot.L": 0.060177,
+          "Foot.R": 0.060176,
+          "Head": 0.040048
+        },
+        "walk": {
+          "Hand.L": 0.347939,
+          "Hand.R": 0.442019,
+          "Foot.L": 0.371972,
+          "Foot.R": 0.375554,
+          "Head": 0.001821
+        }
+      }
+    }
+  },
+  "student": {
+    "file": "dojo-student.glb",
+    "source": "unity/SenbukanPrototype/Assets/Senbukan/Art/DojoStudent.fbx",
+    "bodyHeightMeters": 1.78,
+    "pivot": "feet at y=0; hip x/z origin preserved",
+    "forward": "+Z",
+    "normalizationAppliedInAsset": {
+      "uniformScale": 1.00007990976249,
+      "sourceRestHeightMeters": 1.7798577719881745,
+      "sourceRestMinZ": -1.728083809382497e-08,
+      "removedConstantObjectAnimationChannels": 117
+    },
+    "runtimeScale": 1,
+    "runtimeRotationY": 0,
+    "clipDurationsSeconds": {
+      "idle": 1.966667,
+      "walk": 1.033333,
+      "run": 0.766667,
+      "punch1": 0.5,
+      "punch2": 0.566667,
+      "punch3": 0.766667,
+      "kick": 0.766667,
+      "guard": 0.966667,
+      "hit": 0.566667,
+      "jump": 0.966667,
+      "dash": 0.566667,
+      "transform": 1.566667,
+      "down": 0.966667
+    },
+    "validation": {
+      "roundtrip": "Blender 4.3.2 glTF import",
+      "meshes": 1,
+      "armatures": 1,
+      "triangles": 9696,
+      "materials": 10,
+      "bytes": 680264,
+      "sha256": "f508f47323c8212ee9783f8cb28bc9d26c3a85896c61ba6f92cbbed157f4f153",
+      "bones": 20,
+      "unweightedVertices": 0,
+      "restBoundsBlenderZUp": [
+        [
+          -0.584351,
+          0.584351
+        ],
+        [
+          -0.199292,
+          0.121901
+        ],
+        [
+          0.0,
+          1.78
+        ]
+      ],
+      "sampledJointTravelMeters": {
+        "dash": {
+          "Hand.L": 0.053326,
+          "Hand.R": 0.022591,
+          "Foot.L": 0.0,
+          "Foot.R": 0.0,
+          "Head": 0.053582
+        },
+        "down": {
+          "Hand.L": 0.735521,
+          "Hand.R": 0.499986,
+          "Foot.L": 0.415964,
+          "Foot.R": 0.415964,
+          "Head": 0.202291
+        },
+        "guard": {
+          "Hand.L": 0.013424,
+          "Hand.R": 0.071784,
+          "Foot.L": 0.015137,
+          "Foot.R": 0.015143,
+          "Head": 0.001347
+        },
+        "hit": {
+          "Hand.L": 0.26939,
+          "Hand.R": 0.242247,
+          "Foot.L": 0.065325,
+          "Foot.R": 0.065332,
+          "Head": 0.090931
+        },
+        "idle": {
+          "Hand.L": 0.017402,
+          "Hand.R": 0.016506,
+          "Foot.L": 0.015192,
+          "Foot.R": 0.015184,
+          "Head": 0.000442
+        },
+        "jump": {
+          "Hand.L": 0.055933,
+          "Hand.R": 0.119033,
+          "Foot.L": 0.416655,
+          "Foot.R": 0.540754,
+          "Head": 0.071764
+        },
+        "kick": {
+          "Hand.L": 0.077077,
+          "Hand.R": 0.144403,
+          "Foot.L": 0.032258,
+          "Foot.R": 1.460318,
+          "Head": 0.077327
+        },
+        "punch1": {
+          "Hand.L": 0.471231,
+          "Hand.R": 0.082686,
+          "Foot.L": 0.025093,
+          "Foot.R": 0.025096,
+          "Head": 0.000427
+        },
+        "punch2": {
+          "Hand.L": 0.059869,
+          "Hand.R": 0.768847,
+          "Foot.L": 0.025637,
+          "Foot.R": 0.025647,
+          "Head": 0.000432
+        },
+        "punch3": {
+          "Hand.L": 0.058924,
+          "Hand.R": 0.662182,
+          "Foot.L": 0.025499,
+          "Foot.R": 0.025509,
+          "Head": 0.019542
+        },
+        "run": {
+          "Hand.L": 0.611347,
+          "Hand.R": 0.431429,
+          "Foot.L": 0.537529,
+          "Foot.R": 0.550699,
+          "Head": 0.003971
+        },
+        "transform": {
+          "Hand.L": 0.312927,
+          "Hand.R": 0.250873,
+          "Foot.L": 0.057982,
+          "Foot.R": 0.057982,
+          "Head": 0.038588
+        },
+        "walk": {
+          "Hand.L": 0.335253,
+          "Hand.R": 0.425901,
+          "Foot.L": 0.358409,
+          "Foot.R": 0.361861,
+          "Head": 0.001755
+        }
+      }
+    }
+  },
+  "dojo": {
+    "file": "dojo.glb",
+    "source": "unity/SenbukanPrototype/Assets/Senbukan/Art/DojoSenbukan.fbx",
+    "floorY": 0.19,
+    "woodSurfaceY": 0.1875,
+    "clearArenaSizeMeters": [
+      18,
+      18
+    ],
+    "runtimeScale": 1,
+    "runtimeRotationY": 0,
+    "validation": {
+      "roundtrip": "Blender 4.3.2 glTF import",
+      "meshes": 26,
+      "armatures": 0,
+      "triangles": 46056,
+      "materials": 25,
+      "bytes": 2529472,
+      "sha256": "b321566b1f8adc93b2e2f145fdc371a409c2e0a51be81341bc639860dd0ef841",
+      "boundsBlenderZUp": [
+        [
+          -55.0,
+          55.0
+        ],
+        [
+          -45.0,
+          65.0
+        ],
+        [
+          -3.364881,
+          32.400002
+        ]
+      ],
+      "baseFloorBoundsBlenderZUp": [
+        [
+          -9.2,
+          9.2
+        ],
+        [
+          -9.2,
+          9.2
+        ],
+        [
+          0.06,
+          0.13
+        ]
+      ],
+      "woodSurfaceY": 0.1875,
+      "combatFloorY": 0.19,
+      "woodSurfaceVertices": 2304
+    }
+  }
+}

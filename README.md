@@ -26,7 +26,7 @@ A guarda tem resistência 100 e rompe por 0,7 segundo sob pressão. Defesa perfe
 
 O menu inicial reúne os **18 lutadores numa pancadaria geral**, com rivais que mudam, ataques normais e transformações. Todos ficam no chão. No PC, use Agitar a luta ao fundo para provocar uma reação coletiva; essa demonstração não usa Ultimates e não altera o combate das partidas.
 
-A nova aba **Wars of Champions** abre uma galeria com quatro campanhas **Em breve**: **Senbukan** (Karatê Caetano), **Resenha** (Rickzera), **Got** (Renngotti) e **Campeões** (Bieubatman). Um quinto quadro avisa que mais campanhas estão vindo. Cada um tem uma ilustração de costas com um gesto próprio. Clique, toque ou navegue com as setas para destacar os quadros; Escape ou MENU INICIAL retorna. As campanhas ainda não iniciam partidas.
+A aba **Wars of Champions** abre uma galeria com quatro campanhas: **Senbukan** (Karatê Caetano), **Resenha** (Rickzera), **Got** (Renngotti) e **Campeões** (Bieubatman). Um quinto quadro avisa que mais campanhas estão vindo. Cada um tem uma ilustração de costas com um gesto próprio. Clique, toque ou navegue com as setas para destacar os quadros; Escape ou MENU INICIAL retorna. Senbukan abre o treino 3D; as demais campanhas continuam **Em breve**.
 
 A faixa enviada, **Ada’s Theme — Resident Evil 2**, toca em loop somente nesse menu. A troca de música fica bloqueada ali; o volume permanece ajustável. Sair restaura a estação, posição e estado de pausa anteriores da rádio. São sete raps na rádio e uma faixa exclusiva de campanha, incluída também no ZIP offline. Veja [menus e campanha](docs/living-menus.md).
 
@@ -123,4 +123,8 @@ Os novos 864 desenhos de extensão/retorno dos ataques, dash, salto, pouso e gua
 
 ## Experimento Senbukan em 3D
 
-Wars of Champions → Senbukan abre uma área de preparação do protótipo Unity + Blender. O salão noturno e dois modelos rigados foram preparados a partir das referências. A prévia é renderizada no Blender; ainda não existe build Unity jogável nesta versão. O projeto completo pode ser baixado nessa área. Veja [abrir e compilar o projeto](unity/SenbukanPrototype/README.md) e [inventário verificado dos assets](docs/senbukan-assets.json). O combate 2D continua no menu principal.
+O salão noturno e os dois modelos rigados foram preparados no Blender a partir das referências. O treino jogável atual usa WebGL; a compilação Unity continua pendente. O projeto Unity completo pode ser baixado no painel do treino. Veja [abrir e compilar o projeto Unity](unity/SenbukanPrototype/README.md) e [inventário dos fontes Blender/FBX](docs/senbukan-assets.json). O combate 2D continua no menu principal.
+
+### Treino 3D jogável — Senbukan
+
+Wars of Champions → Senbukan abre a arena WebGL de Caetano contra um aluno com IA, usando os modelos e 13 animações esqueléticas de cada lutador do Blender. Tem movimento livre, câmera com alvo, socos encadeados, chute, Dedilho, defesa/quebra de guarda, dash, salto e Prime de 10 segundos. Também há comandos de toque. [Controles, regras e arte](docs/senbukan-playable.md). Esta implementação usa Three.js, enquanto o projeto Unity e seus fontes continuam disponíveis separadamente, com compilação Unity pendente.

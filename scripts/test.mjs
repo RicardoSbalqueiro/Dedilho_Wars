@@ -3,7 +3,7 @@ import { spawnSync } from 'node:child_process';
 import { mkdirSync,rmSync } from 'node:fs';
 mkdirSync('.sites-runtime',{recursive:true});
 try {
- for(const name of ['senbukan','flow-art','motion-effects']){await build({entryPoints:['tests/'+name+'.test.ts'],bundle:true,platform:'node',format:'esm',outfile:'.sites-runtime/'+name+'-test.mjs'});const r=spawnSync(process.execPath,['.sites-runtime/'+name+'-test.mjs'],{stdio:'inherit'});if(r.status!==0)process.exit(r.status||1)}
+ for(const name of ['senbukan','senbukan3d','flow-art','motion-effects']){await build({entryPoints:['tests/'+name+'.test.ts'],bundle:true,platform:'node',format:'esm',outfile:'.sites-runtime/'+name+'-test.mjs'});const r=spawnSync(process.execPath,['.sites-runtime/'+name+'-test.mjs'],{stdio:'inherit'});if(r.status!==0)process.exit(r.status||1)}
  await build({entryPoints:['tests/combat-evolution.test.ts'],bundle:true,platform:'node',format:'esm',outfile:'.sites-runtime/combat-evolution-test.mjs'});
  {const r=spawnSync(process.execPath,['.sites-runtime/combat-evolution-test.mjs'],{stdio:'inherit'});if(r.status!==0)process.exit(r.status||1)}
  await build({entryPoints:['tests/combat.test.ts'],bundle:true,platform:'node',format:'esm',outfile:'.sites-runtime/combat-test.mjs'});

@@ -15,7 +15,7 @@ export default defineConfig({
   build: {
     outDir: "dist/client",
     assetsDir: "",
-    assetsInlineLimit: (filePath) => !filePath.endsWith(".mp3") && !filePath.endsWith(".webp"),
+    assetsInlineLimit: (filePath) => !filePath.endsWith(".mp3") && !filePath.endsWith(".webp") && !filePath.endsWith(".glb"),
     cssCodeSplit: false,
     rollupOptions: { output: { inlineDynamicImports: true } },
   },
