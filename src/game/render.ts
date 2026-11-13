@@ -1,3 +1,5 @@
+import {drawReactiveArena} from './reactive-arena';
+import {effectDetail,recordDrawCost} from './visual-budget';
 import {drawAccessoryNormal} from './accessories';
 import {drawCombatFlowFx} from './form-effects';
 import {drawStrikeSpectacle,drawFightEnvironment,drawFightImpacts,drawFightScreen} from './fight-spectacle';
@@ -24,8 +26,12 @@ import { drawMotionInk, drawGuardInk } from './combat-art';
 import { combatHint } from './combat-feel';
 import { remotePresentation,localPresentation } from './render-motion';
 import { drawKnuckleEnergy,drawKnuckleCrater } from './rick-art';
+import {matchupLine} from './presentation';
 
 const FONT = "'Russo One','Impact','Arial Black','Segoe UI',sans-serif";
+
+const gradients=new WeakMap<CanvasRenderingContext2D,Map<string,CanvasGradient>>();
+function cachedGradient(c:CanvasRenderingContext2D,key:string,create:()=>CanvasGradient){let map=gradients.get(c);if(!map){map=new Map();gradients.set(c,map)}const size=`${c.canvas?.width}/${c.canvas?.height}/${key}`;let value=map.get(size);if(!value){if(map.size>24)map.clear();value=create();map.set(size,value)}return value;}
 
 export function label(ctx: CanvasRenderingContext2D, s: string, x: number, y: number, size: number, fill: string | CanvasGradient, stroke?: string, align: CanvasTextAlign = 'left', skew = -0.18, lw = 0) {
   ctx.save();
@@ -360,7 +366,6 @@ function drawFighter(ctx: CanvasRenderingContext2D, g: Game, f: Fighter, time: n
   const phase=m?movePhase(m,frame,f.connected):null;
   const accessoryPose=f.poseOverride||(m&&phase?.phase==='recovery'&&phase.progress<.35?m.recoveryPose||m.poses[1]:f.poseName);
   if(!reflect)drawMotionInk(ctx,f,settings.reducedFlash);
-  if(!reflect)drawStrikeSpectacle(ctx,f,g.tick);
   drawRig(ctx, f.ch, f.rig, f.pose, { time:f.animT, expr: f.expr, glow: f.glow, glowColor: f.def.glow, stretch,transformation:f.formT>0,formVariant:f.formVariant,formTime:f.formElapsed,poseName:accessoryPose,
     ...animeMotion(f),...captureArtOptions(g,f),...(f.ch==='jane'&&f.formT===0&&f.bikeDizzy>0&&actionAtlasReady('jane-bike')?{actionClip:'bike',actionProgress:10.01/12}:{}) });
   if(!reflect&&m&&!(f.ch==='ulisses'&&f.formT>0))drawAccessoryNormal(ctx,m,frame);
@@ -744,6 +749,13 @@ function drawMeter(ctx:CanvasRenderingContext2D,g:Game,f:Fighter,side:0|1){
 
 function drawHUD(ctx: CanvasRenderingContext2D, g: Game, compact=false) {
   const [a, b] = g.f;
+  if(g.phase==='intro'&&g.round===1&&g.phaseT>=8&&g.phaseT<245){
+    const actor=g.phaseT<130?a:b,other=actor===a?b:a;
+    ctx.save();ctx.fillStyle='rgba(10,6,20,.88)';ctx.beginPath();ctx.roundRect(90,382,780,65,7);ctx.fill();
+    label(ctx,actor.def.short,W/2,401,12,actor.def.glow,'#080510','center',0,2);
+    label(ctx,matchupLine(actor.ch,other.ch),W/2,425,14,'#fff5e8','#080510','center',0,2);
+    label(ctx,`${compact?'SOCO / CHUTE':keyLabel(g.cfg.bindings[0].p[0])+' / '+keyLabel(g.cfg.bindings[0].k[0])} PARA ENTRAR NA LUTA`,W/2,463,10,'#cfc6da','#080510','center',0,2);ctx.restore();
+  }
   drawBar(ctx, g, a, 0);
   drawBar(ctx, g, b, 1);
   for (const f of g.f) {
@@ -860,7 +872,7 @@ function drawHUD(ctx: CanvasRenderingContext2D, g: Game, compact=false) {
     ctx.stroke();
     ctx.restore();
     label(ctx, 'TREINAMENTO', 26, 308, 17, '#fbbf24', '#000', 'left', -0.1, 4);
-    const outcome={pending:'—',hit:'ACERTO',block:'BLOQUEADO',whiff:'ERRO'}[a.contact];
+    const outcome=b.guardBreakT>0&&a.contact==='hit'&&g.train.lastDmg===0?'GUARDA ROMPIDA':{pending:'—',hit:'ACERTO',block:'BLOQUEADO',whiff:'ERRO'}[a.contact];
     const lines = [`Dummy [T]: ${names[g.train.dummy]}`, `Último dano: ${g.train.lastDmg}`, `Resultado: ${outcome}`, `Combo: ${g.train.combo} hits  |  ${Math.round(g.train.total)} dano`, `Maior combo: ${g.train.maxCombo} hits`, 'Reiniciar posições [R]'];
     ctx.font = `600 14px ${FONT}`;
     ctx.fillStyle = '#fff';
@@ -1009,6 +1021,7 @@ function drawCine(ctx: CanvasRenderingContext2D, g: Game) {
 
 // ------------------------------------------------------------------ render principal
 export function render(ctx: CanvasRenderingContext2D, g: Game, stage: Stage, time: number, remoteNow?:number,compact=false) {
+ const paintStart=typeof performance==='undefined'?0:performance.now();
   ctx.save();
   if(g.finisher){drawFinisherArt(ctx,g.f[g.finisher.winner].ch,g.f[1-g.finisher.winner].ch,g.finisher.t,g.finisher.dur);ctx.restore();return;}
   if(g.seq?.kind.startsWith('super')&&actionAtlasReady(g.seq.a.ch+(g.seq.a.formT>0?'-ult-form':'-ult'))){drawIllustratedUltimate(ctx,g.seq.a.ch,g.seq.d.ch,g.seq.t,g.seq.dur,g.seq.a.formT>0,g.seq.d.formT>0);ctx.restore();return;}
@@ -1051,10 +1064,11 @@ export function render(ctx: CanvasRenderingContext2D, g: Game, stage: Stage, tim
   }
   stage.drawLights(ctx, g.cam.x, tint, tintAmt);
 
+  drawReactiveArena(ctx,g);
   // reflexos
   const locked=g.hitstop>0||g.paused||!!g.seq||!!g.cine||!!g.clash;
   const presentation=g.f.map(f=>remoteNow===undefined?localPresentation(f,g.previousVisual?.[f.idx],g.renderFraction,locked):remotePresentation(f,remoteNow,locked));
-  for (const f of presentation) {
+  if(effectDetail().particles>180)for (const f of presentation) {
     ctx.save();
     ctx.translate(0, 2 * FLOOR_Y);
     ctx.scale(1, -1);
@@ -1075,6 +1089,9 @@ export function render(ctx: CanvasRenderingContext2D, g: Game, stage: Stage, tim
   for (const f of g.f) if (!f.hidden) drawTrail(ctx, f);
   const front = (f: Fighter) => (f.state === 'attack' || f.state === 'seq' || f.state === 'cine' || f.state === 'win' ? 1 : 0);
   const order = front(presentation[0]) > front(presentation[1]) ? [presentation[1], presentation[0]] : presentation;
+  // Paint both fighters' attack ribbons before either main figure, so one
+  // player's bright trail cannot hide the other player's body or recovery.
+  for(const f of presentation){if(f.hidden)continue;ctx.save();ctx.translate(f.x,FLOOR_Y+f.y);const form=formStats(f);ctx.scale(f.facing*f.turn*form.scale,form.scale);if(f.rotAdd){ctx.translate(0,-70);ctx.rotate(f.rotAdd);ctx.translate(0,70);}drawStrikeSpectacle(ctx,f,g.tick);ctx.restore();}
   for (const f of order) drawFighter(ctx, g, f, time);
 
   if (settings.hitboxes) {
@@ -1093,27 +1110,22 @@ export function render(ctx: CanvasRenderingContext2D, g: Game, stage: Stage, tim
   drawDanceHorde(ctx,g,true);
   drawVehicles(ctx, g);
   drawProjectiles(ctx, g);
-  for (const p of g.parts)if(p.type!=='crater')drawParticle(ctx,p);
+  const budget=effectDetail().particles,start=Math.max(0,g.parts.length-budget),view=600/g.cam.zoom;
+  for(let i=0;i<g.parts.length;i++){const p=g.parts[i];if(p.type==='crater'||(i<start&&p.type!=='text')||Math.abs(p.x-g.cam.x)>view+160)continue;drawParticle(ctx,p);}
   drawFightImpacts(ctx,g);
   ctx.restore();
   drawFightScreen(ctx,g);
 
   // ---- sobreposições de tela
-  const vg = ctx.createRadialGradient(W / 2, H / 2, 200, W / 2, H / 2, 620);
-  vg.addColorStop(0, 'rgba(0,0,0,0)');
-  vg.addColorStop(1, `rgba(0,0,0,${g.slowmo > 0 ? 0.75 : 0.5})`);
+  const vg=cachedGradient(ctx,'vignette/'+(g.slowmo>0),()=>{const value=ctx.createRadialGradient(W/2,H/2,200,W/2,H/2,620);value.addColorStop(0,'rgba(0,0,0,0)');value.addColorStop(1,`rgba(0,0,0,${g.slowmo>0?.75:.5})`);return value});
   ctx.fillStyle = vg;
   ctx.fillRect(0, 0, W, H);
   ctx.save();
   ctx.globalCompositeOperation = 'lighter';
-  const l1 = ctx.createRadialGradient(0, 120, 0, 0, 120, 380);
-  l1.addColorStop(0, g.f[0].def.color + '38');
-  l1.addColorStop(1, 'rgba(150,70,255,0)');
+  const l1=cachedGradient(ctx,'edge/0/'+g.f[0].def.color,()=>{const value=ctx.createRadialGradient(0,120,0,0,120,380);value.addColorStop(0,g.f[0].def.color+'38');value.addColorStop(1,'rgba(0,0,0,0)');return value});
   ctx.fillStyle = l1;
   ctx.fillRect(0, 0, W, H);
-  const l2 = ctx.createRadialGradient(W, 120, 0, W, 120, 380);
-  l2.addColorStop(0, g.f[1].def.color + '38');
-  l2.addColorStop(1, 'rgba(255,50,40,0)');
+  const l2=cachedGradient(ctx,'edge/1/'+g.f[1].def.color,()=>{const value=ctx.createRadialGradient(W,120,0,W,120,380);value.addColorStop(0,g.f[1].def.color+'38');value.addColorStop(1,'rgba(0,0,0,0)');return value});
   ctx.fillStyle = l2;
   ctx.fillRect(0, 0, W, H);
   ctx.restore();
@@ -1154,11 +1166,13 @@ export function render(ctx: CanvasRenderingContext2D, g: Game, stage: Stage, tim
     ctx.globalAlpha = 1;
   }
   drawCine(ctx,g);drawTransformCutin(ctx,g);
+  ctx.restore();ctx.save(); // HUD stays fixed while the arena shakes.
   drawHUD(ctx,g,compact);drawResourcesHud(ctx,g);
   for(const f of g.f)if(f.ch==='santox'&&f.move?.id==='s3'&&movePhase(f.move,Math.max(0,f.moveT-1),f.connected).phase==='active')drawFourthWall(ctx,f.moveT-1-f.move.startup,f.move.active);
   drawClashUI(ctx, g);
   drawAnn(ctx, g);
   ctx.restore();
+  if(paintStart)recordDrawCost(performance.now()-paintStart);
 }
 
 // ------------------------------------------------------------------ utilitários para telas de menu

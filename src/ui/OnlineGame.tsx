@@ -3,7 +3,7 @@ import {transformationAudio} from '../game/transformation-audio';
 import {CanvasSurface,stageDensity,canvasFontRevision} from '../game/canvas';
 import { FinisherPrompt } from './FinisherPrompt';
 import { FINISHER_NAMES } from '../game/finishers-art';
-import { FIGHTER_STYLE } from '../game/presentation';
+import { victoryLine } from '../game/presentation';
 import { useEffect, useRef, useState } from 'react';
 import { touchInput } from '../game/touch';
 import { GameOverlay, TouchControls } from './TouchControls';
@@ -44,7 +44,7 @@ export function OnlineGame({room,user,onLobby,onLeave}:{room:Room;user:User;onLo
   const link=new FightConnection(room,user,{
    state:s=>{const hp=game.f.map(f=>f.hp),previous=game.f.map(f=>f.impact),cine=game.cine?.f.idx,clash=game.clash,forms=game.f.map(f=>f.formStartup>0||f.formT>0);if(applyState(game,s)){
     pending=pending.filter(e=>e.id>(s.inputAck||0));
-    game.f.forEach((f,i)=>{const impact=f.impact;if(impact&&(impact.serial!==previous[i]?.serial||impact.tick!==previous[i]?.tick)){if(impact.kind==='perfect'||impact.kind==='precision')audio.perfectBlock(impact.kind==='precision');else if(impact.kind==='block')audio.block();else audio.hit(impact.strength)}else if(f.hp<hp[i])audio.hit(1)});
+    game.f.forEach((f,i)=>{const impact=f.impact;if(impact&&(impact.serial!==previous[i]?.serial||impact.tick!==previous[i]?.tick)){if(impact.kind==='perfect'||impact.kind==='precision')audio.perfectBlock(impact.kind==='precision');else if(impact.kind==='block')audio.block();else if(impact.kind==='guardBreak')audio.boom(.45);else audio.hit(impact.strength)}else if(f.hp<hp[i])audio.hit(1)});
     game.f.forEach((f,i)=>{if(!forms[i]&&(f.formStartup>0||f.formT>0))transformationAudio(f.ch)});
     if(game.cine&&game.cine.f.idx!==cine){audio.boom(.8);audio.say(game.cine.f.def.superName)}
     if(game.clash&&(!clash||Math.floor(game.clash.t/12)>Math.floor(clash.t/12)))audio.clash();
@@ -97,7 +97,7 @@ export function OnlineGame({room,user,onLobby,onLeave}:{room:Room;user:User;onLo
   {result!==null&&winner&&<GameOverlay><div className="dw-online-result absolute inset-0 flex flex-col items-center justify-center gap-4 bg-black/75 fade-in">
    <div className="title-main text-xl text-white/80">{(host?0:1)===result?'VOCÊ VENCEU!':'FIM DA PARTIDA'}</div>
    <div className="title-main text-5xl" style={{color:CHARS[winner.char].glow}}>{winner.username}</div>
-   <div className="text-sm">{CHARS[winner.char].name}</div><div className="text-xs text-white/70 text-center px-5">{FIGHTER_STYLE[winner.char].victory}</div>{finishName&&<div className="text-amber-300 text-sm">FINISHER · {finishName}</div>}<div className="text-xs text-cyan-200 text-center px-5">{reward}</div>
+   <div className="text-sm">{CHARS[winner.char].name}</div><div className="text-xs text-white/70 text-center px-5">{victoryLine(winner.char,(result===0?room.guest:room.host)!.char)}</div>{finishName&&<div className="text-amber-300 text-sm">FINISHER · {finishName}</div>}<div className="text-xs text-cyan-200 text-center px-5">{reward}</div>
    <SkewBtn onClick={onLobby} color="#22d3ee">VOLTAR À SALA</SkewBtn>
    <p className="text-xs text-white/60">Para a revanche, os dois confirmam PRONTO novamente.</p>
   </div></GameOverlay>}

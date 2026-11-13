@@ -32,9 +32,10 @@ check('every fighter and form ships 12 intact, hashed illustrated poses',()=>{
   }
  }
 });
-for(const ch of weaponChars)check(`${ch}: accessory normals preserve all published combat properties`,()=>{
+for(const ch of weaponChars)check(`${ch}: accessory normals preserve combat properties with the new standing-chain tuning`,()=>{
  const current=Object.fromEntries(Object.entries(CHARS[ch].moves).filter(([,m])=>m.kind==='normal').map(([id,m])=>[id,Object.fromEntries(Object.entries(m).filter(([key])=>!['label','accessory'].includes(key)))]));
- assert.deepEqual(current,baseline[ch]);assert.equal(CHARS[ch].moves.headbutt.accessory,undefined);
+ const expected=structuredClone(baseline[ch]);for(const [id,m]of Object.entries(expected) as [string,any][]){if(/^(p[LMH]|k[LMH])$/.test(id)){m.launch=m.launchVx=0;m.kb=Math.min(m.kb,id.endsWith('H')?2.6:1.9);if(id.endsWith('H'))m.hitstun=Math.max(24,m.hitstun);}}
+ assert.deepEqual(current,expected);assert.equal(CHARS[ch].moves.headbutt.accessory,undefined);
  assert(Object.values(CHARS[ch].moves).filter(m=>m.kind!=='normal'||m.grab).every(m=>!m.accessory));
 });
 for(const ch of weaponChars)for(const side of [0,1] as const)for(const block of [false,true])check(`${ch} P${side+1}: normal ${block?'block':'hit'} uses weapon and synchronizes without extra attack`,()=>{

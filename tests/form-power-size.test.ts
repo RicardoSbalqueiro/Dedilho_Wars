@@ -57,8 +57,8 @@ check('form immunity ends with the active timer and never leaks into normal play
 check('keyboard-equivalent form attack breaks held defense in the running simulation',()=>{
  const g=make('caetano'),[a,d]=g.f;try{a.formT=600;g.onlineInputs[1]=1<<ACTIONS.indexOf('block');g.startMove(a,a.def.moves.pL);for(let i=0;i<25;i++)g.step();assert(d.hp<d.maxHp);assert.equal(d.guardResult,'none');}finally{g.destroy()}
 });
-check('online revision 12 preserves immunity and refuses old combat rules atomically',()=>{
- const host=make('ulisses','jane'),guest=make('ulisses','jane');try{host.f[0].formT=600;host.f[1].formT=310;const s=structuredClone(captureState(host));assert.equal(ONLINE_PROTOCOL,'dw-online-12');assert(applyState(guest,s));assert(guest.f.every(f=>formStats(f).invulnerable));const before=JSON.stringify(captureState(guest));assert(!applyState(guest,{...s,v:'dw-online-11'}));assert.equal(JSON.stringify(captureState(guest)),before);}finally{host.destroy();guest.destroy()}
+check('online revision 13 preserves immunity and refuses old combat rules atomically',()=>{
+ const host=make('ulisses','jane'),guest=make('ulisses','jane');try{host.f[0].formT=600;host.f[1].formT=310;const s=structuredClone(captureState(host));assert.equal(ONLINE_PROTOCOL,'dw-online-13');assert(applyState(guest,s));assert(guest.f.every(f=>formStats(f).invulnerable));const before=JSON.stringify(captureState(guest));assert(!applyState(guest,{...s,v:'dw-online-11'}));assert.equal(JSON.stringify(captureState(guest)),before);}finally{host.destroy();guest.destroy()}
 });
 
 const resourceOf=(f:Game['f'][0])=>f.ch==='jane'?f.battery:f.ch==='ulisses'?f.blood:f.energy;

@@ -78,6 +78,9 @@ export interface Move {
   accessory?:'katana'|'guitar'|'screwdriver'|'spray';
   resourcePower?:number;
   rangeScale?:number;
+  guardDamage?:number;
+  artMove?:string;
+  signature?:{step:number;total:number;name:string};
 }
 
 export interface CharDef {
@@ -823,6 +826,12 @@ for(const def of Object.values(CHARS)){
 }
 
 for(const ch of CHAR_IDS)applyAccessoryNormals(ch,CHARS[ch].moves);
+// Ordinary standing strikes keep the rival on their feet. Sweeps, dedicated
+// launchers, aerial hits and Ultimates retain their deliberate knockdowns.
+for(const ch of CHAR_IDS)for(const id of ['pL','pM','pH','kL','kM','kH']){
+ const m=CHARS[ch].moves[id];m.launch=m.launchVx=0;m.kb=Math.min(m.kb,id.endsWith('H')?2.6:1.9);
+ if(id.endsWith('H'))m.hitstun=Math.max(24,m.hitstun);
+}
 
 export function movePhase(move:Move,frame:number,connected:boolean){
   // Progress within each phase is presentation data; phase boundaries and the

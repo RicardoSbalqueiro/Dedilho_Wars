@@ -1,6 +1,6 @@
 import {preloadAnimeSprites} from '../game/anime-sprite';
 import {CanvasSurface,stageDensity,canvasFontRevision} from '../game/canvas';
-import { FIGHTER_STYLE } from '../game/presentation';
+import { victoryLine } from '../game/presentation';
 import { FINISHER_NAMES } from '../game/finishers-art';
 import { rememberLocal } from '../game/progression';
 import { FinisherPrompt } from './FinisherPrompt';
@@ -174,7 +174,7 @@ export function GameScreen({ cfg, onExit, onSelect, onMap, onRadio, inputSuspend
             <div className="title-main text-[22px] tracking-[0.3em] text-white/90 pop-in">{who}</div>
             <div className="title-main victory-name text-[56px] pop-in" style={{ color: '#fff', WebkitTextStroke: `2px ${winnerChar.color2}`, textShadow: `0 0 28px ${winnerChar.color}, 5px 5px 0 #000`, animationDelay: '0.15s' }}>
               {winnerChar.name}
-            </div><div className="mt-3 text-xs text-white/80">{g?.f[0].wins} × {g?.f[1].wins} · {FIGHTER_STYLE[winnerChar.id].victory}</div>
+            </div><div className="mt-3 text-xs text-white/80">{g?.f[0].wins} × {g?.f[1].wins} · {victoryLine(winnerChar.id,g!.f[1-result].ch)}</div>
             {g?.finishedBy!==null&&g?.finishedBy!==undefined&&<div className="title-main text-xl text-amber-300 mt-2">FINISHER · {FINISHER_NAMES[winnerChar.id]}</div>}
           </div>
           <div className="absolute bottom-[112px] w-full text-center slide-up" style={{ animationDelay: '0.5s' }}>

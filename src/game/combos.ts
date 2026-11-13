@@ -1,6 +1,7 @@
 import { CHAR_IDS } from './data';
 import type { CharId } from './data';
 import type { Action } from './input';
+import {SIGNATURES} from './combat-evolution';
 
 export type ComboKind='basic'|'advanced'|'punish';
 export interface ComboResult {hits:number;damage:number;moves:string[];kind:ComboKind;freeAt:number|null}
@@ -15,6 +16,7 @@ export const COMBO_ROUTES:ComboRoute[]=CHAR_IDS.flatMap(ch=>{
   {id:`${ch}-three`,ch,name:'Três tempos',level:'Básico',steps:[step('pL',['p']),step('kM',['k']),step('pH',['p'])],help:'Leve → médio → forte. O forte termina a cadeia; errar continua punível.'},
   {id:`${ch}-special`,ch,name,level:'Intermediário',steps:[step('pL',['p']),step('kM',['k']),step(special,[special])],help:ch==='jane'?'Confirme os dois normais em ESP 2. Soltar a moto inicia a arrancada; não exceda cinco segundos.':`Confirme os normais no especial. ${['orango','jao','eneas'].includes(ch)?'Este encaixe específico tem preparação reduzida após o médio confirmado.':'A preparação e a recuperação próprias do especial continuam valendo.'}`},
   {id:`${ch}-air`,ch,name:'Rasteira e perseguição',level:'Aéreo',steps:[step('cK',['down','k'],'Segure baixo e aperte chute: rasteira.'),step('jump',['up'],'Aperte salto nos seis frames após o lançamento confirmado.'),...(longAir?[step('jP',['p'],'Soco no ar, perto do rival.'),step('jK',['k'],'Confirme o soco em um chute aéreo.')]:[step('jK',['k'],'Chute no ar. A força do lançamento pede uma finalização curta.')])],help:'Rasteira baixa → salto de perseguição → ataque aéreo. O salto exige acerto; quatro contatos de juggle encerram as extensões.'},
+  {id:`${ch}-signature`,ch,name:SIGNATURES[ch].name,level:'Intermediário',steps:[...SIGNATURES[ch].buttons].map((b,i)=>step(b+(i===0?'L':i===1||i===3?'M':'H'),[b as Action],'Continue a ordem durante o impacto. Solte as direções.')),help:'Seis contatos exclusivos com o rival em pé. Exige cada acerto na ordem indicada; erro ou bloqueio interrompe a extensão. O golpe final encerra a sequência.'},
  ] as ComboRoute[];
 });
 export const comboRoutes=(ch:CharId)=>COMBO_ROUTES.filter(r=>r.ch===ch);

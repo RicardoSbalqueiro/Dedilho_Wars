@@ -28,6 +28,6 @@ export function animeMotion(f:Pick<Fighter,'state'|'move'|'moveT'|'connected'|'c
  else if(f.state==='block'||f.guard&&!f.crouch)reaction=11;
  return {spriteState,spritePhase:phase?.phase,spriteProgress:phase?.progress,
   spriteKind:m?.kind==='normal'?/^(k|cK|jK)/.test(m.id)?'kick':'punch':m?.kind==='super'?'super':'special',
-  spriteRank:m?.rank,spriteAir:m?.air,normalAccessory:f.ch==='ulisses'&&(f.formT??0)>0?undefined:m?.accessory,spriteMove:m?.id,spriteAction:f.state,spriteStateTime:t,
+  spriteRank:m?.rank,spriteAir:m?.air,normalAccessory:f.ch==='ulisses'&&(f.formT??0)>0?undefined:m?.accessory,spriteMove:m?.artMove??m?.id,spriteAction:f.state,spriteStateTime:t,
   actionClip:reaction!==undefined?'react':undefined,actionProgress:reaction===undefined?undefined:(reaction+.01)/12};
 }

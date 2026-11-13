@@ -1,4 +1,5 @@
 import {canTransform} from './resources';
+import {SIGNATURES} from './combat-evolution';
 // IA do computador: aproxima, defende, combina golpes, usa especiais e super.
 import type { Game, Fighter, Difficulty } from './engine';
 import type { Action } from './input';
@@ -107,6 +108,7 @@ export function aiAct(g: Game, f: Fighter, diff: Difficulty) {
   }
 
   if(f.manualFacing&&f.facing!==dir&&f.state==='ground'&&f.landLag===0)tap('turn');
+  if(f.guardMeter<22&&canAct&&!incoming){block=false;forced=-1;ai.guardT=0;}
 
   // ---------- planos de combo ----------
   if (ai.plan.length) {
@@ -159,6 +161,9 @@ export function aiAct(g: Game, f: Fighter, diff: Difficulty) {
 
   function decide() {
     const r = rnd();
+    if(diff!=='easy'&&dist<105&&f.stamina>48&&!o.guard&&r<(diff==='hard'?.25:.12)){
+      ai.plan=[...SIGNATURES[f.ch].buttons] as Action[];ai.planStep=0;ai.walk=0;return;
+    }
     const oDown = o.state === 'down' || o.state === 'getup' || o.state === 'launched';
     if (f.meter >= 100 && dist < 480 && (oDown || o.state === 'hit' || o.state === 'block' || rnd() < 0.2) && rnd() < P.sup) {
       tap('super');

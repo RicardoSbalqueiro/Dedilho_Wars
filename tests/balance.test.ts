@@ -168,7 +168,7 @@ game('AI picks the closest real threat and ignores own, expired, retreating and 
 });
 
 game('exact recovery-frame Ultimate inherits scaling without adding hitstun or a grace period',g=>{
- const [a,d]=g.f;a.x=600;d.x=734;a.meter=100;g.startMove(a,a.def.moves.cP);
+ const [a,d]=g.f;a.x=600;d.x=751;a.meter=100;g.startMove(a,a.def.moves.cP);
  let request=0,last=-1;const route=['p','super'] as const;
  for(let t=0;t<500&&!g.seq;t++){
   if(a.contact==='hit'&&a.connected&&a.serial!==last&&request<route.length){last=a.serial;a.pad.tap(route[request++],g.tick);}
@@ -204,7 +204,7 @@ check('doubled legacy HP, explicit Jane stature and otherwise preserved asymmetr
  for(const ch of CHAR_IDS.filter(ch=>before[ch])){
   for(const key of ['hp','walk','walkBack','jumpVy','jumpVx','dashVx','dashDur','pushW','hurtH','crouchH'] as const)assert.equal(CHARS[ch][key],key==='hp'?before[ch][key]*2:ch==='jane'&&key==='hurtH'?96:ch==='jane'&&key==='crouchH'?60:before[ch][key]);
   const combatData=(m:object)=>Object.fromEntries(Object.entries(m).filter(([key])=>!['label','accessory'].includes(key)));
-  for(const m of Object.values<{kind:string;id:string}>(before[ch].moves).filter(m=>m.kind==='normal'))assert.deepEqual(combatData(CHARS[ch].moves[m.id]),combatData(m));
+  for(const m of Object.values<Move>(before[ch].moves).filter(m=>m.kind==='normal')){const expected={...m};if(/^(p[LMH]|k[LMH])$/.test(m.id)){expected.launch=expected.launchVx=0;expected.kb=Math.min(m.kb,m.id.endsWith('H')?2.6:1.9);if(m.id.endsWith('H'))expected.hitstun=Math.max(24,m.hitstun);}assert.deepEqual(combatData(CHARS[ch].moves[m.id]),combatData(expected));}
  }
  assert(frameData('santox','s2').variable&&frameData('jao','s2').variable&&frameData('renngotti','s1').variable,'conditional advantage is never presented as guaranteed');
 });

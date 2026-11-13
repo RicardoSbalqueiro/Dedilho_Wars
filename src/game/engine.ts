@@ -3,7 +3,8 @@ import {RESOURCE_RULES,FORMS,freshResources,formStats,formPowerActive,canTransfo
 import type {ResourceState} from './resources';
 import {WOC_ULTIMATES,ultimatePose} from './woc-choreography';
 import {SHARK_ULT_DURATION,SHARK_ULT_BEATS,SHARK_ULT_TAIL_FRAME,SHARK_ULT_THROW,sharkUltMotion} from './shark-choreography';
-import { matchupLine, FINISHER_CALLS } from './presentation';
+import { matchupLine, FINISHER_CALLS,victoryLine } from './presentation';
+import {GUARD_RULES,STANDING_COMBO_LIMIT,signatureContinuation,guardPressure} from './combat-evolution';
 import { challengeDefinition, challengeAvailable, saveChallengeBadge } from './challenges';
 import type { ChallengeId, ChallengeProgress } from './challenges';
 // Lógica de combate (separada da renderização).
@@ -94,7 +95,8 @@ export interface Fighter extends ResourceState {
   contact:'pending'|'hit'|'block'|'whiff';
   contactFrame:number;
   poseName:string;
-  impact:{serial:number;kind:'hit'|'block'|'perfect'|'precision'|'armor';strength:number;tick:number;x?:number;y?:number}|null;
+  impact:{serial:number;kind:'hit'|'block'|'perfect'|'precision'|'armor'|'guardBreak';strength:number;tick:number;x?:number;y?:number}|null;
+  guardMeter:number;guardDelay:number;guardBreakT:number;resonance:number;resonanceT:number;
   hitDone: boolean;
   hbActive: boolean;
   serial: number;
@@ -236,6 +238,7 @@ function makeFighter(idx: 0 | 1, ch: CharId, cpu: boolean): Fighter {
     moveT: 0,
     connected: false,
     contact:'pending',contactFrame:-1,poseName:'idle',impact:null,groundSmash:false,
+    guardMeter:GUARD_RULES.max,guardDelay:0,guardBreakT:0,resonance:0,resonanceT:0,
     hitDone: false,
     hbActive: false,
     serial: 0,
@@ -303,6 +306,7 @@ export class Game {
   camOv: { x: number; zoom: number } | null = null;
   camOvT = 0;
   parts: Particle[] = [];
+  arena={damage:[0,0,0],slot:-1,tick:-999,serial:0};
   projectiles: Projectile[] = [];
   flash = { c: '#fff', a: 0 };
   shake = 0;
@@ -402,6 +406,7 @@ export class Game {
       f.ko = false;
       f.crouch = f.guard = false;
       f.guardSpentAt=-999;f.guardResult='none';f.guardResultT=f.guardReadyT=0;
+      f.guardMeter=GUARD_RULES.max;f.guardDelay=f.guardBreakT=f.resonance=f.resonanceT=0;
       f.poseOverride = null;
       f.rotAdd = 0;
       f.turn = 1;
@@ -425,6 +430,7 @@ export class Game {
     }
     this.seq = this.cine = this.clash = this.expl = null;
     this.projectiles = [];
+    this.arena={damage:[0,0,0],slot:-1,tick:-999,serial:0};
     this.comboShow=[{hits:0,dmg:0,t:0},{hits:0,dmg:0,t:0}];
     this.hitstop = 0;
     this.slowmo = 0;
@@ -575,6 +581,10 @@ export class Game {
       if (f.rangedCooldown > 0 && --f.rangedCooldown === 0) { f.rangedUses = 0; if(f.idx===0)this.challengeEvent('range'); }
     }
     this.pollInputs();
+    if(this.phase==='intro'&&this.phaseT>=30&&this.f.some(f=>f.pad.buffered('p',this.tick)||f.pad.buffered('k',this.tick))){
+      this.phase='fight';this.phaseT=0;for(const f of this.f){f.pad.consume('p');f.pad.consume('k');}
+      this.announce('FIGHT!','',35,'#fb923c');audio.gong();
+    }
     for(const f of this.f)if(f.ch==='jane'&&f.formT===0&&f.move?.id==='s2'&&f.bikeCooldown===0&&f.moveT>=f.move.startup&&f.moveT<=f.move.startup+f.move.active){
       f.bikeTicks++;
       if(f.bikeTicks>300)this.stopBike(f,true);
@@ -686,16 +696,16 @@ export class Game {
           const last = a.wins + 1 >= this.winsNeeded && b.wins + 1 >= this.winsNeeded;
           this.announce(last ? 'ROUND FINAL' : `ROUND ${this.round}`, '', 70, '#fde68a');
           audio.bell();
-          audio.say(last ? 'Round final' : `Round ${this.round}`, 0.8, 0.95);
+          if(this.round!==1)audio.say(last ? 'Round final' : `Round ${this.round}`, 0.8, 0.95);
         }
-        if(this.round===1&&this.phaseT===8)this.text(a.x,FLOOR_Y-225,matchupLine(a.ch,b.ch),a.def.glow,18);
-        if(this.round===1&&this.phaseT===64){this.text(b.x,FLOOR_Y-225,matchupLine(b.ch,a.ch),b.def.glow,18);audio.say(matchupLine(b.ch,a.ch),1.2,1.2);}
-        if (this.phaseT === (this.round===1?125:72)) {
+        if(this.round===1&&this.phaseT===8)audio.say(matchupLine(a.ch,b.ch),1.2,1.25);
+        if(this.round===1&&this.phaseT===130)audio.say(matchupLine(b.ch,a.ch),1.2,1.25);
+        if (this.phaseT === (this.round===1?245:72)) {
           this.announce('FIGHT!', '', 50, '#fb923c');
           audio.gong();
           audio.say('Liberou o dedilho!', 1.1, 1.3);
         }
-        if (this.phaseT >= (this.round===1?165:110)) {
+        if (this.phaseT >= (this.round===1?285:110)) {
           this.phase = 'fight';
           this.phaseT = 0;
         }
@@ -758,7 +768,7 @@ export class Game {
   private completeMatch(){
     if(this.phase==='matchEnd')return;
     this.phase='matchEnd';this.phaseT=0;this.finisher=null;this.ann=null;
-    audio.music('victory');audio.say(this.finishedBy!==null?'Finisher! Vitória absurda!':`Vitória de ${this.f[this.winner].def.short}!`,1.1,1.15);
+    audio.music('victory');audio.say(`${this.finishedBy!==null?'Finisher! ':''}Vitória de ${this.f[this.winner].def.short}! ${victoryLine(this.f[this.winner].ch,this.f[1-this.winner].ch)}`,1.1,1.15);
     this.onEvent({type:'matchEnd',winner:this.winner});
   }
 
@@ -835,6 +845,10 @@ export class Game {
 
   // ------------------------------------------------------------ atualização do lutador
   private updateResources(f:Fighter){
+    if(f.guardBreakT>0){f.guardBreakT--;if(f.guardBreakT===0)f.guardMeter=Math.max(f.guardMeter,GUARD_RULES.restore);}
+    if(f.guardDelay>0)f.guardDelay--;
+    else if(f.guardBreakT===0&&f.state==='ground'&&!f.guard)f.guardMeter=Math.min(GUARD_RULES.max,f.guardMeter+GUARD_RULES.regen);
+    if(f.resonanceT>0){f.resonanceT--;if(f.resonanceT===0)f.resonance=0;}
     f.charging=false;
     if(f.confusionT>0)f.confusionT--;
     if(f.predictionCooldown>0)f.predictionCooldown--;
@@ -919,7 +933,7 @@ export class Game {
 
   private sampleGuard(f:Fighter){
     f.crouch=f.pad.held.down;
-    f.guard=f.landLag===0&&(f.pad.held.block||f.pad.buffered('block',this.tick));
+    f.guard=f.guardBreakT===0&&f.landLag===0&&(f.pad.held.block||f.pad.buffered('block',this.tick));
     if(f.guard)f.pad.consume('block');
     const o=this.opp(f),m=o.move;
     if(!f.guard&&f.formT>0&&['jao','hdsh'].includes(f.ch)&&f.predictionCooldown===0&&f.exhaustT===0&&f.stamina>=6&&f.landLag===0&&f.state==='ground'&&m&&!m.grab&&m.level!=='low'&&o.moveT>=m.startup-5&&o.moveT<m.startup+m.active&&Math.abs(f.x-o.x)<180){f.guard=true;f.crouch=false;f.predictionCooldown=60;payStamina(f,6);this.text(f.x,FLOOR_Y-200,'PREVISÃO · GUARDA ALTA',f.def.glow,16);}
@@ -1053,6 +1067,12 @@ export class Game {
     if (!f.connected || f.contactFrame<0 || f.moveT-f.contactFrame>CANCEL_CONFIRM_FRAMES || this.phase !== 'fight' || (f.ch==='jane'&&['s2','bikeRush','s3'].includes(m.id))) return false;
     const clean=f.contact==='hit';
     const opponent=this.opp(f);
+    if(clean&&m.kind==='normal'&&!m.air&&!f.pad.held.down&&opponent.state==='hit'&&m.signature?.step!==6){
+      for(const b of ['p','k'] as const)if(pad.buffered(b,tk)){
+        const next=signatureContinuation(f.ch,opponent.comboMoves,b,f.def.moves);
+        if(next&&this.startMove(f,next)){pad.consume(b);return true;}
+      }
+    }
     // One ascending aerial link. No reverse chain, special or ULT cancels in the air.
     if(m.air){
       if(clean&&m.kind==='normal'&&m.id==='jP'&&f.y<0&&opponent.state==='launched'&&opponent.juggle<4&&pad.buffered('k',tk)&&this.startMove(f,f.def.moves.jK)){pad.consume('k');return true;}
@@ -1732,6 +1752,7 @@ export class Game {
       return;
     }
     const breakDefense=formPowerActive(a);
+    if(breakDefense&&d.guard){d.guardMeter=0;d.guardBreakT=GUARD_RULES.breakFrames;d.guardDelay=GUARD_RULES.delay;}
     if(breakDefense&&(d.guard||d.armor||d.invuln>0||m.grab&&d.throwShield>0)){
       this.text(px,py-60,'DEFESA ROMPIDA!',a.def.glow,23);this.ring(px,py,a.def.glow,160,22,7);this.spark(px,py,a.def.glow,32,11,4,22);
     }
@@ -1762,6 +1783,9 @@ export class Game {
       const precision=fresh&&d.ch==='caetano'&&d.parryCooldown===0&&age<PRECISION_GUARD_FRAMES;
       const perfect=fresh&&age<PERFECT_GUARD_FRAMES;
       const result=precision?'precision':perfect?'perfect':'block';
+      if(precision||perfect)d.guardMeter=Math.min(GUARD_RULES.max,d.guardMeter+(precision?12:7));
+      else d.guardMeter=Math.max(0,d.guardMeter-guardPressure(m));
+      d.guardDelay=GUARD_RULES.delay;
       d.guardSpentAt=d.pad.edgeAt.block;d.guardResult=result;d.guardResultT=36;d.guardReadyT=0;
       this.recordImpact(d,result,impactStrength(m),px,py);
       if (d.idx === 0){this.challengeEvent('block');if(m.level==='low')this.challengeEvent('blockLow');if(perfect||precision)this.challengeEvent('perfect');}
@@ -1793,6 +1817,14 @@ export class Game {
       if (a.x === d.x) a.x -= dir;
       if (d.hp <= 0 && prev > 0) this.triggerKO(a, d);
       this.trainingEvent('block',a,m.id,d,impact?.serial??a.serial);
+      if(d.guardMeter===0&&!precision&&!perfect){
+        d.guardBreakT=GUARD_RULES.breakFrames;d.state='hit';d.stateT=0;d.hitstun=GUARD_RULES.breakFrames;d.blockstun=0;
+        d.guard=d.armor=d.crouch=false;d.vx=dir*.8;d.guardResult='none';d.guardResultT=0;d.stunLow=false;
+        if(latest)a.contact='hit';
+        this.recordImpact(d,'guardBreak',2.5,px,py);this.text(px,py-65,'QUEBRA DE GUARDA!', '#fbbf24',29);
+        this.reactArena(px,2.5);
+        this.ring(px,py,'#fbbf24',160,25,7);this.spark(px,py,'#bfecff',42,11,4,24);this.hitstop=Math.max(this.hitstop,11);this.shake=Math.max(this.shake,9);audio.boom(.45);
+      }
       return;
     }
 
@@ -1814,10 +1846,17 @@ export class Game {
     d.comboHits++;
     if (a.idx === 0) this.challengeEvent('combo',d.comboHits);
     const scale = comboDamageScale(d.comboHits-1);
-    const dmg = Math.max(1, m.dmg * (m.resourcePower??1) * scale * (a.ch==='orango'?1+a.momentum*.03:1));
+    const sonic=a.ch==='felipence'&&a.resonance>=3&&(m.id==='s1'||m.signature?.step===6);
+    const dmg = Math.max(1, (m.dmg+(sonic?18:0)) * (m.resourcePower??1) * scale * (a.ch==='orango'?1+a.momentum*.03:1));
+    if(sonic){a.resonance=a.resonanceT=0;if(!m.signature)this.text(px,py-72,'RESSONÂNCIA!',a.def.glow,25);for(let i=0;i<3;i++)this.ring(px,py,a.def.glow,110+i*45,24+i*3,5);audio.boom(.55);}
+    else if(a.ch==='felipence'&&m.kind==='normal'){a.resonance=Math.min(3,a.resonance+1);a.resonanceT=240;}
+    if(d.ch==='felipence')d.resonance=d.resonanceT=0;
     if(a.ch==='orango'){a.momentum=Math.min(3,a.momentum+1);a.momentumT=180;}
     if(d.ch==='orango')d.momentum=d.momentumT=0;
     this.dealDamage(a, d, dmg);
+    if(m.signature){this.moveBanner={text:`${m.signature.name} · ${m.signature.step}/${m.signature.total}`,color:a.def.color,t:6,dur:55};
+      if(m.signature.step===m.signature.total){this.parts=this.parts.filter(p=>p.type!=='text'||!['COMBO!','COMBO AVANÇADO'].includes(p.text??''));this.ring(px,py,a.def.glow,170,25,6);if(a.ch==='ulisses')a.hp=Math.min(a.maxHp,a.hp+16);}
+    }
     if(a.formT>0&&['bieu','aneninha','santox'].includes(a.ch)&&d.predictionCooldown===0){d.confusionT=18;d.predictionCooldown=90;this.text(d.x,FLOOR_Y-205,'CONFUSÃO · 0,3s',a.def.glow,18);}
     this.trainingEvent('hit',a,m.id,d,impact?.serial??a.serial);
     this.interruptBike(d);
@@ -1831,9 +1870,10 @@ export class Game {
     d.turn = 1;
     d.stunLow = m.level === 'low' || d.crouch;
     d.hitstun = m.hitstun;
+    if(!air&&d.comboHits>6)d.hitstun=Math.max(9,d.hitstun-(d.comboHits-6)*3);
     d.stateT = 0;
     d.groundSmash=false;
-    if (m.launch > 0 || air) {
+    if (m.launch > 0 || air || d.comboHits>=STANDING_COMBO_LIMIT) {
       d.state = 'launched';
       d.vy = m.spike?9:-(m.launch > 0 ? m.launch : 6.5);
       d.vx = dir * (m.launchVx || m.kb + 1);
@@ -1859,6 +1899,7 @@ export class Game {
   }
 
   private hitFx(a: Fighter, d: Fighter, m: Move, px: number, py: number) {
+    this.reactArena(px,impactStrength(m),!!m.signature&&m.signature.step===m.signature.total);
     if(a.ch==='eneas'&&m.id==='s2')this.text(px,py-40,'CASO GRAVE!', '#86efac',30);
     const col = a.def.color;
     const glow = a.def.glow;
@@ -1917,6 +1958,12 @@ export class Game {
 
   private recordImpact(d:Fighter,kind:NonNullable<Fighter['impact']>['kind'],strength:number,x=d.x,y=FLOOR_Y+d.y-d.def.hurtH*.58){
     d.impact={serial:(d.impact?.serial??0)+1,kind,strength,tick:this.tick,x,y};
+  }
+  private reactArena(x:number,strength:number,finisher=false){
+    if(strength<1.2&&!finisher)return;
+    const positions=[250,800,1350],slot=positions.reduce((best,p,i)=>Math.abs(p-x)<Math.abs(positions[best]-x)?i:best,0);
+    if(Math.abs(positions[slot]-x)>280||this.tick-this.arena.tick<16)return;
+    this.arena.damage[slot]=Math.min(3,this.arena.damage[slot]+1);this.arena.slot=slot;this.arena.tick=this.tick;this.arena.serial++;
   }
 
   // ------------------------------------------------------------ DEDILHO CLASH

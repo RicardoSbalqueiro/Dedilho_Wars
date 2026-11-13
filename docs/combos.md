@@ -1,3 +1,5 @@
+A revisão atual acrescenta 18 sequências de seis comandos e ajusta os normais em pé. São 90 rotas. As regras e a validação atuais estão em [Guarda e combate em pé](combat-evolution.md); as medições abaixo preservam o histórico das rotas anteriores.
+
 # Combos, treinador e novos golpes da Jane
 
 Há **52 rotas propostas: quatro por personagem**, incluindo um básico de dois golpes, um básico de três, uma ligação entre normais e especial e uma perseguição aérea. O motor anterior foi expandido; buffer, dano progressivo, recargas, defesa, ULTs e finishers continuam no mesmo sistema.

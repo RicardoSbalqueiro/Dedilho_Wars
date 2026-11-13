@@ -1,8 +1,8 @@
 {
   "version": 1,
   "filename": "Dedilho-Wars-completo.zip",
-  "bytes": 127247226,
-  "sha256": "f61d5512c2ec020993b09964ec5606a919d7cad6cd4a4c7e9472d2ba5285362c",
+  "bytes": 127269725,
+  "sha256": "6895f47bee18b8f34345913f15f07340aa33639e2e4a6d4ccb9be9a77414bf19",
   "parts": [
     {
       "name": "Dedilho-Wars-projeto.part1.bin",
@@ -30,7 +30,7 @@
     },
     {
       "name": "Dedilho-Wars-projeto.part7.bin",
-      "bytes": 1418106
+      "bytes": 1440605
     }
   ]
 }

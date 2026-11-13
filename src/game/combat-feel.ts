@@ -6,6 +6,8 @@ import type { Fighter } from './engine';
 export function combatHint(f: Fighter, bindings: Bindings, touch: boolean): string {
   const names:Record<string,string>={p:'SOCO',k:'CHUTE',block:'DEFESA',down:'AGACHAR',headbutt:'CABEÇADA'};
   const key=(a:keyof Bindings)=>touch?names[a]||a:keyLabel(bindings[a][0]);
+  if(f.guardBreakT>0)return 'Guarda rompida! Recupere a postura antes de defender novamente.';
+  if(f.guardMeter<25)return 'Guarda quase quebrando: crie distância ou acerte uma defesa perfeita.';
   if(f.state==='hit'||f.state==='launched')return `Segure ${key('block')} para defender assim que recuperar o controle.`;
   if(f.guard)return `${key('down')} + ${key('block')}: defesa baixa. Agarrões vencem uma defesa previsível.`;
   if(f.move&&f.contact==='block')return 'Bloqueado! Espere a recuperação antes de atacar de novo.';

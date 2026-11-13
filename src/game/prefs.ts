@@ -10,11 +10,12 @@ export interface Prefs {
   hitboxes: boolean;
   reducedFlash: boolean;
   combatHints: boolean;
+  effects?:'auto'|'full'|'light';
   difficulty: Difficulty;
 }
 
 const KEY = 'dedilho-wars-prefs-v1';
-export const DEFAULT_PREFS: Prefs = { music: 0.6, sfx: 0.8, voice: true, shake: true, hitboxes: false, reducedFlash: false, combatHints: true, difficulty: 'normal' };
+export const DEFAULT_PREFS: Prefs = { music: 0.6, sfx: 0.8, voice: true, shake: true, hitboxes: false, reducedFlash: false, combatHints: true,effects:'auto', difficulty: 'normal' };
 
 export function loadPrefs(): Prefs {
   const reduced=typeof matchMedia==='function'&&matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -42,4 +43,5 @@ export function applyPrefs(p: Prefs) {
   settings.hitboxes = p.hitboxes;
   settings.reducedFlash=p.reducedFlash;
   settings.combatHints=p.combatHints;
+  settings.effects=p.effects==='full'||p.effects==='light'?p.effects:'auto';
 }
