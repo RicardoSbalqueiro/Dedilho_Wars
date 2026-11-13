@@ -3,7 +3,7 @@ export const FIGHTER_STYLE:Record<CharId,{name:string;help:string;victory:string
  patrick:{name:'COURAÇA E CONTRA-ATAQUE',help:'Escudo tem armadura só na janela ativa. Investida e Punho cobram preparação; agarrões vencem a proteção.',victory:'O REI TATU SEGUE EM PÉ'},
  gabrielzin:{name:'CHARME E CAPTURA',help:'Projéteis rosas criam espaço para o Abraço. Captura exige curta distância e recuperação do rival.',victory:'O CHARME TOMOU A ARENA'},
  ulisses:{name:'SANGUE E ALCANCE',help:'Ataque com a katana nos normais, capture sangue com Presas e guarde estoques para a regeneração.',victory:'A NOITE PERTENCE AO NEFASTO'},
- felipence:{name:'PRESSÃO SONORA',help:'Normais golpeiam com a guitarra. Riff empurra e Pulso afasta e Lamento lança uma nota. Respeite a distância e o fôlego.',victory:'O ÚLTIMO ACORDE É DELE'},
+ felipence:{name:'PRESSÃO SONORA',help:'Três normais confirmados carregam Ressonância. Riff ou o final de Cadência do Caos libera a explosão sonora; receber um golpe perde a carga.',victory:'O ÚLTIMO ACORDE É DELE'},
  hdsh:{name:'ANÁLISE E TERRITÓRIO',help:'Controle o chão com Go, intercepte com setas e anuncie o airdrop. Salto e acertos desfazem sua zona.',victory:'A ANÁLISE FECHOU O BOX'},
  caetano:{name:'TÉCNICO',help:'Defenda no último instante para carregar a Precisão. Ela fortalece o próximo Dedilho. Confirme Dedilho em Chute para continuar o combo.',victory:'A TÉCNICA VENCEU A TEORIA'},
  orango:{name:'PRESSÃO',help:'Acertos seguidos acumulam até 3 de Ímpeto: mais dano e avanço. Ser atingido ou recuar por muito tempo encerra a pressão.',victory:'A SELVA TEM UM CAMPEÃO'},
@@ -32,4 +32,18 @@ const lines:Partial<Record<CharId,Partial<Record<CharId,string>>>>={
 };
 const defaults:Record<CharId,string>={patrick:'Couraça também exige estratégia.',gabrielzin:'O charme também tem frame data.',ulisses:'O sangue conta uma história.',felipence:'A próxima nota vai te alcançar.',hdsh:'O padrão já está na minha análise.',caetano:'Um golpe. Uma teoria comprovada.',orango:'Entrou na selva, aguenta a pressão!',renngotti:'Alcance máximo. Volume também.',aneninha:'Osasco muda o passo sem avisar!',tubarao:'A fiscalização chegou na arena!',rickzera:'Pode parcelar essa derrota.',bieu:'O muro já sabe o campeão.',nomad:'O próximo round é no meu lobby!',santox:'A câmera também está me olhando?',jao:'Já calculei os próximos três lances.',jane:'Não me acorde antes do deploy.',cristyan:'Na minha rede, o descanso é curto.',eneas:'Meu nome é Acreano! E agora é ciência!'};
 export const matchupLine=(a:CharId,b:CharId)=>lines[a]?.[b]||(a===b?'Até meu espelho vai aprender.':defaults[a]);
+const rivalWins:Partial<Record<CharId,Partial<Record<CharId,string>>>>={};
+const rivals:[CharId,CharId,string,string,string,string][]=[
+ ['caetano','ulisses','No dojo, até a noite tem disciplina.','Sua disciplina também sangra.','A técnica encerrou sua noite.','A noite passou pela sua guarda.'],
+ ['rickzera','hdsh','Pode analisar. Eu já estou no próximo golpe.','Sua energia também deixa padrões.','Faltou energia nessa análise.','Seu próximo golpe já estava no gráfico.'],
+ ['jane','felipence','Sua guitarra vai precisar de atualização.','Então prepara o volume do deploy.','Corrigi o ruído da sua guitarra.','O último acorde derrubou seu sistema.'],
+ ['renngotti','nomad','Chega de sorte. Hoje vale pressão.','Relaxa. Essa partida já está no meu lobby.','A sorte não segurou o impacto.','Volta para a fila do lobby.'],
+ ['bieu','gabrielzin','Charme não distrai quem vive de malícia.','Então tenta resistir sem desviar o olhar.','O Capão conhece todos os truques.','Até sua malícia caiu no charme.'],
+ ['aneninha','cristyan','Minha sequência não tem hora de descanso.','Depois dela, eu te apresento a rede.','Osasco passou por cima da rede.','A rede de hoje ficou para você.'],
+ ['orango','patrick','Essa couraça aguenta a selva inteira?','Uma peça por vez. Pode tentar.','A selva encontrou a rachadura.','Seu instinto encontrou uma parede.'],
+ ['jao','eneas','Vou demonstrar sua derrota em seis lances.','Quero ver os cálculos passarem pela ciência.','A demonstração está concluída.','A hipótese não resistiu ao experimento.'],
+ ['tubarao','santox','Até a quarta parede recebe fiscalização.','Vamos ver quem quebra a tela primeiro.','O glitch terminou no fundo do mar.','A fiscalização saiu do roteiro.'],
+];
+for(const [a,b,opening,answer,win,reply] of rivals){lines[a]={...lines[a],[b]:opening};lines[b]={...lines[b],[a]:answer};rivalWins[a]={...rivalWins[a],[b]:win};rivalWins[b]={...rivalWins[b],[a]:reply};}
+export const victoryLine=(a:CharId,b:CharId)=>rivalWins[a]?.[b]??FIGHTER_STYLE[a].victory;
 export const FINISHER_CALLS:Record<CharId,string>={patrick:'Colisão invencível concluída!',gabrielzin:'Kawai em volume máximo!',ulisses:'Rakuyo encerrou a noite!',felipence:'O último acorde venceu!',hdsh:'Full box! Duzentos!',caetano:'Dedo de precisão absoluta!',orango:'A selva encerrou o expediente!',renngotti:'Direto para a lua, com áudio!',aneninha:'Osasco fez a festa inteira!',tubarao:'Beijo de fiscalização aprovado!',rickzera:'Transferência encerrada em seis vezes!',bieu:'Prestígio carimbado no asfalto!',nomad:'O lobby fechou para balanço!',santox:'O coelho saiu do roteiro!',jao:'Xeque-mate absoluto! A conta fechou!',jane:'Deploy do AreiaZord autorizado!',cristyan:'Sentença da rede! Hora de acordar!',eneas:'Cinquenta e seis no placar! Meu nome é Acreano!'};

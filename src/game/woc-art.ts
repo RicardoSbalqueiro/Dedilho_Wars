@@ -71,10 +71,14 @@ export function drawResourcesHud(c:CanvasRenderingContext2D,g:Game){
  c.fillStyle='#111222';c.fillRect(x,73,w,5);c.fillStyle=f.exhaustT>0?'#f87171':'#67e8d5';c.fillRect(x,73,w*clamp(f.stamina/RESOURCE_RULES.staminaMax),5);
  text(c,`${Math.ceil(f.hp)} / ${f.maxHp} HP`,tx,39,10,'#fff',align);
  text(c,`${f.exhaustT>0?'EXAUSTO':'FÔLEGO'} ${Math.ceil(f.stamina)}`,right?884:76,78,8,f.exhaustT>0?'#fca5a5':'#a7f3d0',align);
+ c.fillStyle='#121522';c.fillRect(x,82,250,4);c.fillStyle=f.guardBreakT>0?'#fb7185':f.guardMeter<25?'#fbbf24':'#7dd3fc';c.fillRect(x,82,250*clamp(f.guardMeter/100),4);
+ text(c,f.guardBreakT>0?'ROMPIDA':`GUARDA ${Math.ceil(f.guardMeter)}`,right?554:406,86,7,f.guardBreakT>0?'#fb7185':'#bfeaff',right?'left':'right');
  const x2=right?912:48;
  if(f.ch==='rickzera')text(c,`ENERGIA ${Math.floor(f.energy)}/100${f.charging?' · CARREGANDO':''}`,x2,126,11,'#86efac',align);
  if(f.ch==='ulisses')text(c,`SANGUE ${f.blood}/3`,x2,126,11,'#fb7185',align);
  if(f.ch==='jane')text(c,`BATERIA ${Math.ceil(f.battery)}%`,x2,126,11,'#fde047',align);
+ if(f.ch==='felipence')text(c,`RESSONÂNCIA ${'◆'.repeat(f.resonance)}${'◇'.repeat(3-f.resonance)}`,x2,126,11,'#fdba74',align);
+ if(f.guardBreakT>0)text(c,'GUARDA ROMPIDA',x2,145,12,'#fbbf24',align);
  if(f.formT>0){text(c,`${FORMS[f.ch].name} · ${(f.formT/60).toFixed(1)}s${f.ch==='nomad'?[' · FORÇA 2×',' · VELOCIDADE',' · TAMANHO'][f.formVariant]:''}`,x2,480,11,f.def.glow,align);text(c,'IMUNE · ROMPE DEFESA',x2,465,10,'#fff1b5',align);}
  else if(f.aftermathT>0&&['renngotti','tubarao'].includes(f.ch))text(c,`${f.ch==='renngotti'?'RECUPERAÇÃO BERSERKER':'CRESCENDO'} ${(f.aftermathT/60).toFixed(0)}s`,x2,480,10,'#fda4af',align);
  else if(canTransform(f))text(c,`FORMA PRONTA [${g.cfg.bindings[f.idx].transform[0].replace('Key','').replace('Numpad','NUM ')}]`,x2,480,11,'#a3ff8c',align);

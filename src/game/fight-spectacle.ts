@@ -8,6 +8,8 @@ import {animeMotion} from './anime-motion';
 import {mobileGraphics} from './mobile-settings';
 import {settings} from './visual-settings';
 import {FLOOR_Y,W,H} from './stage';
+import {effectDetail} from './visual-budget';
+import {drawImpactMotif} from './impact-motifs';
 
 const TAU=Math.PI*2,clamp=(n:number)=>Math.max(0,Math.min(1,n));
 const noise=(n:number)=>{const x=Math.sin(n*127.1+311.7)*43758.5453;return x-Math.floor(x)};
@@ -36,7 +38,7 @@ export function drawStrikeSpectacle(c:CanvasRenderingContext2D,f:Fighter,tick:nu
  const amount=phase.phase==='startup'?clamp((p-.3)/.7)*.35:phase.phase==='active'?1:Math.max(0,1-p*2.5);
  if(amount<=0)return;
  if(!reduced&&phase.phase!=='startup'){
-  const images=mobile?2:3;
+  const images=effectDetail().ghosts;
   for(let i=images;i>0;i--){const delay=i*2.6,pose=attackAnimation(f.ch,m,Math.max(0,frame-delay),f.connected);
    c.save();c.globalAlpha*=amount*(.17-i*.035);c.translate(-i*(7+force*3)-f.vx*f.facing*.2,0);
    drawRig(c,f.ch,computeRig(f.ch,pose),pose,{time:t-delay,transformation:f.formT>0,formVariant:f.formVariant,formTime:f.formElapsed,...animeMotion({...f,moveT:Math.max(1,f.moveT-delay)})});c.restore();
@@ -52,25 +54,26 @@ export function drawStrikeSpectacle(c:CanvasRenderingContext2D,f:Fighter,tick:nu
  c.restore();void tick;
 }
 
-export function drawImpactSpectacle(c:CanvasRenderingContext2D,ch:CharId,x:number,y:number,age:number,power=1,seed=0,kind:'hit'|'guard'|'immune'='hit'){
+export function drawImpactSpectacle(c:CanvasRenderingContext2D,ch:CharId,x:number,y:number,age:number,power=1,seed=0,kind:'hit'|'guard'|'immune'|'break'='hit'){
  if(age<0||age>=28)return;
- const reduced=settings.reducedFlash,mobile=mobileGraphics()==='auto',u=age/28,fade=(1-u)**1.5,col=kind==='guard'?'#83eaff':kind==='immune'?FORM_VISUALS[ch].light:light(ch),strength=Math.min(3,Math.max(.6,power));
+ const reduced=settings.reducedFlash,u=age/28,fade=(1-u)**1.5,col=kind==='guard'?'#83eaff':kind==='break'?'#fbbf24':kind==='immune'?FORM_VISUALS[ch].light:light(ch),strength=Math.min(3,Math.max(.6,power));
  c.save();c.translate(x,y);c.globalCompositeOperation='lighter';c.lineCap='round';c.lineJoin='round';
  c.globalAlpha=fade*(reduced?.24:.9);c.strokeStyle=col;c.fillStyle=col;
  const radius=13+age*(3+strength*1.6);
  for(let i=0;i<(reduced?2:4);i++){c.globalAlpha=fade*(reduced?.14:.53)/(1+i*.3);c.lineWidth=1.5+strength*(1-u);ellipse(c,0,0,radius*(1-i*.14),radius*(.5+i*.1),i*.43);}
- const count=reduced?8:mobile?22:42;
+ const count=reduced?8:effectDetail().rays;
  for(let i=0;i<count;i++){
   const a=noise(i+seed*7)*TAU,n=noise(i*3.7+seed),r=(12+age*(3+n*6))*strength,len=(13+n*31)*(1-u);
   c.globalAlpha=fade*(.28+n*.6)*(reduced?.3:1);c.strokeStyle=i%4?col:'#ffffff';c.lineWidth=i%4?1+n*2:3;
   c.beginPath();c.moveTo(Math.cos(a)*r*.55,Math.sin(a)*r*.55);c.lineTo(Math.cos(a)*(r+len),Math.sin(a)*(r+len));c.stroke();
  }
- if(kind==='immune'){
+ if(kind==='immune'||kind==='break'){
   c.strokeStyle=col;c.lineWidth=2;c.globalAlpha=fade*.7;
   for(let i=0;i<6;i++){const a=i/6*TAU,r=25+age*2;polygon(c,Math.cos(a)*r,Math.sin(a)*r*.8,9+u*9,6,a+u);c.stroke();}
  }else if(kind==='hit'){
-  c.globalAlpha=fade*(reduced?.13:.75);c.fillStyle='#fff7dc';
-  c.beginPath();for(let i=0;i<16;i++){const a=i/16*TAU,r=(i%2?9:38+strength*9)*(1-u*.65);i?c.lineTo(Math.cos(a)*r,Math.sin(a)*r):c.moveTo(Math.cos(a)*r,Math.sin(a)*r)}c.closePath();c.fill();
+  drawImpactMotif(c,ch,age,CHARS[ch].color,power);
+  c.globalAlpha=fade*(reduced?.13:.48);c.fillStyle='#fff7dc';
+  c.beginPath();for(let i=0;i<16;i++){const a=i/16*TAU,r=(i%2?7:26+strength*6)*(1-u*.65);i?c.lineTo(Math.cos(a)*r,Math.sin(a)*r):c.moveTo(Math.cos(a)*r,Math.sin(a)*r)}c.closePath();c.fill();
   c.globalAlpha=fade*(reduced?.13:.5);c.strokeStyle=col;c.lineWidth=2;
   if(ch==='ulisses')for(let i=-1;i<2;i++){c.beginPath();c.moveTo(-50+i*14,35);c.quadraticCurveTo(i*14,-20,44+i*14,-52);c.stroke();}
   if(ch==='felipence')for(let i=0;i<4;i++)ellipse(c,0,0,35+i*17+age*2,26+i*13+age*1.5);
@@ -88,7 +91,7 @@ export function drawFightEnvironment(c:CanvasRenderingContext2D,g:Game){
   c.save();c.translate(x,FLOOR_Y+2);c.globalAlpha=(1-u)*(reduced?.15:.42);c.strokeStyle=col;c.lineWidth=2;
   ellipse(c,0,0,20+age*(3+strength),3+age*.5);
   if(hit.kind==='hit'){
-   const count=mobile?8:15;
+   const count=effectDetail().shards;
    for(let i=0;i<count;i++){const n=noise(i+hit.serial*3),side=i%2?1:-1,dx=side*(8+age*(1+n*3)),dy=-Math.sin(clamp(age/(20+n*10))*Math.PI)*(7+n*25)*strength;
     c.save();c.translate(dx,dy);c.rotate(side*age*.12);c.fillStyle=i%3?'#b3a3a0':col;polygon(c,0,0,2+n*5,4,0);c.fill();c.restore();}
    for(let i=0;i<5;i++){const a=i/5*TAU,rr=18+u*55;c.beginPath();c.moveTo(0,0);c.lineTo(Math.cos(a)*rr*.5,Math.sin(a)*rr*.1);c.lineTo(Math.cos(a)*rr,Math.sin(a)*rr*.22);c.stroke();}
@@ -104,7 +107,7 @@ export function drawFightEnvironment(c:CanvasRenderingContext2D,g:Game){
 }
 export function drawFightImpacts(c:CanvasRenderingContext2D,g:Game){
  for(const f of g.f){const h=f.impact;if(!h)continue;const age=g.tick-h.tick;
-  drawImpactSpectacle(c,h.kind==='hit'?g.f[1-f.idx].ch:f.ch,h.x??f.x,h.y??FLOOR_Y+f.y-f.def.hurtH*.58,age,h.strength,h.serial,h.kind==='armor'&&f.formT>0?'immune':h.kind==='hit'?'hit':'guard');
+  drawImpactSpectacle(c,h.kind==='hit'?g.f[1-f.idx].ch:f.ch,h.x??f.x,h.y??FLOOR_Y+f.y-f.def.hurtH*.58,age,h.strength,h.serial,h.kind==='guardBreak'?'break':h.kind==='armor'&&f.formT>0?'immune':h.kind==='hit'?'hit':'guard');
  }
 }
 export function drawFightScreen(c:CanvasRenderingContext2D,g:Game){

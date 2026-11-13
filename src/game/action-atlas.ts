@@ -84,11 +84,17 @@ export function sampleActionFrame(ch:CharId,o:DrawOpts):{clip:ActionClip;frame:n
  * the cinematic choreography, never from deforming individual illustrated limbs. */
 export function drawActionSprite(c:CanvasRenderingContext2D,ch:CharId,o:DrawOpts,height:number,_rotation=0):boolean{
  const pick=sampleActionFrame(ch,o);if(!pick)return false;const e=entry(pick.clip.atlas,true);if(!e||e.status!=='ready'||!e.source)return false;
- const cell=e.atlas.frames[pick.frame];if(!cell)return false;const [x,y,w,h]=cell.rect,placement=spritePlacement('actions',pick.clip.atlas,pick.frame,height,{...o,actionClip:pick.action},{reference:cell.referenceHeight,baseline:cell.baseline,anchorX:cell.anchorX}),scale=placement.scale,dx=-placement.anchorX*scale,dy=-placement.baseline*scale;
+ if(!e.atlas.frames[pick.frame])return false;
  c.save();c.imageSmoothingEnabled=true;c.imageSmoothingQuality='high';
- // Each new plate already contains the complete authored body pose. Rotating
- // its weapon-sized bounding box again was changing apparent height and feet.
- c.drawImage(e.source,x*e.rx,y*e.ry,w*e.rx,h*e.ry,dx,dy,w*scale,h*scale);c.restore();return true;
+ const paint=(frame:number,alpha:number,key=pick.clip.atlas)=>{if(alpha<=0)return;const source=key===pick.clip.atlas?e:entry(key,true);if(!source?.source||source.status!=='ready')return;const f=source.atlas.frames[frame];if(!f)return;const [sx,sy,sw,sh]=f.rect,p=spritePlacement('actions',key,frame,height,{...o,actionClip:pick.action},{reference:f.referenceHeight,baseline:f.baseline,anchorX:f.anchorX});c.save();c.globalAlpha*=alpha;c.drawImage(source.source,sx*source.rx,sy*source.ry,sw*source.rx,sh*source.ry,-p.anchorX*p.scale,-p.baseline*p.scale,sw*p.scale,sh*p.scale);c.restore();};
+ const smooth=(v:number)=>{const t=clamp(v);return t*t*(3-2*t)},p=clamp(o.spriteProgress??0),ordinary=o.actionProgress===undefined&&pick.clip.kind==='move'&&pick.action!=='react';
+ // Contact frames stay exact; anticipation and recovery blend whole drawings
+ // at the same calibrated unit and feet plane. Explicit gallery frames stay exact.
+ if(ordinary&&o.spritePhase==='startup'&&pick.clip.frames.length===4){const t=smooth((p-.28)/.42);paint(pick.clip.frames[0],1-t);paint(pick.clip.frames[1],t);}
+ else if(ordinary&&o.spritePhase==='recovery'&&p<.18){const t=smooth(p/.18);paint(pick.clip.frames[2],1-t);paint(pick.frame,t);}
+ else if(ordinary&&o.spritePhase==='recovery'&&p>.82&&cache.get(ch+'-reactions')?.status==='ready'){const t=smooth((p-.82)/.18);paint(pick.frame,1-t);paint(o.transformation?12:0,t,ch+'-reactions');}
+ else paint(pick.frame,1);
+ c.restore();return true;
 }
 export function drawActionProp(c:CanvasRenderingContext2D,key:string,frame:number,x:number,y:number,width:number,height:number):boolean{
  const e=entry(key,true);if(!e||e.status!=='ready'||!e.source)return false;const cell=e.atlas.frames[Math.max(0,Math.min(e.atlas.frames.length-1,Math.floor(frame)))];if(!cell)return false;

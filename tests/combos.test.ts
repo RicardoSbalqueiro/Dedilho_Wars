@@ -50,9 +50,9 @@ function runRoute(g:Game,route:ComboRoute,mode:'keyboard'|'touch'|'online',mirro
  return {stage,hits,max,free,damage:d.maxHp-d.hp};
 }
 
-check('all eighteen fighters have four routes, including real low kicks, normals/specials and launch follow-ups',()=>{
- assert.equal(COMBO_ROUTES.length,72);assert.equal(new Set(COMBO_ROUTES.map(r=>r.id)).size,72);
- for(const ch of CHAR_IDS){const routes=comboRoutes(ch);assert.equal(routes.length,4);assert(routes.some(r=>r.level==='Intermediário'&&r.steps.some(s=>/^s[123]$/.test(s.move))));assert(routes.some(r=>r.level==='Aéreo'&&r.steps[0].move==='cK'));}
+check('all eighteen fighters have five routes, including real low kicks, normals/specials and launch follow-ups',()=>{
+ assert.equal(COMBO_ROUTES.length,90);assert.equal(new Set(COMBO_ROUTES.map(r=>r.id)).size,90);
+ for(const ch of CHAR_IDS){const routes=comboRoutes(ch);assert.equal(routes.length,5);assert(routes.some(r=>r.level==='Intermediário'&&r.steps.some(s=>/^s[123]$/.test(s.move))));assert(routes.some(r=>r.level==='Aéreo'&&r.steps[0].move==='cK'));}
 });
 for(const route of COMBO_ROUTES)for(const mode of ['keyboard','touch','online'] as const)for(const mirror of [false,true])game(`${route.id} via ${mode}, mirror=${mirror}: true chain and predictable recovery`,g=>{
  g.cfg.online=mode==='online';
@@ -156,4 +156,4 @@ game('feedback: special and aerial contacts are advanced and synchronize in snap
  g.resetPositions();g.phase='fight';a.x=600;d.x=660;a.y=-40;a.vy=0;d.y=-30;d.vy=-5;d.state='launched';d.juggle=1;g.startMove(a,a.def.moves.jP);a.moveT=a.move!.startup;g.step();assert(d.hp<d.maxHp,'real aerial contact');assert.equal(d.comboKind,'advanced');
  const copy=make();try{assert(applyState(copy,JSON.parse(JSON.stringify(captureState(g)))));assert.equal(copy.f[1].comboKind,'advanced')}finally{copy.destroy()}
 });
-console.log(`Combos/Jane: ${cases} cases passed (52 routes, keyboard/touch/online, mirrored sides, actual coaching, universal crouch sweep, bounded links/juggles, inputs and Jane hop/spin/runaway/crash).`);
+console.log(`Combos/Jane: ${cases} cases passed (${COMBO_ROUTES.length} routes, keyboard/touch/online, mirrored sides, actual coaching, universal crouch sweep, bounded links/juggles, inputs and Jane hop/spin/runaway/crash).`);

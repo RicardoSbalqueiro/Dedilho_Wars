@@ -3,6 +3,8 @@ import { spawnSync } from 'node:child_process';
 import { mkdirSync,rmSync } from 'node:fs';
 mkdirSync('.sites-runtime',{recursive:true});
 try {
+ await build({entryPoints:['tests/combat-evolution.test.ts'],bundle:true,platform:'node',format:'esm',outfile:'.sites-runtime/combat-evolution-test.mjs'});
+ {const r=spawnSync(process.execPath,['.sites-runtime/combat-evolution-test.mjs'],{stdio:'inherit'});if(r.status!==0)process.exit(r.status||1)}
  await build({entryPoints:['tests/combat.test.ts'],bundle:true,platform:'node',format:'esm',outfile:'.sites-runtime/combat-test.mjs'});
  await build({entryPoints:['tests/challenges.test.ts'],bundle:true,platform:'node',format:'esm',outfile:'.sites-runtime/challenges-test.mjs'});
  await build({entryPoints:['tests/expansion.test.ts'],bundle:true,platform:'node',format:'esm',outfile:'.sites-runtime/expansion-test.mjs'});
