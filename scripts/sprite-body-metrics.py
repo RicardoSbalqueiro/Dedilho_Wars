@@ -35,7 +35,7 @@ def measure(piece,baseline,anchor):
  return {'top':head_top,'rise':max(1,bottom-head_top),'baseline':float(bottom),'anchorX':float(anchor),'width':int(xx.max()-xx.min()+1),'area':int(a.sum())}
 
 result={'version':1,'atlases':{}}
-for bank in ['sprites','motion','actions']:
+for bank in ['sprites','motion','actions','flow']:
  manifest=json.loads((ROOT/f'src/assets/{bank}/manifest.json').read_text())
  for key,a in manifest['atlases'].items():
   if bank=='actions' and a['kind']=='effects':continue
@@ -54,13 +54,22 @@ for bank in ['sprites','motion','actions']:
 # Median opaque mass measures drawing resolution independently of that pose.
 for key,a in result['atlases'].items():
  bank,name=key.split('/',1);a['references']=[]
- variants=2 if bank=='motion' or bank=='actions' and len(a['frames'])==24 and not name.endswith(('-ult','-ult-form')) else 1
+ variants=2 if bank in ['motion','flow'] or bank=='actions' and len(a['frames'])==24 and not name.endswith(('-ult','-ult-form')) else 1
  for variant in range(variants):
   form=name.endswith('-form') if bank=='sprites' or name.endswith(('-ult','-ult-form')) else variant==1
   ch=name.split('-')[0];canonical=result['atlases']['sprites/'+ch+('-form' if form else '')]['frames'][:2]
   canonical_rise=statistics.mean(f['rise'] for f in canonical);canonical_area=statistics.mean(f['area'] for f in canonical)
   frames=a['frames'][variant*12:(variant+1)*12] if variants==2 else a['frames']
   if bank=='sprites':ref=canonical_rise
+  elif bank=='flow':
+   # Use the matching existing stance, not opaque weapon area or a crouch's
+   # cropped height, to calibrate this artist's new sheet at one fixed unit.
+   source=result['atlases']['actions/'+ch+('-punches' if name.endswith('-bridges') else '-reactions')]
+   source_frames=source['frames'][variant*12:(variant+1)*12]
+   chosen=[0,1,3] if name.endswith('-bridges') else [11]
+   ratio=statistics.median(source_frames[i]['rise'] for i in chosen)/source['references'][variant]
+   basis=[0,1,2,3] if name.endswith('-bridges') else [8,9]
+   ref=statistics.median(frames[i]['rise'] for i in basis)/ratio
   elif name=='jane-bike':ref=statistics.median(frames[i]['rise'] for i in [0,1,6,7,8])/1.2
   else:
    basis=frames[:4] if name.endswith('-reactions') else [frames[i] for i in [0,1,2,22,23]] if name.endswith(('-ult','-ult-form')) else frames

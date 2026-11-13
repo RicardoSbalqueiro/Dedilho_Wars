@@ -367,7 +367,7 @@ function drawFighter(ctx: CanvasRenderingContext2D, g: Game, f: Fighter, time: n
   const accessoryPose=f.poseOverride||(m&&phase?.phase==='recovery'&&phase.progress<.35?m.recoveryPose||m.poses[1]:f.poseName);
   if(!reflect)drawMotionInk(ctx,f,settings.reducedFlash);
   drawRig(ctx, f.ch, f.rig, f.pose, { time:f.animT, expr: f.expr, glow: f.glow, glowColor: f.def.glow, stretch,transformation:f.formT>0,formVariant:f.formVariant,formTime:f.formElapsed,poseName:accessoryPose,
-    ...animeMotion(f),...captureArtOptions(g,f),...(f.ch==='jane'&&f.formT===0&&f.bikeDizzy>0&&actionAtlasReady('jane-bike')?{actionClip:'bike',actionProgress:10.01/12}:{}) });
+    ...animeMotion(f,g.tick),...captureArtOptions(g,f),...(f.ch==='jane'&&f.formT===0&&f.bikeDizzy>0&&actionAtlasReady('jane-bike')?{actionClip:'bike',actionProgress:10.01/12}:{}) });
   if(!reflect&&m&&!(f.ch==='ulisses'&&f.formT>0))drawAccessoryNormal(ctx,m,frame);
   if(!reflect)drawGuardInk(ctx,f,g.tick,settings.reducedFlash);
   if (!reflect) drawFx(ctx, g, f, time);

@@ -15,15 +15,17 @@ import {preloadActionSheets,preloadActionSprites} from '../game/action-atlas';
 import {drawIllustratedUltimate} from '../game/illustrated-ultimate';
 import {ultimateDuration} from '../game/ultimate-direction';
 
-type GalleryClip=AnimationClip|`move:${string}`|'throw'|'ult';
+type GalleryClip=AnimationClip|`move:${string}`|'throw'|'ult'|'guard-low'|'guard-break'|'landing';
+const EXTRA_MOTION={'guard-low':{label:'Defesa baixa',duration:48,pose:'guard'},'guard-break':{label:'Guarda rompida',duration:42,pose:'hit'},landing:{label:'Aterrissagem',duration:12,pose:'crouch'}} as const;
 
 export function AnimationGallery({initial}:{initial:CharId}){
   const [ch,setCh]=useState(initial),[clip,setClip]=useState<GalleryClip>('walk'),[playing,setPlaying]=useState(true),[frame,setFrame]=useState(0),[form,setForm]=useState(false),[sheet,setSheet]=useState(false);
   const canvas=useRef<HTMLCanvasElement>(null),position=useRef(0);
   const move=clip.startsWith('move:')?CHARS[ch].moves[clip.slice(5)]:undefined;
-  const motion=move||clip==='ult'||clip==='throw'?undefined:ANIMATION_CLIPS[clip as AnimationClip];
-  const frames=move?(move.startup+move.active+move.recovery+move.whiff)*ANIMATION_SUBFRAMES:clip==='ult'?ultimateDuration(ch)*ANIMATION_SUBFRAMES:clip==='throw'?60*ANIMATION_SUBFRAMES:motion!.frames;
-  const label=move?.label||(clip==='ult'?CHARS[ch].superName:clip==='throw'?'Agarrão':motion!.label);
+  const extra=EXTRA_MOTION[clip as keyof typeof EXTRA_MOTION];
+  const motion=move||clip==='ult'||clip==='throw'?undefined:ANIMATION_CLIPS[(extra?.pose??clip) as AnimationClip];
+  const frames=move?(move.startup+move.active+move.recovery+move.whiff)*ANIMATION_SUBFRAMES:clip==='ult'?ultimateDuration(ch)*ANIMATION_SUBFRAMES:clip==='throw'?60*ANIMATION_SUBFRAMES:extra?extra.duration*ANIMATION_SUBFRAMES:motion!.frames;
+  const label=move?.label||(clip==='ult'?CHARS[ch].superName:clip==='throw'?'Agarrão':extra?.label||motion!.label);
   const seek=(n:number)=>{setPlaying(false);position.current=Math.max(0,Math.min(frames-1,n));setFrame(Math.floor(position.current))};
   useEffect(()=>{void preloadAnimeSprite(ch,form);void preloadActionSprites([ch]);if(clip==='ult')void preloadActionSheets([(ch==='caetano'?'rickzera':'caetano')+'-reactions','fx-scene'])},[ch,form,clip]);
   useEffect(()=>{
@@ -34,7 +36,7 @@ export function AnimationGallery({initial}:{initial:CharId}){
       position.current+=clock.deltaFrames*ANIMATION_SUBFRAMES;
       if(position.current>=frames)position.current=move||clip==='ult'||clip==='throw'||motion?.loop?position.current%frames:frames-1;
       const i=Math.floor(position.current),time=position.current/ANIMATION_SUBFRAMES;
-      const pose=sheet?modelSheetPose(ch,time):move?attackAnimation(ch,move,time,false):motion?animationFrame(ch,clip as AnimationClip,position.current):CHARS[ch].poses.idle;
+      const pose=sheet?modelSheetPose(ch,time):move?attackAnimation(ch,move,time,false):motion?animationFrame(ch,(extra?.pose??clip) as AnimationClip,position.current):CHARS[ch].poses.idle;
       const phase=move?movePhase(move,time,false):undefined;
       const options:DrawOpts={time,transformation:form,formTime:time,poseName:sheet?'model':move?move.poses[phase?.phase==='startup'?0:1]:motion?.pose||'idle'};
       if(sheet)options.spriteState='idle';
@@ -44,11 +46,20 @@ export function AnimationGallery({initial}:{initial:CharId}){
         Object.assign(options,{spriteAction:clip,spriteStateTime:time,spriteState:clip==='walk'||clip==='dash'?'walk':clip==='jump'?'jump':clip==='guard'?'guard':clip==='crouch'||clip==='getup'?'crouch':clip==='hit'?'hit':clip==='win'?'victory':'idle'});
         if(clip==='hit'||clip==='getup'||clip==='guard'){const index=clip==='guard'?11:clip==='getup'?8+Math.min(2,Math.floor(time/6)):time<4?1:time<10?2:10;Object.assign(options,{actionClip:'react',actionProgress:(index+.01)/12});}
       }
+      if(!sheet&&!move&&clip!=='ult'&&clip!=='throw'){
+        options.spriteDashDuration=motion!.frames/ANIMATION_SUBFRAMES;
+        if(clip==='jump')options.spriteVelocityY=-12+24*time/(frames/ANIMATION_SUBFRAMES);
+        if(clip==='guard')options.spriteGuardAge=time;
+        if(clip==='guard-low')Object.assign(options,{spriteState:'guard',spriteLow:true});
+        if(clip==='guard-break')Object.assign(options,{spriteState:'hit',spriteGuardBreak:Math.max(0,42-time)});
+        if(clip==='landing')Object.assign(options,{spriteState:'crouch',spriteAction:'ground',spriteLanding:Math.max(0,12-time)});
+      }
       ctx.clearRect(0,0,680,380);const bg=ctx.createRadialGradient(340,220,5,340,220,355);bg.addColorStop(0,CHARS[ch].color2);bg.addColorStop(1,'#0c0a16');ctx.fillStyle=bg;ctx.fillRect(0,0,680,380);
       if(clip==='ult'&&!sheet){ctx.save();ctx.scale(680/960,380/540);drawIllustratedUltimate(ctx,ch,ch==='caetano'?'rickzera':'caetano',time,ultimateDuration(ch),form);ctx.restore();}
       else{
       ctx.strokeStyle=CHARS[ch].glow+'55';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(45,345);ctx.lineTo(635,345);ctx.stroke();
       ctx.save();ctx.translate(330,341);ctx.scale(form&&ch==='jane'?3.2:1.34,form&&ch==='jane'?3.2:1.34);
+      if(!sheet&&clip==='jump')ctx.translate(0,-Math.sin(Math.PI*Math.min(1,time/(frames/ANIMATION_SUBFRAMES)))*85);
       if(form)drawFormPreview(ctx,ch,time+30);
       const rig=computeRig(ch,pose);drawRig(ctx,ch,rig,pose,options);ctx.restore();}
       if(now-notice>50){setFrame(i);notice=now;}raf=requestAnimationFrame(draw);
@@ -56,10 +67,10 @@ export function AnimationGallery({initial}:{initial:CharId}){
   },[ch,clip,playing,frames,form,sheet,move,motion]);
   const reset=()=>{position.current=0;setFrame(0)};
   return <section className="animation-gallery" data-animation-character={ch} data-animation-frame={frame}>
-    <div className="animation-gallery-fields"><label>Lutador<select aria-label="Lutador da galeria de animação" value={ch} onChange={e=>{setCh(e.target.value as CharId);reset()}}>{CHAR_IDS.map(id=><option key={id} value={id}>{CHARS[id].name}</option>)}</select></label><label>Animação<select aria-label="Clipe de animação" value={clip} onChange={e=>{setClip(e.target.value as GalleryClip);reset()}}><optgroup label="Movimentação">{ANIMATION_CLIP_IDS.map(id=><option key={id} value={id}>{ANIMATION_CLIPS[id].label}</option>)}</optgroup><optgroup label="Golpes">{Object.values(CHARS[ch].moves).map(m=><option key={m.id} value={'move:'+m.id}>{m.label}</option>)}<option value="throw">Agarrão</option></optgroup><optgroup label="Ultimate"><option value="ult">{CHARS[ch].superName}</option></optgroup></select></label></div>
+    <div className="animation-gallery-fields"><label>Lutador<select aria-label="Lutador da galeria de animação" value={ch} onChange={e=>{setCh(e.target.value as CharId);reset()}}>{CHAR_IDS.map(id=><option key={id} value={id}>{CHARS[id].name}</option>)}</select></label><label>Animação<select aria-label="Clipe de animação" value={clip} onChange={e=>{setClip(e.target.value as GalleryClip);reset()}}><optgroup label="Movimentação">{ANIMATION_CLIP_IDS.map(id=><option key={id} value={id}>{ANIMATION_CLIPS[id].label}</option>)}{Object.entries(EXTRA_MOTION).map(([id,value])=><option key={id} value={id}>{value.label}</option>)}</optgroup><optgroup label="Golpes">{Object.values(CHARS[ch].moves).map(m=><option key={m.id} value={'move:'+m.id}>{m.label}</option>)}<option value="throw">Agarrão</option></optgroup><optgroup label="Ultimate"><option value="ult">{CHARS[ch].superName}</option></optgroup></select></label></div>
     <label><input type="checkbox" aria-label="Exibir transformação" checked={form} onChange={e=>setForm(e.target.checked)}/> Forma: {FORMS[ch].name}</label><p>{FORMS[ch].cost} · {FORMS[ch].duration/60}s · {FORMS[ch].help}</p><p>{FORM_POWER_HELP}</p>
     <label><input type="checkbox" aria-label="Pose do cartaz" checked={sheet} onChange={e=>setSheet(e.target.checked)}/> Pose do cartaz</label>
-    <p>Golpes com preparação, liberação, impacto e retomada próprios. ULTs com 24 desenhos exclusivos por forma.</p>
+    <p>Dash, salto e defesa com poses próprias. Ataques básicos com novos desenhos de extensão e retorno; ULTs com 24 desenhos por forma.</p>
     <canvas ref={canvas} width={680} height={380} aria-label={`${CHARS[ch].name}: ${label}`}/>
     <div className="animation-gallery-controls"><button type="button" aria-label="Quadro anterior" onClick={()=>seek(frame-1)}>◀</button><button type="button" onClick={()=>{if(position.current>=frames-1)reset();else setFrame(Math.floor(position.current));setPlaying(!playing)}}>{playing?'PAUSAR ANIMAÇÃO':'REPRODUZIR'}</button><button type="button" aria-label="Próximo quadro" onClick={()=>seek(frame+1)}>▶</button><output aria-live="off">TEMPO {frame+1} / {frames}</output></div>
     <label className="animation-gallery-scrubber">Inspecionar animação<input aria-label="Quadro da animação" type="range" min={0} max={frames-1} step={1} value={frame} onChange={e=>seek(+e.target.value)}/></label>

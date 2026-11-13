@@ -10,6 +10,7 @@ import {settings} from './visual-settings';
 import {FLOOR_Y,W,H} from './stage';
 import {effectDetail} from './visual-budget';
 import {drawImpactMotif} from './impact-motifs';
+import {drawMotionEnvironment,drawGuardMotion,drawForceRibbons} from './motion-effects';
 
 const TAU=Math.PI*2,clamp=(n:number)=>Math.max(0,Math.min(1,n));
 const noise=(n:number)=>{const x=Math.sin(n*127.1+311.7)*43758.5453;return x-Math.floor(x)};
@@ -21,6 +22,7 @@ function polygon(c:CanvasRenderingContext2D,x:number,y:number,r:number,sides:num
  * damage, hitboxes, the camera, fighter scale, or the online particle payload. */
 export function drawStrikeSpectacle(c:CanvasRenderingContext2D,f:Fighter,tick:number){
  const mobile=mobileGraphics()==='auto',reduced=settings.reducedFlash,col=light(f.ch,f.formT>0),h=f.ch==='tubarao'&&f.formT>0?155:f.def.hurtH,t=f.animT;
+ drawGuardMotion(c,f,tick);
  if(f.formT>0){
   c.save();c.strokeStyle=col;c.fillStyle=col;c.globalCompositeOperation='lighter';
   c.globalAlpha=reduced?.12:.35;c.lineWidth=1.5;
@@ -45,13 +47,11 @@ export function drawStrikeSpectacle(c:CanvasRenderingContext2D,f:Fighter,tick:nu
   }
  }
  const reach=Math.min(330,Math.max(45,m.hb[1]*(m.rangeScale??1))),low=m.level==='low',kick=/^(k|cK|jK)/.test(m.id),y=low?-h*.15:kick?-h*.48:-h*.66,spread=(18+force*19)*(kick?1.3:1);
- c.save();c.globalCompositeOperation='lighter';c.globalAlpha*=amount*(reduced?.23:.68);c.fillStyle=col;c.strokeStyle=col;
- c.beginPath();c.moveTo(-12,y+spread);c.quadraticCurveTo(reach*.48,y-spread*2,reach+15,y-spread*.22);c.quadraticCurveTo(reach*.54,y-spread*.7,-12,y+spread);c.fill();
- const count=mobile?5:9;
- for(let i=0;i<count;i++){const n=noise(i+f.serial*13),offset=(i-count/2)*4.2;c.lineWidth=i%3?1:2.6;c.strokeStyle=i%3?col:'#fff8e7';c.beginPath();c.moveTo(-10-i*5,y+spread+offset);c.quadraticCurveTo(reach*.48,y-spread*(1.3+n)+offset,reach+8+n*32,y+offset*.5);c.stroke();}
+ drawForceRibbons(c,f,amount,reach,y,spread,col);
+ c.save();c.globalCompositeOperation='lighter';c.globalAlpha*=amount*(reduced?.18:.48);c.fillStyle=col;c.strokeStyle=col;
  // Small energy fragments follow the strike rather than replacing the actor.
  for(let i=0;i<(mobile?5:10);i++){const u=(t*.065+i*.17)%1;c.globalAlpha=amount*(1-u)*(reduced?.13:.65);polygon(c,reach*u,y+Math.sin(i*6+u*4)*spread,2+force*2,4,u*TAU);c.fill();}
- c.restore();void tick;
+ c.restore();
 }
 
 export function drawImpactSpectacle(c:CanvasRenderingContext2D,ch:CharId,x:number,y:number,age:number,power=1,seed=0,kind:'hit'|'guard'|'immune'|'break'='hit'){
@@ -60,19 +60,26 @@ export function drawImpactSpectacle(c:CanvasRenderingContext2D,ch:CharId,x:numbe
  c.save();c.translate(x,y);c.globalCompositeOperation='lighter';c.lineCap='round';c.lineJoin='round';
  c.globalAlpha=fade*(reduced?.24:.9);c.strokeStyle=col;c.fillStyle=col;
  const radius=13+age*(3+strength*1.6);
- for(let i=0;i<(reduced?2:4);i++){c.globalAlpha=fade*(reduced?.14:.53)/(1+i*.3);c.lineWidth=1.5+strength*(1-u);ellipse(c,0,0,radius*(1-i*.14),radius*(.5+i*.1),i*.43);}
- const count=reduced?8:effectDetail().rays;
+ for(let i=0;i<(reduced?2:effectDetail().ghosts>1?3:2);i++){c.globalAlpha=fade*(reduced?.12:.4)/(1+i*.3);c.lineWidth=1.5+strength*(1-u);ellipse(c,0,0,radius*(1-i*.14),radius*(.5+i*.1),i*.43);}
+ const count=reduced?7:kind==='guard'?Math.floor(effectDetail().rays*.55):effectDetail().rays;
  for(let i=0;i<count;i++){
   const a=noise(i+seed*7)*TAU,n=noise(i*3.7+seed),r=(12+age*(3+n*6))*strength,len=(13+n*31)*(1-u);
   c.globalAlpha=fade*(.28+n*.6)*(reduced?.3:1);c.strokeStyle=i%4?col:'#ffffff';c.lineWidth=i%4?1+n*2:3;
   c.beginPath();c.moveTo(Math.cos(a)*r*.55,Math.sin(a)*r*.55);c.lineTo(Math.cos(a)*(r+len),Math.sin(a)*(r+len));c.stroke();
  }
- if(kind==='immune'||kind==='break'){
+ // Detached pressure crescents carry the impact outward after its sharp core
+ // has faded. The empty centre preserves the defender's illustrated silhouette.
+ if(kind==='hit'&&age>1&&age<18){
+  const fronts=reduced?2:effectDetail().ghosts>1?5:3;
+  c.strokeStyle=col;c.lineWidth=1.15;c.globalAlpha=(1-age/18)*.32*(reduced?.45:1);
+  for(let i=0;i<fronts;i++){const a=noise(i+seed*2.3)*TAU,r=radius*(.8+i*.065);c.beginPath();c.ellipse(0,0,r,r*(.49+i*.05),i*.37,a,a+.24+strength*.07);c.stroke();}
+ }
+ if(kind==='immune'){
   c.strokeStyle=col;c.lineWidth=2;c.globalAlpha=fade*.7;
   for(let i=0;i<6;i++){const a=i/6*TAU,r=25+age*2;polygon(c,Math.cos(a)*r,Math.sin(a)*r*.8,9+u*9,6,a+u);c.stroke();}
  }else if(kind==='hit'){
   drawImpactMotif(c,ch,age,CHARS[ch].color,power);
-  c.globalAlpha=fade*(reduced?.13:.48);c.fillStyle='#fff7dc';
+  c.globalAlpha=Math.max(0,1-age/11)*fade*(reduced?.075:.32);c.fillStyle='#fff7dc';
   c.beginPath();for(let i=0;i<16;i++){const a=i/16*TAU,r=(i%2?7:26+strength*6)*(1-u*.65);i?c.lineTo(Math.cos(a)*r,Math.sin(a)*r):c.moveTo(Math.cos(a)*r,Math.sin(a)*r)}c.closePath();c.fill();
   c.globalAlpha=fade*(reduced?.13:.5);c.strokeStyle=col;c.lineWidth=2;
   if(ch==='ulisses')for(let i=-1;i<2;i++){c.beginPath();c.moveTo(-50+i*14,35);c.quadraticCurveTo(i*14,-20,44+i*14,-52);c.stroke();}
@@ -84,6 +91,7 @@ export function drawImpactSpectacle(c:CanvasRenderingContext2D,ch:CharId,x:numbe
 }
 
 export function drawFightEnvironment(c:CanvasRenderingContext2D,g:Game){
+ drawMotionEnvironment(c,g);
  const reduced=settings.reducedFlash,mobile=mobileGraphics()==='auto';
  for(const f of g.f){
   const hit=f.impact;if(!hit)continue;const age=g.tick-hit.tick;if(age<0||age>32)continue;

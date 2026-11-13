@@ -82,10 +82,10 @@ check('a real three-orb Rick volley restores energy on all three damaging contac
  const g=make('rickzera'),[a,d]=g.f;try{a.x=500;d.x=720;a.energy=40;assert(g.startMove(a,a.def.moves.s1));assert.equal(a.energy,24);for(let i=0;i<85;i++)g.step();assert.equal(a.energy,39);assert(Math.abs(d.maxHp-d.hp-64.8)<.001);}finally{g.destroy()}
 });
 
-check('all 4332 body drawings have calibrated ground anchors',()=>{
- const m=spriteBodyMetrics();assert.equal(Object.keys(m.atlases).length,199);let frames=0;
+check('all 5196 body drawings have calibrated ground anchors',()=>{
+ const m=spriteBodyMetrics();assert.equal(Object.keys(m.atlases).length,235);let frames=0;
  for(const a of Object.values(m.atlases))for(const f of a.frames){assert(f.rise>0&&f.baseline>0&&f.top>=0&&f.width>0);assert(f.baseline>=f.rise);frames++;}
- assert.equal(frames,4332);
+ assert.equal(frames,5196);
 });
 for(const ch of CHAR_IDS)for(const form of [false,true])check(`${ch}/${form}: standing attacks retain their stature through every frame`,()=>{
  for(const id of ['pL','pM','pH','kL','kM','kH','headbutt']){
