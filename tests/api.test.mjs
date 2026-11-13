@@ -1,7 +1,9 @@
 import assert from 'node:assert/strict';
 import { readFileSync,readdirSync } from 'node:fs';
 import { Miniflare } from 'miniflare';
-const mf=new Miniflare({modules:true,modulesRules:[{type:'ESModule',include:['**/*.js']}],scriptPath:'worker/index.js',compatibilityDate:'2025-10-01',d1Databases:['DB']});
+import {buildWorker} from '../scripts/worker-bundle.mjs';
+await buildWorker('.sites-runtime/api-worker.js');
+const mf=new Miniflare({modules:true,modulesRules:[{type:'ESModule',include:['**/*.js']}],scriptPath:'.sites-runtime/api-worker.js',compatibilityDate:'2025-10-01',d1Databases:['DB']});
 try {
  const db=await mf.getD1Database('DB');
  for(const file of readdirSync('drizzle').filter(x=>x.endsWith('.sql'))) {

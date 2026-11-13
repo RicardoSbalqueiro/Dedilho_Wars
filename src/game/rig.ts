@@ -1,3 +1,5 @@
+import {drawTrainingNpc} from './training/npc-art';
+import type {TrainingNpc} from './training/npc-art';
 // Invisible combat contact anchors and illustrated sprite drawing entry points.
 // Character appearance comes exclusively from the authored anime atlases.
 import type { CharId, Pose } from './data';
@@ -14,6 +16,7 @@ export interface Rig {
 }
 export interface DrawOpts {
   time: number;
+  trainingNpc?:TrainingNpc;
   spriteState?:'idle'|'walk'|'crouch'|'jump'|'guard'|'hit'|'attack'|'charge'|'victory';
   spritePhase?:'startup'|'active'|'recovery';
   spriteKind?:'punch'|'kick'|'special'|'super';
@@ -121,7 +124,7 @@ export function computeRig(ch: CharId, pose: Pose): Rig {
 // Public painting boundaries share the same War of Champions artwork in gameplay,
 // portraits, the animation library and cinematic actors. Poses remain simulation-owned.
 export function drawHead(ctx:CanvasRenderingContext2D,ch:CharId,r:number,o:DrawOpts){drawAnimeSpriteHead(ctx,ch,r,o)}
-export function drawRig(ctx:CanvasRenderingContext2D,ch:CharId,_rig:Rig,pose:Pose,o:DrawOpts){drawAnimeSprite(ctx,ch,pose,o)}
+export function drawRig(ctx:CanvasRenderingContext2D,ch:CharId,rig:Rig,pose:Pose,o:DrawOpts){if(o.trainingNpc){drawTrainingNpc(ctx,rig,o.trainingNpc,o.time,{jet:o.spriteState==='jump'||o.spriteAir,attack:o.spriteState==='attack',guard:o.spriteState==='guard'});return;}drawAnimeSprite(ctx,ch,pose,o)}
 export function drawBolivianDancer(ctx:CanvasRenderingContext2D,x:number,y:number,scale:number,time:number,flip=false,costume=0){
   const pose={...CHARS.aneninha.poses.idle,lean:Math.sin(time*.15)*8,fa1:-40+Math.sin(time*.19)*25,fa2:-80,ba1:160,ba2:100,fl1:60+Math.sin(time*.16)*22,bl1:115-Math.sin(time*.16)*20};
   const rig=computeRig('aneninha',pose);ctx.save();ctx.translate(x,y);ctx.scale(flip?-scale:scale,scale);drawRig(ctx,'aneninha',rig,pose,{time,costume});ctx.restore();

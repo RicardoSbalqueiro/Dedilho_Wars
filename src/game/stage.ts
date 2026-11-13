@@ -1,10 +1,13 @@
+import {buildTrainingCityScene,drawCityAmbient,TRAINING_STAGE_IDS,TRAINING_STAGES} from './training/city-stages';
+import type {TrainingStageId} from './training/city-stages';
 import {layerCanvas,stageDensity,canvasFontRevision} from './canvas';
 // Arenas em camadas com parallax; a geometria do combate é igual em todos os mapas.
 import { buildOutdoorScene } from './stage-scenes';
 import { buildExtraScene, drawExtraStageDetails } from './extra-stage-scenes';
 export const STAGE_IDS = ['neto', 'dojo', 'liberdade', 'curitiba', 'piaui', 'planalto', 'casebre', 'praca', 'osasco', 'bolivia', 'morro', 'campo', 'casabranca', 'letsgay', 'ngb', 'zoologico', 'termodinamica'] as const;
-export type StageId = (typeof STAGE_IDS)[number];
+export type StageId = (typeof STAGE_IDS)[number] | TrainingStageId;
 export const STAGES: Record<StageId, { id: StageId; name: string; subtitle: string; accent: string; credit?: string }> = {
+  ...TRAINING_STAGES,
   neto: { id: 'neto', name: 'Neto Supermercados', subtitle: 'OFERTAS E COMBATE NA CALÇADA', accent: '#3b82f6' },
   dojo: { id: 'dojo', name: 'Dojo Senbukan', subtitle: 'O DOJO CLÁSSICO DO DEDILHO', accent: '#a855f7' },
   liberdade: { id: 'liberdade', name: 'Liberdade SP', subtitle: 'LANTERNAS NO CORAÇÃO DE SÃO PAULO', accent: '#ef4444' },
@@ -357,19 +360,19 @@ export class Stage {
 
   constructor(public readonly id:StageId='dojo',public readonly density=1){
     this.density=stageDensity(density);
-    seed=7+STAGE_IDS.indexOf(id)*997;
+    seed=7+(STAGE_IDS as readonly string[]).indexOf(id)*997;
     if (id === 'dojo') {
       this.sky = buildSky(this.density); this.mountains = buildMountains(this.density); this.hall = buildHall(this.density); this.floor = buildFloor(this.density);
       const sign = this.hall.getContext('2d')!;
       sign.fillStyle = '#170d22dd'; sign.fillRect(617, 52, 366, 39);
       sign.font = "900 23px 'Russo One',Impact,sans-serif"; sign.textAlign = 'center'; sign.fillStyle = '#f7dca9'; sign.fillText('DOJO SENBUKAN', 800, 80);
     } else {
-      const scene = buildExtraScene(id,STAGE_W,H,this.density)??buildOutdoorScene(id,STAGE_W,H,this.density);
+      const scene = buildTrainingCityScene(id,STAGE_W,H,this.density)??buildExtraScene(id,STAGE_W,H,this.density)??buildOutdoorScene(id,STAGE_W,H,this.density);
       this.sky = scene.sky; this.mountains = scene.mountains; this.hall = scene.hall; this.floor = scene.floor;
     }
     const skins = ['#f1c8a0', '#c98d5c', '#8d5a3a', '#e8b58a', '#6b4430'];
     const hairs = ['#111', '#2a1a10', '#4a3020', '#999', '#222'];
-    for (let i = 0; i < (id === 'dojo' ? 64 : 24); i++) {
+    for (let i = 0; i < ((TRAINING_STAGE_IDS as readonly string[]).includes(id)?0:id === 'dojo' ? 64 : 24); i++) {
       const x = 20 + (i / (id === 'dojo' ? 64 : 24)) * 1560 + rnd() * 14;
       const t = x / STAGE_W;
       const pal = t < 0.4 ? ['#7c3aed', '#a855f7', '#5b21b6', '#e9d5ff', '#4c1d95'] : t > 0.6 ? ['#dc2626', '#ef4444', '#991b1b', '#fecaca', '#7f1d1d'] : ['#f59e0b', '#e5e7eb', '#1f2937', '#fb923c', '#16a34a'];
@@ -403,6 +406,7 @@ export class Stage {
     this.layer(ctx, camX, zoom, 0.35);
     ctx.drawImage(this.hall,0,0,STAGE_W,H);
     drawExtraStageDetails(ctx, this.id, time);
+    drawCityAmbient(ctx,this.id,time,camX);
     // lanternas
     for (let i = 0; this.id === 'dojo' && i < 10; i++) {
       const x = 90 + i * 168;
@@ -485,10 +489,12 @@ export class Stage {
       ctx.globalAlpha = 1;
     }
     // trave/corda separando o público
+    if(!(TRAINING_STAGE_IDS as readonly string[]).includes(this.id)){
     ctx.fillStyle = '#2a1510';
     ctx.fillRect(0, BASE + 4, STAGE_W, 5);
     ctx.fillStyle = 'rgba(0,0,0,0.45)';
     ctx.fillRect(0, BASE + 9, STAGE_W, 8);
+    }
     ctx.restore();
     const elapsed=this.lastBackgroundTime===null?0:Math.max(0,Math.min(15,time-this.lastBackgroundTime));
     this.lastBackgroundTime=time;

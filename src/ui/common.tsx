@@ -64,17 +64,17 @@ export function MusicButton({ onClick }: { onClick: () => void }) {
 }
 
 /** Logical layout stays 960×540; CSS zoom paints text at the displayed size. */
-export function Frame({ children, game = false }: { children: ReactNode; game?: boolean }) {
+export function Frame({ children, game = false,topInset=0,topGap=0 }: { children: ReactNode; game?: boolean;topInset?:number;topGap?:number }) {
   const [s, setS] = useState(1);
   useLayoutEffect(() => {
-    const f = () => {const vh=window.visualViewport?.height||window.innerHeight,vw=window.visualViewport?.width||window.innerWidth;const portrait=matchMedia('(pointer: coarse)').matches&&vh>vw,deck=parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--dw-controls-height'))||310;setS(Math.min(Math.max(1,vw)/W,Math.max(1,vh-(game&&portrait?deck+56:0))/H));};
+    const f = () => {const vh=window.visualViewport?.height||window.innerHeight,vw=window.visualViewport?.width||window.innerWidth;const portrait=matchMedia('(pointer: coarse)').matches&&vh>vw,deck=parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--dw-controls-height'))||310;setS(Math.min(Math.max(1,vw)/W,Math.max(1,vh-(game&&portrait?deck+Math.max(56,topInset):topInset)-topGap)/H));};
     f();
     window.addEventListener('resize',f);window.addEventListener('dedilho-controls-change',f);window.visualViewport?.addEventListener('resize',f);
     return()=>{window.removeEventListener('resize',f);window.removeEventListener('dedilho-controls-change',f);window.visualViewport?.removeEventListener('resize',f)};
-  }, [game]);
+  }, [game,topInset,topGap]);
   useLayoutEffect(()=>{window.dispatchEvent(new Event('dedilho-display-change'))},[s]);
   return (
-    <div data-game-frame={game ? '1' : '0'} className="game-frame fixed inset-0 bg-black flex items-center justify-center overflow-hidden select-none">
+    <div data-game-frame={game ? '1' : '0'} style={topInset||topGap?{top:topInset,...(topGap?{alignItems:'flex-start',paddingTop:topGap}:{})}:undefined} className="game-frame fixed inset-0 bg-black flex items-center justify-center overflow-hidden select-none">
       <div style={{ width: W, height: H, zoom:s, position: 'relative', flexShrink: 0, overflow: 'hidden' }}>{children}</div>
     </div>
   );

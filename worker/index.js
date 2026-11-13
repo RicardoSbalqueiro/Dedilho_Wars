@@ -1,3 +1,4 @@
+import {trainingProfile,startTraining,submitTraining,abandonTraining} from './training.js';
 import { rememberMatch, leaderboard, profile, submitResult } from './progression.js';
 // Public game API. Application accounts use usernames, never email addresses.
 const VERSION = 'dw-online-13';
@@ -90,6 +91,13 @@ export default {
       }
       if(path==='/api/leaderboard'&&req.method==='GET')return await leaderboard(db,url,json);
       const user=await session(req,db);
+      if(path==='/api/training'&&req.method==='GET')return await trainingProfile(db,user,now(),json);
+      if(path==='/api/training/start'&&req.method==='POST'){await limit(db,'training-start:'+user.id,30,300);return await startTraining(db,user,await body(req,4096),now(),json,fail);}
+      const trainingPath=path.match(/^\/api\/training\/([a-f0-9-]{36})\/(submit|abandon)$/);
+      if(trainingPath&&req.method==='POST'){
+        if(trainingPath[2]==='abandon')return await abandonTraining(db,user,trainingPath[1],json);
+        await limit(db,'training-submit:'+user.id,20,60);return await submitTraining(db,user,trainingPath[1],await body(req,262144),now(),json,fail);
+      }
       if(path==='/api/profile'&&req.method==='GET')return await profile(db,user,json);
       const resultPath=path.match(/^\/api\/results\/([a-f0-9-]{36})$/);
       if(resultPath&&req.method==='POST')return await submitResult(db,user,resultPath[1],await body(req,2048),json,fail,now());

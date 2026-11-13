@@ -73,6 +73,7 @@ export function drawResourcesHud(c:CanvasRenderingContext2D,g:Game){
  text(c,`${f.exhaustT>0?'EXAUSTO':'FÔLEGO'} ${Math.ceil(f.stamina)}`,right?884:76,78,8,f.exhaustT>0?'#fca5a5':'#a7f3d0',align);
  c.fillStyle='#121522';c.fillRect(x,82,250,4);c.fillStyle=f.guardBreakT>0?'#fb7185':f.guardMeter<25?'#fbbf24':'#7dd3fc';c.fillRect(x,82,250*clamp(f.guardMeter/100),4);
  text(c,f.guardBreakT>0?'ROMPIDA':`GUARDA ${Math.ceil(f.guardMeter)}`,right?554:406,86,7,f.guardBreakT>0?'#fb7185':'#bfeaff',right?'left':'right');
+ if(f.npc){c.restore();continue;}
  const x2=right?912:48;
  if(f.ch==='rickzera')text(c,`ENERGIA ${Math.floor(f.energy)}/100${f.charging?' · CARREGANDO':''}`,x2,126,11,'#86efac',align);
  if(f.ch==='ulisses')text(c,`SANGUE ${f.blood}/3`,x2,126,11,'#fb7185',align);
