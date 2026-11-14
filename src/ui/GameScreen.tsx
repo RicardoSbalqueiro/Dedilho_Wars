@@ -52,7 +52,7 @@ export function GameScreen({ cfg, onExit, onSelect, onMap, onRadio, inputSuspend
     const loop = (now: number) => {
       game.advance(now);
       if((game.phase==='finisher'||!!game.seq?.kind.startsWith('super'))!==lastCinematic){lastCinematic=game.phase==='finisher'||!!game.seq?.kind.startsWith('super');setCinematic(lastCinematic);}
-      if(!document.hidden&&!displayBlocked.current&&(!cadence||(game.paused?pausedCadence:cadence).due(now))){surface.prepare();const density=stageDensity(surface.scale);
+      if(!document.hidden&&!displayBlocked.current&&(game.paused?pausedCadence.due(now):!cadence||cadence.due(now))){surface.prepare();const density=stageDensity(surface.scale);
       if(stage.density!==density||stage.fontRevision!==canvasFontRevision())stage=getStage(cfg.stage??'dojo',density);
       render(ctx, game, stage, game.tick,undefined,!!cadence);}
       raf = requestAnimationFrame(loop);

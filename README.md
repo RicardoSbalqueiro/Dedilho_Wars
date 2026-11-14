@@ -137,3 +137,8 @@ Wars of Champions → Senbukan abre a arena WebGL de Caetano contra um aluno com
 Com uma conta, as atividades autorizadas geram XP após validação da sequência de comandos no servidor. O perfil separa treinamento e multiplayer, preservando o total existente e os pontos competitivos. Sem login, o progresso fica local e nunca é importado automaticamente como XP de conta. Veja [conteúdo, regras, persistência e validação](docs/training-reborn.md).
 
 Para desenvolvimento: `npm install`, `npm run db:local`, `npm run build`, `npm run preview`. A migração aditiva `0003_training_reborn.sql` deve acompanhar o Worker. Verifique `npm run typecheck`, `npm test` e `npm run build` antes de publicar.
+
+
+## Carregamento otimizado
+
+Os menus usam atlas compactos compartilhados e retratos sem perda para reduzir downloads, decodificação de imagens e recarregamentos ao retornar à tela inicial. O Senbukan 3D agrupa superfícies compatíveis e reduz o trabalho gráfico durante pausas. As regras de combate e o multiplayer permanecem iguais. Veja [mudanças, medições e validação](docs/optimization.md).

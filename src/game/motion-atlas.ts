@@ -1,4 +1,5 @@
 /// <reference types="vite/client" />
+import {notifyArtReady} from './art-events';
 import type {CharId} from './data';
 import raw from '../assets/motion/manifest.json';
 export interface MotionCell {rect:[number,number,number,number];anchorX:number;baseline:number;height:number;visiblePixels:number}
@@ -6,8 +7,8 @@ export interface MotionAtlas {ch:CharId;src:string;width:number;height:number;re
 const manifest=raw as unknown as {version:number;poses:string[];formOffset:number;atlases:Partial<Record<CharId,MotionAtlas>>};
 const urls:Record<string,string>=(()=>{try{return import.meta.glob<string>('../assets/motion/*.webp',{eager:true,query:'?url',import:'default'})}catch{return {}}})();
 interface Entry {image:HTMLImageElement;atlas:MotionAtlas;status:'loading'|'ready'|'error';promise:Promise<void>;used:number;pixels:number}
-const cache=new Map<CharId,Entry>();const MAX_PIXELS=12*1024*1024,MAX_IMAGES=6;let serial=0,notice=false;
-function notify(){if(notice||typeof window==='undefined')return;notice=true;requestAnimationFrame(()=>{notice=false;window.dispatchEvent(new Event('dedilho-display-change'))})}
+const cache=new Map<CharId,Entry>();const MAX_PIXELS=12*1024*1024,MAX_IMAGES=6;let serial=0;
+const notify=notifyArtReady;
 function trim(protectedId:CharId){let pixels=[...cache.values()].reduce((n,e)=>n+e.pixels,0);for(const [id,e] of [...cache].filter(([id,e])=>id!==protectedId&&e.status!=='loading').sort((a,b)=>a[1].used-b[1].used)){if(pixels<=MAX_PIXELS&&cache.size<=MAX_IMAGES)break;pixels-=e.pixels;cache.delete(id)}}
 function entry(ch:CharId):Entry|undefined {
  const old=cache.get(ch);if(old){old.used=++serial;return old;}
