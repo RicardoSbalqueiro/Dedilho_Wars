@@ -48,7 +48,7 @@ export function StagePreview({ stageId, animated = false, className = '' }: { st
       clock.sample(now,!document.hidden);drawStageScene(ctx,stage,clock.frames);
       if(animated)raf=requestAnimationFrame(draw);
     };
-    const stop=animated?()=>{}:surface.observe(()=>draw(performance.now()));
+    const stop=animated?()=>{}:surface.observe(()=>draw(performance.now()),false);
     document.addEventListener('visibilitychange',rebase);draw(performance.now());
     return()=>{stop();cancelAnimationFrame(raf);document.removeEventListener('visibilitychange',rebase)};
   },[stageId,animated]);
@@ -97,13 +97,13 @@ export function ArtCanvas({ variant, selected,paused=false }: { variant: ArtVari
   propsRef.current = { variant, selected,paused };
   useEffect(() => {
     const canvas = ref.current!;
-    const surface=new CanvasSurface(canvas,W,H,'scene'),ctx=surface.ctx;
+    const surface=new CanvasSurface(canvas,W,H,variant==='select'?'scene':'ambient'),ctx=surface.ctx;
     const stageId=STAGE_IDS[Math.floor(Math.random()*STAGE_IDS.length)];
     surface.prepare();let stage=getStage(stageId,surface.scale);
     let raf = 0;
     const clock=new FrameTimer(),rebase=()=>clock.rebase();
     const brawl=variant==='menu'||variant==='splash'?new MenuBrawlArt(matchMedia('(pointer:coarse)').matches):undefined;
-    const cadence=new PaintCadence(matchMedia('(pointer:coarse)').matches?30:60);
+    const cadence=new PaintCadence(30);
     let inView=true,lastPaintFrame=0;const observer=typeof IntersectionObserver!=='undefined'?new IntersectionObserver(entries=>{inView=entries[0]?.isIntersecting??true;clock.rebase()}):undefined;observer?.observe(canvas);
     const rally=(event:Event)=>brawl?.rally(clock.frames,(event as CustomEvent<{x?:number}>).detail?.x);
     window.addEventListener('dedilho-menu-rally',rally);

@@ -1,6 +1,8 @@
 /// <reference types="vite/client" />
 /** Illustrated anime frame renderer. Art is authored in the atlas, never rebuilt
  * from the old mannequin or stretched limb-by-limb. Contacts remain engine data. */
+import {loadedPortrait,portraitAtlasFailed} from './portrait-atlas';
+import {notifyArtReady} from './art-events';
 import {CHARS,CHAR_IDS} from './data';
 import type {CharId,Pose} from './data';
 import type {DrawOpts} from './rig';
@@ -38,13 +40,8 @@ function cachePortrait(key:string,atlas:AnimeSpriteAtlas,image:HTMLImageElement)
  ctx.drawImage(image,sx,sy,sw,sh,0,0,sw,sh);const result={source:canvas,width:sw,height:sh};portraits.set(key,result);return result;
 }
 const MAX_IMAGES=20,MAX_PIXELS=32*1024*1024;
-let useSerial=0,notificationPending=false;
-function notifyImageReady(){
- if(notificationPending||typeof window==='undefined'||typeof window.dispatchEvent!=='function')return;
- notificationPending=true;
- const notify=()=>{notificationPending=false;window.dispatchEvent(new Event('dedilho-display-change'))};
- if(typeof requestAnimationFrame==='function')requestAnimationFrame(notify);else queueMicrotask(notify);
-}
+let useSerial=0;
+const notifyImageReady=notifyArtReady;
 function trimImages(protectedKey:string){
  let pixels=0;for(const entry of images.values())pixels+=entry.pixels;
  const candidates=[...images].filter(([key,e])=>key!==protectedKey&&e.status!=='loading').sort((a,b)=>a[1].used-b[1].used);
@@ -72,7 +69,7 @@ function imageFor(key:string,atlas:AnimeSpriteAtlas):ImageEntry|undefined{
  images.set(key,entry);
  const complete=(ready:boolean)=>{
   if(entry.status!=='loading')return;entry.status=ready?'ready':'error';
-  if(ready){entry.pixels=(image.naturalWidth||atlas.width)*(image.naturalHeight||atlas.height);cachePortrait(key,atlas,image);trimImages(key);notifyImageReady()}
+  if(ready){entry.pixels=(image.naturalWidth||atlas.width)*(image.naturalHeight||atlas.height);trimImages(key);notifyImageReady()}
   finish();
  };
  image.onload=()=>complete(true);image.onerror=()=>complete(false);image.src=url;
@@ -211,6 +208,8 @@ export function drawAnimeSprite(c:CanvasRenderingContext2D,ch:CharId,pose:Pose,o
 export function drawAnimeSpriteHead(c:CanvasRenderingContext2D,ch:CharId,r:number,o:DrawOpts):boolean{
  if(!Number.isFinite(r)||r<=0)return false;
  const selected=atlasFor(ch,!!o.transformation);if(!selected)return false;
+ const packed=loadedPortrait(selected.key);if(packed){const [sx,sy,sw,sh]=packed.rect,h=r*2.8,w=h*sw/sh;c.save();c.imageSmoothingEnabled=true;c.imageSmoothingQuality='high';c.drawImage(packed.image,sx,sy,sw,sh,-w*.5,-r*1.65,w,h);c.restore();return true;}
+ if(!portraitAtlasFailed())return false;
  let portrait=portraits.get(selected.key);
  if(!portrait){
   const data=loadedAtlas(ch,!!o.transformation);if(!data)return false;

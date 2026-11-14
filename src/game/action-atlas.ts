@@ -1,4 +1,5 @@
 /// <reference types="vite/client" />
+import {notifyArtReady} from './art-events';
 import type {CharId} from './data';
 import type {DrawOpts} from './rig';
 import {mobileGraphics} from './mobile-settings';
@@ -16,9 +17,9 @@ const flow=flowRaw as unknown as {atlases:Record<string,ActionAtlas>;totalDrawin
 const urls:Record<string,string>=(()=>{try{return import.meta.glob<string>('../assets/actions/*.webp',{eager:true,query:'?url',import:'default'})}catch{return {}}})();
 const flowUrls:Record<string,string>=(()=>{try{return import.meta.glob<string>('../assets/flow/*.webp',{eager:true,query:'?url',import:'default'})}catch{return {}}})();
 interface Entry {source?:CanvasImageSource;image?:HTMLImageElement;atlas:ActionAtlas;status:'queued'|'loading'|'ready'|'error';promise:Promise<void>;resolve:()=>void;rx:number;ry:number;used:number;pixels:number}
-const cache=new Map<string,Entry>(),queue:string[]=[];let loading=0,serial=0,notified=false;
+const cache=new Map<string,Entry>(),queue:string[]=[];let loading=0,serial=0;
 const clamp=(n:number)=>Number.isFinite(n)?Math.max(0,Math.min(1,n)):0;
-function notify(){if(notified||typeof window==='undefined')return;notified=true;requestAnimationFrame(()=>{notified=false;window.dispatchEvent(new Event('dedilho-display-change'))})}
+const notify=notifyArtReady;
 function trim(protectedKey:string){
  let pixels=[...cache.values()].reduce((sum,e)=>sum+e.pixels,0);const limit=(mobileGraphics()==='auto'?16:40)*1024*1024;
  for(const [key,e] of [...cache].filter(([key,e])=>key!==protectedKey&&e.status==='ready').sort((a,b)=>a[1].used-b[1].used)){

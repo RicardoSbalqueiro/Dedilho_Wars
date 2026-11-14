@@ -6,7 +6,7 @@ let average=0,samples=0,slow=0,fast=0,penalty=0;
 /** Measured paint cost affects cosmetic detail only. No input, simulation tick,
  * collision, sprite stature or network payload depends on this local budget. */
 export function recordDrawCost(ms:number){
- if(!Number.isFinite(ms)||ms<0||ms>100)return;
+ if(!Number.isFinite(ms)||ms<0)return;ms=Math.min(ms,100);
  average=samples?average*.94+ms*.06:ms;samples++;
  if(average>12){slow++;fast=0;if(slow>=20){penalty=Math.min(2,penalty+1);slow=0;}}
  else if(average<7){fast++;slow=0;if(fast>=150){penalty=Math.max(0,penalty-1);fast=0;}}

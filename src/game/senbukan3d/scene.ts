@@ -1,4 +1,6 @@
 import * as THREE from 'three';
+import {batchPaletteArt} from './batch-art';
+import {PaintCadence} from '../mobile-settings';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import type {GLTF} from 'three/addons/loaders/GLTFLoader.js';
 import caetanoUrl from '../../assets/senbukan/3d/caetano.glb?url';
@@ -19,7 +21,7 @@ export class SenbukanScene {
  readonly renderer:THREE.WebGLRenderer;readonly scene=new THREE.Scene();readonly camera=new THREE.PerspectiveCamera(53,1,.08,120);
  readonly models:Model[]=[];
  ready=false;disposed=false;frames=0;azimuth=Math.PI;quality:'auto'|'low'='auto';
- private abort=new AbortController();private raf=0;private last=0;private accumulator=0;private clock=0;private hudTime=0;private lastEvent=0;
+ private idlePaint=new PaintCadence(12);private abort=new AbortController();private raf=0;private last=0;private accumulator=0;private clock=0;private hudTime=0;private lastEvent=0;
  private observer:ResizeObserver;private sparks:Spark[]=[];private rings:Ring[]=[];private shotModels=new Map<number,THREE.Group>();
  private particles:THREE.InstancedMesh;private gradient:THREE.DataTexture;private cachedMaterials=new Map<THREE.Material,THREE.Material>();
  private orbit=0;private pitch=.25;private distance=6.3;private drag:{id:number;x:number;y:number}|null=null;private shake=0;private cameraReady=false;
@@ -47,7 +49,7 @@ export class SenbukanScene {
   const get=async(url:string)=>{const response=await fetch(url,{signal:this.abort.signal});if(!response.ok)throw new Error('Não foi possível carregar os modelos 3D.');const data=await response.arrayBuffer();const gltf=await loader.parseAsync(data,'');progress(++completed/3);return gltf;};
   const loaded=await Promise.all([get(dojoUrl),get(caetanoUrl),get(studentUrl)]);
   if(this.disposed){loaded.forEach(g=>this.disposeObject(g.scene));return;}
-  this.toon(loaded[0].scene,false);this.scene.add(loaded[0].scene);
+  this.toon(loaded[0].scene,false);batchPaletteArt(loaded[0].scene,false);this.scene.add(loaded[0].scene);
   for(const g of loaded.slice(1))this.models.push(this.makeModel(g));
   // A clean, thin ring makes the playable floor and selected target readable.
   const edge=new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints([
@@ -69,7 +71,7 @@ export class SenbukanScene {
   });
  }
  private makeModel(g:GLTF):Model {
-  this.toon(g.scene,true);this.scene.add(g.scene);const mixer=new THREE.AnimationMixer(g.scene),actions=new Map<string,THREE.AnimationAction>();
+  this.toon(g.scene,true);batchPaletteArt(g.scene,true);this.scene.add(g.scene);const mixer=new THREE.AnimationMixer(g.scene),actions=new Map<string,THREE.AnimationAction>();
   g.animations.forEach(c=>actions.set(c.name,mixer.clipAction(c)));
   const glow=new THREE.Group();
   for(let i=0;i<3;i++){
@@ -133,7 +135,7 @@ export class SenbukanScene {
   for(const e of this.sim.events)if(e.id>this.lastEvent){this.lastEvent=e.id;this.effects(e);}
   this.sparks=this.sparks.filter(s=>s.age<s.life);
   this.sparks.forEach((s,i)=>{s.age+=dt;s.vy-=7*dt;s.x+=s.vx*dt;s.y+=s.vy*dt;s.z+=s.vz*dt;temp.position.set(s.x,s.y,s.z);temp.scale.setScalar(Math.max(.001,s.size*(1-s.age/s.life)));temp.updateMatrix();this.particles.setMatrixAt(i,temp.matrix);this.particles.setColorAt(i,s.color);});
-  this.particles.count=this.sparks.length;this.particles.instanceMatrix.needsUpdate=true;if(this.particles.instanceColor)this.particles.instanceColor.needsUpdate=true;
+  this.particles.count=this.sparks.length;if(this.sparks.length){this.particles.instanceMatrix.needsUpdate=true;if(this.particles.instanceColor)this.particles.instanceColor.needsUpdate=true;}
   this.rings.forEach(r=>{r.age+=dt;r.mesh.visible=r.age<r.life;if(r.mesh.visible){r.mesh.scale.setScalar(.15+r.age/r.life*r.size);r.mesh.material.opacity=(1-r.age/r.life)*.8;}});
   const live=new Set(this.sim.shots.map(s=>s.id));
   this.shotModels.forEach((model,id)=>{if(!live.has(id)){this.scene.remove(model);this.disposeObject(model);this.shotModels.delete(id);}});
@@ -155,7 +157,7 @@ export class SenbukanScene {
   this.camera.lookAt(target);
  }
  private frame=(now:number)=>{
-  if(this.disposed)return;this.raf=requestAnimationFrame(this.frame);const raw=this.last?(now-this.last)/1000:STEP,dt=Math.min(.12,raw);this.last=now;
+  if(this.disposed)return;this.raf=requestAnimationFrame(this.frame);if(document.hidden){this.last=0;this.accumulator=0;return;}if(!this.sim.running&&!this.idlePaint.due(now))return;const raw=this.last?(now-this.last)/1000:STEP,dt=Math.min(.12,raw);this.last=now;
   if(this.contextLost)return;
   if(this.ready&&this.sim.running&&this.quality==='auto'&&this.clock>3){this.slowTime+=Math.min(raw,.3);this.slowFrames++;if(this.slowFrames>=45){if(this.slowTime/this.slowFrames>.043&&this.adaptiveScale>.6){this.adaptiveScale=Math.max(.6,this.adaptiveScale*.85);this.renderer.shadowMap.enabled=false;this.size.w=0;this.resize();}this.slowTime=0;this.slowFrames=0;}}
   this.clock+=dt;
